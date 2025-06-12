@@ -1,0 +1,16 @@
+rootProject.name = 'solver'
+
+include(
+        'app',
+        'app:api',
+        'app:batch',
+        'app:consumer',
+
+        'client',
+        'client:in',
+        'client:out',
+
+        'domain',
+
+        'common'
+)
