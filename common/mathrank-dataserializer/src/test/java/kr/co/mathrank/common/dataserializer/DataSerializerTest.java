@@ -40,6 +40,18 @@ class DataSerializerTest {
         Assertions.assertNull(dto.get().name1);
     }
 
+    @Test
+    void 오브젝트를_특정_객체로_매핑() {
+        final Person person = new Person("test", 12, DATE_TIME);
+        final String json = DataSerializer.serialize(person).get();
+
+        final Object object = DataSerializer.deserialize(json, Object.class).get();
+        final Person result = DataSerializer.deserialize(object, Person.class).get();
+
+        Assertions.assertNotNull(result);
+        Assertions.assertEquals(person, result);
+    }
+
     private record Person(
             String name,
             Integer age,

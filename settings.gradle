@@ -13,5 +13,6 @@ include(
         'domain',
 
         'common',
-        'common:mathrank-dataserializer'
+        'common:mathrank-dataserializer',
+        'common:mathrank-event'
 )
