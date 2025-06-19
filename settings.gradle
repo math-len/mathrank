@@ -12,5 +12,6 @@ include(
 
         'domain',
 
-        'common'
+        'common',
+        'common:mathrank-dataserializer'
 )
