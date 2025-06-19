@@ -37,4 +37,26 @@ allprojects {
     tasks.named('test') {
         useJUnitPlatform()
     }
+
+    // check style
+    apply plugin: 'checkstyle'
+
+    tasks.withType(Checkstyle) {
+        reports {
+            xml.required = true
+            html.required = true
+        }
+    }
+
+    checkstyleMain.source = fileTree('src/main/java')
+
+    checkstyle {
+        configFile = rootProject.file("checkstyle/naver-checkstyle-rules.xml")
+        configProperties = [
+                "suppressionFile":
+                        rootProject.file("checkstyle/naver-checkstyle-suppressions.xml").absolutePath
+        ]
+    }
+
+    checkstyleTest.enabled = false
 }
