@@ -33,4 +33,8 @@ public class DataSerializer {
             return Optional.empty();
         }
     }
+
+    public static <T> Optional<T> deserialize(Object object, Class<T> clazz) {
+        return Optional.ofNullable(MAPPER.convertValue(object, clazz));
+    }
 }
