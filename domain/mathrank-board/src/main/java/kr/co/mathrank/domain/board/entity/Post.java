@@ -25,7 +25,7 @@ import lombok.ToString;
 	}
 )
 @ToString
-public class Post {
+public abstract class Post {
 	@Id
 	private String id;
 

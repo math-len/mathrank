@@ -35,7 +35,7 @@ class PostTest {
 	@Test
 	void 인덱스_idx_boardCategory_ownerId_사용() {
 		for (int i = 0; i < 100; i++) {
-			postRepository.save(new Post("test", "content", 1L, Collections.emptyList(), BoardCategory.FREE_BOARD));
+			postRepository.save(new FreePost("test", "content", 1L, Collections.emptyList()));
 		}
 
 		final Map<String, String> doc = new HashMap<>();
@@ -59,7 +59,7 @@ class PostTest {
 	@Test
 	void 인덱스_idx_boardCategory_createdAt_사용() {
 		for (int i = 0; i < 100; i++) {
-			postRepository.save(new Post("test", "content", 1L, Collections.emptyList(), BoardCategory.FREE_BOARD));
+			postRepository.save(new FreePost("test", "content", 1L, Collections.emptyList()));
 		}
 
 		final Map<String, String> doc = new HashMap<>();
@@ -83,7 +83,7 @@ class PostTest {
 	@Test
 	void 인덱스_questionId_사용() {
 		for (int i = 0; i < 100; i++) {
-			postRepository.save(new Post("test", "content", 1L, Collections.emptyList(), BoardCategory.FREE_BOARD));
+			postRepository.save(new FreePost("test", "content", 1L, Collections.emptyList()));
 		}
 
 		Document document = mongoTemplate.getCollection("posts")
@@ -103,7 +103,7 @@ class PostTest {
 	@Test
 	void 인덱스_purchaseId_사용() {
 		for (int i = 0; i < 100; i++) {
-			postRepository.save(new Post("test", "content", 1L, Collections.emptyList(), BoardCategory.FREE_BOARD));
+			postRepository.save(new FreePost("test", "content", 1L, Collections.emptyList()));
 		}
 
 		Document document = mongoTemplate.getCollection("posts")
@@ -122,7 +122,7 @@ class PostTest {
 
 	@Test
 	void 이미지_교체시_사용되지않는_이미지_리턴() {
-		final Post post = new Post("test", "content", 1L, List.of("1", "2", "3"), BoardCategory.FREE_BOARD);
+		final Post post = new FreePost("test", "content", 1L, List.of("1", "2", "3"));
 
 		final List<String> prevImages = post.resetImages(List.of("2", "3", "4"));
 
