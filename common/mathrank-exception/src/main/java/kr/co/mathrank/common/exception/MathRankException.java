@@ -16,4 +16,9 @@ public class MathRankException extends RuntimeException {
 		super(message.getMessage(), cause);
 		this.exceptionMessage = message;
 	}
+
+	public MathRankException(String message) {
+		super(message);
+		this.exceptionMessage = () -> message;
+	}
 }

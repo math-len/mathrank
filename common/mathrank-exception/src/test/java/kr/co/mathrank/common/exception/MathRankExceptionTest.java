@@ -34,12 +34,29 @@ class MathRankExceptionTest {
 			.hasMessageContaining("test");
 	}
 
+	@Test
+	void String_예외_처리_테스트() {
+		// given
+		// when & then
+		assertThatThrownBy(() -> {
+			throw new CustomException("TEST");
+		})
+			.isInstanceOf(MathRankException.class)
+			.satisfies(exception -> {
+				MathRankException ex = (MathRankException) exception;
+				assertThat(ex.getExceptionMessage().getMessage()).isEqualTo("TEST");
+			});
+	}
+
 	class CustomException extends MathRankException {
 		public CustomException(ExceptionMessage message) {
 			super(message);
 		}
 		public CustomException(ExceptionMessage message, Throwable cause) {
 			super(message, cause);
+		}
+		public CustomException(String message) {
+			super(message);
 		}
 	}
 
