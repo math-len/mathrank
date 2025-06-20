@@ -18,7 +18,7 @@ class PostUpdateServiceTest {
 	@Autowired
 	private PostUpdateService postUpdateService;
 	@Autowired
-	private FreePostService freePostService;
+	private PostRegisterService registerService;
 	@Autowired
 	private PostRepository postRepository;
 
@@ -30,7 +30,7 @@ class PostUpdateServiceTest {
 	@Test
 	void 업데이트_COMMAND의_필드로_모두_업데이트_된다() {
 		final long memberId = 1L;
-		final String id = freePostService.save(
+		final String id = registerService.save(
 			new FreePostCreateCommand(memberId, "title", "content", List.of("images")));
 
 		final String newTitle = "newTitle";
@@ -49,7 +49,7 @@ class PostUpdateServiceTest {
 	void 소유자가_아니면_변경하지_못한다() {
 		final long memberId = 1L;
 		final long anotherMemberId = 2L;
-		final String id = freePostService.save(
+		final String id = registerService.save(
 			new FreePostCreateCommand(memberId, "title", "content", List.of("images")));
 
 		final String newTitle = "newTitle";
@@ -62,7 +62,7 @@ class PostUpdateServiceTest {
 	@Test
 	void post_찾을수_없을때_예외처리() {
 		final long memberId = 1L;
-		freePostService.save(
+		registerService.save(
 			new FreePostCreateCommand(memberId, "title", "content", List.of("images")));
 
 		final String newTitle = "newTitle";

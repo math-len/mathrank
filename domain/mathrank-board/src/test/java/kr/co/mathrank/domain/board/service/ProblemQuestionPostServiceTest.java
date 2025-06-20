@@ -16,7 +16,7 @@ import kr.co.mathrank.domain.board.repository.PostRepository;
 @SpringBootTest(properties = "de.flapdoodle.mongodb.embedded.version=6.0.5")
 class ProblemQuestionPostServiceTest {
 	@Autowired
-	private ProblemQuestionPostService postService;
+	private PostRegisterService postService;
 	@Autowired
 	private PostRepository postRepository;
 
