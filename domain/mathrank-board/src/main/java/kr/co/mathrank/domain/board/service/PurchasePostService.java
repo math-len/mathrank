@@ -17,9 +17,9 @@ import lombok.RequiredArgsConstructor;
 public class PurchasePostService {
 	private final PostRepository postRepository;
 
-	public void save(@NotNull @Valid final PurchasePostCreateCommand command) {
+	public String save(@NotNull @Valid final PurchasePostCreateCommand command) {
 		final Post post = new PurchasePost(command.title(), command.content(), command.memberId(),
 			command.images(), command.purchaseId());
-		postRepository.save(post);
+		return postRepository.save(post).getId();
 	}
 }

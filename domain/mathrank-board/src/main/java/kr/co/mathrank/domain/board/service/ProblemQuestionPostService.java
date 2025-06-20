@@ -17,9 +17,9 @@ import lombok.RequiredArgsConstructor;
 public class ProblemQuestionPostService {
 	private final PostRepository postRepository;
 
-	public void save(@NotNull @Valid final ProblemQuestionPostCreateCommand command) {
+	public String save(@NotNull @Valid final ProblemQuestionPostCreateCommand command) {
 		final Post post = new ProblemQuestionPost(command.title(), command.content(), command.memberId(),
 			command.images(), command.problemId());
-		postRepository.save(post);
+		return postRepository.save(post).getId();
 	}
 }

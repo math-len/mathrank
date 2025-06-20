@@ -17,8 +17,8 @@ import lombok.RequiredArgsConstructor;
 public class FreePostService {
 	private final PostRepository postRepository;
 
-	public void save(@NotNull @Valid final FreePostCreateCommand command) {
+	public String save(@NotNull @Valid final FreePostCreateCommand command) {
 		final Post post = new FreePost(command.title(), command.content(), command.memberId(), command.images());
-		postRepository.save(post);
+		return postRepository.save(post).getId();
 	}
 }
