@@ -4,5 +4,6 @@ import lombok.Getter;
 
 @Getter
 enum BoardCategory {
-	PROBLEM_QUESTION
+	PROBLEM_QUESTION,
+	FREE_BOARD
 }
