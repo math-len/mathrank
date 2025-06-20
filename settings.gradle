@@ -15,5 +15,6 @@ include(
         'common',
         'common:mathrank-dataserializer',
         'common:mathrank-snowflake',
-        'common:mathrank-event'
+        'common:mathrank-event',
+        'common:mathrank-exception'
 )
