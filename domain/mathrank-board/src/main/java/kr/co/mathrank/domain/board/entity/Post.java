@@ -12,6 +12,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 import lombok.ToString;
 
 @Document(collection = "posts")
@@ -28,14 +29,17 @@ public class Post {
 	@Id
 	private String id;
 
+	@Setter
 	private String title;
 
+	@Setter
 	private String content;
 
 	private Long ownerId;
 
 	private LocalDateTime createdAt;
 
+	@Setter
 	private LocalDateTime updatedAt;
 
 	private List<String> images = new ArrayList<>();
@@ -50,5 +54,14 @@ public class Post {
 		this.updatedAt = LocalDateTime.now();
 		this.images = images;
 		this.boardCategory = boardCategory;
+	}
+
+	public List<String> resetImages(List<String> images) {
+		final List<String> removedImages = this.images.stream()
+			.filter(imagesSource -> !images.contains(imagesSource))
+			.toList();
+		this.images = images;
+
+		return removedImages;
 	}
 }

@@ -119,4 +119,28 @@ class PostTest {
 			() -> Assertions.assertEquals("purchaseId", inputStage.getString("indexName"))
 		);
 	}
+
+	@Test
+	void 이미지_교체시_사용되지않는_이미지_리턴() {
+		final Post post = new Post("test", "content", 1L, List.of("1", "2", "3"), BoardCategory.FREE_BOARD);
+
+		final List<String> prevImages = post.resetImages(List.of("2", "3", "4"));
+
+		// 삭제되는 이미지 리스트 확인
+		Assertions.assertAll(
+			() -> Assertions.assertTrue(prevImages.contains("1")),
+
+			() -> Assertions.assertFalse(prevImages.contains("2")),
+			() -> Assertions.assertFalse(prevImages.contains("3"))
+		);
+
+		// 제대로 갱신됐는지
+		Assertions.assertAll(
+			() -> Assertions.assertFalse(post.getImages().contains("1")),
+
+			() -> Assertions.assertTrue(post.getImages().contains("2")),
+			() -> Assertions.assertTrue(post.getImages().contains("3")),
+			() -> Assertions.assertTrue(post.getImages().contains("4"))
+		);
+	}
 }
