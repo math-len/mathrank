@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.mongodb.repository.MongoRepository;
+import org.springframework.data.mongodb.repository.Query;
 
 import kr.co.mathrank.domain.board.entity.BoardCategory;
 import kr.co.mathrank.domain.board.entity.Post;
@@ -14,4 +15,7 @@ public interface PostRepository extends MongoRepository<Post, String> {
 		Pageable pageable);
 
 	List<Post> findAllByBoardCategoryAndOwnerId(BoardCategory boardCategory, Long ownerId, Pageable pageable);
+
+	@Query("{ 'outbox': { '$exists': true } }")
+	List<Post> findAllContainsOutbox();
 }

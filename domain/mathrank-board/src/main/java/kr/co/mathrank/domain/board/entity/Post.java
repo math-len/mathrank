@@ -7,8 +7,10 @@ import java.util.List;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.index.CompoundIndex;
 import org.springframework.data.mongodb.core.index.CompoundIndexes;
+import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+import kr.co.mathrank.domain.board.outbox.Outbox;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -46,6 +48,9 @@ public abstract class Post {
 
 	private BoardCategory boardCategory; // shard key
 
+	@Indexed(sparse = true)
+	private Outbox outbox;
+
 	protected Post(String title, String content, Long ownerId, LocalDateTime createdAt, List<String> images, BoardCategory boardCategory) {
 		this.title = title;
 		this.content = content;
@@ -56,6 +61,17 @@ public abstract class Post {
 		this.boardCategory = boardCategory;
 	}
 
+	protected Post(String title, String content, Long ownerId, LocalDateTime createdAt, List<String> images, BoardCategory boardCategory, Outbox outbox) {
+		this.title = title;
+		this.content = content;
+		this.ownerId = ownerId;
+		this.createdAt = createdAt;
+		this.updatedAt = createdAt;
+		this.images = images;
+		this.boardCategory = boardCategory;
+		this.outbox = outbox;
+	}
+
 	public List<String> resetImages(List<String> images) {
 		final List<String> removedImages = this.images.stream()
 			.filter(imagesSource -> !images.contains(imagesSource))
@@ -63,5 +79,9 @@ public abstract class Post {
 		this.images = images;
 
 		return removedImages;
+	}
+
+	public void clearOutbox() {
+		this.outbox = null;
 	}
 }

@@ -30,7 +30,7 @@ class PostTest {
 	void 인덱스_갯수_확인() {
 		List<IndexInfo> indexList = mongoTemplate.indexOps(Post.class).getIndexInfo();
 
-		Assertions.assertEquals(5, indexList.size());
+		Assertions.assertEquals(6, indexList.size());
 	}
 
 	@Test
