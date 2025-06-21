@@ -1,5 +1,6 @@
 package kr.co.mathrank.domain.board.service;
 
+import java.time.LocalDateTime;
 import java.util.Collections;
 
 import org.junit.jupiter.api.Assertions;
@@ -16,9 +17,9 @@ import kr.co.mathrank.domain.board.entity.PurchasePost;
 class PostMapperTest {
 	@Test
 	void DTO매핑_확인() {
-		final Post freePost = new FreePost("title", "content", 1L, Collections.emptyList());
-		final Post purchasePost = new PurchasePost("title", "content", 1L, Collections.emptyList(), 2L);
-		final Post questionPost = new ProblemQuestionPost("title", "content", 1L, Collections.emptyList(), 1L);
+		final Post freePost = new FreePost("title", "content", 1L, LocalDateTime.now(), Collections.emptyList());
+		final Post purchasePost = new PurchasePost("title", "content", 1L, LocalDateTime.now(), Collections.emptyList(), 2L);
+		final Post questionPost = new ProblemQuestionPost("title", "content", 1L, LocalDateTime.now(), Collections.emptyList(), 1L);
 
 		Assertions.assertAll(
 			() -> Assertions.assertInstanceOf(FreePostQueryResult.class, PostMapper.map(freePost)),

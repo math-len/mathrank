@@ -46,12 +46,12 @@ public abstract class Post {
 
 	private BoardCategory boardCategory; // shard key
 
-	protected Post(String title, String content, Long ownerId, List<String> images, BoardCategory boardCategory) {
+	protected Post(String title, String content, Long ownerId, LocalDateTime createdAt, List<String> images, BoardCategory boardCategory) {
 		this.title = title;
 		this.content = content;
 		this.ownerId = ownerId;
-		this.createdAt = LocalDateTime.now();
-		this.updatedAt = LocalDateTime.now();
+		this.createdAt = createdAt;
+		this.updatedAt = createdAt;
 		this.images = images;
 		this.boardCategory = boardCategory;
 	}

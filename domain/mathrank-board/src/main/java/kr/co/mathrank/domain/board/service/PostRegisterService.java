@@ -1,5 +1,7 @@
 package kr.co.mathrank.domain.board.service;
 
+import java.time.LocalDateTime;
+
 import org.springframework.stereotype.Service;
 import org.springframework.validation.annotation.Validated;
 
@@ -22,19 +24,20 @@ public class PostRegisterService {
 	private final PostRepository postRepository;
 
 	public String save(@NotNull @Valid final FreePostCreateCommand command) {
-		final Post post = new FreePost(command.title(), command.content(), command.memberId(), command.images());
+		final Post post = new FreePost(command.title(), command.content(), command.memberId(), LocalDateTime.now(),
+			command.images());
 		return savePost(post);
 	}
 
 	public String save(@NotNull @Valid final ProblemQuestionPostCreateCommand command) {
 		final Post post = new ProblemQuestionPost(command.title(), command.content(), command.memberId(),
-			command.images(), command.problemId());
+			LocalDateTime.now(), command.images(), command.problemId());
 		return savePost(post);
 	}
 
 	public String save(@NotNull @Valid final PurchasePostCreateCommand command) {
 		final Post post = new PurchasePost(command.title(), command.content(), command.memberId(),
-			command.images(), command.purchaseId());
+			LocalDateTime.now(), command.images(), command.purchaseId());
 		return savePost(post);
 	}
 

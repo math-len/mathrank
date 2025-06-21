@@ -1,5 +1,6 @@
 package kr.co.mathrank.domain.board.entity;
 
+import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -35,7 +36,7 @@ class PostTest {
 	@Test
 	void 인덱스_idx_boardCategory_ownerId_사용() {
 		for (int i = 0; i < 100; i++) {
-			postRepository.save(new FreePost("test", "content", 1L, Collections.emptyList()));
+			postRepository.save(new FreePost("test", "content", 1L, LocalDateTime.now(), Collections.emptyList()));
 		}
 
 		final Map<String, String> doc = new HashMap<>();
@@ -59,7 +60,7 @@ class PostTest {
 	@Test
 	void 인덱스_idx_boardCategory_createdAt_사용() {
 		for (int i = 0; i < 100; i++) {
-			postRepository.save(new FreePost("test", "content", 1L, Collections.emptyList()));
+			postRepository.save(new FreePost("test", "content", 1L, LocalDateTime.now(), Collections.emptyList()));
 		}
 
 		final Map<String, String> doc = new HashMap<>();
@@ -83,7 +84,7 @@ class PostTest {
 	@Test
 	void 인덱스_questionId_사용() {
 		for (int i = 0; i < 100; i++) {
-			postRepository.save(new FreePost("test", "content", 1L, Collections.emptyList()));
+			postRepository.save(new FreePost("test", "content", 1L, LocalDateTime.now(), Collections.emptyList()));
 		}
 
 		Document document = mongoTemplate.getCollection("posts")
@@ -103,7 +104,7 @@ class PostTest {
 	@Test
 	void 인덱스_purchaseId_사용() {
 		for (int i = 0; i < 100; i++) {
-			postRepository.save(new FreePost("test", "content", 1L, Collections.emptyList()));
+			postRepository.save(new FreePost("test", "content", 1L, LocalDateTime.now(), Collections.emptyList()));
 		}
 
 		Document document = mongoTemplate.getCollection("posts")
@@ -122,7 +123,7 @@ class PostTest {
 
 	@Test
 	void 이미지_교체시_사용되지않는_이미지_리턴() {
-		final Post post = new FreePost("test", "content", 1L, List.of("1", "2", "3"));
+		final Post post = new FreePost("test", "content", 1L, LocalDateTime.now(), List.of("1", "2", "3"));
 
 		final List<String> prevImages = post.resetImages(List.of("2", "3", "4"));
 
