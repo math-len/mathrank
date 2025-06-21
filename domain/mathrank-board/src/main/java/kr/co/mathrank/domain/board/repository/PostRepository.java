@@ -12,4 +12,6 @@ import kr.co.mathrank.domain.board.entity.Post;
 public interface PostRepository extends MongoRepository<Post, String> {
 	List<Post> findAllByBoardCategoryAndCreatedAtIsBefore(BoardCategory boardCategory, LocalDateTime createdAtBefore,
 		Pageable pageable);
+
+	List<Post> findAllByBoardCategoryAndOwnerId(BoardCategory boardCategory, Long ownerId, Pageable pageable);
 }

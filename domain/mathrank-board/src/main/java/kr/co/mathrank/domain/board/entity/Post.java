@@ -20,7 +20,7 @@ import lombok.ToString;
 @Getter
 @CompoundIndexes(
 	{
-		@CompoundIndex(name = "idx_boardCategory_ownerId", def = "{'boardCategory': 1, 'ownerId': 1}"),
+		@CompoundIndex(name = "idx_boardCategory_ownerId_createdAt", def = "{'boardCategory': 1, 'ownerId': 1, 'createdAt': -1}"),
 		@CompoundIndex(name = "idx_boardCategory_createdAt", def = "{'boardCategory': 1, 'createdAt': -1}")
 	}
 )

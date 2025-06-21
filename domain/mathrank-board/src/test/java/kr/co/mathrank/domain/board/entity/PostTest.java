@@ -53,7 +53,7 @@ class PostTest {
 
 		Assertions.assertAll(
 			() -> Assertions.assertEquals("IXSCAN", inputStage.getString("stage")),
-			() -> Assertions.assertEquals("idx_boardCategory_ownerId", inputStage.getString("indexName"))
+			() -> Assertions.assertEquals("idx_boardCategory_ownerId_createdAt", inputStage.getString("indexName"))
 		);
 	}
 
