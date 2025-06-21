@@ -13,6 +13,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 
 import kr.co.mathrank.domain.board.dto.DescendingDateQueryCommand;
 import kr.co.mathrank.domain.board.dto.PostQueryResult;
+import kr.co.mathrank.domain.board.entity.BoardCategory;
 import kr.co.mathrank.domain.board.entity.FreePost;
 import kr.co.mathrank.domain.board.entity.ProblemQuestionPost;
 import kr.co.mathrank.domain.board.entity.PurchasePost;
@@ -43,8 +44,8 @@ class PostDescendingDateQueryServiceTest {
 				new FreePost("title", "content", 1L, now.plus(i, ChronoUnit.SECONDS), Collections.emptyList()));
 		}
 
-		final List<PostQueryResult> posts = postDescendingDateQueryService.queryFreePosts(
-			new DescendingDateQueryCommand(now.plus(99, ChronoUnit.SECONDS), 5)).results();
+		final List<PostQueryResult> posts = postDescendingDateQueryService.queryPostsByDateDescending(
+			new DescendingDateQueryCommand(BoardCategory.FREE_BOARD, now.plus(99, ChronoUnit.SECONDS), 5)).results();
 
 		Assertions.assertTrue(posts.getFirst().getCreatedAt().isAfter(posts.getLast().getCreatedAt()));
 	}
@@ -66,11 +67,14 @@ class PostDescendingDateQueryServiceTest {
 		final LocalDateTime now = before.plus(1, ChronoUnit.SECONDS);
 
 		Assertions.assertAll(
-			() -> Assertions.assertEquals(1, postDescendingDateQueryService.queryFreePosts(new DescendingDateQueryCommand(now, 100)).results().size()),
+			() -> Assertions.assertEquals(1, postDescendingDateQueryService.queryPostsByDateDescending(
+				new DescendingDateQueryCommand(BoardCategory.FREE_BOARD, now, 100)).results().size()),
 			() -> Assertions.assertEquals(2,
-				postDescendingDateQueryService.queryPurchasePosts(new DescendingDateQueryCommand(now, 100)).results().size()),
+				postDescendingDateQueryService.queryPostsByDateDescending(
+					new DescendingDateQueryCommand(BoardCategory.PURCHASE_QUESTION, now, 100)).results().size()),
 			() -> Assertions.assertEquals(3,
-				postDescendingDateQueryService.queryProblemPosts(new DescendingDateQueryCommand(now, 100)).results().size())
+				postDescendingDateQueryService.queryPostsByDateDescending(
+					new DescendingDateQueryCommand(BoardCategory.PROBLEM_QUESTION, now, 100)).results().size())
 		);
 	}
 }
