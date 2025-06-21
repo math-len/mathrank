@@ -11,7 +11,6 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
-import kr.co.mathrank.domain.board.dto.DescendingDateQueryCommand;
 import kr.co.mathrank.domain.board.dto.PostQueryResult;
 import kr.co.mathrank.domain.board.dto.QueryPostByOwnerIdCommand;
 import kr.co.mathrank.domain.board.entity.BoardCategory;
@@ -26,7 +25,7 @@ import kr.co.mathrank.domain.board.repository.PostRepository;
 	""")
 class PostQueryByMemberIdServiceTest {
 	@Autowired
-	private PostQueryByMemberIdService postQueryByMemberIdService;
+	private PostQueryService postQueryService;
 	@Autowired
 	private PostRepository postRepository;
 
@@ -50,7 +49,7 @@ class PostQueryByMemberIdServiceTest {
 				new FreePost("title", "content", otherId, now.plus(i, ChronoUnit.SECONDS), Collections.emptyList()));
 		}
 
-		Assertions.assertEquals(10, postQueryByMemberIdService.queryByOwnerIdAndDateDescending(
+		Assertions.assertEquals(10, postQueryService.queryByOwnerIdAndDateDescending(
 			new QueryPostByOwnerIdCommand(ownerId, BoardCategory.FREE_BOARD, 30)).results().size());
 	}
 
@@ -69,9 +68,9 @@ class PostQueryByMemberIdServiceTest {
 		}
 
 		Assertions.assertAll(
-			() -> Assertions.assertEquals(10, postQueryByMemberIdService.queryByOwnerIdAndDateDescending(
+			() -> Assertions.assertEquals(10, postQueryService.queryByOwnerIdAndDateDescending(
 				new QueryPostByOwnerIdCommand(ownerId, BoardCategory.FREE_BOARD, 30)).results().size()),
-			() -> Assertions.assertEquals(20, postQueryByMemberIdService.queryByOwnerIdAndDateDescending(
+			() -> Assertions.assertEquals(20, postQueryService.queryByOwnerIdAndDateDescending(
 				new QueryPostByOwnerIdCommand(ownerId, BoardCategory.PURCHASE_QUESTION, 30)).results().size())
 		);
 	}
@@ -86,7 +85,7 @@ class PostQueryByMemberIdServiceTest {
 				new FreePost("title", "content", 1L, now.plus(i, ChronoUnit.SECONDS), Collections.emptyList()));
 		}
 
-		final List<PostQueryResult> posts = postQueryByMemberIdService.queryByOwnerIdAndDateDescending(
+		final List<PostQueryResult> posts = postQueryService.queryByOwnerIdAndDateDescending(
 			new QueryPostByOwnerIdCommand(ownerId, BoardCategory.FREE_BOARD, 30)).results();
 
 		Assertions.assertTrue(posts.getFirst().getCreatedAt().isAfter(posts.getLast().getCreatedAt()));

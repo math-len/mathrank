@@ -26,7 +26,7 @@ import kr.co.mathrank.domain.board.repository.PostRepository;
 	""")
 class PostDescendingDateQueryServiceTest {
 	@Autowired
-	private PostDescendingDateQueryService postDescendingDateQueryService;
+	private PostQueryService postQueryService;
 	@Autowired
 	private PostRepository postRepository;
 
@@ -44,7 +44,7 @@ class PostDescendingDateQueryServiceTest {
 				new FreePost("title", "content", 1L, now.plus(i, ChronoUnit.SECONDS), Collections.emptyList()));
 		}
 
-		final List<PostQueryResult> posts = postDescendingDateQueryService.queryPostsByDateDescending(
+		final List<PostQueryResult> posts = postQueryService.queryPostsByDateDescending(
 			new DescendingDateQueryCommand(BoardCategory.FREE_BOARD, now.plus(99, ChronoUnit.SECONDS), 5)).results();
 
 		Assertions.assertTrue(posts.getFirst().getCreatedAt().isAfter(posts.getLast().getCreatedAt()));
@@ -67,13 +67,13 @@ class PostDescendingDateQueryServiceTest {
 		final LocalDateTime now = before.plus(1, ChronoUnit.SECONDS);
 
 		Assertions.assertAll(
-			() -> Assertions.assertEquals(1, postDescendingDateQueryService.queryPostsByDateDescending(
+			() -> Assertions.assertEquals(1, postQueryService.queryPostsByDateDescending(
 				new DescendingDateQueryCommand(BoardCategory.FREE_BOARD, now, 100)).results().size()),
 			() -> Assertions.assertEquals(2,
-				postDescendingDateQueryService.queryPostsByDateDescending(
+				postQueryService.queryPostsByDateDescending(
 					new DescendingDateQueryCommand(BoardCategory.PURCHASE_QUESTION, now, 100)).results().size()),
 			() -> Assertions.assertEquals(3,
-				postDescendingDateQueryService.queryPostsByDateDescending(
+				postQueryService.queryPostsByDateDescending(
 					new DescendingDateQueryCommand(BoardCategory.PROBLEM_QUESTION, now, 100)).results().size())
 		);
 	}
