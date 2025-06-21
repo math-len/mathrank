@@ -1,9 +1,5 @@
-package kr.co.mathrank.domain.board.service;
+package kr.co.mathrank.domain.board.dto;
 
-import kr.co.mathrank.domain.board.dto.FreePostQueryResult;
-import kr.co.mathrank.domain.board.dto.PostQueryResult;
-import kr.co.mathrank.domain.board.dto.ProblemPostQueryResult;
-import kr.co.mathrank.domain.board.dto.PurchasePostQueryResult;
 import kr.co.mathrank.domain.board.entity.FreePost;
 import kr.co.mathrank.domain.board.entity.Post;
 import kr.co.mathrank.domain.board.entity.ProblemQuestionPost;

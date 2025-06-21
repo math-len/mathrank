@@ -1,4 +1,4 @@
-package kr.co.mathrank.domain.board.service;
+package kr.co.mathrank.domain.board.dto;
 
 import java.time.LocalDateTime;
 import java.util.Collections;
@@ -6,9 +6,6 @@ import java.util.Collections;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
-import kr.co.mathrank.domain.board.dto.FreePostQueryResult;
-import kr.co.mathrank.domain.board.dto.ProblemPostQueryResult;
-import kr.co.mathrank.domain.board.dto.PurchasePostQueryResult;
 import kr.co.mathrank.domain.board.entity.FreePost;
 import kr.co.mathrank.domain.board.entity.Post;
 import kr.co.mathrank.domain.board.entity.ProblemQuestionPost;
