@@ -16,11 +16,7 @@ import org.springframework.data.mongodb.core.index.IndexInfo;
 
 import kr.co.mathrank.domain.board.repository.PostRepository;
 
-@SpringBootTest(properties = """
-	de.flapdoodle.mongodb.embedded.version=6.0.5
-	spring.data.mongodb.auto-index-creation=true
-	snowflake.node.id=1
-	""")
+@SpringBootTest
 class PostTest {
 	@Autowired
 	private MongoTemplate mongoTemplate;

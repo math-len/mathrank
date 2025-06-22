@@ -18,12 +18,7 @@ import kr.co.mathrank.domain.board.entity.FreePost;
 import kr.co.mathrank.domain.board.entity.Post;
 import kr.co.mathrank.domain.board.repository.PostRepository;
 
-@SpringBootTest(properties = """
-	de.flapdoodle.mongodb.embedded.version=6.0.5
-	spring.data.mongodb.auto-index-creation=true
-	logging.level.org.springframework.data.mongodb.core.MongoTemplate=DEBUG
-	snowflake.node.id=1
-	""")
+@SpringBootTest
 class OutboxEventPublisherTest {
 	@Autowired
 	private PostRepository postRepository;
