@@ -19,7 +19,7 @@ public class PostUpdateService {
 	private final PostRepository postRepository;
 
 	public void update(@NotNull @Valid final PostUpdateCommand command) {
-		postRepository.findById(command.postId())
+		postRepository.findByIdAndDeletedIsFalse(command.postId())
 			.ifPresentOrElse(post -> {
 				validate(command.memberId(), post);
 

@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.bson.Document;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,6 +23,11 @@ class PostTest {
 	private MongoTemplate mongoTemplate;
 	@Autowired
 	private PostRepository postRepository;
+
+	@AfterEach
+	void clean() {
+		postRepository.deleteAll();
+	}
 
 	@Test
 	void 인덱스_갯수_확인() {
@@ -50,7 +56,7 @@ class PostTest {
 
 		Assertions.assertAll(
 			() -> Assertions.assertEquals("IXSCAN", inputStage.getString("stage")),
-			() -> Assertions.assertEquals("idx_boardCategory_ownerId_createdAt", inputStage.getString("indexName"))
+			() -> Assertions.assertEquals("idx_boardCategory_ownerId_createdAt_deleted", inputStage.getString("indexName"))
 		);
 	}
 
@@ -63,6 +69,7 @@ class PostTest {
 		final Map<String, String> doc = new HashMap<>();
 		doc.put("createdAt", "test");
 		doc.put("boardCategory", "FREE_BOARD");
+		doc.put("deleted", "true");
 
 		Document document = mongoTemplate.getCollection("posts")
 			.find(new Document(doc))
@@ -74,7 +81,7 @@ class PostTest {
 
 		Assertions.assertAll(
 			() -> Assertions.assertEquals("IXSCAN", inputStage.getString("stage")),
-			() -> Assertions.assertEquals("idx_boardCategory_createdAt", inputStage.getString("indexName"))
+			() -> Assertions.assertEquals("idx_boardCategory_createdAt_deleted", inputStage.getString("indexName"))
 		);
 	}
 

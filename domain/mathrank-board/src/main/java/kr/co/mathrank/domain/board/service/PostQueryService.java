@@ -23,14 +23,14 @@ public class PostQueryService {
 		final PageRequest pageRequest = PageRequest.of(0, command.pageSize(),
 			Sort.by(Sort.Order.asc("ownerId"), Sort.Order.asc("boardCategory"), Sort.Order.desc("createdAt")));
 		return PostQueryResults.from(
-			postRepository.findAllByBoardCategoryAndOwnerId(command.boardCategory(), command.ownerId(), pageRequest));
+			postRepository.findAllByBoardCategoryAndOwnerIdAndDeletedIsFalse(command.boardCategory(), command.ownerId(), pageRequest));
 	}
 
 	public PostQueryResults queryPostsByDateDescending(@NotNull @Valid final DescendingDateQueryCommand command) {
 		final PageRequest pageRequest = PageRequest.of(0, command.pageSize(),
 			Sort.by(Sort.Order.asc("boardCategory"), Sort.Order.desc("createdAt")));
 		return PostQueryResults.from(
-			postRepository.findAllByBoardCategoryAndCreatedAtIsBefore(command.category(), command.current(),
+			postRepository.findAllByBoardCategoryAndCreatedAtIsBeforeAndDeletedIsFalse(command.category(), command.current(),
 				pageRequest));
 	}
 }

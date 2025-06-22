@@ -8,6 +8,7 @@ import org.springframework.stereotype.Component;
 
 import kr.co.mathrank.domain.board.entity.Post;
 import kr.co.mathrank.domain.board.outbox.payload.PostEventPayloadManager;
+import kr.co.mathrank.domain.board.outbox.posthandler.PublishedEventPostHandlerManger;
 import kr.co.mathrank.domain.board.repository.PostRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -18,18 +19,21 @@ import lombok.extern.slf4j.Slf4j;
 public class OutboxEventPublisher {
 	private final PostRepository postRepository;
 	private final PostEventPayloadManager messagePayloadManager;
+	private final PublishedEventPostHandlerManger publishedEventPostHandlerManger;
+
 	private final KafkaTemplate<String, String> kafkaTemplate;
 
 	@Async("eventAsyncPublisher")
 	public void publishMessage(final Post post) {
-		final Outbox outbox = post.getOutbox();
+		final EventType eventType = post.getOutbox().getEventType();
 		final String message = messagePayloadManager.extractPayload(post);
 		log.debug("[OutboxEventPublisher.publishMessage]: {}", message);
 
 		try {
-			kafkaTemplate.send(outbox.getEventType().getTopic(), message)
+			kafkaTemplate.send(eventType.getTopic(), message)
 				.get(1L, TimeUnit.SECONDS);
 			clearOutbox(post);
+			publishedEventPostHandlerManger.handle(post, eventType);
 		} catch (Exception e) {
 			log.error("[OutboxEventExecutor.publishMessage]: error occurred {}", post, e);
 			throw new RuntimeException(e);

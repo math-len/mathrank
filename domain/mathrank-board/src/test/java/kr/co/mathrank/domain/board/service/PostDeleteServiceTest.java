@@ -34,7 +34,7 @@ class PostDeleteServiceTest {
 		postRepository.save(post);
 		postDeleteService.delete(new PostDeleteCommand(ownerId, post.getId()));
 
-		Assertions.assertEquals(0, postRepository.findAll().size());
+		Assertions.assertTrue(postRepository.findByIdAndDeletedIsFalse(post.getId()).isEmpty());
 	}
 
 	@Test

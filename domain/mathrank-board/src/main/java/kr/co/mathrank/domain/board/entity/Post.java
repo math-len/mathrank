@@ -22,8 +22,8 @@ import lombok.ToString;
 @Getter
 @CompoundIndexes(
 	{
-		@CompoundIndex(name = "idx_boardCategory_ownerId_createdAt", def = "{'boardCategory': 1, 'ownerId': 1, 'createdAt': -1}"),
-		@CompoundIndex(name = "idx_boardCategory_createdAt", def = "{'boardCategory': 1, 'createdAt': -1}")
+		@CompoundIndex(name = "idx_boardCategory_ownerId_createdAt_deleted", def = "{'boardCategory': 1, 'ownerId': 1, 'createdAt': -1, 'deleted': -1}"),
+		@CompoundIndex(name = "idx_boardCategory_createdAt_deleted", def = "{'boardCategory': 1, 'createdAt': -1, 'deleted': -1}"),
 	}
 )
 @ToString
@@ -48,7 +48,11 @@ public abstract class Post {
 
 	private BoardCategory boardCategory; // shard key
 
+	@Setter
+	private Boolean deleted = false;
+
 	@Indexed(sparse = true)
+	@Setter
 	private Outbox outbox;
 
 	protected Post(String title, String content, Long ownerId, LocalDateTime createdAt, List<String> images, BoardCategory boardCategory) {
