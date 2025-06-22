@@ -18,6 +18,7 @@ import kr.co.mathrank.domain.board.repository.PostRepository;
 	de.flapdoodle.mongodb.embedded.version=6.0.5
 	spring.data.mongodb.auto-index-creation=true
 	logging.level.org.springframework.data.mongodb.core.MongoTemplate=DEBUG
+	snowflake.node.id=1
 	""")
 class PostDeleteServiceTest {
 	@Autowired

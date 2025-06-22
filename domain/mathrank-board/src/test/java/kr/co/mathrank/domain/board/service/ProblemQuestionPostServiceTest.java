@@ -13,7 +13,11 @@ import kr.co.mathrank.domain.board.dto.ProblemQuestionPostCreateCommand;
 import kr.co.mathrank.domain.board.entity.ProblemQuestionPost;
 import kr.co.mathrank.domain.board.repository.PostRepository;
 
-@SpringBootTest(properties = "de.flapdoodle.mongodb.embedded.version=6.0.5")
+@SpringBootTest(properties = """
+	de.flapdoodle.mongodb.embedded.version=6.0.5
+	spring.data.mongodb.auto-index-creation=true
+	logging.level.org.springframework.data.mongodb.core.MongoTemplate=DEBUG
+	snowflake.node.id=1""")
 class ProblemQuestionPostServiceTest {
 	@Autowired
 	private PostRegisterService postService;

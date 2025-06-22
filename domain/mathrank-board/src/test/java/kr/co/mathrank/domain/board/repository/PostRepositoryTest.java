@@ -17,6 +17,7 @@ import kr.co.mathrank.domain.board.outbox.EventType;
 	de.flapdoodle.mongodb.embedded.version=6.0.5
 	spring.data.mongodb.auto-index-creation=true
 	logging.level.org.springframework.data.mongodb.core.MongoTemplate=DEBUG
+	snowflake.node.id=1
 	""")
 class PostRepositoryTest {
 	@Autowired
@@ -31,7 +32,7 @@ class PostRepositoryTest {
 	void 아웃박스_있는것만_조회한다() {
 		postRepository.save(
 			new FreePost("title", "content", 1L, LocalDateTime.now(), Collections.emptyList(), new Outbox(
-				EventType.PURCHASE_POST_CREATED_EVENT, LocalDateTime.now())));
+				EventType.FREE_POST_CREATED_EVENT, LocalDateTime.now())));
 		postRepository.save(
 			new FreePost("title", "content", 1L, LocalDateTime.now(), Collections.emptyList()));
 
