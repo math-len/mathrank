@@ -9,6 +9,9 @@ import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 import kr.co.mathrank.domain.board.dto.PostUpdateCommand;
 import kr.co.mathrank.domain.board.entity.Post;
+import kr.co.mathrank.domain.board.outbox.EventType;
+import kr.co.mathrank.domain.board.outbox.Outbox;
+import kr.co.mathrank.domain.board.outbox.OutboxEventPublisher;
 import kr.co.mathrank.domain.board.repository.PostRepository;
 import lombok.RequiredArgsConstructor;
 
@@ -17,6 +20,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class PostUpdateService {
 	private final PostRepository postRepository;
+	private final OutboxEventPublisher outboxEventPublisher;
 
 	public void update(@NotNull @Valid final PostUpdateCommand command) {
 		postRepository.findByIdAndDeletedIsFalse(command.postId())
@@ -28,7 +32,10 @@ public class PostUpdateService {
 				post.setTitle(command.title());
 				post.setContent(command.content());
 
+				post.setOutbox(new Outbox(EventType.POST_UPDATED_EVENT, LocalDateTime.now()));
+
 				postRepository.save(post);
+				outboxEventPublisher.publishMessage(post);
 			}, () -> {throw new IllegalArgumentException("Post not found");});
 	}
 
