@@ -1,0 +1,76 @@
+package kr.co.mathrank.domain.board.post.service;
+
+import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
+import java.util.Collections;
+import java.util.List;
+
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+
+import kr.co.mathrank.domain.board.post.dto.DescendingDateQueryCommand;
+import kr.co.mathrank.domain.board.post.dto.PostQueryResult;
+import kr.co.mathrank.domain.board.post.entity.BoardCategory;
+import kr.co.mathrank.domain.board.post.entity.FreePost;
+import kr.co.mathrank.domain.board.post.entity.ProblemQuestionPost;
+import kr.co.mathrank.domain.board.post.entity.PurchasePost;
+import kr.co.mathrank.domain.board.post.repository.PostRepository;
+
+@SpringBootTest
+class PostDescendingDateQueryServiceTest {
+	@Autowired
+	private PostQueryService postQueryService;
+	@Autowired
+	private PostRepository postRepository;
+
+	@AfterEach
+	void clean() {
+		postRepository.deleteAll();
+	}
+
+	@Test
+	void 결과가_내림차순으로_정렬되는지() {
+		final LocalDateTime now = LocalDateTime.of(2020, 1, 1, 0, 0);
+
+		for (int i = 0; i < 100; i++) {
+			postRepository.save(
+				new FreePost("title", "content", 1L, now.plus(i, ChronoUnit.SECONDS), Collections.emptyList()));
+		}
+
+		final List<PostQueryResult> posts = postQueryService.queryPostsByDateDescending(
+			new DescendingDateQueryCommand(BoardCategory.FREE_BOARD, now.plus(99, ChronoUnit.SECONDS), 5)).results();
+
+		Assertions.assertTrue(posts.getFirst().getCreatedAt().isAfter(posts.getLast().getCreatedAt()));
+	}
+
+	@Test
+	void 특정_게시판만_조회() {
+		final LocalDateTime before = LocalDateTime.of(2020, 1, 1, 0, 0);
+
+		for (int i = 0; i < 1; i++) {
+			postRepository.save(new FreePost("title", "content", 1L, before, Collections.emptyList()));
+		}
+		for (int i = 0; i < 2; i++) {
+			postRepository.save(new PurchasePost("title", "content", 1L, before, Collections.emptyList(), 1L));
+		}
+		for (int i = 0; i < 3; i++) {
+			postRepository.save(new ProblemQuestionPost("title", "content", 1L, before, Collections.emptyList(), 1L));
+		}
+
+		final LocalDateTime now = before.plus(1, ChronoUnit.SECONDS);
+
+		Assertions.assertAll(
+			() -> Assertions.assertEquals(1, postQueryService.queryPostsByDateDescending(
+				new DescendingDateQueryCommand(BoardCategory.FREE_BOARD, now, 100)).results().size()),
+			() -> Assertions.assertEquals(2,
+				postQueryService.queryPostsByDateDescending(
+					new DescendingDateQueryCommand(BoardCategory.PURCHASE_QUESTION, now, 100)).results().size()),
+			() -> Assertions.assertEquals(3,
+				postQueryService.queryPostsByDateDescending(
+					new DescendingDateQueryCommand(BoardCategory.PROBLEM_QUESTION, now, 100)).results().size())
+		);
+	}
+}

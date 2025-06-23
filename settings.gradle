@@ -11,7 +11,7 @@ include(
         'client:out',
 
         'domain',
-        'domain:mathrank-board',
+        'domain:mathrank-board-post',
 
         'common',
         'common:mathrank-dataserializer',
