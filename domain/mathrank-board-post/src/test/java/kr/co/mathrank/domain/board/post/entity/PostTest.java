@@ -12,10 +12,13 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.testcontainers.service.connection.ServiceConnection;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.index.IndexInfo;
+import org.testcontainers.containers.MongoDBContainer;
 
 import kr.co.mathrank.domain.board.post.repository.PostRepository;
+
 
 @SpringBootTest
 class PostTest {
@@ -23,6 +26,9 @@ class PostTest {
 	private MongoTemplate mongoTemplate;
 	@Autowired
 	private PostRepository postRepository;
+
+	@ServiceConnection
+	static MongoDBContainer mongoDBContainer = new MongoDBContainer("mongo:6.0");
 
 	@AfterEach
 	void clean() {

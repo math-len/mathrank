@@ -8,7 +8,9 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.testcontainers.service.connection.ServiceConnection;
 import org.springframework.data.domain.Pageable;
+import org.testcontainers.containers.MongoDBContainer;
 
 import kr.co.mathrank.domain.board.post.entity.BoardCategory;
 import kr.co.mathrank.domain.board.post.entity.FreePost;
@@ -21,11 +23,13 @@ class PostRepositoryTest {
 	@Autowired
 	private PostRepository postRepository;
 
+	@ServiceConnection
+	static MongoDBContainer mongoDBContainer = new MongoDBContainer("mongo:6.0");
+
 	@AfterEach
 	void clean() {
 		postRepository.deleteAll();
 	}
-
 	@Test
 	void 아웃박스_있는것만_조회한다() {
 		postRepository.save(

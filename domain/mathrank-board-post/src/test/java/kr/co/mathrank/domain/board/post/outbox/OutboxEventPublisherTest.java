@@ -10,9 +10,11 @@ import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.testcontainers.service.connection.ServiceConnection;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.kafka.support.SendResult;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
+import org.testcontainers.containers.MongoDBContainer;
 
 import kr.co.mathrank.domain.board.post.entity.FreePost;
 import kr.co.mathrank.domain.board.post.entity.Post;
@@ -27,11 +29,13 @@ class OutboxEventPublisherTest {
 	@MockitoBean
 	private KafkaTemplate<String, String> kafkaTemplate;
 
+	@ServiceConnection
+	static MongoDBContainer mongoDBContainer = new MongoDBContainer("mongo:6.0");
+
 	@AfterEach
 	void clean() {
 		postRepository.deleteAll();
 	}
-
 	@Test
 	void 전송_성공시_아웃박스_삭제() {
 		SendResult<String, String> mockSendResult = Mockito.mock(SendResult.class);
