@@ -13,14 +13,13 @@ import org.springframework.test.context.bean.override.mockito.MockitoBean;
 
 @SpringBootTest(properties = """
 	snowflake.node.id=1
+	event.pending.initial=1
 	spring.jpa.show-sql=true
 	""")
-public class TransactionalOutboxPublisherTest {
+class PendingEventWorkerTest {
 	@MockitoBean
 	private KafkaTemplate<String, String> kafkaTemplate;
 
-	@Autowired
-	private TestPublisher testPublisher;
 	@Autowired
 	private OutboxEventRepository outboxEventRepository;
 
@@ -30,32 +29,18 @@ public class TransactionalOutboxPublisherTest {
 	}
 
 	@Test
-	void 이벤트_발행_성공_시_아웃박스_삭제() {
+	void 이벤트_발행_실패시_주기적으로_처리된다() {
 		Mockito.doReturn(CompletableFuture.completedFuture(null))
 			.when(kafkaTemplate)
 			.send(Mockito.anyString(), Mockito.anyString());
-		testPublisher.publish();
+		outboxEventRepository.save(Outbox.of(1L, "testTopic", "testPayload"));
 
 		try {
-			Thread.sleep(500);
+			Thread.sleep(3000);
 		} catch (InterruptedException e) {
 			throw new RuntimeException(e);
 		}
 
 		Assertions.assertThat(outboxEventRepository.findAll().size()).isEqualTo(0);
-	}
-
-	@Test
-	void 이벤트_발행_실패시_아웃박스가_저장() {
-		Mockito.doThrow(new RuntimeException()).when(kafkaTemplate).send(Mockito.anyString(), Mockito.anyString());
-		testPublisher.publish();
-
-		try {
-			Thread.sleep(500);
-		} catch (InterruptedException e) {
-			throw new RuntimeException(e);
-		}
-
-		Assertions.assertThat(outboxEventRepository.findAll().size()).isEqualTo(1);
 	}
 }
