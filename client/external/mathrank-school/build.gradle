@@ -1,0 +1,15 @@
+ext {
+    springCloudVersion = "2024.0.1"
+}
+dependencies {
+    implementation 'org.springframework.cloud:spring-cloud-starter-openfeign'
+//    implementation 'org.springframework.boot:spring-boot-starter-web'
+
+    implementation project(':common:mathrank-dataserializer')
+}
+
+dependencyManagement {
+    imports {
+        mavenBom "org.springframework.cloud:spring-cloud-dependencies:$springCloudVersion"
+    }
+}
