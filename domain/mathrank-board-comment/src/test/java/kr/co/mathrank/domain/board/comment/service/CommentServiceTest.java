@@ -11,6 +11,7 @@ import org.springframework.transaction.annotation.Transactional;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import kr.co.mathrank.domain.board.comment.dto.CommentRegisterCommand;
+import kr.co.mathrank.domain.board.comment.dto.CommentUpdateCommand;
 import kr.co.mathrank.domain.board.comment.entity.Comment;
 import kr.co.mathrank.domain.board.comment.repository.CommentRepository;
 
@@ -96,6 +97,47 @@ class CommentServiceTest {
 		final Comment updatedComment = commentRepository.findById(id)
 			.orElseThrow();
 		Assertions.assertTrue(updatedComment.getImageSources().contains("image3.jpg"));
+		Assertions.assertEquals(1, updatedComment.getImageSources().size());
+	}
+
+	@Test
+	@Transactional
+	void 소유자만_수정가능() {
+		final long userId = 2L;
+		final long otherId = 3L;
+		final Long id = commentService.save(new CommentRegisterCommand(1L,
+			userId, "테스트 댓글", List.of("image1.jpg", "image2.jpg")));
+		em.flush();
+		em.clear();
+
+		final String updatedContent = "수정된 댓글 내용";
+		final String updatedImageSource = "image3.jpg";
+
+		Assertions.assertThrows(IllegalArgumentException.class, () -> commentService.update(new CommentUpdateCommand(id, otherId, updatedContent, List.of(updatedImageSource))));
+
+	}
+
+	@Test
+	@Transactional
+	void 수정_정상동작_확인() {
+		final long userId = 2L;
+		final Long id = commentService.save(new CommentRegisterCommand(1L,
+			userId, "테스트 댓글", List.of("image1.jpg", "image2.jpg")));
+		em.flush();
+		em.clear();
+
+		final String updatedContent = "수정된 댓글 내용";
+		final String updatedImageSource = "image3.jpg";
+		commentService.update(new CommentUpdateCommand(id, userId, updatedContent, List.of(updatedImageSource)));
+
+		em.flush();
+		em.clear();
+
+		final Comment updatedComment = commentRepository.findById(id)
+			.orElseThrow();
+
+		Assertions.assertEquals(updatedContent, updatedComment.getContent());
+		Assertions.assertTrue(updatedComment.getImageSources().contains(updatedImageSource));
 		Assertions.assertEquals(1, updatedComment.getImageSources().size());
 	}
 }
