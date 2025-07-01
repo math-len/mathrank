@@ -10,6 +10,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
+import jakarta.validation.ConstraintViolationException;
 import kr.co.mathrank.domain.board.comment.dto.CommentDeleteCommand;
 import kr.co.mathrank.domain.board.comment.dto.CommentRegisterCommand;
 import kr.co.mathrank.domain.board.comment.dto.CommentUpdateCommand;
@@ -171,5 +172,12 @@ class CommentServiceTest {
 		em.clear();
 
 		Assertions.assertEquals(0, commentRepository.count());
+	}
+
+	@Test
+	void 댓글_등록_시_형식에따른_예외() {
+		Assertions.assertThrows(ConstraintViolationException.class, () -> {
+			commentService.save(new CommentRegisterCommand(null, 2L, "테스트 댓글", List.of()));
+		});
 	}
 }
