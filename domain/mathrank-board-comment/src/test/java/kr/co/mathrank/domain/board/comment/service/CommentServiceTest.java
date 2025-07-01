@@ -10,6 +10,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
+import kr.co.mathrank.domain.board.comment.dto.CommentDeleteCommand;
 import kr.co.mathrank.domain.board.comment.dto.CommentRegisterCommand;
 import kr.co.mathrank.domain.board.comment.dto.CommentUpdateCommand;
 import kr.co.mathrank.domain.board.comment.entity.Comment;
@@ -139,5 +140,36 @@ class CommentServiceTest {
 		Assertions.assertEquals(updatedContent, updatedComment.getContent());
 		Assertions.assertTrue(updatedComment.getImageSources().contains(updatedImageSource));
 		Assertions.assertEquals(1, updatedComment.getImageSources().size());
+	}
+
+	@Test
+	@Transactional
+	void 소유자만_삭제가능() {
+		final long userId = 2L;
+		final long otherId = 3L;
+		final Long id = commentService.save(new CommentRegisterCommand(1L,
+			userId, "테스트 댓글", List.of("image1.jpg", "image2.jpg")));
+		em.flush();
+		em.clear();
+
+		Assertions.assertThrows(IllegalArgumentException.class, () -> commentService.delete(new CommentDeleteCommand(id, otherId)));
+	}
+
+	@Test
+	@Transactional
+	void 삭제_정상동작_확인() {
+		final long userId = 2L;
+		final Long id = commentService.save(new CommentRegisterCommand(1L,
+			userId, "테스트 댓글", List.of("image1.jpg", "image2.jpg")));
+
+		em.flush();
+		em.clear();
+
+		commentService.delete(new CommentDeleteCommand(id, userId));
+
+		em.flush();
+		em.clear();
+
+		Assertions.assertEquals(0, commentRepository.count());
 	}
 }
