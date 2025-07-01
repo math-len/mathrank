@@ -11,6 +11,7 @@ include(
         'client:out',
 
         'domain',
+        'domain:mathrank-board-viewcount',
 
         'common',
         'common:mathrank-dataserializer',
