@@ -5,10 +5,13 @@ import java.time.LocalDateTime;
 import org.hibernate.annotations.CreationTimestamp;
 import org.springframework.data.domain.Persistable;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
 import jakarta.persistence.Id;
+import jakarta.persistence.Index;
+import jakarta.persistence.Table;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -16,6 +19,12 @@ import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @Entity
+@Table(name = "problem", indexes = {
+	@Index(name = "idx_member_id", columnList = "member_id"),
+	@Index(name = "idx_difficulty", columnList = "difficulty"),
+	@Index(name = "idx_problem_course", columnList = "problem_course"),
+	@Index(name = "idx_type", columnList = "type"),
+})
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Problem implements Persistable<Long> {
@@ -30,7 +39,7 @@ public class Problem implements Persistable<Long> {
 	private Difficulty difficulty;
 
 	@Enumerated(EnumType.STRING)
-	private ProblemCourse course;
+	private ProblemCourse problemCourse;
 
 	@Enumerated(EnumType.STRING)
 	private AnswerType type;
@@ -51,7 +60,7 @@ public class Problem implements Persistable<Long> {
 		problem.imageSource = imageSource;
 		problem.difficulty = difficulty;
 		problem.type = type;
-		problem.course = course;
+		problem.problemCourse = course;
 		problem.answer = answer;
 		problem.schoolCode = schoolCode;
 
