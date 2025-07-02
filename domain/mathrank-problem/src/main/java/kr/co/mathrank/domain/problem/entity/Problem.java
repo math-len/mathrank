@@ -15,6 +15,7 @@ import jakarta.persistence.Table;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
@@ -26,11 +27,14 @@ import lombok.extern.slf4j.Slf4j;
 	@Index(name = "idx_type", columnList = "type"),
 })
 @Getter
+@Setter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Problem implements Persistable<Long> {
 	@Id
+	@Setter(AccessLevel.NONE)
 	private Long id;
 
+	@Setter(AccessLevel.NONE)
 	private Long memberId;
 
 	private String imageSource;
@@ -49,6 +53,7 @@ public class Problem implements Persistable<Long> {
 	private String answer;
 
 	@CreationTimestamp
+	@Setter(AccessLevel.NONE)
 	private LocalDateTime createdAt;
 
 	public static Problem of(final Long id, final Long memberId, final String imageSource, final Difficulty difficulty,
