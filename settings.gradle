@@ -12,6 +12,7 @@ include(
         'client:external:mathrank-school',
 
         'domain',
+        'domain:mathrank-problem',
 
         'common',
         'common:mathrank-dataserializer',
