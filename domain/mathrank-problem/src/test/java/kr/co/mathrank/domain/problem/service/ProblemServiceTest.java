@@ -13,7 +13,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
 
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
 import jakarta.validation.ConstraintViolationException;
+import kr.co.mathrank.domain.problem.dto.ProblemDeleteCommand;
 import kr.co.mathrank.domain.problem.dto.ProblemRegisterCommand;
 import kr.co.mathrank.domain.problem.dto.ProblemUpdateCommand;
 import kr.co.mathrank.domain.problem.entity.AnswerType;
@@ -22,13 +25,16 @@ import kr.co.mathrank.domain.problem.entity.Problem;
 import kr.co.mathrank.domain.problem.entity.ProblemCourse;
 import kr.co.mathrank.domain.problem.repository.ProblemRepository;
 
-@SpringBootTest
+@SpringBootTest(properties = """
+logging.level.kr.co.mathrank=DEBUG""")
 @Transactional
 class ProblemServiceTest {
 	@Autowired
 	private ProblemService problemService;
 	@Autowired
 	private ProblemRepository problemRepository;
+	@PersistenceContext
+	private EntityManager entityManager;
 
 	@ParameterizedTest
 	@MethodSource("argumentsStream")
@@ -62,6 +68,33 @@ class ProblemServiceTest {
 		final ProblemUpdateCommand updateCommand = new ProblemUpdateCommand(problemId, 2L, "newImage.jpeg", AnswerType.SHORT_ANSWER, Difficulty.LEVEL_THREE, "newTestCode", "newAnswer", ProblemCourse.HIGH);
 
 		Assertions.assertThrows(IllegalArgumentException.class, () -> problemService.update(updateCommand));
+	}
+
+	@Test
+	void 삭제_성공() {
+		final ProblemRegisterCommand command = new ProblemRegisterCommand(1L, "image.jpeg", AnswerType.MULTIPLE_CHOICE, Difficulty.LEVEL_FIVE, "testCode", "answer", ProblemCourse.ELEMENTARY);
+		final Long problemId = problemService.save(command);
+
+		entityManager.flush();
+		entityManager.clear();
+
+		final ProblemDeleteCommand deleteCommand = new ProblemDeleteCommand(problemId, 1L);
+		problemService.delete(deleteCommand);
+
+		entityManager.flush();
+		entityManager.clear();
+
+		assertFalse(problemRepository.findById(problemId).isPresent());
+	}
+
+	@Test
+	void 본인_문제만_삭제가능() {
+		final ProblemRegisterCommand command = new ProblemRegisterCommand(1L, "image.jpeg", AnswerType.MULTIPLE_CHOICE, Difficulty.LEVEL_FIVE, "testCode", "answer", ProblemCourse.ELEMENTARY);
+		final Long problemId = problemService.save(command);
+
+		final ProblemDeleteCommand deleteCommand = new ProblemDeleteCommand(problemId, 2L);
+
+		Assertions.assertThrows(IllegalArgumentException.class, () -> problemService.delete(deleteCommand));
 	}
 
 	private static Stream<Arguments> argumentsStream() {
