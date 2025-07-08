@@ -6,6 +6,7 @@ dependencies {
 
     implementation project(':common:mathrank-role')
     implementation project(':common:mathrank-snowflake')
+    implementation project(':common:mathrank-jwt')
 
     testImplementation 'org.testcontainers:junit-jupiter'
     testImplementation 'org.springframework.boot:spring-boot-testcontainers'
