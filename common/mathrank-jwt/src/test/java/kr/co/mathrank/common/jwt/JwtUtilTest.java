@@ -49,4 +49,15 @@ class JwtUtilTest {
 			() -> Assertions.assertThrows(ConstraintViolationException.class, () -> jwtUtil.parse(null))
 		);
 	}
+
+	@Test
+	void 매순간_다른_JWT를_생성한다() {
+		final long memberId = 1L;
+		final Role memberRole = Role.USER;
+
+		final JwtResult result1 = jwtUtil.createJwt(memberId, memberRole, 0L, 10_000L);
+		final JwtResult result2 = jwtUtil.createJwt(memberId, memberRole, 0L, 10_000L);
+
+		Assertions.assertNotEquals(result1, result2);
+	}
 }

@@ -3,6 +3,7 @@ package kr.co.mathrank.common.jwt;
 import java.util.Base64;
 import java.util.Date;
 import java.util.Optional;
+import java.util.UUID;
 
 import javax.crypto.SecretKey;
 
@@ -73,6 +74,7 @@ public class JwtUtil {
 		return TOKEN_FORMAT.formatted(Jwts.builder()
 			.setSubject(String.valueOf(memberId))
 			.claim(ROLE_CLAIM_NAME, role)
+			.setId(UUID.randomUUID().toString())
 			.setIssuedAt(now)
 			.setExpiration(new Date(now.getTime() + expirationTime))
 			.signWith(secretKey, signatureAlgorithm)
