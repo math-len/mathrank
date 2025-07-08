@@ -13,6 +13,7 @@ include(
         'domain',
 
         'common',
+        'common:mathrank-role',
         'common:mathrank-dataserializer',
         'common:mathrank-snowflake',
         'common:mathrank-outbox',
