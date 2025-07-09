@@ -12,9 +12,12 @@ import kr.co.mathrank.common.jwt.JwtUtil;
 import kr.co.mathrank.common.jwt.UserInfo;
 import kr.co.mathrank.common.role.Role;
 import kr.co.mathrank.domain.auth.dto.JwtLoginResult;
+import kr.co.mathrank.domain.auth.exception.AuthException;
 import kr.co.mathrank.domain.auth.repository.RefreshTokenRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 @Component
 @Validated
 @RequiredArgsConstructor
@@ -32,7 +35,8 @@ public class JwtLoginManager {
 		if (refreshTokenRepository.isValidRefreshToken(userInfo.userId(), refreshToken)) {
 			return login(userInfo.userId(), Role.USER);
 		}
-		throw new IllegalArgumentException("Invalid refresh token");
+		log.warn("[JwtLoginManager.refresh] refresh token is not valid for userId: {}", userInfo.userId());
+		throw new AuthException();
 	}
 
 	JwtLoginResult login(@NotNull final Long userId, @NotNull final Role role) {

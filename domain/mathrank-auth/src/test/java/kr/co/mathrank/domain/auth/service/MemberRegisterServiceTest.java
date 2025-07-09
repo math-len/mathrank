@@ -10,6 +10,7 @@ import jakarta.validation.ConstraintViolationException;
 import kr.co.mathrank.common.role.Role;
 import kr.co.mathrank.domain.auth.dto.MemberRegisterCommand;
 import kr.co.mathrank.domain.auth.entity.Password;
+import kr.co.mathrank.domain.auth.exception.AuthException;
 
 @SpringBootTest
 @Transactional
@@ -25,7 +26,7 @@ class MemberRegisterServiceTest {
 		final MemberRegisterCommand command = new MemberRegisterCommand(duplicatedId, password, Role.USER);
 
 		memberRegisterService.register(command);
-		Assertions.assertThrows(IllegalArgumentException.class, () -> memberRegisterService.register(command));
+		Assertions.assertThrows(AuthException.class, () -> memberRegisterService.register(command));
 	}
 
 	@Test

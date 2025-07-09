@@ -10,6 +10,7 @@ import org.testcontainers.containers.GenericContainer;
 
 import kr.co.mathrank.common.role.Role;
 import kr.co.mathrank.domain.auth.dto.JwtLoginResult;
+import kr.co.mathrank.domain.auth.exception.AuthException;
 
 @SpringBootTest
 class JwtLoginManagerTest {
@@ -31,7 +32,7 @@ class JwtLoginManagerTest {
 		final JwtLoginResult result = jwtLoginManager.login(1L, Role.USER);
 		final JwtLoginResult anotherLoginResult = jwtLoginManager.login(1L, Role.USER);
 
-		Assertions.assertThrows(IllegalArgumentException.class, () -> jwtLoginManager.refresh(result.refreshToken()));
+		Assertions.assertThrows(AuthException.class, () -> jwtLoginManager.refresh(result.refreshToken()));
 	}
 
 	@Test

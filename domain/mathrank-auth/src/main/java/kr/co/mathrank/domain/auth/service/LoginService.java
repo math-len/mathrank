@@ -13,6 +13,7 @@ import kr.co.mathrank.domain.auth.dto.JwtLoginResult;
 import kr.co.mathrank.domain.auth.dto.LoginCommand;
 import kr.co.mathrank.domain.auth.entity.Member;
 import kr.co.mathrank.domain.auth.entity.Password;
+import kr.co.mathrank.domain.auth.exception.AuthException;
 import kr.co.mathrank.domain.auth.exception.MemberLockedException;
 import kr.co.mathrank.domain.auth.exception.PasswordMismatchedException;
 import kr.co.mathrank.domain.auth.repository.MemberRepository;
@@ -32,7 +33,7 @@ public class LoginService {
 	@Transactional(noRollbackFor = IllegalArgumentException.class)
 	public JwtLoginResult login(@NotNull @Valid final LoginCommand command) {
 		final Member member = memberRepository.findByLoginId(command.loginId())
-			.orElseThrow();
+			.orElseThrow(AuthException::new);
 
 		final LocalDateTime now = LocalDateTime.now();
 		// lock 인지 확인

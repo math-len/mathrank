@@ -10,6 +10,7 @@ import jakarta.validation.constraints.NotNull;
 import kr.co.mathrank.common.snowflake.Snowflake;
 import kr.co.mathrank.domain.auth.dto.MemberRegisterCommand;
 import kr.co.mathrank.domain.auth.entity.Member;
+import kr.co.mathrank.domain.auth.exception.AuthException;
 import kr.co.mathrank.domain.auth.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -27,7 +28,7 @@ public class MemberRegisterService {
 	public Long register(@NotNull @Valid final MemberRegisterCommand command) {
 		if (isExist(command.loginId())) {
 			log.warn("[MemberRegisterService.register] 이미 존재하는 loginId: {}", command.loginId());
-			throw new IllegalArgumentException();
+			throw new AuthException();
 		}
 
 		final Member newMember = Member.of(snowflake.nextId(), command.role(), command.loginId(),
