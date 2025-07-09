@@ -26,6 +26,7 @@ out/
 generated/
 !**/src/main/**/out/
 !**/src/test/**/out/
+app/init/mathrank-problem/src/main/resources/coursedata_replicated.xlsx
 
 ### NetBeans ###
 /nbproject/private/

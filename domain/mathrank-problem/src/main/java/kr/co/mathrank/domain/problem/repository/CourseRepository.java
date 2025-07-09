@@ -13,4 +13,6 @@ import kr.co.mathrank.domain.problem.entity.Path;
 public interface CourseRepository extends JpaRepository<Course, Path> {
 	@Query("SELECT c FROM Course c WHERE c.path.path LIKE CONCAT(:path, '%')")
 	List<Course> queryCourseStartsWith(@Param("path") final String path, Pageable pageable);
+
+	List<Course> findAllByCourseName(String courseName);
 }

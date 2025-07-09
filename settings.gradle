@@ -2,6 +2,8 @@ rootProject.name = 'solver'
 
 include(
         'app',
+        'app:init',
+        'app:init:mathrank-problem',
         'app:api',
         'app:batch',
         'app:consumer',
