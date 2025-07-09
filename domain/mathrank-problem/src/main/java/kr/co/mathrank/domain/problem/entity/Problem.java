@@ -55,6 +55,8 @@ public class Problem implements Persistable<Long> {
 
 	private String answer;
 
+	private Integer years;
+
 	private String solutionVideoLink;
 
 	@CreationTimestamp
@@ -63,7 +65,7 @@ public class Problem implements Persistable<Long> {
 
 	public static Problem of(final Long id, final Long memberId, final String imageSource, final Difficulty difficulty,
 		final AnswerType type, final Course course, final String answer, final String schoolCode,
-		final String solutionVideoLink, final String solutionImage) {
+		final String solutionVideoLink, final String solutionImage, final Integer year) {
 
 		final Problem problem = new Problem();
 		problem.id = id;
@@ -76,6 +78,7 @@ public class Problem implements Persistable<Long> {
 		problem.schoolCode = schoolCode;
 		problem.solutionVideoLink = solutionVideoLink;
 		problem.solutionImage = solutionImage;
+		problem.years = year;
 
 		return problem;
 	}

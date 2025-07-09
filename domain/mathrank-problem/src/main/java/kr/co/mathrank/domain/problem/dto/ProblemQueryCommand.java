@@ -12,6 +12,7 @@ public record ProblemQueryCommand(
 	AnswerType answerType,
 	String path,
 	Boolean videoExist,
+	Integer year,
 	@NotNull
 	@Range(min = 1, max = 20)
 	Integer pageSize,

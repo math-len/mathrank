@@ -34,7 +34,7 @@ public class ProblemService {
 		final Course course = getCourse(command.coursePath());
 
 		final Problem problem = Problem.of(id, command.requestMemberId(), command.imageSource(), command.difficulty(),
-			command.answerType(), course, command.answer(), command.schoolCode(), command.solutionVideoLink(), command.solutionImage());
+			command.answerType(), course, command.answer(), command.schoolCode(), command.solutionVideoLink(), command.solutionImage(), command.year());
 
 		problemRepository.save(problem);
 		return id;

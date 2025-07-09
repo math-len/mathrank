@@ -19,7 +19,7 @@ class ProblemQueryRepositoryImpl implements ProblemQueryRepository {
 	private final JPAQueryFactory queryFactory;
 
 	@Override
-	public List<Problem> query(Long memberId, Difficulty difficulty, AnswerType answerType, String path, Integer pageSize, Integer pageNumber, Boolean solutionVideoLinkExist) {
+	public List<Problem> query(Long memberId, Difficulty difficulty, AnswerType answerType, String path, Integer pageSize, Integer pageNumber, Boolean solutionVideoLinkExist, Integer year) {
 		final QProblem problem = QProblem.problem;
 
 		return queryFactory.query()
@@ -30,7 +30,8 @@ class ProblemQueryRepositoryImpl implements ProblemQueryRepository {
 				difficultyEq(difficulty),
 				answerTypeEq(answerType),
 				problemCourseStartsWith(path),
-				solutionVideoLinkExist(solutionVideoLinkExist)
+				solutionVideoLinkExist(solutionVideoLinkExist),
+				yearMatch(year)
 			)
 			.offset((pageNumber - 1) * pageSize)
 			.limit(pageSize)
@@ -38,7 +39,7 @@ class ProblemQueryRepositoryImpl implements ProblemQueryRepository {
 	}
 
 	@Override
-	public Long count(Long memberId, Difficulty difficulty, String coursePath, AnswerType answerType, Boolean solutionVideoLinkExist) {
+	public Long count(Long memberId, Difficulty difficulty, String coursePath, AnswerType answerType, Boolean solutionVideoLinkExist, Integer year) {
 		final QProblem problem = QProblem.problem;
 
 		return queryFactory.query()
@@ -49,7 +50,8 @@ class ProblemQueryRepositoryImpl implements ProblemQueryRepository {
 				difficultyEq(difficulty),
 				answerTypeEq(answerType),
 				problemCourseStartsWith(coursePath),
-				solutionVideoLinkExist(solutionVideoLinkExist)
+				solutionVideoLinkExist(solutionVideoLinkExist),
+				yearMatch(year)
 			)
 			.fetchOne();
 	}
@@ -90,5 +92,12 @@ class ProblemQueryRepositoryImpl implements ProblemQueryRepository {
 			return QProblem.problem.solutionVideoLink.isNotNull();
 		}
 		return QProblem.problem.solutionVideoLink.isNull();
+	}
+
+	private BooleanExpression yearMatch(final Integer year) {
+		if (year == null) {
+			return null;
+		}
+		return QProblem.problem.years.eq(year);
 	}
 }

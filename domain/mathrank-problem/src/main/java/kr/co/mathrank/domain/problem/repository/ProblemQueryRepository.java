@@ -14,12 +14,14 @@ interface ProblemQueryRepository {
 		 String path,
 		 Integer pageSize,
 		 Integer pageNumber,
-		 Boolean solutionVideoExist);
+		 Boolean solutionVideoExist,
+		 Integer year);
 
 	Long count(
 		Long memberId,
 		Difficulty difficulty,
 		String path,
 		AnswerType answerType,
-		Boolean solutionVideoExist);
+		Boolean solutionVideoExist,
+		Integer year);
 }

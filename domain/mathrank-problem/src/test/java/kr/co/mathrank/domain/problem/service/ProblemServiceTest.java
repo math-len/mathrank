@@ -2,6 +2,7 @@ package kr.co.mathrank.domain.problem.service;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+import java.time.Year;
 import java.util.stream.Stream;
 
 import org.junit.jupiter.api.Assertions;
@@ -54,7 +55,7 @@ class ProblemServiceTest {
 		entityManager.flush();
 		entityManager.clear();
 
-		final ProblemRegisterCommand command = new ProblemRegisterCommand(1L, "image.jpeg", "image.jpeg", AnswerType.MULTIPLE_CHOICE, path.getPath(), Difficulty.LEVEL_FIVE, "testCode", "answer", null);
+		final ProblemRegisterCommand command = new ProblemRegisterCommand(1L, "image.jpeg", "image.jpeg", AnswerType.MULTIPLE_CHOICE, path.getPath(), Difficulty.LEVEL_FIVE, "testCode", "answer", 1001, null);
 		final Long problemId = problemService.save(command);
 
 		final ProblemUpdateCommand updateCommand = new ProblemUpdateCommand(problemId, 1L, "newImage.jpeg", AnswerType.SHORT_ANSWER, Difficulty.LEVEL_THREE, path.getPath(), "newTestCode", "newAnswer");
@@ -77,7 +78,7 @@ class ProblemServiceTest {
 		entityManager.flush();
 		entityManager.clear();
 
-		final ProblemRegisterCommand command = new ProblemRegisterCommand(1L, "image.jpeg", "image.jpeg", AnswerType.MULTIPLE_CHOICE, path.getPath(), Difficulty.LEVEL_FIVE, "testCode", "answer", null);
+		final ProblemRegisterCommand command = new ProblemRegisterCommand(1L, "image.jpeg", "image.jpeg", AnswerType.MULTIPLE_CHOICE, path.getPath(), Difficulty.LEVEL_FIVE, "testCode", "answer", 1001, null);
 		final Long problemId = problemService.save(command);
 
 		final ProblemUpdateCommand updateCommand = new ProblemUpdateCommand(problemId, 2L, "newImage.jpeg", AnswerType.SHORT_ANSWER, Difficulty.LEVEL_THREE, path.getPath(), "newTestCode", "newAnswer");
@@ -93,7 +94,7 @@ class ProblemServiceTest {
 		entityManager.flush();
 		entityManager.clear();
 
-		final ProblemRegisterCommand command = new ProblemRegisterCommand(1L, "image.jpeg", "image.jpeg", AnswerType.MULTIPLE_CHOICE, path.getPath(), Difficulty.LEVEL_FIVE, "testCode", "answer", null);
+		final ProblemRegisterCommand command = new ProblemRegisterCommand(1L, "image.jpeg", "image.jpeg", AnswerType.MULTIPLE_CHOICE, path.getPath(), Difficulty.LEVEL_FIVE, "testCode", "answer", 1001, null);
 		final Long problemId = problemService.save(command);
 
 		entityManager.flush();
@@ -117,7 +118,7 @@ class ProblemServiceTest {
 		entityManager.clear();
 
 		final ProblemRegisterCommand command = new ProblemRegisterCommand(1L, "image.jpeg", "image.jpeg", AnswerType.MULTIPLE_CHOICE,
-			path.getPath(), Difficulty.LEVEL_FIVE, "testCode", "answer", null);
+			path.getPath(), Difficulty.LEVEL_FIVE, "testCode", "answer", 1001, null);
 		final Long problemId = problemService.save(command);
 
 		final ProblemDeleteCommand deleteCommand = new ProblemDeleteCommand(problemId, 2L);
@@ -127,13 +128,13 @@ class ProblemServiceTest {
 
 	private static Stream<Arguments> argumentsStream() {
 		return Stream.of(
-			Arguments.of(new ProblemRegisterCommand(			null, "image.jpeg", null, AnswerType.MULTIPLE_CHOICE, "aa", Difficulty.LEVEL_FIVE, "testCode", "answer", null)),
-			Arguments.of(new ProblemRegisterCommand(			1L, null, null, AnswerType.MULTIPLE_CHOICE, "aa", Difficulty.LEVEL_FIVE, "testCode", "answer", null)),
-			Arguments.of(new ProblemRegisterCommand(			1L, "image.jpeg", null, null, "aa", Difficulty.LEVEL_FIVE, "testCode", "answer", null)),
-			Arguments.of(new ProblemRegisterCommand(			1L, "image.jpeg", null, AnswerType.MULTIPLE_CHOICE, "aa", null, "testCode", "answer", null)),
-			Arguments.of(new ProblemRegisterCommand(			1L, "image.jpeg", null, AnswerType.MULTIPLE_CHOICE, "aa", Difficulty.LEVEL_FIVE, null, "answer", null)),
-			Arguments.of(new ProblemRegisterCommand(			1L, "image.jpeg", null, AnswerType.MULTIPLE_CHOICE, "aa", Difficulty.LEVEL_FIVE, "testCode", "", null)),
-			Arguments.of(new ProblemRegisterCommand(			1L, "image.jpeg", null, AnswerType.MULTIPLE_CHOICE, "aa", Difficulty.LEVEL_FIVE, "testCode", null, null))
+			Arguments.of(new ProblemRegisterCommand(			null, "image.jpeg", null, AnswerType.MULTIPLE_CHOICE, "aa", Difficulty.LEVEL_FIVE, "testCode", "answer", 1001, null)),
+			Arguments.of(new ProblemRegisterCommand(			1L, null, null, AnswerType.MULTIPLE_CHOICE, "aa", Difficulty.LEVEL_FIVE, "testCode", "answer", 1001, null)),
+			Arguments.of(new ProblemRegisterCommand(			1L, "image.jpeg", null, null, "aa", Difficulty.LEVEL_FIVE, "testCode", "answer", 1001, null)),
+			Arguments.of(new ProblemRegisterCommand(			1L, "image.jpeg", null, AnswerType.MULTIPLE_CHOICE, "aa", null, "testCode", "answer", 1001, null)),
+			Arguments.of(new ProblemRegisterCommand(			1L, "image.jpeg", null, AnswerType.MULTIPLE_CHOICE, "aa", Difficulty.LEVEL_FIVE, null, "answer", 1001, null)),
+			Arguments.of(new ProblemRegisterCommand(			1L, "image.jpeg", null, AnswerType.MULTIPLE_CHOICE, "aa", Difficulty.LEVEL_FIVE, "testCode", "", 1001, null)),
+			Arguments.of(new ProblemRegisterCommand(			1L, "image.jpeg", null, AnswerType.MULTIPLE_CHOICE, "aa", Difficulty.LEVEL_FIVE, "testCode", null, 1001, null))
 		);
 	}
 }
