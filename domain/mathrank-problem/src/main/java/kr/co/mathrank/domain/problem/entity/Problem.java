@@ -26,7 +26,8 @@ import lombok.extern.slf4j.Slf4j;
 @Table(name = "problem", indexes = {
 	@Index(name = "idx_member_id", columnList = "member_id"),
 	@Index(name = "idx_difficulty", columnList = "difficulty"),
-	@Index(name = "idx_type", columnList = "type")
+	@Index(name = "idx_type", columnList = "type"),
+	@Index(name = "idx_videoLink", columnList = "solution_video_link")
 })
 @Getter
 @Setter
@@ -54,12 +55,14 @@ public class Problem implements Persistable<Long> {
 
 	private String answer;
 
+	private String solutionVideoLink;
+
 	@CreationTimestamp
 	@Setter(AccessLevel.NONE)
 	private LocalDateTime createdAt;
 
 	public static Problem of(final Long id, final Long memberId, final String imageSource, final Difficulty difficulty,
-		final AnswerType type, final Course course, final String answer, final String schoolCode) {
+		final AnswerType type, final Course course, final String answer, final String schoolCode, final String solutionVideoLink) {
 
 		final Problem problem = new Problem();
 		problem.id = id;
@@ -70,6 +73,7 @@ public class Problem implements Persistable<Long> {
 		problem.answer = answer;
 		problem.course = course;
 		problem.schoolCode = schoolCode;
+		problem.solutionVideoLink = solutionVideoLink;
 
 		return problem;
 	}

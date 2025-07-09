@@ -19,7 +19,7 @@ class ProblemQueryRepositoryImpl implements ProblemQueryRepository {
 	private final JPAQueryFactory queryFactory;
 
 	@Override
-	public List<Problem> query(Long memberId, Difficulty difficulty, AnswerType answerType, String path, Integer pageSize, Integer pageNumber) {
+	public List<Problem> query(Long memberId, Difficulty difficulty, AnswerType answerType, String path, Integer pageSize, Integer pageNumber, Boolean solutionVideoLinkExist) {
 		final QProblem problem = QProblem.problem;
 
 		return queryFactory.query()
@@ -29,7 +29,8 @@ class ProblemQueryRepositoryImpl implements ProblemQueryRepository {
 				memberIdEq(memberId),
 				difficultyEq(difficulty),
 				answerTypeEq(answerType),
-				problemCourseStartsWith(path)
+				problemCourseStartsWith(path),
+				solutionVideoLinkExist(solutionVideoLinkExist)
 			)
 			.offset((pageNumber - 1) * pageSize)
 			.limit(pageSize)
@@ -37,7 +38,7 @@ class ProblemQueryRepositoryImpl implements ProblemQueryRepository {
 	}
 
 	@Override
-	public Long count(Long memberId, Difficulty difficulty, String coursePath, AnswerType answerType) {
+	public Long count(Long memberId, Difficulty difficulty, String coursePath, AnswerType answerType, Boolean solutionVideoLinkExist) {
 		final QProblem problem = QProblem.problem;
 
 		return queryFactory.query()
@@ -47,7 +48,8 @@ class ProblemQueryRepositoryImpl implements ProblemQueryRepository {
 				memberIdEq(memberId),
 				difficultyEq(difficulty),
 				answerTypeEq(answerType),
-				problemCourseStartsWith(coursePath)
+				problemCourseStartsWith(coursePath),
+				solutionVideoLinkExist(solutionVideoLinkExist)
 			)
 			.fetchOne();
 	}
@@ -78,5 +80,15 @@ class ProblemQueryRepositoryImpl implements ProblemQueryRepository {
 			return null;
 		}
 		return QProblem.problem.course.path.path.startsWith(path);
+	}
+
+	private BooleanExpression solutionVideoLinkExist(final Boolean solutionVideoLinkExist) {
+		if (solutionVideoLinkExist == null) {
+			return null;
+		}
+		if (solutionVideoLinkExist) {
+			return QProblem.problem.solutionVideoLink.isNotNull();
+		}
+		return QProblem.problem.solutionVideoLink.isNull();
 	}
 }

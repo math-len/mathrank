@@ -29,11 +29,13 @@ public class ProblemQueryService {
 			command.answerType(),
 			command.path(),
 			command.pageSize(),
-			command.pageNumber());
+			command.pageNumber(),
+			command.videoExist());
 		final Long totalCount = problemRepository.count(command.memberId(),
 			command.difficulty(),
 			command.path(),
-			command.answerType());
+			command.answerType(),
+			command.videoExist());
 
 		return ProblemQueryPageResult.of(
 			problems,

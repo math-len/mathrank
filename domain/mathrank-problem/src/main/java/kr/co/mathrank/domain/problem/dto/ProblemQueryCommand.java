@@ -11,6 +11,7 @@ public record ProblemQueryCommand(
 	Difficulty difficulty,
 	AnswerType answerType,
 	String path,
+	Boolean videoExist,
 	@NotNull
 	@Range(min = 1, max = 20)
 	Integer pageSize,

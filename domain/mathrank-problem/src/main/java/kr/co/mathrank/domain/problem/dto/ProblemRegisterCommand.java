@@ -19,6 +19,7 @@ public record ProblemRegisterCommand(
 	@NotNull
 	String schoolCode,
 	@NotBlank
-	String answer
+	String answer,
+	String solutionVideoLink
 ) {
 }
