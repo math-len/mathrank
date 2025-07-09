@@ -18,7 +18,7 @@ class ProblemTest {
 
 	@Test
 	void 영속화될때_새로운_엔티티로_판단한다() {
-		final Problem problem = Problem.of(1L, 2L, "문제.jpeg", Difficulty.LEVEL_FIVE, AnswerType.MULTIPLE_CHOICE, Course.of("test", new Path()), "1", "testCode", null);
+		final Problem problem = Problem.of(1L, 2L, "문제.jpeg", Difficulty.LEVEL_FIVE, AnswerType.MULTIPLE_CHOICE, Course.of("test", new Path()), "1", "testCode", null, null);
 		final Problem savedProblem = problemRepository.save(problem);
 
 		// save 시, merge 면 새로운 엔티티를 반환한다.

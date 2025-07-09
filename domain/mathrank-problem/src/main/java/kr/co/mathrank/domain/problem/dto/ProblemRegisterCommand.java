@@ -10,6 +10,8 @@ public record ProblemRegisterCommand(
 	Long requestMemberId,
 	@NotNull
 	String imageSource,
+	@NotBlank
+	String solutionImage,
 	@NotNull
 	AnswerType answerType,
 	@NotNull

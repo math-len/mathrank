@@ -1,12 +1,10 @@
 package kr.co.mathrank.domain.problem.entity;
 
 import java.time.LocalDateTime;
-import java.util.List;
 
 import org.hibernate.annotations.CreationTimestamp;
 import org.springframework.data.domain.Persistable;
 
-import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
@@ -42,6 +40,8 @@ public class Problem implements Persistable<Long> {
 
 	private String imageSource;
 
+	private String solutionImage;
+
 	@Enumerated(EnumType.STRING)
 	private Difficulty difficulty;
 
@@ -62,7 +62,8 @@ public class Problem implements Persistable<Long> {
 	private LocalDateTime createdAt;
 
 	public static Problem of(final Long id, final Long memberId, final String imageSource, final Difficulty difficulty,
-		final AnswerType type, final Course course, final String answer, final String schoolCode, final String solutionVideoLink) {
+		final AnswerType type, final Course course, final String answer, final String schoolCode,
+		final String solutionVideoLink, final String solutionImage) {
 
 		final Problem problem = new Problem();
 		problem.id = id;
@@ -74,6 +75,7 @@ public class Problem implements Persistable<Long> {
 		problem.course = course;
 		problem.schoolCode = schoolCode;
 		problem.solutionVideoLink = solutionVideoLink;
+		problem.solutionImage = solutionImage;
 
 		return problem;
 	}
