@@ -13,6 +13,8 @@ import kr.co.mathrank.common.role.Role;
 import kr.co.mathrank.domain.auth.dto.LoginCommand;
 import kr.co.mathrank.domain.auth.dto.MemberRegisterCommand;
 import kr.co.mathrank.domain.auth.entity.Password;
+import kr.co.mathrank.domain.auth.exception.MemberLockedException;
+import kr.co.mathrank.domain.auth.exception.PasswordMismatchedException;
 
 @SpringBootTest
 @Transactional
@@ -48,6 +50,37 @@ class LoginServiceTest {
 		final Password wrongPassword = new Password("wrong");
 
 		memberRegisterService.register(new MemberRegisterCommand(loginId, password, Role.USER));
-		Assertions.assertThrows(IllegalArgumentException.class, () -> loginService.login(new LoginCommand(loginId, wrongPassword)));
+		Assertions.assertThrows(
+			PasswordMismatchedException.class, () -> loginService.login(new LoginCommand(loginId, wrongPassword)));
+	}
+
+	@Test
+	void 로그인_실패_횟수_초과시_로그인_불가() {
+		final String loginId = "loginId";
+		final Password password = new Password("test");
+		final Password wrongPassword = new Password("wrong");
+
+		memberRegisterService.register(new MemberRegisterCommand(loginId, password, Role.USER));
+
+		for (int i = 0; i < 3; i ++) {
+			Assertions.assertThrows(PasswordMismatchedException.class, () -> loginService.login(new LoginCommand(loginId, wrongPassword)));
+		}
+		Assertions.assertThrows(MemberLockedException.class, () -> loginService.login(new LoginCommand(loginId, password)));
+	}
+
+	@Test
+	void 로그인_성공_시_잠금_초기화() {
+		final String loginId = "loginId";
+		final Password password = new Password("test");
+		final Password wrongPassword = new Password("wrong");
+
+		memberRegisterService.register(new MemberRegisterCommand(loginId, password, Role.USER));
+
+		for (int i = 0; i < 2; i ++) {
+			Assertions.assertThrows(PasswordMismatchedException.class, () -> loginService.login(new LoginCommand(loginId, wrongPassword)));
+		}
+
+		loginService.login(new LoginCommand(loginId, password));
+		Assertions.assertThrows(PasswordMismatchedException.class, () -> loginService.login(new LoginCommand(loginId, wrongPassword)));
 	}
 }
