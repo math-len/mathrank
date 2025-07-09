@@ -5,14 +5,12 @@ import java.time.LocalDateTime;
 import kr.co.mathrank.domain.problem.entity.AnswerType;
 import kr.co.mathrank.domain.problem.entity.Difficulty;
 import kr.co.mathrank.domain.problem.entity.Problem;
-import kr.co.mathrank.domain.problem.entity.ProblemCourse;
 
 public record ProblemQueryResult(
 	Long id,
 	Long memberId,
 	String imageSource,
 	Difficulty difficulty,
-	ProblemCourse problemCourse,
 	AnswerType type,
 	String schoolCode,
 	String answer,
@@ -24,7 +22,6 @@ public record ProblemQueryResult(
 			problem.getMemberId(),
 			problem.getImageSource(),
 			problem.getDifficulty(),
-			problem.getProblemCourse(),
 			problem.getType(),
 			problem.getSchoolCode(),
 			problem.getAnswer(),

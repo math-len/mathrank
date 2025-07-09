@@ -6,27 +6,41 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
 
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
 import kr.co.mathrank.domain.problem.dto.ProblemQueryCommand;
 import kr.co.mathrank.domain.problem.dto.ProblemQueryPageResult;
 import kr.co.mathrank.domain.problem.entity.AnswerType;
+import kr.co.mathrank.domain.problem.entity.Course;
 import kr.co.mathrank.domain.problem.entity.Difficulty;
+import kr.co.mathrank.domain.problem.entity.Path;
 import kr.co.mathrank.domain.problem.entity.Problem;
-import kr.co.mathrank.domain.problem.entity.ProblemCourse;
+import kr.co.mathrank.domain.problem.repository.CourseRepository;
 import kr.co.mathrank.domain.problem.repository.ProblemRepository;
 
 @SpringBootTest
 @Transactional
 class ProblemQueryServiceTest {
+	@PersistenceContext
+	private EntityManager entityManager;
 	@Autowired
 	private ProblemQueryService problemQueryService;
 	@Autowired
 	private ProblemRepository problemRepository;
+	@Autowired
+	private CourseRepository courseRepository;
 
 	@Test
 	void 문제_조회_테스트() {
+		final Path path = new Path();
+		final Course course = Course.of("test", path);
+		courseRepository.save(course);
+		entityManager.flush();
+		entityManager.clear();
+
 		// memberId가 1인 문제를 10개 등록한다.
 		for (int i = 0; i < 10; i++) {
-			final Problem problem = Problem.of((long) i, 1L, "문제.jpeg", Difficulty.LEVEL_FIVE, AnswerType.MULTIPLE_CHOICE, ProblemCourse.ELEMENTARY , "1", "testCode");
+			final Problem problem = Problem.of((long) i, 1L, "문제.jpeg", Difficulty.LEVEL_FIVE, AnswerType.MULTIPLE_CHOICE, course , "1", "testCode");
 			problemRepository.save(problem);
 		}
 

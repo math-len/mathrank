@@ -4,7 +4,6 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import kr.co.mathrank.domain.problem.entity.AnswerType;
 import kr.co.mathrank.domain.problem.entity.Difficulty;
-import kr.co.mathrank.domain.problem.entity.ProblemCourse;
 
 public record ProblemRegisterCommand(
 	@NotNull
@@ -14,12 +13,12 @@ public record ProblemRegisterCommand(
 	@NotNull
 	AnswerType answerType,
 	@NotNull
+	String coursePath,
+	@NotNull
 	Difficulty difficulty,
 	@NotNull
 	String schoolCode,
 	@NotBlank
-	String answer,
-	@NotNull
-	ProblemCourse problemCourse
+	String answer
 ) {
 }

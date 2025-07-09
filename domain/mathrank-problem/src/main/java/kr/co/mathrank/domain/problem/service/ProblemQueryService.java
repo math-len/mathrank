@@ -27,13 +27,13 @@ public class ProblemQueryService {
 		final List<Problem> problems = problemRepository.query(command.memberId(),
 			command.difficulty(),
 			command.answerType(),
-			command.problemCourse(),
+			command.path(),
 			command.pageSize(),
 			command.pageNumber());
 		final Long totalCount = problemRepository.count(command.memberId(),
 			command.difficulty(),
-			command.answerType(),
-			command.problemCourse());
+			command.path(),
+			command.answerType());
 
 		return ProblemQueryPageResult.of(
 			problems,

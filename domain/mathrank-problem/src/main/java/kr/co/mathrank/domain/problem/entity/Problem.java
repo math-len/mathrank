@@ -1,6 +1,7 @@
 package kr.co.mathrank.domain.problem.entity;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 import org.hibernate.annotations.CreationTimestamp;
 import org.springframework.data.domain.Persistable;
@@ -9,8 +10,10 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Index;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -23,8 +26,7 @@ import lombok.extern.slf4j.Slf4j;
 @Table(name = "problem", indexes = {
 	@Index(name = "idx_member_id", columnList = "member_id"),
 	@Index(name = "idx_difficulty", columnList = "difficulty"),
-	@Index(name = "idx_problem_course", columnList = "problem_course"),
-	@Index(name = "idx_type", columnList = "type"),
+	@Index(name = "idx_type", columnList = "type")
 })
 @Getter
 @Setter
@@ -43,10 +45,10 @@ public class Problem implements Persistable<Long> {
 	private Difficulty difficulty;
 
 	@Enumerated(EnumType.STRING)
-	private ProblemCourse problemCourse;
-
-	@Enumerated(EnumType.STRING)
 	private AnswerType type;
+
+	@ManyToOne(fetch = FetchType.LAZY)
+	private Course course;
 
 	private String schoolCode;
 
@@ -57,7 +59,7 @@ public class Problem implements Persistable<Long> {
 	private LocalDateTime createdAt;
 
 	public static Problem of(final Long id, final Long memberId, final String imageSource, final Difficulty difficulty,
-		final AnswerType type, final ProblemCourse course, final String answer, final String schoolCode) {
+		final AnswerType type, final Course course, final String answer, final String schoolCode) {
 
 		final Problem problem = new Problem();
 		problem.id = id;
@@ -65,8 +67,8 @@ public class Problem implements Persistable<Long> {
 		problem.imageSource = imageSource;
 		problem.difficulty = difficulty;
 		problem.type = type;
-		problem.problemCourse = course;
 		problem.answer = answer;
+		problem.course = course;
 		problem.schoolCode = schoolCode;
 
 		return problem;

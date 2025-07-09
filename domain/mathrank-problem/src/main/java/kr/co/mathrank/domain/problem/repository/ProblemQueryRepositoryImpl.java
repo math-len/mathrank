@@ -10,7 +10,6 @@ import com.querydsl.jpa.impl.JPAQueryFactory;
 import kr.co.mathrank.domain.problem.entity.AnswerType;
 import kr.co.mathrank.domain.problem.entity.Difficulty;
 import kr.co.mathrank.domain.problem.entity.Problem;
-import kr.co.mathrank.domain.problem.entity.ProblemCourse;
 import kr.co.mathrank.domain.problem.entity.QProblem;
 import lombok.RequiredArgsConstructor;
 
@@ -20,7 +19,7 @@ class ProblemQueryRepositoryImpl implements ProblemQueryRepository {
 	private final JPAQueryFactory queryFactory;
 
 	@Override
-	public List<Problem> query(Long memberId, Difficulty difficulty, AnswerType answerType, ProblemCourse problemCourse, Integer pageSize, Integer pageNumber) {
+	public List<Problem> query(Long memberId, Difficulty difficulty, AnswerType answerType, String path, Integer pageSize, Integer pageNumber) {
 		final QProblem problem = QProblem.problem;
 
 		return queryFactory.query()
@@ -30,7 +29,7 @@ class ProblemQueryRepositoryImpl implements ProblemQueryRepository {
 				memberIdEq(memberId),
 				difficultyEq(difficulty),
 				answerTypeEq(answerType),
-				problemCourseEq(problemCourse)
+				problemCourseStartsWith(path)
 			)
 			.offset((pageNumber - 1) * pageSize)
 			.limit(pageSize)
@@ -38,7 +37,7 @@ class ProblemQueryRepositoryImpl implements ProblemQueryRepository {
 	}
 
 	@Override
-	public Long count(Long memberId, Difficulty difficulty, AnswerType answerType, ProblemCourse problemCourse) {
+	public Long count(Long memberId, Difficulty difficulty, String coursePath, AnswerType answerType) {
 		final QProblem problem = QProblem.problem;
 
 		return queryFactory.query()
@@ -48,7 +47,7 @@ class ProblemQueryRepositoryImpl implements ProblemQueryRepository {
 				memberIdEq(memberId),
 				difficultyEq(difficulty),
 				answerTypeEq(answerType),
-				problemCourseEq(problemCourse)
+				problemCourseStartsWith(coursePath)
 			)
 			.fetchOne();
 	}
@@ -74,10 +73,10 @@ class ProblemQueryRepositoryImpl implements ProblemQueryRepository {
 		return QProblem.problem.type.eq(answerType);
 	}
 
-	private BooleanExpression problemCourseEq(final ProblemCourse problemCourse) {
-		if (problemCourse == null) {
+	private BooleanExpression problemCourseStartsWith(final String path) {
+		if (path == null) {
 			return null;
 		}
-		return QProblem.problem.problemCourse.eq(problemCourse);
+		return QProblem.problem.course.path.path.startsWith(path);
 	}
 }
