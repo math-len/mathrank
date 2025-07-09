@@ -26,6 +26,9 @@ public class Member {
 
 	private String password;
 
+	@Embedded
+	private final LockInfo lockInfo = new LockInfo();
+
 	public static Member of(Long id, Role role, String loginId, String password) {
 		final Member member = new Member();
 		member.id = id;
