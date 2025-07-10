@@ -38,6 +38,14 @@ public class Path {
 		return this.path.length() / DEPTH_CHUNK_SIZE;
 	}
 
+	public int getChildDepth() {
+		return getDepth() + 1;
+	}
+
+	public int getChildLength() {
+		return getChildDepth() * DEPTH_CHUNK_SIZE;
+	}
+
 	/**
 	 * @param latestPath 해당 {@code Path}를 거치는 모든 경로를 오름차순 정렬했을때, 가장 마지막의 {@code Path}
 	 * @return 유일한 자식경로

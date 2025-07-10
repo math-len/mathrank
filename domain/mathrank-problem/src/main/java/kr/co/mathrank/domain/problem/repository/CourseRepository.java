@@ -14,5 +14,8 @@ public interface CourseRepository extends JpaRepository<Course, Path> {
 	@Query("SELECT c FROM Course c WHERE c.path.path LIKE CONCAT(:path, '%')")
 	List<Course> queryCourseStartsWith(@Param("path") final String path, Pageable pageable);
 
+	@Query("SELECT c FROM Course c WHERE c.path.path LIKE CONCAT(:path, '%') AND LENGTH(c.path.path) = :depthLength")
+	List<Course> queryChildes(@Param("path") final String path, @Param("depthLength") final Integer targetPathLength);
+
 	List<Course> findAllByCourseName(String courseName);
 }
