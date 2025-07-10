@@ -5,6 +5,7 @@ import java.time.LocalDateTime;
 import org.hibernate.annotations.CreationTimestamp;
 import org.springframework.data.domain.Persistable;
 
+import jakarta.persistence.Convert;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
@@ -42,7 +43,7 @@ public class Problem implements Persistable<Long> {
 
 	private String solutionImage;
 
-	@Enumerated(EnumType.STRING)
+	@Convert(converter = DifficultyConverter.class)
 	private Difficulty difficulty;
 
 	@Enumerated(EnumType.STRING)
