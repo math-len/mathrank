@@ -2,18 +2,23 @@ rootProject.name = 'solver'
 
 include(
         'app',
+        'app:init',
+        'app:init:mathrank-problem',
         'app:api',
         'app:api:mathrank-common',
         'app:api:mathrank-auth',
+        'app:api:mathrank-school-read',
         'app:batch',
         'app:consumer',
 
         'client',
-        'client:in',
-        'client:out',
+        'client:internal',
+        'client:external',
+        'client:external:mathrank-school',
 
         'domain',
         'domain:mathrank-auth',
+        'domain:mathrank-problem',
 
         'common',
         'common:mathrank-jwt',
