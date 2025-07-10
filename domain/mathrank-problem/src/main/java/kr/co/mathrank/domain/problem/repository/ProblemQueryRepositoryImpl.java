@@ -19,7 +19,9 @@ class ProblemQueryRepositoryImpl implements ProblemQueryRepository {
 	private final JPAQueryFactory queryFactory;
 
 	@Override
-	public List<Problem> query(Long memberId, Difficulty difficulty, AnswerType answerType, String path, Integer pageSize, Integer pageNumber, Boolean solutionVideoLinkExist, Integer year) {
+	public List<Problem> query(Long memberId, Difficulty difficultyMinInclude,
+		Difficulty difficultyMaxInclude, AnswerType answerType, String path, Integer pageSize, Integer pageNumber,
+		Boolean solutionVideoLinkExist, Integer year) {
 		final QProblem problem = QProblem.problem;
 
 		return queryFactory.query()
@@ -27,7 +29,7 @@ class ProblemQueryRepositoryImpl implements ProblemQueryRepository {
 			.from(problem)
 			.where(
 				memberIdEq(memberId),
-				difficultyEq(difficulty),
+				difficultyIn(difficultyMinInclude, difficultyMaxInclude),
 				answerTypeEq(answerType),
 				problemCourseStartsWith(path),
 				solutionVideoLinkExist(solutionVideoLinkExist),
@@ -39,7 +41,8 @@ class ProblemQueryRepositoryImpl implements ProblemQueryRepository {
 	}
 
 	@Override
-	public Long count(Long memberId, Difficulty difficulty, String coursePath, AnswerType answerType, Boolean solutionVideoLinkExist, Integer year) {
+	public Long count(Long memberId, Difficulty difficultyMinInclude, Difficulty difficultyMaxInclude,
+		String coursePath, AnswerType answerType, Boolean solutionVideoLinkExist, Integer year) {
 		final QProblem problem = QProblem.problem;
 
 		return queryFactory.query()
@@ -47,7 +50,7 @@ class ProblemQueryRepositoryImpl implements ProblemQueryRepository {
 			.from(problem)
 			.where(
 				memberIdEq(memberId),
-				difficultyEq(difficulty),
+				difficultyIn(difficultyMinInclude, difficultyMaxInclude),
 				answerTypeEq(answerType),
 				problemCourseStartsWith(coursePath),
 				solutionVideoLinkExist(solutionVideoLinkExist),
@@ -63,11 +66,11 @@ class ProblemQueryRepositoryImpl implements ProblemQueryRepository {
 		return QProblem.problem.memberId.eq(memberId);
 	}
 
-	private BooleanExpression difficultyEq(final Difficulty difficulty) {
-		if (difficulty == null) {
+	private BooleanExpression difficultyIn(final Difficulty minInclude, final Difficulty maxInclude) {
+		if (minInclude == null && maxInclude == null) {
 			return null;
 		}
-		return QProblem.problem.difficulty.eq(difficulty);
+		return QProblem.problem.difficulty.between(minInclude, maxInclude);
 	}
 
 	private BooleanExpression answerTypeEq(final AnswerType answerType) {

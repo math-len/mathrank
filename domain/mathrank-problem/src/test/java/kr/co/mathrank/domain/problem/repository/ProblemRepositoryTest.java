@@ -47,7 +47,7 @@ class ProblemRepositoryTest {
 		problemRepository.save(owner1);
 		problemRepository.save(owner2);
 
-		final List<Problem> problems = problemRepository.query(1L, null, null, null, 10, 1, null, 1001);
+		final List<Problem> problems = problemRepository.query(1L, null, null,null, null, 10, 1, null, 1001);
 
 		Assertions.assertEquals(1, problems.size());
 	}
@@ -66,7 +66,7 @@ class ProblemRepositoryTest {
 		problemRepository.save(problem1);
 		problemRepository.save(problem2);
 
-		final List<Problem> problems = problemRepository.query(null, null, null, null, 10, 1, null, 1001);
+		final List<Problem> problems = problemRepository.query(null, null, null, null, null, 10, 1, null, 1001);
 
 		Assertions.assertEquals(2, problems.size());
 	}
@@ -88,7 +88,7 @@ class ProblemRepositoryTest {
 		problemRepository.save(problem1);
 		problemRepository.save(problem2);
 
-		final List<Problem> problems = problemRepository.query(null, Difficulty.KILLER, null, null, 10, 1, null, 1001);
+		final List<Problem> problems = problemRepository.query(null, Difficulty.KILLER, Difficulty.KILLER, null, null, 10, 1, null, 1001);
 
 		Assertions.assertEquals(1, problems.size());
 	}
@@ -107,7 +107,7 @@ class ProblemRepositoryTest {
 		problemRepository.save(problem1);
 		problemRepository.save(problem2);
 
-		final List<Problem> problems = problemRepository.query(1L, Difficulty.KILLER, AnswerType.MULTIPLE_CHOICE,
+		final List<Problem> problems = problemRepository.query(1L, Difficulty.KILLER, Difficulty.KILLER, AnswerType.MULTIPLE_CHOICE,
 			"aa", 10, 1, null, 1001);
 
 		Assertions.assertEquals(1, problems.size());
@@ -127,7 +127,7 @@ class ProblemRepositoryTest {
 		problemRepository.save(problem1);
 		problemRepository.save(problem2);
 
-		final List<Problem> problems = problemRepository.query(null, Difficulty.HIGH, null, null, 10, 1, null, 1001);
+		final List<Problem> problems = problemRepository.query(null, Difficulty.HIGH, Difficulty.HIGH, null, null, 10, 1, null, 1001);
 
 		Assertions.assertTrue(problems.isEmpty());
 	}
@@ -145,7 +145,7 @@ class ProblemRepositoryTest {
 			problemRepository.save(problem);
 		}
 
-		assertEquals(10, problemRepository.count(null, null, null, null, null, 1001));
+		assertEquals(10, problemRepository.count(null, null, null, null, null, null, 1001));
 	}
 
 	@Test
@@ -167,7 +167,7 @@ class ProblemRepositoryTest {
 			problemRepository.save(problem);
 		}
 
-		assertEquals(10, problemRepository.count(null, Difficulty.KILLER, null, null, null, 1001));
+		assertEquals(10, problemRepository.count(null, Difficulty.KILLER, Difficulty.KILLER, null, null, null, 1001));
 	}
 
 	@Test
@@ -189,7 +189,7 @@ class ProblemRepositoryTest {
 			problemRepository.save(problem);
 		}
 
-		assertEquals(20, problemRepository.count(null, null, null, null, null, 1001));
+		assertEquals(20, problemRepository.count(null, null, null, null, null, null, 1001));
 	}
 
 	@Test
@@ -213,6 +213,6 @@ class ProblemRepositoryTest {
 			problemRepository.save(problem);
 		}
 
-		Assertions.assertEquals(20, problemRepository.query(null, null, null, path.getPath(), 100, 1, null, 1001).size());
+		Assertions.assertEquals(20, problemRepository.query(null, null, null, null, path.getPath(), 100, 1, null, 1001).size());
 	}
 }

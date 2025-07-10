@@ -8,7 +8,8 @@ import kr.co.mathrank.domain.problem.entity.Difficulty;
 
 public record ProblemQueryCommand(
 	Long memberId,
-	Difficulty difficulty,
+	Difficulty difficultyMinInclude,
+	Difficulty difficultyMaxInclude,
 	AnswerType answerType,
 	String path,
 	Boolean videoExist,

@@ -12,6 +12,7 @@ import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 import kr.co.mathrank.domain.problem.dto.ProblemQueryCommand;
 import kr.co.mathrank.domain.problem.dto.ProblemQueryPageResult;
+import kr.co.mathrank.domain.problem.entity.Difficulty;
 import kr.co.mathrank.domain.problem.entity.Problem;
 import kr.co.mathrank.domain.problem.repository.ProblemRepository;
 import lombok.RequiredArgsConstructor;
@@ -25,7 +26,8 @@ public class ProblemQueryService {
 	@Transactional
 	public ProblemQueryPageResult query(@NotNull @Valid final ProblemQueryCommand command) {
 		final List<Problem> problems = problemRepository.query(command.memberId(),
-			command.difficulty(),
+			command.difficultyMinInclude(),
+			command.difficultyMaxInclude(),
 			command.answerType(),
 			command.path(),
 			command.pageSize(),
@@ -33,7 +35,8 @@ public class ProblemQueryService {
 			command.videoExist(),
 			command.year());
 		final Long totalCount = problemRepository.count(command.memberId(),
-			command.difficulty(),
+			command.difficultyMinInclude(),
+			command.difficultyMaxInclude(),
 			command.path(),
 			command.answerType(),
 			command.videoExist(),
