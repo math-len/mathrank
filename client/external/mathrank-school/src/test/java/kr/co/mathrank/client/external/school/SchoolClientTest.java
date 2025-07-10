@@ -17,12 +17,12 @@ class SchoolClientTest {
 	void 결과가_있을때() {
 		final SchoolResponse schoolResponse = schoolClient.getSchools(RequestType.JSON.getType(), 2, 10, "대연");
 		System.out.println(schoolResponse);
-		Assertions.assertFalse(schoolResponse.schoolInfo().isEmpty());
+		Assertions.assertFalse(schoolResponse.getSchoolInfo().isEmpty());
 	}
 
 	@Test
 	void 결과가_없을때() {
 		final SchoolResponse schoolResponse = schoolClient.getSchools(RequestType.JSON.getType(), 2, 10, "ㅂㅈ두버ㅕ룾ㅂ");
-		Assertions.assertNull(schoolResponse.schoolInfo());
+		Assertions.assertTrue(schoolResponse.getSchoolInfo().isEmpty());
 	}
 }
