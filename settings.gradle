@@ -6,6 +6,7 @@ include(
         'app:init:mathrank-problem',
         'app:api',
         'app:api:mathrank-image',
+        'app:api:mathrank-problem',
         'app:api:mathrank-common',
         'app:api:mathrank-auth',
         'app:api:mathrank-school-read',
