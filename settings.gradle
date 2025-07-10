@@ -11,6 +11,7 @@ include(
         'client:out',
 
         'domain',
+        'domain:mathrank-image',
 
         'common',
         'common:mathrank-dataserializer',
