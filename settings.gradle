@@ -5,6 +5,8 @@ include(
         'app:init',
         'app:init:mathrank-problem',
         'app:api',
+        'app:api:mathrank-common',
+        'app:api:mathrank-auth',
         'app:api:mathrank-school-read',
         'app:batch',
         'app:consumer',
@@ -15,9 +17,12 @@ include(
         'client:external:mathrank-school',
 
         'domain',
+        'domain:mathrank-auth',
         'domain:mathrank-problem',
 
         'common',
+        'common:mathrank-jwt',
+        'common:mathrank-role',
         'common:mathrank-dataserializer',
         'common:mathrank-snowflake',
         'common:mathrank-outbox',

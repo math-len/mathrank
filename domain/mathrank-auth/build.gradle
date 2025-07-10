@@ -1,0 +1,15 @@
+dependencies {
+    implementation 'org.springframework.security:spring-security-crypto:6.1.5'
+    implementation 'org.springframework.boot:spring-boot-starter-validation'
+    implementation 'org.springframework.boot:spring-boot-starter-data-redis'
+    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+
+    implementation project(':common:mathrank-role')
+    implementation project(':common:mathrank-snowflake')
+    implementation project(':common:mathrank-jwt')
+
+    testImplementation 'org.testcontainers:junit-jupiter'
+    testImplementation 'org.springframework.boot:spring-boot-testcontainers'
+
+    runtimeOnly 'com.h2database:h2'
+}
