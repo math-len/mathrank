@@ -4,6 +4,7 @@ include(
         'app',
         'app:api',
         'app:api:mathrank-common',
+        'app:api:mathrank-auth',
         'app:batch',
         'app:consumer',
 
