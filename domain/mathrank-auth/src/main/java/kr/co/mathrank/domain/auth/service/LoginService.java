@@ -54,6 +54,14 @@ public class LoginService {
 		throw new PasswordMismatchedException();
 	}
 
+	public JwtLoginResult refresh(@NotNull final String refreshToken) {
+		return jwtLoginManager.refresh(refreshToken);
+	}
+
+	public void logout(@NotNull final Long userId) {
+		jwtLoginManager.logout(userId);
+	}
+
 	private boolean isMatch(final Password password, final String encryptedPassword) {
 		return password.matches(encryptedPassword, passwordEncoder);
 	}

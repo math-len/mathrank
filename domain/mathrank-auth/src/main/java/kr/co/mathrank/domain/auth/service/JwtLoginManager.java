@@ -21,7 +21,7 @@ import lombok.extern.slf4j.Slf4j;
 @Component
 @Validated
 @RequiredArgsConstructor
-public class JwtLoginManager {
+class JwtLoginManager {
 	@Value("${auth.jwt.accessToken.expireTimeMillis}")
 	private Long accessTokenExpireTimeMillis;
 	@Value("${auth.jwt.refreshToken.expireTimeMillis}")
@@ -39,10 +39,14 @@ public class JwtLoginManager {
 		throw new AuthException();
 	}
 
-	JwtLoginResult login(@NotNull final Long userId, @NotNull final Role role) {
+	public JwtLoginResult login(@NotNull final Long userId, @NotNull final Role role) {
 		final JwtResult result = jwtUtil.createJwt(userId, role, accessTokenExpireTimeMillis, refreshTokenExpireTimeMillis);
 		refreshTokenRepository.refresh(userId, result.refreshToken(), Duration.ofMillis(refreshTokenExpireTimeMillis));
 
 		return JwtLoginResult.from(result);
+	}
+
+	public void logout(@NotNull final Long userId) {
+		refreshTokenRepository.expire(userId);
 	}
 }
