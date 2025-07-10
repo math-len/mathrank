@@ -5,6 +5,7 @@ include(
         'app:init',
         'app:init:mathrank-problem',
         'app:api',
+        'app:api:mathrank-school-read',
         'app:batch',
         'app:consumer',
 
