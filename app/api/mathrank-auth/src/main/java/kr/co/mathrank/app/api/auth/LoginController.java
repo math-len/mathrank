@@ -35,10 +35,10 @@ public class LoginController {
 
 	@PostMapping("/api/v1/auth/login")
 	public ResponseEntity<JwtResponse> login(
-		@RequestBody final LoginCommand command,
+		@RequestBody final Requests.LoginRequest request,
 		final HttpServletResponse response
 	) {
-		final JwtLoginResult result = loginService.login(command);
+		final JwtLoginResult result = loginService.login(request.toCommand());
 		final ResponseCookie cookie = createRefreshTokenCookie(result.refreshToken(), Duration.ofDays(7));
 		response.setHeader(HttpHeaders.SET_COOKIE, cookie.toString());
 
