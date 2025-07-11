@@ -1,0 +1,6 @@
+dependencies {
+    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+
+    implementation project(':domain:mathrank-auth')
+    implementation project(':common:mathrank-role')
+}
