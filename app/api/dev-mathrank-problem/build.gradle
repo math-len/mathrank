@@ -1,11 +1,11 @@
 dependencies {
     implementation 'org.springframework.boot:spring-boot-starter'
 
-    implementation project(':app:api:mathrank-auth')
-    implementation project(':app:api:mathrank-image')
-    implementation project(':app:api:mathrank-problem')
-    implementation project(':app:api:mathrank-school-read')
+    implementation project(':app:api:mathrank-auth-api')
+    implementation project(':app:api:mathrank-image-api')
+    implementation project(':app:api:mathrank-problem-api')
+    implementation project(':app:api:mathrank-school-read-api')
 
-    implementation project(':app:init:mathrank-problem')
-    implementation project(':app:init:mathrank-auth')
+    implementation project(':app:init:mathrank-problem-init')
+    implementation project(':app:init:mathrank-auth-init')
 }
