@@ -4,6 +4,7 @@ import kr.co.mathrank.common.role.Role;
 
 public record UserInfo(
 	Long userId,
-	Role role
+	Role role,
+	String userName
 ) {
 }

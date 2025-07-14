@@ -22,8 +22,9 @@ class JwtUtilTest {
 	void 토큰을_파싱시_저장된_값이_리턴된다() {
 		final long memberId = 1L;
 		final Role memberRole = Role.USER;
+		final String userName = "testName";
 
-		final JwtResult result = jwtUtil.createJwt(memberId, memberRole, 5_000L, 10_000L);
+		final JwtResult result = jwtUtil.createJwt(memberId, memberRole, userName, 5_000L, 10_000L);
 		final UserInfo info = jwtUtil.parse(result.accessToken());
 
 		Assertions.assertAll(
@@ -36,8 +37,9 @@ class JwtUtilTest {
 	void 유효기간이_지나면_에러발생한다() {
 		final long memberId = 1L;
 		final Role memberRole = Role.USER;
+		final String userName = "testName";
 
-		final JwtResult result = jwtUtil.createJwt(memberId, memberRole, 0L, 10_000L);
+		final JwtResult result = jwtUtil.createJwt(memberId, memberRole, userName, 0L, 10_000L);
 
 		Assertions.assertThrows(JwtException.class, () -> jwtUtil.parse(result.accessToken()));
 	}
@@ -45,7 +47,7 @@ class JwtUtilTest {
 	@Test
 	void 검증_로직_정상동작_확인() {
 		Assertions.assertAll(
-			() -> Assertions.assertThrows(ConstraintViolationException.class, () -> jwtUtil.createJwt(null, null, null, null)),
+			() -> Assertions.assertThrows(ConstraintViolationException.class, () -> jwtUtil.createJwt(null, null, null, null, null)),
 			() -> Assertions.assertThrows(ConstraintViolationException.class, () -> jwtUtil.parse(null))
 		);
 	}
@@ -54,9 +56,10 @@ class JwtUtilTest {
 	void 매순간_다른_JWT를_생성한다() {
 		final long memberId = 1L;
 		final Role memberRole = Role.USER;
+		final String userName = "testName";
 
-		final JwtResult result1 = jwtUtil.createJwt(memberId, memberRole, 0L, 10_000L);
-		final JwtResult result2 = jwtUtil.createJwt(memberId, memberRole, 0L, 10_000L);
+		final JwtResult result1 = jwtUtil.createJwt(memberId, memberRole, userName, 0L, 10_000L);
+		final JwtResult result2 = jwtUtil.createJwt(memberId, memberRole, userName, 0L, 10_000L);
 
 		Assertions.assertNotEquals(result1, result2);
 	}

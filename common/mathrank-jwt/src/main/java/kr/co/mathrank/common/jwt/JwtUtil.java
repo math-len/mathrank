@@ -29,6 +29,7 @@ public class JwtUtil {
 	private static final String TOKEN_FORMAT = TOKEN_TYPE + " " + "%s";
 
 	private static final String ROLE_CLAIM_NAME = "memberRole";
+	private static final String USERNAME_CLAIM_NAME = "memberName";
 
 	@Value("${server.jwt.algorithm}")
 	private String encryptAlgorithm;
@@ -48,12 +49,12 @@ public class JwtUtil {
 			.build();
 	}
 
-	public JwtResult createJwt(@NotNull final Long memberId, @NotNull final Role role,
+	public JwtResult createJwt(@NotNull final Long memberId, @NotNull final Role role, @NotNull final String userName,
 		@NotNull final Long accessTokenExpirationTimeMillis, @NotNull final Long refreshTokenExpirationTimeMillis) {
 		final Date now = new Date();
 
-		final String accessToken = generateToken(memberId, role, accessTokenExpirationTimeMillis, now);
-		final String refreshToken = generateToken(memberId, role, refreshTokenExpirationTimeMillis, now);
+		final String accessToken = generateToken(memberId, userName, role, accessTokenExpirationTimeMillis, now);
+		final String refreshToken = generateToken(memberId, userName, role, refreshTokenExpirationTimeMillis, now);
 		return new JwtResult(accessToken, refreshToken);
 	}
 
@@ -62,7 +63,8 @@ public class JwtUtil {
 			final Claims claims = this.parseToken(token);
 			return new UserInfo(
 				getMemberId(claims).orElseThrow(),
-				getMemberRole(claims).orElseThrow()
+				getMemberRole(claims).orElseThrow(),
+				getMemberName(claims).orElseThrow()
 			);
 		} catch (Exception e) {
 			log.error("[JwtUtil.parse] error occurred with: {}", e.getMessage(), e);
@@ -70,10 +72,12 @@ public class JwtUtil {
 		}
 	}
 
-	private String generateToken(final Long memberId, final Role role, final long expirationTime, final Date now) {
+	private String generateToken(final Long memberId, final String userName, final Role role, final long expirationTime,
+		final Date now) {
 		return TOKEN_FORMAT.formatted(Jwts.builder()
 			.setSubject(String.valueOf(memberId))
 			.claim(ROLE_CLAIM_NAME, role)
+			.claim(USERNAME_CLAIM_NAME, userName)
 			.setId(UUID.randomUUID().toString())
 			.setIssuedAt(now)
 			.setExpiration(new Date(now.getTime() + expirationTime))
@@ -98,5 +102,10 @@ public class JwtUtil {
 			return Optional.empty();
 		}
 		return Optional.of(Role.valueOf(role));
+	}
+
+	protected Optional<String> getMemberName(final Claims claims) {
+		final String name = claims.get(USERNAME_CLAIM_NAME, String.class);
+		return Optional.ofNullable(name);
 	}
 }
