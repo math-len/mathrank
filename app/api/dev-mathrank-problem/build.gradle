@@ -4,6 +4,7 @@ dependencies {
     implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.7.0'
 
     implementation project(':app:api:mathrank-auth-api')
+    implementation project(':app:api:mathrank-healthcheck-api')
     implementation project(':app:api:mathrank-image-api')
     implementation project(':app:api:mathrank-problem-api')
     implementation project(':app:api:mathrank-school-read-api')
