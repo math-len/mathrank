@@ -19,7 +19,6 @@ import kr.co.mathrank.app.api.common.authentication.Authorization;
 import kr.co.mathrank.app.api.common.authentication.LoginInfo;
 import kr.co.mathrank.app.api.common.authentication.MemberPrincipal;
 import kr.co.mathrank.domain.auth.dto.JwtLoginResult;
-import kr.co.mathrank.domain.auth.dto.LoginCommand;
 import kr.co.mathrank.domain.auth.service.LoginService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -80,7 +79,7 @@ public class LoginController {
 			.secure(true)
 			.maxAge(ttl)
 			.sameSite(Cookie.SameSite.STRICT.name())
-			.path("/api/v1/auth/login/refresh")
+			.path("/api/v1/auth")
 			.build();
 	}
 
