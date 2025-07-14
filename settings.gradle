@@ -7,7 +7,7 @@ include(
         'app:init:mathrank-problem-init',
         'app:api',
         'app:api:mathrank-healthcheck-api',
-        'app:api:dev-mathrank-problem',
+        'app:api:monolith-api',
         'app:api:mathrank-image-api',
         'app:api:mathrank-problem-api',
         'app:api:mathrank-api-common',
