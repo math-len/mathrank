@@ -31,7 +31,7 @@ public class MemberRegisterService {
 			throw new AuthException();
 		}
 
-		final Member newMember = Member.of(snowflake.nextId(), command.role(), command.loginId(),
+		final Member newMember = Member.of(snowflake.nextId(), command.name(), command.role(), command.loginId(),
 			command.password().encrypt(passwordEncoder));
 
 		return memberRepository.save(newMember).getId();

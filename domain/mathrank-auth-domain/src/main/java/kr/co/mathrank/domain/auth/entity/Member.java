@@ -18,6 +18,8 @@ public class Member {
 	@Id
 	private Long id;
 
+	private String name;
+
 	@Enumerated(EnumType.STRING)
 	private Role role;
 
@@ -29,10 +31,11 @@ public class Member {
 	@Embedded
 	private final LockInfo lockInfo = new LockInfo();
 
-	public static Member of(Long id, Role role, String loginId, String password) {
+	public static Member of(Long id, String name, Role role, String loginId, String password) {
 		final Member member = new Member();
 		member.id = id;
 		member.role = role;
+		member.name = name;
 		member.loginId = loginId;
 		member.password = password;
 

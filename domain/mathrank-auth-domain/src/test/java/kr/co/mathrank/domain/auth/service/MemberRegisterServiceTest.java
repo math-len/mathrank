@@ -21,9 +21,10 @@ class MemberRegisterServiceTest {
 	@Test
 	void 아이디가_이미_존재할때_에러처리() {
 		final String duplicatedId = "loginId";
+		final String userName = "testName";
 		final Password password = new Password("1234");
 
-		final MemberRegisterCommand command = new MemberRegisterCommand(duplicatedId, password, Role.USER);
+		final MemberRegisterCommand command = new MemberRegisterCommand(duplicatedId, userName, password, Role.USER);
 
 		memberRegisterService.register(command);
 		Assertions.assertThrows(AuthException.class, () -> memberRegisterService.register(command));
@@ -33,7 +34,7 @@ class MemberRegisterServiceTest {
 	void 형식_에러_테스트() {
 		Assertions.assertAll(
 			() -> Assertions.assertThrows(ConstraintViolationException.class, () -> memberRegisterService.register(null)),
-			() -> Assertions.assertThrows(ConstraintViolationException.class, () -> memberRegisterService.register(new MemberRegisterCommand(null, null, null)))
+			() -> Assertions.assertThrows(ConstraintViolationException.class, () -> memberRegisterService.register(new MemberRegisterCommand(null, null, null, null)))
 		);
 	}
 }

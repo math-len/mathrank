@@ -29,15 +29,15 @@ class JwtLoginManagerTest {
 
 	@Test
 	void 최신_refresh_토큰이_아니면_사용_불가능하다() {
-		final JwtLoginResult result = jwtLoginManager.login(1L, Role.USER);
-		final JwtLoginResult anotherLoginResult = jwtLoginManager.login(1L, Role.USER);
+		final JwtLoginResult result = jwtLoginManager.login(1L, Role.USER, "testName");
+		final JwtLoginResult anotherLoginResult = jwtLoginManager.login(1L, Role.USER, "testName");
 
 		Assertions.assertThrows(AuthException.class, () -> jwtLoginManager.refresh(result.refreshToken()));
 	}
 
 	@Test
 	void 최신_refreshToken으론_성공한다() {
-		final JwtLoginResult result = jwtLoginManager.login(1L, Role.USER);
+		final JwtLoginResult result = jwtLoginManager.login(1L, Role.USER, "testName");
 
 		Assertions.assertDoesNotThrow(() -> jwtLoginManager.refresh(result.refreshToken()));
 	}

@@ -33,17 +33,17 @@ class JwtLoginManager {
 	public JwtLoginResult refresh(@NotNull final String refreshToken) {
 		final UserInfo userInfo = jwtUtil.parse(refreshToken);
 		if (refreshTokenRepository.isValidRefreshToken(userInfo.userId(), refreshToken)) {
-			return login(userInfo.userId(), Role.USER);
+			return login(userInfo.userId(), Role.USER, userInfo.userName());
 		}
 		log.warn("[JwtLoginManager.refresh] refresh token is not valid for userId: {}", userInfo.userId());
 		throw new AuthException();
 	}
 
-	public JwtLoginResult login(@NotNull final Long userId, @NotNull final Role role) {
-		final JwtResult result = jwtUtil.createJwt(userId, role, accessTokenExpireTimeMillis, refreshTokenExpireTimeMillis);
+	public JwtLoginResult login(@NotNull final Long userId, @NotNull final Role role, @NotNull final String userName) {
+		final JwtResult result = jwtUtil.createJwt(userId, role, userName, accessTokenExpireTimeMillis, refreshTokenExpireTimeMillis);
 		refreshTokenRepository.refresh(userId, result.refreshToken(), Duration.ofMillis(refreshTokenExpireTimeMillis));
 
-		return JwtLoginResult.from(result);
+		return JwtLoginResult.from(result, userName);
 	}
 
 	public void logout(@NotNull final Long userId) {

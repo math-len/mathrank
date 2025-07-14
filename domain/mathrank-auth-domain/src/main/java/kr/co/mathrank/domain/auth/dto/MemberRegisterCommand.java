@@ -8,6 +8,8 @@ public record MemberRegisterCommand(
 	@NotNull
 	String loginId,
 	@NotNull
+	String name,
+	@NotNull
 	Password password,
 	@NotNull
 	Role role

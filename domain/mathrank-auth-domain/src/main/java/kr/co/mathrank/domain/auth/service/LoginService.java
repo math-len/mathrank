@@ -9,6 +9,7 @@ import org.springframework.validation.annotation.Validated;
 
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
+import kr.co.mathrank.common.jwt.JwtResult;
 import kr.co.mathrank.domain.auth.dto.JwtLoginResult;
 import kr.co.mathrank.domain.auth.dto.LoginCommand;
 import kr.co.mathrank.domain.auth.entity.Member;
@@ -45,7 +46,7 @@ public class LoginService {
 		// 비밀번호 일치
 		if (isMatch(command.password(), member.getPassword())) {
 			member.getLockInfo().unlock();
-			return jwtLoginManager.login(member.getId(), member.getRole());
+			return jwtLoginManager.login(member.getId(), member.getRole(), member.getName());
 		}
 
 		// 비밀번호 불일치

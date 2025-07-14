@@ -37,19 +37,21 @@ class LoginServiceTest {
 	@Test
 	void 비밀번호_일치시_로그인_성공() {
 		final String loginId = "loginId";
+		final String userName = "testName";
 		final Password password = new Password("test");
 
-		memberRegisterService.register(new MemberRegisterCommand(loginId, password, Role.USER));
+		memberRegisterService.register(new MemberRegisterCommand(loginId, userName, password, Role.USER));
 		Assertions.assertNotNull(loginService.login(new LoginCommand(loginId, password)));
 	}
 
 	@Test
 	void 비밀번호_비일치시_로그인_실패() {
 		final String loginId = "loginId";
+		final String userName = "testName";
 		final Password password = new Password("test");
 		final Password wrongPassword = new Password("wrong");
 
-		memberRegisterService.register(new MemberRegisterCommand(loginId, password, Role.USER));
+		memberRegisterService.register(new MemberRegisterCommand(loginId, userName, password, Role.USER));
 		Assertions.assertThrows(
 			PasswordMismatchedException.class, () -> loginService.login(new LoginCommand(loginId, wrongPassword)));
 	}
@@ -57,10 +59,11 @@ class LoginServiceTest {
 	@Test
 	void 로그인_실패_횟수_초과시_로그인_불가() {
 		final String loginId = "loginId";
+		final String userName = "testName";
 		final Password password = new Password("test");
 		final Password wrongPassword = new Password("wrong");
 
-		memberRegisterService.register(new MemberRegisterCommand(loginId, password, Role.USER));
+		memberRegisterService.register(new MemberRegisterCommand(loginId, userName, password, Role.USER));
 
 		for (int i = 0; i < 3; i ++) {
 			Assertions.assertThrows(PasswordMismatchedException.class, () -> loginService.login(new LoginCommand(loginId, wrongPassword)));
@@ -71,10 +74,11 @@ class LoginServiceTest {
 	@Test
 	void 로그인_성공_시_잠금_초기화() {
 		final String loginId = "loginId";
+		final String userName = "testName";
 		final Password password = new Password("test");
 		final Password wrongPassword = new Password("wrong");
 
-		memberRegisterService.register(new MemberRegisterCommand(loginId, password, Role.USER));
+		memberRegisterService.register(new MemberRegisterCommand(loginId, userName, password, Role.USER));
 
 		for (int i = 0; i < 2; i ++) {
 			Assertions.assertThrows(PasswordMismatchedException.class, () -> loginService.login(new LoginCommand(loginId, wrongPassword)));
