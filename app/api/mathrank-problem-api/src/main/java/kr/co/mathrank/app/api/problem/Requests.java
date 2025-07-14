@@ -10,7 +10,7 @@ import kr.co.mathrank.domain.problem.entity.Difficulty;
 class Requests {
 	record ProblemRegisterRequest(
 		@NotNull
-		String imageSource,
+		String problemImage,
 		@NotBlank
 		String solutionImage,
 		@NotNull
@@ -28,7 +28,7 @@ class Requests {
 	) {
 		public ProblemRegisterCommand toCommand(final Long memberId) {
 			return new ProblemRegisterCommand(memberId,
-				imageSource,
+				problemImage,
 				solutionImage,
 				answerType,
 				coursePath,
