@@ -33,7 +33,7 @@ public class LoginController {
 	private final LoginService loginService;
 
 	@PostMapping("/api/v1/auth/login")
-	public ResponseEntity<JwtResponse> login(
+	public ResponseEntity<LoginResponse> login(
 		@RequestBody final Requests.LoginRequest request,
 		final HttpServletResponse response
 	) {
@@ -41,12 +41,12 @@ public class LoginController {
 		final ResponseCookie cookie = createRefreshTokenCookie(result.refreshToken(), Duration.ofDays(7));
 		response.setHeader(HttpHeaders.SET_COOKIE, cookie.toString());
 
-		return ResponseEntity.ok(new JwtResponse(result.accessToken()));
+		return ResponseEntity.ok(new LoginResponse(result.accessToken(), result.userName()));
 	}
 
 	@PostMapping("/api/v1/auth/login/refresh")
 	@Authorization(openedForAll = true)
-	public ResponseEntity<JwtResponse> loginWithRefreshToken(
+	public ResponseEntity<LoginResponse> loginWithRefreshToken(
 		@CookieValue(name = REFRESH_TOKEN_NAME) final String refreshToken,
 		final HttpServletResponse response
 	) {
@@ -56,7 +56,7 @@ public class LoginController {
 		final ResponseCookie cookie = createRefreshTokenCookie(result.refreshToken(), Duration.ofDays(7));
 		response.setHeader(HttpHeaders.SET_COOKIE, cookie.toString());
 
-		return ResponseEntity.ok(new JwtResponse(result.accessToken()));
+		return ResponseEntity.ok(new LoginResponse(result.accessToken(), result.userName()));
 	}
 
 	@PostMapping("/api/v1/auth/logout")
