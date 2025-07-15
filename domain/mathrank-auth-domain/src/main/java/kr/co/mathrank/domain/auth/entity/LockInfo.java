@@ -32,6 +32,11 @@ public class LockInfo {
 		this.lockStartedAt = null;
 	}
 
+	public int getRemainTryCount() {
+		final int diff = MAX_TRY_COUNT - this.loginTryCount;
+		return Math.max(0, diff);
+	}
+
 	private void lock(final LocalDateTime now) {
 		this.lockStartedAt = now;
 	}
