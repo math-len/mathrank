@@ -16,6 +16,6 @@ public class InitMembers implements CommandLineRunner {
 
 	@Override
 	public void run(String... args) throws Exception {
-		memberRegisterService.register(new MemberRegisterCommand("test1", new Password("0000"), Role.ADMIN));
+		memberRegisterService.register(new MemberRegisterCommand("test1", "testName", new Password("0000"), Role.ADMIN));
 	}
 }

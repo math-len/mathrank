@@ -1,35 +1,30 @@
 package kr.co.mathrank.app.api.problem;
 
-import org.springdoc.core.annotations.ParameterObject;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import kr.co.mathrank.app.api.common.authentication.Authorization;
 import kr.co.mathrank.app.api.common.authentication.LoginInfo;
 import kr.co.mathrank.app.api.common.authentication.MemberPrincipal;
 import kr.co.mathrank.common.role.Role;
 import kr.co.mathrank.domain.problem.dto.ProblemDeleteCommand;
-import kr.co.mathrank.domain.problem.dto.ProblemQueryCommand;
-import kr.co.mathrank.domain.problem.dto.ProblemQueryPageResult;
 import kr.co.mathrank.domain.problem.dto.ProblemRegisterCommand;
 import kr.co.mathrank.domain.problem.dto.ProblemUpdateCommand;
-import kr.co.mathrank.domain.problem.service.ProblemQueryService;
 import kr.co.mathrank.domain.problem.service.ProblemService;
 import lombok.RequiredArgsConstructor;
 
 @RestController
 @RequiredArgsConstructor
+@Tag(name = "problem")
 public class ProblemController {
 	private final ProblemService problemService;
-	private final ProblemQueryService problemQueryService;
 
 	@PostMapping("/api/v1/problem")
 	@Authorization(values = Role.ADMIN)
@@ -64,12 +59,5 @@ public class ProblemController {
 		problemService.delete(new ProblemDeleteCommand(problemId, principal.memberId()));
 
 		return ResponseEntity.ok().build();
-	}
-
-	@GetMapping(value = "/api/v1/problem")
-	public ResponseEntity<ProblemQueryPageResult> problems(
-		@ParameterObject @ModelAttribute @Valid final ProblemQueryCommand command
-	) {
-		return ResponseEntity.ok(problemQueryService.query(command));
 	}
 }
