@@ -13,7 +13,7 @@ import kr.co.mathrank.domain.auth.dto.JwtLoginResult;
 import kr.co.mathrank.domain.auth.dto.LoginCommand;
 import kr.co.mathrank.domain.auth.entity.Member;
 import kr.co.mathrank.domain.auth.entity.Password;
-import kr.co.mathrank.domain.auth.exception.AuthException;
+import kr.co.mathrank.domain.auth.exception.CannotFoundMemberException;
 import kr.co.mathrank.domain.auth.exception.MemberLockedException;
 import kr.co.mathrank.domain.auth.exception.PasswordMismatchedException;
 import kr.co.mathrank.domain.auth.repository.MemberRepository;
@@ -30,16 +30,16 @@ public class LoginService {
 
 	private final JwtLoginManager jwtLoginManager;
 
-	@Transactional(noRollbackFor = IllegalArgumentException.class)
+	@Transactional(noRollbackFor = PasswordMismatchedException.class)
 	public JwtLoginResult login(@NotNull @Valid final LoginCommand command) {
 		final Member member = memberRepository.findByLoginId(command.loginId())
-			.orElseThrow(AuthException::new);
+			.orElseThrow(CannotFoundMemberException::new);
 
 		final LocalDateTime now = LocalDateTime.now();
 		// lock 인지 확인
 		if (member.getLockInfo().isLocked(now)) {
-			log.warn("[LoginService.login] cannot login with locked member: {}", member.getId());
-			throw new MemberLockedException();
+			log.warn("[LoginService.login] cannot login with locked member: {}, remain lock minutes: {}", member.getId(), member.getLockInfo().getRemainLockDuration(now));
+			throw new MemberLockedException(member.getLockInfo().getRemainLockDuration(now));
 		}
 
 		// 비밀번호 일치
@@ -50,8 +50,9 @@ public class LoginService {
 
 		// 비밀번호 불일치
 		member.getLockInfo().addFailedCount(now);
-		log.warn("[LoginService.login] password not matched");
-		throw new PasswordMismatchedException();
+		memberRepository.save(member);
+		log.warn("[LoginService.login] password not matched for member: {}, remain try count: {}", member.getId(), member.getLockInfo().getRemainTryCount());
+		throw new PasswordMismatchedException(member.getLockInfo().getRemainTryCount());
 	}
 
 	public JwtLoginResult refresh(@NotNull final String refreshToken) {

@@ -4,7 +4,9 @@ plugins {
 
 dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-web'
+    implementation 'org.springframework.boot:spring-boot-starter-validation'
 
     implementation project(':common:mathrank-jwt')
+    implementation project(':common:mathrank-exception')
     api project(':common:mathrank-role')
 }
