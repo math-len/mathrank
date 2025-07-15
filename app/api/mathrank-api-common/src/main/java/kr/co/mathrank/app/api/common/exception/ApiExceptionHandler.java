@@ -7,19 +7,23 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import jakarta.servlet.ServletException;
 import jakarta.validation.ConstraintViolationException;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 @RestControllerAdvice
 public class ApiExceptionHandler {
 	private static final HttpStatus API_EXCEPTION_STATUS = HttpStatus.BAD_REQUEST;
 
 	@ExceptionHandler(ConstraintViolationException.class)
 	public ResponseEntity<ApiExceptionBody> handleValidationException(final ConstraintViolationException exception) {
+		log.warn("[ApiExceptionHandler] wrong arguments with: {}", exception.getConstraintViolations(), exception);
 		return ResponseEntity.status(API_EXCEPTION_STATUS)
 			.body(ApiExceptionBody.of(1000, exception.getMessage()));
 	}
 
 	@ExceptionHandler(ServletException.class)
 	public ResponseEntity<ApiExceptionBody> handleServletException(final ServletException exception) {
+		log.warn("[ApiExceptionHandler] wrong api access with: {}", exception.getMessage(), exception);
 		return ResponseEntity.status(API_EXCEPTION_STATUS)
 			.body(ApiExceptionBody.of(1001, exception.getMessage()));
 	}
