@@ -24,6 +24,7 @@ import kr.co.mathrank.domain.problem.entity.Course;
 import kr.co.mathrank.domain.problem.entity.Difficulty;
 import kr.co.mathrank.domain.problem.entity.Path;
 import kr.co.mathrank.domain.problem.entity.Problem;
+import kr.co.mathrank.domain.problem.exception.CannotAccessProblemException;
 import kr.co.mathrank.domain.problem.repository.CourseRepository;
 import kr.co.mathrank.domain.problem.repository.ProblemRepository;
 
@@ -82,7 +83,7 @@ class ProblemServiceTest {
 
 		final ProblemUpdateCommand updateCommand = new ProblemUpdateCommand(problemId, 2L, "newImage.jpeg", AnswerType.SHORT_ANSWER, Difficulty.KILLER, path.getPath(), "newTestCode", "newAnswer");
 
-		Assertions.assertThrows(IllegalArgumentException.class, () -> problemService.update(updateCommand));
+		Assertions.assertThrows(CannotAccessProblemException.class, () -> problemService.update(updateCommand));
 	}
 
 	@Test
@@ -122,7 +123,7 @@ class ProblemServiceTest {
 
 		final ProblemDeleteCommand deleteCommand = new ProblemDeleteCommand(problemId, 2L);
 
-		Assertions.assertThrows(IllegalArgumentException.class, () -> problemService.delete(deleteCommand));
+		Assertions.assertThrows(CannotAccessProblemException.class, () -> problemService.delete(deleteCommand));
 	}
 
 	private static Stream<Arguments> argumentsStream() {

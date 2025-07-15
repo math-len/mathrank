@@ -13,6 +13,9 @@ import kr.co.mathrank.domain.problem.dto.ProblemUpdateCommand;
 import kr.co.mathrank.domain.problem.entity.Course;
 import kr.co.mathrank.domain.problem.entity.Path;
 import kr.co.mathrank.domain.problem.entity.Problem;
+import kr.co.mathrank.domain.problem.exception.CannotAccessProblemException;
+import kr.co.mathrank.domain.problem.exception.CannotFoundCourseException;
+import kr.co.mathrank.domain.problem.exception.CannotFoundProblemException;
 import kr.co.mathrank.domain.problem.repository.CourseRepository;
 import kr.co.mathrank.domain.problem.repository.ProblemRepository;
 import lombok.RequiredArgsConstructor;
@@ -41,7 +44,7 @@ public class ProblemService {
 	@Transactional
 	public void update(@NotNull @Valid final ProblemUpdateCommand command) {
 		final Problem problem = problemRepository.findById(command.problemId())
-			.orElseThrow(() -> new IllegalArgumentException("Problem not found with id: " + command.problemId()));
+			.orElseThrow(() -> new CannotFoundProblemException(command.problemId()));
 		final Course course = getCourse(command.coursePath());
 
 		isOwner(command.requestMemberId(), problem);
@@ -56,13 +59,13 @@ public class ProblemService {
 
 	private Course getCourse(String command) {
 		return courseRepository.findById(new Path(command))
-			.orElseThrow();
+			.orElseThrow(() -> new CannotFoundCourseException(command));
 	}
 
 	@Transactional
 	public void delete(@NotNull @Valid final ProblemDeleteCommand command) {
 		final Problem problem = problemRepository.findById(command.problemId())
-			.orElseThrow(() -> new IllegalArgumentException("Problem not found with id: " + command.problemId()));
+			.orElseThrow(() -> new CannotFoundProblemException(command.problemId()));
 
 		isOwner(command.requestMemberId(), problem);
 
@@ -72,7 +75,7 @@ public class ProblemService {
 
 	private void isOwner(final Long requestMemberId, final Problem problem) {
 		if (!requestMemberId.equals(problem.getMemberId())) {
-			throw new IllegalArgumentException("Member ID does not match the problem owner.");
+			throw new CannotAccessProblemException();
 		}
 	}
 }

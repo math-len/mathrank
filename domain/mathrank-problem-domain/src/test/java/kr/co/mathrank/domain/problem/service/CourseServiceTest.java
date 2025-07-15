@@ -8,6 +8,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import kr.co.mathrank.domain.problem.dto.CourseRegisterCommand;
 import kr.co.mathrank.domain.problem.entity.Path;
+import kr.co.mathrank.domain.problem.exception.CannotFoundCourseException;
 import kr.co.mathrank.domain.problem.repository.CourseRepository;
 
 @SpringBootTest
@@ -27,7 +28,8 @@ class CourseServiceTest {
 
 	@Test
 	void 부모가_존재하지않으면_에러() {
-		Assertions.assertThrows(IllegalArgumentException.class, ()-> courseService.register(new CourseRegisterCommand("test", "12")));
+		Assertions.assertThrows(
+			CannotFoundCourseException.class, ()-> courseService.register(new CourseRegisterCommand("test", "12")));
 	}
 
 	@Test

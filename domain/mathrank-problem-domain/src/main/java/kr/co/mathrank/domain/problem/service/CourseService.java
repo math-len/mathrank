@@ -11,6 +11,7 @@ import jakarta.validation.constraints.NotNull;
 import kr.co.mathrank.domain.problem.dto.CourseRegisterCommand;
 import kr.co.mathrank.domain.problem.entity.Course;
 import kr.co.mathrank.domain.problem.entity.Path;
+import kr.co.mathrank.domain.problem.exception.CannotFoundCourseException;
 import kr.co.mathrank.domain.problem.repository.CourseRepository;
 import lombok.RequiredArgsConstructor;
 
@@ -32,7 +33,7 @@ public class CourseService {
 
 		// 존재하지 않는 부모 조회
 		if (!command.parentPath().isBlank() && longestPath == null) {
-			throw new IllegalArgumentException("존재하지 않는 상위 path");
+			throw new CannotFoundCourseException(command.parentPath());
 		}
 
 		final Path childPath = parentPath.nextChild(longestPath.getPath());
