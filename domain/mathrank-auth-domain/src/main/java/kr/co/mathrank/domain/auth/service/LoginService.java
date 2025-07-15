@@ -10,6 +10,7 @@ import org.springframework.validation.annotation.Validated;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 import kr.co.mathrank.common.jwt.JwtResult;
+import kr.co.mathrank.common.jwt.UserInfo;
 import kr.co.mathrank.domain.auth.dto.JwtLoginResult;
 import kr.co.mathrank.domain.auth.dto.LoginCommand;
 import kr.co.mathrank.domain.auth.entity.Member;
@@ -59,8 +60,8 @@ public class LoginService {
 		return jwtLoginManager.refresh(refreshToken);
 	}
 
-	public void logout(@NotNull final Long userId) {
-		jwtLoginManager.logout(userId);
+	public void logout(@NotNull final String refreshToken) {
+		jwtLoginManager.logout(refreshToken);
 	}
 
 	private boolean isMatch(final Password password, final String encryptedPassword) {

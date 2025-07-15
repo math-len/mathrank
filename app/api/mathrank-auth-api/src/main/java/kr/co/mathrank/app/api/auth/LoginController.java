@@ -5,18 +5,17 @@ import java.net.URLDecoder;
 import java.net.URLEncoder;
 import java.time.Duration;
 
-import org.springframework.boot.web.server.Cookie;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RestController;
 
 import jakarta.servlet.http.HttpServletResponse;
 import kr.co.mathrank.app.api.auth.cookie.RefreshTokenCookieManager;
-import kr.co.mathrank.app.api.common.authentication.Authorization;
 import kr.co.mathrank.app.api.common.authentication.LoginInfo;
 import kr.co.mathrank.app.api.common.authentication.MemberPrincipal;
 import kr.co.mathrank.domain.auth.dto.JwtLoginResult;
@@ -46,7 +45,6 @@ public class LoginController {
 	}
 
 	@PostMapping("/api/v1/auth/login/refresh")
-	@Authorization(openedForAll = true)
 	public ResponseEntity<LoginResponse> loginWithRefreshToken(
 		@CookieValue(name = RefreshTokenCookieManager.REFRESH_TOKEN_HEADER_NAME) final String refreshToken,
 		final HttpServletResponse response
@@ -61,12 +59,12 @@ public class LoginController {
 	}
 
 	@PostMapping("/api/v1/auth/logout")
-	@Authorization(openedForAll = true)
 	public ResponseEntity<Void> logout(
-		@LoginInfo final MemberPrincipal principal,
+		@CookieValue(name = RefreshTokenCookieManager.REFRESH_TOKEN_HEADER_NAME) final String refreshToken,
 		final HttpServletResponse response
 	) {
-		loginService.logout(principal.memberId());
+		final String decodedRefreshToken = decodeToken(refreshToken);
+		loginService.logout(decodedRefreshToken);
 		final ResponseCookie cookie = createRefreshTokenCookie("", Duration.ZERO);
 		response.setHeader(HttpHeaders.SET_COOKIE, cookie.toString());
 

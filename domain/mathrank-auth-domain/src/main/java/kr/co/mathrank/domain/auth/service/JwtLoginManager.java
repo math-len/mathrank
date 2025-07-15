@@ -46,7 +46,8 @@ class JwtLoginManager {
 		return JwtLoginResult.from(result, userName);
 	}
 
-	public void logout(@NotNull final Long userId) {
-		refreshTokenRepository.expire(userId);
+	public void logout(@NotNull final String refreshToken) {
+		final UserInfo userInfo = jwtUtil.parse(refreshToken);
+		refreshTokenRepository.expire(userInfo.userId());
 	}
 }
