@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import jakarta.servlet.http.HttpServletResponse;
+import kr.co.mathrank.app.api.auth.cookie.RefreshTokenCookieManager;
 import kr.co.mathrank.app.api.common.authentication.Authorization;
 import kr.co.mathrank.app.api.common.authentication.LoginInfo;
 import kr.co.mathrank.app.api.common.authentication.MemberPrincipal;
@@ -27,10 +28,10 @@ import lombok.extern.slf4j.Slf4j;
 @RestController
 @RequiredArgsConstructor
 public class LoginController {
-	private static final String REFRESH_TOKEN_NAME = "refreshToken";
 	private static final String ENCODER = "UTF-8";
 
 	private final LoginService loginService;
+	private final RefreshTokenCookieManager cookieManager;
 
 	@PostMapping("/api/v1/auth/login")
 	public ResponseEntity<LoginResponse> login(
@@ -47,7 +48,7 @@ public class LoginController {
 	@PostMapping("/api/v1/auth/login/refresh")
 	@Authorization(openedForAll = true)
 	public ResponseEntity<LoginResponse> loginWithRefreshToken(
-		@CookieValue(name = REFRESH_TOKEN_NAME) final String refreshToken,
+		@CookieValue(name = RefreshTokenCookieManager.REFRESH_TOKEN_HEADER_NAME) final String refreshToken,
 		final HttpServletResponse response
 	) {
 		final String decodedRefreshToken = decodeToken(refreshToken);
@@ -72,17 +73,6 @@ public class LoginController {
 		return ResponseEntity.ok().build();
 	}
 
-	private ResponseCookie createRefreshTokenCookie(final String cookieValue, final Duration ttl) {
-		final String encodedRefreshToken = encodeToken(cookieValue);
-		return ResponseCookie.from(REFRESH_TOKEN_NAME, encodedRefreshToken)
-			.httpOnly(true)
-			.secure(true)
-			.maxAge(ttl)
-			.sameSite(Cookie.SameSite.STRICT.name())
-			.path("/api/v1/auth")
-			.build();
-	}
-
 	private String decodeToken(final String refreshToken) {
 		try {
 			return URLDecoder.decode(refreshToken, ENCODER);
@@ -99,5 +89,10 @@ public class LoginController {
 			log.error("[LoginController.encodeToken] error in encode: {}", refreshToken, e);
 			throw new RuntimeException(e);
 		}
+	}
+
+	private ResponseCookie createRefreshTokenCookie(final String refreshToken, final Duration duration) {
+		final String encodedToken = encodeToken(refreshToken);
+		return this.cookieManager.create(encodedToken, duration);
 	}
 }
