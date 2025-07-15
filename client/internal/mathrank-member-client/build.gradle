@@ -1,0 +1,9 @@
+dependencies {
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+
+    testImplementation 'org.springframework.boot:spring-boot-starter-web'
+    testImplementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+    testImplementation project(':app:api:mathrank-auth-api')
+    testImplementation project(':domain:mathrank-auth-domain')
+    testImplementation project(':common:mathrank-role')
+}
