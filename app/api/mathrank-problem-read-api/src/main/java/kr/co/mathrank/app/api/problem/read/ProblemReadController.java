@@ -10,6 +10,9 @@ import org.springframework.web.bind.annotation.RestController;
 
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
+import kr.co.mathrank.client.external.school.RequestType;
+import kr.co.mathrank.client.external.school.SchoolClient;
+import kr.co.mathrank.client.external.school.SchoolInfo;
 import kr.co.mathrank.client.internal.member.MemberClient;
 import kr.co.mathrank.client.internal.member.MemberInfo;
 import kr.co.mathrank.domain.problem.dto.ProblemQueryCommand;
@@ -24,24 +27,27 @@ import lombok.RequiredArgsConstructor;
 public class ProblemReadController {
 	private final ProblemQueryService problemQueryService;
 	private final MemberClient memberClient;
+	private final SchoolClient schoolClient;
 
 	@GetMapping(value = "/api/v1/problem")
-	public ResponseEntity<ProblemWithUserNamePageResult> problems(
+	public ResponseEntity<ProblemPageResponse> problems(
 		@ParameterObject @ModelAttribute @Valid final ProblemQueryCommand command
 	) {
 		final ProblemQueryPageResult pageQueryResult = problemQueryService.query(command);
 
-		final ProblemWithUserNamePageResult containsUserName = ProblemWithUserNamePageResult.from(
+		final ProblemPageResponse containsUserName = ProblemPageResponse.from(
 			withUserName(pageQueryResult.queryResults()), pageQueryResult);
 
 		return ResponseEntity.ok(containsUserName);
 	}
 
-	private List<ProblemWithUserNameResult> withUserName(final List<ProblemQueryResult> queryResults) {
+	private List<ProblemResponse> withUserName(final List<ProblemQueryResult> queryResults) {
 		return queryResults.stream()
-			.map(problemQueryResult -> {
-				final MemberInfo info = memberClient.getMemberInfo(problemQueryResult.memberId());
-				return ProblemWithUserNameResult.from(problemQueryResult, info.memberName());
+			.map(problem -> {
+				final MemberInfo info = memberClient.getMemberInfo(problem.memberId());
+				final SchoolInfo schoolInfo = schoolClient.getSchool(RequestType.JSON.getType(), problem.schoolCode())
+					.orElse(SchoolInfo.none());
+				return ProblemResponse.from(problem, info.memberName(), schoolInfo);
 			})
 			.toList();
 	}

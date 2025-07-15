@@ -6,4 +6,5 @@ dependencies {
 
     implementation project(':domain:mathrank-problem-domain')
     implementation project(':client:internal:mathrank-member-client')
+    implementation project(':client:external:mathrank-school')
 }

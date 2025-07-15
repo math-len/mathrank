@@ -1,5 +1,7 @@
 package kr.co.mathrank.client.external.school;
 
+import java.util.Optional;
+
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestClient;
@@ -17,6 +19,21 @@ public class SchoolClient {
 		restClient = RestClient.builder()
 			.baseUrl("https://open.neis.go.kr")
 			.build();
+	}
+
+	public Optional<SchoolInfo> getSchool(final String type, final String schoolCode) {
+		// SD_SCHUL_CODE
+		final SchoolResponse response = restClient.get()
+			.uri(uriBuilder -> uriBuilder.path("/hub/schoolInfo")
+				.queryParam("Type", type)
+				.queryParam("pIndex", 1)
+				.queryParam("pSize", 1)
+				.queryParam("KEY", key)
+				.queryParam("SD_SCHUL_CODE", schoolCode)
+				.build())
+			.retrieve()
+			.body(SchoolResponse.class);
+		return response.getSchoolInfo().isEmpty() ? Optional.empty() : Optional.of(response.getSchoolInfo().getFirst());
 	}
 
 	public SchoolResponse getSchools(String type, Integer pageIndex, Integer pageSize, String schoolName) {

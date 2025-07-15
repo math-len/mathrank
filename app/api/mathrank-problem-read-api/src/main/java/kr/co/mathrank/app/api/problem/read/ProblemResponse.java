@@ -2,11 +2,12 @@ package kr.co.mathrank.app.api.problem.read;
 
 import java.time.LocalDateTime;
 
+import kr.co.mathrank.client.external.school.SchoolInfo;
 import kr.co.mathrank.domain.problem.dto.ProblemQueryResult;
 import kr.co.mathrank.domain.problem.entity.AnswerType;
 import kr.co.mathrank.domain.problem.entity.Difficulty;
 
-public record ProblemWithUserNameResult(
+public record ProblemResponse(
 	Long id,
 	Long memberId,
 	String userName,
@@ -14,14 +15,18 @@ public record ProblemWithUserNameResult(
 	Difficulty difficulty,
 	AnswerType type,
 	String schoolCode,
+	String schoolName,
+	String schoolKind,
+	String schoolCity,
 	String answer,
 	LocalDateTime createdAt
 ) {
-	public static ProblemWithUserNameResult from(
+	public static ProblemResponse from(
 		final ProblemQueryResult result,
-		final String userName
+		final String userName,
+		final SchoolInfo schoolInfo
 	) {
-		return new ProblemWithUserNameResult(
+		return new ProblemResponse(
 			result.id(),
 			result.memberId(),
 			userName,
@@ -29,6 +34,9 @@ public record ProblemWithUserNameResult(
 			result.difficulty(),
 			result.type(),
 			result.schoolCode(),
+			schoolInfo.SCHUL_NM(),
+			schoolInfo.SCHUL_KND_SC_NM(),
+			schoolInfo.LCTN_SC_NM(),
 			result.answer(),
 			result.createdAt()
 		);
