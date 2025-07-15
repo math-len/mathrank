@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import jakarta.validation.ConstraintViolationException;
+import kr.co.mathrank.common.exception.MathRankException;
 
 @RestController
 public class ApiExceptionOccuringController {
@@ -26,5 +27,10 @@ public class ApiExceptionOccuringController {
 	@GetMapping("/internal-exception")
 	public ResponseEntity<Void> internalException() {
 		throw new IllegalArgumentException();
+	}
+
+	@GetMapping("/mathrank-exception")
+	public ResponseEntity<Void> mathRankException() {
+		throw new MathRankException(11, "test");
 	}
 }

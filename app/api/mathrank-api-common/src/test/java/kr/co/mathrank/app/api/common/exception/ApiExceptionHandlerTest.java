@@ -38,4 +38,12 @@ class ApiExceptionHandlerTest {
 			.andExpect(content().string(containsString("9000")))
 			.andDo(MockMvcResultHandlers.print());
 	}
+
+	@Test
+	void 서비스_내_비즈니스_에러_시_응답() throws Exception {
+		mockMvc.perform(MockMvcRequestBuilders.get("/mathrank-exception"))
+			.andExpect(MockMvcResultMatchers.status().isBadRequest())
+			.andExpect(content().string(containsString("11")))
+			.andDo(MockMvcResultHandlers.print());
+	}
 }

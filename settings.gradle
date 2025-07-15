@@ -29,6 +29,7 @@ include(
         'domain:mathrank-problem-domain',
 
         'common',
+        'common:mathrank-exception',
         'common:mathrank-jwt',
         'common:mathrank-role',
         'common:mathrank-dataserializer',

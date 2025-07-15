@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import jakarta.servlet.ServletException;
 import jakarta.validation.ConstraintViolationException;
+import kr.co.mathrank.common.exception.MathRankException;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
@@ -34,5 +35,12 @@ public class ApiExceptionHandler {
 		log.error("[ApiExceptionHandler] internal exception: {}", exception.getMessage(), exception);
 		return ResponseEntity.status(SERVER_EXCEPTION_STATUS)
 			.body(ApiExceptionBody.of(9000, "서버 내 오류 발생"));
+	}
+
+	@ExceptionHandler(MathRankException.class)
+	public ResponseEntity<ApiExceptionBody> handleMathRankException(final MathRankException exception) {
+		log.warn("[ApiExceptionHandler] math rank exception code: {}, and message: {}", exception.getCode(), exception.getMessage(), exception);
+		return ResponseEntity.status(API_EXCEPTION_STATUS)
+			.body(ApiExceptionBody.of(exception.getCode(), exception.getMessage()));
 	}
 }
