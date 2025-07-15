@@ -5,6 +5,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
+import jakarta.servlet.ServletException;
 import jakarta.validation.ConstraintViolationException;
 
 @RestControllerAdvice
@@ -15,5 +16,11 @@ public class ApiExceptionHandler {
 	public ResponseEntity<ApiExceptionBody> handleValidationException(final ConstraintViolationException exception) {
 		return ResponseEntity.status(API_EXCEPTION_STATUS)
 			.body(ApiExceptionBody.of(1000, exception.getMessage()));
+	}
+
+	@ExceptionHandler(ServletException.class)
+	public ResponseEntity<ApiExceptionBody> handleServletException(final ServletException exception) {
+		return ResponseEntity.status(API_EXCEPTION_STATUS)
+			.body(ApiExceptionBody.of(1001, exception.getMessage()));
 	}
 }

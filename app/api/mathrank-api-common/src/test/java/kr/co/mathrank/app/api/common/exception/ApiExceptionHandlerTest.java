@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
+import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
 @WebMvcTest(controllers = ApiExceptionOccuringController.class)
@@ -20,5 +21,13 @@ class ApiExceptionHandlerTest {
 		mockMvc.perform(MockMvcRequestBuilders.get("/error"))
 			.andExpect(MockMvcResultMatchers.status().isBadRequest())
 			.andExpect(content().string(containsString("1000")));
+	}
+
+	@Test
+	void 서블릿_바인딩_에러_시_응답() throws Exception {
+		mockMvc.perform(MockMvcRequestBuilders.get("/require-argument"))
+			.andExpect(MockMvcResultMatchers.status().isBadRequest())
+			.andExpect(content().string(containsString("1001")))
+			.andDo(MockMvcResultHandlers.print());
 	}
 }
