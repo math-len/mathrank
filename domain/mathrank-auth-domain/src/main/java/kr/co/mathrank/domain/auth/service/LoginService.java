@@ -31,7 +31,7 @@ public class LoginService {
 
 	private final JwtLoginManager jwtLoginManager;
 
-	@Transactional(noRollbackFor = IllegalArgumentException.class)
+	@Transactional(noRollbackFor = PasswordMismatchedException.class)
 	public JwtLoginResult login(@NotNull @Valid final LoginCommand command) {
 		final Member member = memberRepository.findByLoginId(command.loginId())
 			.orElseThrow(CannotFoundMemberException::new);
@@ -51,7 +51,8 @@ public class LoginService {
 
 		// 비밀번호 불일치
 		member.getLockInfo().addFailedCount(now);
-		log.warn("[LoginService.login] password not matched");
+		memberRepository.save(member);
+		log.warn("[LoginService.login] password not matched for member: {}", member.getLoginId());
 		throw new PasswordMismatchedException();
 	}
 

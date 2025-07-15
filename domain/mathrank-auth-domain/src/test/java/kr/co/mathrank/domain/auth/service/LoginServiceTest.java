@@ -1,5 +1,7 @@
 package kr.co.mathrank.domain.auth.service;
 
+import java.time.LocalDateTime;
+
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,9 +14,11 @@ import org.testcontainers.containers.GenericContainer;
 import kr.co.mathrank.common.role.Role;
 import kr.co.mathrank.domain.auth.dto.LoginCommand;
 import kr.co.mathrank.domain.auth.dto.MemberRegisterCommand;
+import kr.co.mathrank.domain.auth.entity.Member;
 import kr.co.mathrank.domain.auth.entity.Password;
 import kr.co.mathrank.domain.auth.exception.MemberLockedException;
 import kr.co.mathrank.domain.auth.exception.PasswordMismatchedException;
+import kr.co.mathrank.domain.auth.repository.MemberRepository;
 
 @SpringBootTest
 @Transactional
@@ -23,6 +27,8 @@ class LoginServiceTest {
 	private LoginService loginService;
 	@Autowired
 	private MemberRegisterService memberRegisterService;
+	@Autowired
+	private MemberRepository memberRepository;
 
 	private static GenericContainer<?> redisContainer = new GenericContainer<>("redis:6.0.2")
 		.withExposedPorts(6379);
@@ -86,5 +92,23 @@ class LoginServiceTest {
 
 		loginService.login(new LoginCommand(loginId, password));
 		Assertions.assertThrows(PasswordMismatchedException.class, () -> loginService.login(new LoginCommand(loginId, wrongPassword)));
+	}
+
+	@Test
+	void 로그인_실패시_락_카운트_증가() {
+		final String loginId = "loginId";
+		final String userName = "testName";
+		final Password password = new Password("test");
+		final Password wrongPassword = new Password("wrong");
+
+		memberRegisterService.register(new MemberRegisterCommand(loginId, userName, password, Role.USER));
+		for (int i = 0; i < 3; i++) {
+			Assertions.assertThrows(PasswordMismatchedException.class,
+				() -> loginService.login(new LoginCommand(loginId, wrongPassword)));
+		}
+		final Member member = memberRepository.findByLoginId(loginId)
+			.orElseThrow();
+
+		Assertions.assertTrue(member.getLockInfo().isLocked(LocalDateTime.now()));
 	}
 }
