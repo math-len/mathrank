@@ -22,4 +22,9 @@ public class ApiExceptionOccuringController {
 	) {
 		return ResponseEntity.ok().build();
 	}
+
+	@GetMapping("/internal-exception")
+	public ResponseEntity<Void> internalException() {
+		throw new IllegalArgumentException();
+	}
 }

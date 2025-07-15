@@ -30,4 +30,12 @@ class ApiExceptionHandlerTest {
 			.andExpect(content().string(containsString("1001")))
 			.andDo(MockMvcResultHandlers.print());
 	}
+
+	@Test
+	void 예측하지_못한_오류_응답() throws Exception {
+		mockMvc.perform(MockMvcRequestBuilders.get("/internal-exception"))
+			.andExpect(MockMvcResultMatchers.status().isInternalServerError())
+			.andExpect(content().string(containsString("9000")))
+			.andDo(MockMvcResultHandlers.print());
+	}
 }
