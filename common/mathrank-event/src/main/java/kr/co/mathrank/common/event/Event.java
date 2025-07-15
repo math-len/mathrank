@@ -1,6 +1,7 @@
 package kr.co.mathrank.common.event;
 
 import java.time.LocalDateTime;
+
 import kr.co.mathrank.common.dataserializer.DataSerializer;
 import lombok.AccessLevel;
 import lombok.Getter;
