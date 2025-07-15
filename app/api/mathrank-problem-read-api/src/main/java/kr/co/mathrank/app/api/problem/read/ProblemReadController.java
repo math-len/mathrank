@@ -47,7 +47,7 @@ public class ProblemReadController {
 				final MemberInfo info = memberClient.getMemberInfo(problem.memberId());
 				final SchoolInfo schoolInfo = schoolClient.getSchool(RequestType.JSON.getType(), problem.schoolCode())
 					.orElse(SchoolInfo.none());
-				return ProblemResponse.from(problem, info.memberName(), schoolInfo);
+				return ProblemResponse.from(problem, info, schoolInfo);
 			})
 			.toList();
 	}
