@@ -1,5 +1,6 @@
 package kr.co.mathrank.domain.auth.entity;
 
+import java.time.Duration;
 import java.time.LocalDateTime;
 
 import jakarta.persistence.Embeddable;
@@ -18,6 +19,21 @@ public class LockInfo {
 		}
 
 		return lockStartedAt.plusMinutes(LOCK_MINUTES).isAfter(now);
+	}
+
+	public Duration getRemainLockDuration(final LocalDateTime now) {
+		// 잠금되지 않음
+		if (lockStartedAt == null) {
+			return Duration.ZERO;
+		}
+
+		// 아직 잠금 중임
+		if (isLocked(now)) {
+			return Duration.between(now, lockStartedAt.plusMinutes(LOCK_MINUTES));
+		}
+
+		// 잠금 끝남
+		return Duration.ZERO;
 	}
 
 	public void addFailedCount(final LocalDateTime now) {

@@ -13,7 +13,6 @@ import kr.co.mathrank.domain.auth.dto.JwtLoginResult;
 import kr.co.mathrank.domain.auth.dto.LoginCommand;
 import kr.co.mathrank.domain.auth.entity.Member;
 import kr.co.mathrank.domain.auth.entity.Password;
-import kr.co.mathrank.domain.auth.exception.AuthException;
 import kr.co.mathrank.domain.auth.exception.CannotFoundMemberException;
 import kr.co.mathrank.domain.auth.exception.MemberLockedException;
 import kr.co.mathrank.domain.auth.exception.PasswordMismatchedException;
@@ -39,8 +38,8 @@ public class LoginService {
 		final LocalDateTime now = LocalDateTime.now();
 		// lock 인지 확인
 		if (member.getLockInfo().isLocked(now)) {
-			log.warn("[LoginService.login] cannot login with locked member: {}", member.getId());
-			throw new MemberLockedException();
+			log.warn("[LoginService.login] cannot login with locked member: {}, remain lock minutes: {}", member.getId(), member.getLockInfo().getRemainLockDuration(now));
+			throw new MemberLockedException(member.getLockInfo().getRemainLockDuration(now));
 		}
 
 		// 비밀번호 일치
