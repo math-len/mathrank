@@ -1,11 +1,13 @@
 package kr.co.mathrank.common.event;
 
 import java.time.LocalDateTime;
-import kr.co.mathrank.common.dataserializer.DataSerializer;
+
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.mockito.MockedStatic;
 import org.mockito.Mockito;
+
+import kr.co.mathrank.common.dataserializer.DataSerializer;
 
 class EventTest {
     private static final LocalDateTime NOW = LocalDateTime.of(1999, 11, 21, 10, 40);

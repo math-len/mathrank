@@ -1,8 +1,6 @@
 package kr.co.mathrank.domain.problem.service;
 
 import java.util.List;
-import java.util.stream.IntStream;
-import java.util.stream.LongStream;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -12,7 +10,6 @@ import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 import kr.co.mathrank.domain.problem.dto.ProblemQueryCommand;
 import kr.co.mathrank.domain.problem.dto.ProblemQueryPageResult;
-import kr.co.mathrank.domain.problem.entity.Difficulty;
 import kr.co.mathrank.domain.problem.entity.Problem;
 import kr.co.mathrank.domain.problem.repository.ProblemRepository;
 import lombok.RequiredArgsConstructor;

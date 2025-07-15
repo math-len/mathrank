@@ -1,7 +1,5 @@
 package kr.co.mathrank.domain.problem.dto;
 
-import java.time.Year;
-
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import kr.co.mathrank.domain.problem.entity.AnswerType;

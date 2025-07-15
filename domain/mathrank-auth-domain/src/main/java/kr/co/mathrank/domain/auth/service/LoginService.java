@@ -9,8 +9,6 @@ import org.springframework.validation.annotation.Validated;
 
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
-import kr.co.mathrank.common.jwt.JwtResult;
-import kr.co.mathrank.common.jwt.UserInfo;
 import kr.co.mathrank.domain.auth.dto.JwtLoginResult;
 import kr.co.mathrank.domain.auth.dto.LoginCommand;
 import kr.co.mathrank.domain.auth.entity.Member;

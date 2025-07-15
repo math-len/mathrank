@@ -1,9 +1,10 @@
 package kr.co.mathrank.common.outbox;
 
-import kr.co.mathrank.common.event.EventPayload;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
+
+import kr.co.mathrank.common.event.EventPayload;
 
 @Component
 public class TestPublisher {

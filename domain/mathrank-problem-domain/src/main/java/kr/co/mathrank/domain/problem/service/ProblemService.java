@@ -4,8 +4,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.annotation.Validated;
 
-import jakarta.persistence.EntityManager;
-import jakarta.persistence.PersistenceContext;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 import kr.co.mathrank.common.snowflake.Snowflake;

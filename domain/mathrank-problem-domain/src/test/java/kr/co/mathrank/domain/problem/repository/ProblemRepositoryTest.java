@@ -2,7 +2,6 @@ package kr.co.mathrank.domain.problem.repository;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-import java.time.Year;
 import java.util.List;
 
 import org.junit.jupiter.api.Assertions;
@@ -16,7 +15,6 @@ import jakarta.persistence.PersistenceContext;
 import kr.co.mathrank.domain.problem.entity.AnswerType;
 import kr.co.mathrank.domain.problem.entity.Course;
 import kr.co.mathrank.domain.problem.entity.Difficulty;
-import kr.co.mathrank.domain.problem.entity.Path;
 import kr.co.mathrank.domain.problem.entity.Path;
 import kr.co.mathrank.domain.problem.entity.Problem;
 

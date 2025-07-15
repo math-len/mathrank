@@ -1,9 +1,5 @@
 package kr.co.mathrank.domain.problem.entity;
 
-import static org.junit.jupiter.api.Assertions.*;
-
-import java.time.Year;
-
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

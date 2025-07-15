@@ -2,9 +2,11 @@ package kr.co.mathrank.common.dataserializer;
 
 import java.time.LocalDateTime;
 import java.util.Optional;
-import lombok.extern.slf4j.Slf4j;
+
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
+
+import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 class DataSerializerTest {

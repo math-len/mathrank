@@ -11,13 +11,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RestController;
 
 import jakarta.servlet.http.HttpServletResponse;
 import kr.co.mathrank.app.api.auth.cookie.RefreshTokenCookieManager;
-import kr.co.mathrank.app.api.common.authentication.LoginInfo;
-import kr.co.mathrank.app.api.common.authentication.MemberPrincipal;
 import kr.co.mathrank.domain.auth.dto.JwtLoginResult;
 import kr.co.mathrank.domain.auth.service.LoginService;
 import lombok.RequiredArgsConstructor;
