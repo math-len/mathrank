@@ -37,11 +37,16 @@ class LockInfoTest {
 			lockInfo.addFailedCount(now);
 		}
 
+		// 5분 전엔 잠금
+		Assertions.assertTrue(lockInfo.isLocked(now.plusMinutes(4L)));
+		// 5분 지나면 잠금 해제
 		Assertions.assertFalse(lockInfo.isLocked(now.plusMinutes(5L)));
 
 		// 한번 더 실패
 		lockInfo.addFailedCount(now.plusMinutes(5L));
-		Assertions.assertTrue(lockInfo.isLocked(now.minusMinutes(6L)));
-		Assertions.assertTrue(lockInfo.isLocked(now.minusMinutes(7L)));
+		// 5분 전엔 잠금
+		Assertions.assertTrue(lockInfo.isLocked(now.plusMinutes(9L)));
+		// 5분 지나면 잠금 해제
+		Assertions.assertFalse(lockInfo.isLocked(now.plusMinutes(10L)));
 	}
 }

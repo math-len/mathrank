@@ -23,7 +23,6 @@ public class LockInfo {
 	public void addFailedCount(final LocalDateTime now) {
 		this.loginTryCount++;
 		if (loginTryCount >= MAX_TRY_COUNT) {
-			loginTryCount = 0;
 			lock(now);
 		}
 	}
