@@ -11,7 +11,7 @@ public record ProblemQueryCommand(
 	Difficulty difficultyMinInclude,
 	Difficulty difficultyMaxInclude,
 	AnswerType answerType,
-	String path,
+	String coursePath,
 	Boolean videoExist,
 	Integer year,
 	@NotNull

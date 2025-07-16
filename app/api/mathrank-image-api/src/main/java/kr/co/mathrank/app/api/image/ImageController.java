@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.constraints.NotNull;
 import kr.co.mathrank.app.api.common.authentication.Authorization;
 import kr.co.mathrank.domain.image.ImageFileResult;
@@ -20,12 +21,13 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
+@Tag(name = "이미지 API", description = "서버내에서 사용되는 이미지들을 관리하는 API 집합입니다.")
 @RestController
 @RequiredArgsConstructor
 public class ImageController {
 	private final ImageService imageService;
 
-	@Operation(summary = "이미지 조회를 위한 API", description = "댓글 및 게시글 조회시 받은 이미지 주소를 포함하여 요청하면 이미지 데이터를 리턴합니다.")
+	@Operation(summary = "이미지 조회 API", description = "댓글 및 게시글 조회시 받은 이미지 주소를 포함하여 요청하면 이미지 데이터를 리턴합니다.")
 	@GetMapping("/api/v1/image")
 	public ResponseEntity<byte[]> getImage(@RequestParam final String imageSource) throws IOException {
 		final ImageFileResult media = imageService.load(imageSource);
@@ -35,6 +37,7 @@ public class ImageController {
 			.body(media.data().readAllBytes());
 	}
 
+	@Operation(summary = "이미지 업로드 API", description = "multipartForm으로 업로드. 업로드 후 응답받은 string 값을 통해 이미지를 로드 가능합니다.")
 	@PostMapping(value = "/api/v1/image", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
 	@Authorization(openedForAll = true)
 	public ResponseEntity<Response.ImageResponse> postImage(

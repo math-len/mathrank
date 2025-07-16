@@ -6,6 +6,8 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-web'
     implementation 'org.springframework.boot:spring-boot-starter-validation'
 
+    implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.7.0'
+
     implementation project(':common:mathrank-jwt')
     implementation project(':common:mathrank-exception')
     api project(':common:mathrank-role')

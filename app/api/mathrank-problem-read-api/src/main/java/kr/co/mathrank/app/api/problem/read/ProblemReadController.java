@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RestController;
 
+import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import kr.co.mathrank.client.external.school.RequestType;
@@ -23,12 +24,13 @@ import lombok.RequiredArgsConstructor;
 
 @RestController
 @RequiredArgsConstructor
-@Tag(name = "problem")
+@Tag(name = "문제 API")
 public class ProblemReadController {
 	private final ProblemQueryService problemQueryService;
 	private final MemberClient memberClient;
 	private final SchoolClient schoolClient;
 
+	@Operation(summary = "등록된 문제 조회 API", description = "필드를 null 로 설정할 시, 해당 필드는 조건에 포함하지 않습니다. +) coursePath 를 통해 조회시, 하위의 과정의 문제들까지 모두 조회됩니다.")
 	@GetMapping(value = "/api/v1/problem")
 	public ResponseEntity<ProblemPageResponse> problems(
 		@ParameterObject @ModelAttribute @Valid final ProblemQueryCommand command
