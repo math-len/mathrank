@@ -23,11 +23,11 @@ import lombok.RequiredArgsConstructor;
 
 @RestController
 @RequiredArgsConstructor
-@Tag(name = "문제 API")
+@Tag(name = "문제 API", description = "문제들은 서버내의 다른 API ( 개별문제, 시험문제, ... )에서 조합하여 사용할 수 있습니다.")
 public class ProblemController {
 	private final ProblemService problemService;
 
-	@Operation(summary = "문제 등록 API", description = "이 API를 통해 등록된 문제들은, 서버내의 다른 API ( 개별문제, 시험문제 )에서 조합하여 사용할 수 있습니다.")
+	@Operation(summary = "문제 등록 API")
 	@PostMapping("/api/v1/problem")
 	@Authorization(values = Role.ADMIN)
 	public ResponseEntity<Void> register(

@@ -21,7 +21,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
-@Tag(name = "이미지 API")
+@Tag(name = "이미지 API", description = "서버내에서 사용되는 이미지들을 관리하는 API 집합입니다.")
 @RestController
 @RequiredArgsConstructor
 public class ImageController {

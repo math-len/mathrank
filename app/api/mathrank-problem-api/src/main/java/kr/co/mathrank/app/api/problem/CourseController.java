@@ -14,7 +14,7 @@ import kr.co.mathrank.domain.problem.dto.CourseQueryResult;
 import kr.co.mathrank.domain.problem.service.CourseQueryService;
 import lombok.RequiredArgsConstructor;
 
-@Tag(name = "과정 API", description = "문제 등록에서 사용되는 과정( 초/중/고, 대단원, 중단원, 소단원 )을 조회하기 위한 API 입니다.")
+@Tag(name = "문제 과정 API", description = "문제 등록에서 사용되는 과정( 초/중/고, 대단원, 중단원, 소단원 )을 조회하기 위한 API 입니다.")
 @RestController
 @RequiredArgsConstructor
 public class CourseController {
