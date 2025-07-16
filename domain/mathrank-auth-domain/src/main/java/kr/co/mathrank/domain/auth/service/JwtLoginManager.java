@@ -34,7 +34,7 @@ class JwtLoginManager {
 	public JwtLoginResult refresh(@NotNull final String refreshToken) {
 		final UserInfo userInfo = jwtUtil.parse(refreshToken);
 		if (refreshTokenRepository.isValidRefreshToken(userInfo.userId(), refreshToken)) {
-			return login(userInfo.userId(), Role.USER, userInfo.userName());
+			return login(userInfo.userId(), userInfo.role(), userInfo.userName());
 		}
 		log.warn("[JwtLoginManager.refresh] refresh token is not valid for userId: {}", userInfo.userId());
 		throw new InvalidRefreshTokenException();
