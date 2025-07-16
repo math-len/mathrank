@@ -24,7 +24,7 @@ class ProblemQueryRepositoryImpl implements ProblemQueryRepository {
 		Boolean solutionVideoLinkExist, Integer year) {
 		final QProblem problem = QProblem.problem;
 
-		return queryFactory.query()
+		final List<Problem> problems = queryFactory.query()
 			.select(problem)
 			.from(problem)
 			.where(
@@ -38,6 +38,14 @@ class ProblemQueryRepositoryImpl implements ProblemQueryRepository {
 			.offset((pageNumber - 1) * pageSize)
 			.limit(pageSize)
 			.fetch();
+
+		// batchsize를 통해 trigger
+		// 없을땐 수행하지 않도록.
+		if (problems.isEmpty()) {
+			return problems;
+		}
+		problems.getFirst().getAnswers();
+		return problems;
 	}
 
 	@Override

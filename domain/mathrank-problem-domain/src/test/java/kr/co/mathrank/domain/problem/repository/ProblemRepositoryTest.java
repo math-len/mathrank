@@ -3,6 +3,7 @@ package kr.co.mathrank.domain.problem.repository;
 import static org.junit.jupiter.api.Assertions.*;
 
 import java.util.List;
+import java.util.Set;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -12,6 +13,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
+import kr.co.mathrank.domain.problem.entity.Answer;
 import kr.co.mathrank.domain.problem.entity.AnswerType;
 import kr.co.mathrank.domain.problem.entity.Course;
 import kr.co.mathrank.domain.problem.entity.Difficulty;
@@ -212,5 +214,30 @@ class ProblemRepositoryTest {
 		}
 
 		Assertions.assertEquals(20, problemRepository.query(null, null, null, null, path.getPath(), 100, 1, null, 1001).size());
+	}
+
+	@Test
+	void 질문_페이징시_limit을_활용하여_두번의_쿼리로_해결한다() {
+		final Course course = Course.of("test2", new Path());
+		courseRepository.save(course);
+
+		entityManager.flush();
+		entityManager.clear();
+
+		// 데이터 삽입 ( 문제당 답안 2개씩 )
+		for (int i = 0; i < 20; i++) {
+			final Problem problem = Problem.of((long) i, 1L, "문제.jpeg", Difficulty.KILLER, AnswerType.MULTIPLE_CHOICE, course, "testCode", null, null, 1001);
+			final Set<Answer> answers = Set.of(Answer.of((long) i, "1", problem), Answer.of((long) i + 20, "2", problem));
+			problem.setAnswers(answers);
+			problemRepository.save(problem);
+		}
+
+		entityManager.flush();
+		entityManager.clear();
+
+		// 5개 조회
+		final List<Problem> problems = problemRepository.query(1L, null, null, null, null, 5, 1, null, null);
+		// 로그를 확인했을 때, limit과 offset을 활용하는것을 확인
+		Assertions.assertEquals(5, problems.size());
 	}
 }
