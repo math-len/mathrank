@@ -22,7 +22,6 @@ class Requests {
 		String coursePath,
 		@NotNull
 		Difficulty difficulty,
-		@NotNull
 		String schoolCode,
 		@Size(min = 1, max = 100)
 		Set<String> answers,
@@ -56,7 +55,6 @@ class Requests {
 		String coursePath,
 		@NotNull
 		Difficulty difficulty,
-		@NotNull
 		String schoolCode,
 		@Size(min = 1, max = 100)
 		Set<String> answers,
@@ -68,11 +66,15 @@ class Requests {
 				problemId,
 				memberId,
 				imageSource,
+				solutionImage,
 				answerType,
 				difficulty,
 				coursePath,
 				schoolCode,
-				answers);
+				answers,
+				year,
+				solutionVideoLink
+			);
 		}
 	}
 }

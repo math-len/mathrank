@@ -61,7 +61,7 @@ class ProblemServiceTest {
 			Set.of("1"), 1001, null);
 		final Long problemId = problemService.save(command);
 
-		final ProblemUpdateCommand updateCommand = new ProblemUpdateCommand(problemId, 1L, "newImage.jpeg", AnswerType.SHORT_ANSWER, Difficulty.KILLER, path.getPath(), "newTestCode", Set.of("newAnswer"));
+		final ProblemUpdateCommand updateCommand = new ProblemUpdateCommand(problemId, 1L, "newImage.jpeg", "newImage.jpeg", AnswerType.SHORT_ANSWER, Difficulty.KILLER, path.getPath(), "newTestCode", Set.of("newAnswer"), 1212, "solutionVideoLink");
 		problemService.update(updateCommand);
 
 		final Problem updatedProblem = problemRepository.findById(problemId)
@@ -84,8 +84,7 @@ class ProblemServiceTest {
 		final ProblemRegisterCommand command = new ProblemRegisterCommand(1L, "image.jpeg", "image.jpeg", AnswerType.MULTIPLE_CHOICE, path.getPath(), Difficulty.KILLER, "testCode", Set.of("test"), 1001, null);
 		final Long problemId = problemService.save(command);
 
-		final ProblemUpdateCommand updateCommand = new ProblemUpdateCommand(problemId, 2L, "newImage.jpeg", AnswerType.SHORT_ANSWER, Difficulty.KILLER, path.getPath(), "newTestCode",
-			Set.of("newAnswer"));
+		final ProblemUpdateCommand updateCommand = new ProblemUpdateCommand(problemId, 2L, "newImage.jpeg", "newImage.jpeg", AnswerType.SHORT_ANSWER, Difficulty.KILLER, path.getPath(), "newTestCode", Set.of("newAnswer"), 1212, "solutionVideoLink");
 
 		Assertions.assertThrows(CannotAccessProblemException.class, () -> problemService.update(updateCommand));
 	}

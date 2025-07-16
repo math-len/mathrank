@@ -38,8 +38,18 @@ public class ProblemService {
 		final Course course = getCourse(command.coursePath());
 
 		final Long id = snowflake.nextId();
-		final Problem problem = Problem.of(id, command.requestMemberId(), command.imageSource(), command.difficulty(),
-			command.answerType(), course, command.schoolCode(), command.solutionVideoLink(), command.solutionImage(), command.year());
+		final Problem problem = Problem.of(
+			id,
+			command.requestMemberId(),
+			command.imageSource(),
+			command.difficulty(),
+			command.answerType(),
+			course,
+			command.schoolCode(),
+			command.solutionVideoLink(),
+			command.solutionImage(),
+			command.year()
+		);
 		final Set<Answer> answers = mapToAnswer(command.answers(), problem);
 		problem.setAnswers(answers);
 
@@ -61,6 +71,9 @@ public class ProblemService {
 		problem.setAnswers(mapToAnswer(command.answers(), problem));
 		problem.setSchoolCode(command.schoolCode());
 		problem.setImageSource(command.imageSource());
+		problem.setSolutionVideoLink(command.solutionVideoLink());
+		problem.setSolutionImage(command.solutionImage());
+		problem.setYears(command.year());
 	}
 
 	private Course getCourse(String command) {
