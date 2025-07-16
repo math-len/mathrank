@@ -3,6 +3,7 @@ package kr.co.mathrank.domain.problem.repository;
 import static org.junit.jupiter.api.Assertions.*;
 
 import java.util.List;
+import java.util.Set;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -12,6 +13,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
+import kr.co.mathrank.domain.problem.entity.Answer;
 import kr.co.mathrank.domain.problem.entity.AnswerType;
 import kr.co.mathrank.domain.problem.entity.Course;
 import kr.co.mathrank.domain.problem.entity.Difficulty;
@@ -37,10 +39,10 @@ class ProblemRepositoryTest {
 		entityManager.clear();
 
 		// 사용자 1의 문제
-		final Problem owner1 = Problem.of((long) 1, 2L, "문제.jpeg", Difficulty.KILLER, AnswerType.MULTIPLE_CHOICE, course, "1", "testCode", null, null,
+		final Problem owner1 = Problem.of((long) 1, 2L, "문제.jpeg", Difficulty.KILLER, AnswerType.MULTIPLE_CHOICE, course, "testCode", null, null,
 			1001);
 		// 사용자 2의 문제
-		final Problem owner2 = Problem.of((long) 2, 1L, "문제.jpeg", Difficulty.KILLER, AnswerType.MULTIPLE_CHOICE, course, "1", "testCode", null, null, 1001);
+		final Problem owner2 = Problem.of((long) 2, 1L, "문제.jpeg", Difficulty.KILLER, AnswerType.MULTIPLE_CHOICE, course, "testCode", null, null, 1001);
 
 		problemRepository.save(owner1);
 		problemRepository.save(owner2);
@@ -58,8 +60,8 @@ class ProblemRepositoryTest {
 		entityManager.flush();
 		entityManager.clear();
 
-		final Problem problem1 = Problem.of(1L, 2L, "문제.jpeg", Difficulty.KILLER, AnswerType.MULTIPLE_CHOICE, course, "1", "testCode", null, null, 1001);
-		final Problem problem2 = Problem.of(2L, 2L, "문제.jpeg", Difficulty.KILLER, AnswerType.MULTIPLE_CHOICE, course, "1", "testCode", null, null, 1001);
+		final Problem problem1 = Problem.of(1L, 2L, "문제.jpeg", Difficulty.KILLER, AnswerType.MULTIPLE_CHOICE, course, "testCode", null, null, 1001);
+		final Problem problem2 = Problem.of(2L, 2L, "문제.jpeg", Difficulty.KILLER, AnswerType.MULTIPLE_CHOICE, course, "testCode", null, null, 1001);
 
 		problemRepository.save(problem1);
 		problemRepository.save(problem2);
@@ -78,10 +80,10 @@ class ProblemRepositoryTest {
 		entityManager.clear();
 
 		// level 4
-		final Problem problem1 = Problem.of(1L, 2L, "문제.jpeg", Difficulty.HIGH, AnswerType.MULTIPLE_CHOICE, course, "1", "testCode", null, null, 1001);
+		final Problem problem1 = Problem.of(1L, 2L, "문제.jpeg", Difficulty.HIGH, AnswerType.MULTIPLE_CHOICE, course, "testCode", null, null, 1001);
 
 		// level 5
-		final Problem problem2 = Problem.of(2L, 2L, "문제.jpeg", Difficulty.KILLER, AnswerType.MULTIPLE_CHOICE, course, "1", "testCode", null, null, 1001);
+		final Problem problem2 = Problem.of(2L, 2L, "문제.jpeg", Difficulty.KILLER, AnswerType.MULTIPLE_CHOICE, course, "testCode", null, null, 1001);
 
 		problemRepository.save(problem1);
 		problemRepository.save(problem2);
@@ -99,8 +101,8 @@ class ProblemRepositoryTest {
 		entityManager.flush();
 		entityManager.clear();
 
-		final Problem problem1 = Problem.of(1L, 1L, "문제.jpeg", Difficulty.KILLER, AnswerType.MULTIPLE_CHOICE, course, "1", "testCode", null, null, 1001);
-		final Problem problem2 = Problem.of(2L, 3L, "문제.jpeg", Difficulty.KILLER, AnswerType.MULTIPLE_CHOICE, course, "1", "testCode", null, null, 1001);
+		final Problem problem1 = Problem.of(1L, 1L, "문제.jpeg", Difficulty.KILLER, AnswerType.MULTIPLE_CHOICE, course, "testCode", null, null, 1001);
+		final Problem problem2 = Problem.of(2L, 3L, "문제.jpeg", Difficulty.KILLER, AnswerType.MULTIPLE_CHOICE, course, "testCode", null, null, 1001);
 
 		problemRepository.save(problem1);
 		problemRepository.save(problem2);
@@ -119,8 +121,8 @@ class ProblemRepositoryTest {
 		entityManager.flush();
 		entityManager.clear();
 
-		final Problem problem1 = Problem.of(1L, 2L, "문제.jpeg", Difficulty.KILLER, AnswerType.MULTIPLE_CHOICE, course, "1", "testCode", null, null, 1001);
-		final Problem problem2 = Problem.of(2L, 3L, "문제.jpeg", Difficulty.KILLER, AnswerType.MULTIPLE_CHOICE, course, "1", "testCode", null, null, 1001);
+		final Problem problem1 = Problem.of(1L, 2L, "문제.jpeg", Difficulty.KILLER, AnswerType.MULTIPLE_CHOICE, course, "testCode", null, null, 1001);
+		final Problem problem2 = Problem.of(2L, 3L, "문제.jpeg", Difficulty.KILLER, AnswerType.MULTIPLE_CHOICE, course, "testCode", null, null, 1001);
 
 		problemRepository.save(problem1);
 		problemRepository.save(problem2);
@@ -139,7 +141,7 @@ class ProblemRepositoryTest {
 		entityManager.clear();
 
 		for (int i = 0; i < 10; i++) {
-			final Problem problem = Problem.of((long) i, 1L, "문제.jpeg", Difficulty.KILLER, AnswerType.MULTIPLE_CHOICE, course, "1", "testCode", null, null, 1001);
+			final Problem problem = Problem.of((long) i, 1L, "문제.jpeg", Difficulty.KILLER, AnswerType.MULTIPLE_CHOICE, course, "testCode", null, null, 1001);
 			problemRepository.save(problem);
 		}
 
@@ -156,12 +158,12 @@ class ProblemRepositoryTest {
 
 		// level 5 문제들
 		for (int i = 0; i < 10; i++) {
-			final Problem problem = Problem.of((long) i, 1L, "문제.jpeg", Difficulty.HIGH, AnswerType.MULTIPLE_CHOICE, course, "1", "testCode", null, null, 1001);
+			final Problem problem = Problem.of((long) i, 1L, "문제.jpeg", Difficulty.HIGH, AnswerType.MULTIPLE_CHOICE, course, "testCode", null, null, 1001);
 			problemRepository.save(problem);
 		}
 		// level1 문제들
 		for (int i = 10; i < 20; i++) {
-			final Problem problem = Problem.of((long) i, 1L, "문제.jpeg", Difficulty.KILLER, AnswerType.MULTIPLE_CHOICE, course, "1", "testCode", null, null, 1001);
+			final Problem problem = Problem.of((long) i, 1L, "문제.jpeg", Difficulty.KILLER, AnswerType.MULTIPLE_CHOICE, course, "testCode", null, null, 1001);
 			problemRepository.save(problem);
 		}
 
@@ -178,12 +180,12 @@ class ProblemRepositoryTest {
 
 		// level 5 문제들
 		for (int i = 0; i < 10; i++) {
-			final Problem problem = Problem.of((long) i, 1L, "문제.jpeg", Difficulty.KILLER, AnswerType.MULTIPLE_CHOICE, course, "1", "testCode", null, null, 1001);
+			final Problem problem = Problem.of((long) i, 1L, "문제.jpeg", Difficulty.KILLER, AnswerType.MULTIPLE_CHOICE, course, "testCode", null, null, 1001);
 			problemRepository.save(problem);
 		}
 		// level1 문제들
 		for (int i = 10; i < 20; i++) {
-			final Problem problem = Problem.of((long) i, 1L, "문제.jpeg", Difficulty.KILLER, AnswerType.MULTIPLE_CHOICE, course, "1", "testCode", null, null, 1001);
+			final Problem problem = Problem.of((long) i, 1L, "문제.jpeg", Difficulty.KILLER, AnswerType.MULTIPLE_CHOICE, course, "testCode", null, null, 1001);
 			problemRepository.save(problem);
 		}
 
@@ -202,15 +204,40 @@ class ProblemRepositoryTest {
 		entityManager.clear();
 
 		for (int i = 0; i < 10; i++) {
-			final Problem problem = Problem.of((long) i, 1L, "문제.jpeg", Difficulty.KILLER, AnswerType.MULTIPLE_CHOICE, parentCourse, "1", "testCode", null, null, 1001);
+			final Problem problem = Problem.of((long) i, 1L, "문제.jpeg", Difficulty.KILLER, AnswerType.MULTIPLE_CHOICE, parentCourse, "testCode", null, null, 1001);
 			problemRepository.save(problem);
 		}
 
 		for (int i = 10; i < 20; i++) {
-			final Problem problem = Problem.of((long) i, 1L, "문제.jpeg", Difficulty.KILLER, AnswerType.MULTIPLE_CHOICE, childCourse, "1", "testCode", null, null, 1001);
+			final Problem problem = Problem.of((long) i, 1L, "문제.jpeg", Difficulty.KILLER, AnswerType.MULTIPLE_CHOICE, childCourse, "testCode", null, null, 1001);
 			problemRepository.save(problem);
 		}
 
 		Assertions.assertEquals(20, problemRepository.query(null, null, null, null, path.getPath(), 100, 1, null, 1001).size());
+	}
+
+	@Test
+	void 질문_페이징시_limit을_활용하여_두번의_쿼리로_해결한다() {
+		final Course course = Course.of("test2", new Path());
+		courseRepository.save(course);
+
+		entityManager.flush();
+		entityManager.clear();
+
+		// 데이터 삽입 ( 문제당 답안 2개씩 )
+		for (int i = 0; i < 20; i++) {
+			final Problem problem = Problem.of((long) i, 1L, "문제.jpeg", Difficulty.KILLER, AnswerType.MULTIPLE_CHOICE, course, "testCode", null, null, 1001);
+			final Set<Answer> answers = Set.of(Answer.of((long) i, "1", problem), Answer.of((long) i + 20, "2", problem));
+			problem.setAnswers(answers);
+			problemRepository.save(problem);
+		}
+
+		entityManager.flush();
+		entityManager.clear();
+
+		// 5개 조회
+		final List<Problem> problems = problemRepository.query(1L, null, null, null, null, 5, 1, null, null);
+		// 로그를 확인했을 때, limit과 offset을 활용하는것을 확인
+		Assertions.assertEquals(5, problems.size());
 	}
 }

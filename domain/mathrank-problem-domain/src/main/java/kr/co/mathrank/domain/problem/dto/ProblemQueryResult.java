@@ -1,6 +1,7 @@
 package kr.co.mathrank.domain.problem.dto;
 
 import java.time.LocalDateTime;
+import java.util.Set;
 
 import kr.co.mathrank.domain.problem.entity.AnswerType;
 import kr.co.mathrank.domain.problem.entity.Difficulty;
@@ -13,7 +14,7 @@ public record ProblemQueryResult(
 	Difficulty difficulty,
 	AnswerType type,
 	String schoolCode,
-	String answer,
+	Set<String> answer,
 	LocalDateTime createdAt
 ) {
 	public static ProblemQueryResult from(Problem problem) {
@@ -24,7 +25,7 @@ public record ProblemQueryResult(
 			problem.getDifficulty(),
 			problem.getType(),
 			problem.getSchoolCode(),
-			problem.getAnswer(),
+			problem.getAnswers(),
 			problem.getCreatedAt()
 		);
 	}
