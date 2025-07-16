@@ -15,14 +15,17 @@ public record ProblemUpdateCommand(
 	@NotNull
 	String imageSource,
 	@NotNull
+	String solutionImage,
+	@NotNull
 	AnswerType answerType,
 	@NotNull
 	Difficulty difficulty,
 	@NotNull
 	String coursePath,
-	@NotNull
 	String schoolCode,
 	@Size(min = 1, max = 100)
-	Set<String> answers
+	Set<String> answers,
+	Integer year,
+	String solutionVideoLink
 ) {
 }
