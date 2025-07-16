@@ -1,7 +1,10 @@
 package kr.co.mathrank.app.api.problem;
 
+import java.util.Set;
+
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 import kr.co.mathrank.domain.problem.dto.ProblemRegisterCommand;
 import kr.co.mathrank.domain.problem.dto.ProblemUpdateCommand;
 import kr.co.mathrank.domain.problem.entity.AnswerType;
@@ -21,8 +24,8 @@ class Requests {
 		Difficulty difficulty,
 		@NotNull
 		String schoolCode,
-		@NotBlank
-		String answer,
+		@Size(min = 1, max = 100)
+		Set<String> answers,
 		Integer year,
 		String solutionVideoLink
 	) {
@@ -34,7 +37,7 @@ class Requests {
 				coursePath,
 				difficulty,
 				schoolCode,
-				answer,
+				answers,
 				year,
 				solutionVideoLink);
 		}
@@ -55,8 +58,8 @@ class Requests {
 		Difficulty difficulty,
 		@NotNull
 		String schoolCode,
-		@NotBlank
-		String answer,
+		@Size(min = 1, max = 100)
+		Set<String> answers,
 		Integer year,
 		String solutionVideoLink
 	) {
@@ -69,7 +72,7 @@ class Requests {
 				difficulty,
 				coursePath,
 				schoolCode,
-				answer);
+				answers);
 		}
 	}
 }

@@ -1,6 +1,7 @@
 package kr.co.mathrank.app.api.problem.read;
 
 import java.time.LocalDateTime;
+import java.util.Set;
 
 import kr.co.mathrank.client.external.school.SchoolInfo;
 import kr.co.mathrank.client.internal.member.MemberInfo;
@@ -15,7 +16,7 @@ public record ProblemResponse(
 	Difficulty difficulty,
 	AnswerType type,
 	SchoolResponse schoolInfo,
-	String answer,
+	Set<String> answers,
 	LocalDateTime createdAt
 ) {
 	public static ProblemResponse from(

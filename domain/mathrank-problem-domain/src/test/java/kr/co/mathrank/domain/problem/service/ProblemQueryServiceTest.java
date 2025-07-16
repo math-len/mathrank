@@ -40,7 +40,7 @@ class ProblemQueryServiceTest {
 
 		// memberId가 1인 문제를 10개 등록한다.
 		for (int i = 0; i < 10; i++) {
-			final Problem problem = Problem.of((long) i, 1L, "문제.jpeg", Difficulty.KILLER, AnswerType.MULTIPLE_CHOICE, course , "1", "testCode", null, null, 1001);
+			final Problem problem = Problem.of((long) i, 1L, "문제.jpeg", Difficulty.KILLER, AnswerType.MULTIPLE_CHOICE, course, "testCode", null, null, 1001);
 			problemRepository.save(problem);
 		}
 
