@@ -39,7 +39,6 @@ public class ApiExceptionHandler {
 
 	@ExceptionHandler(MathRankException.class)
 	public ResponseEntity<ApiExceptionBody> handleMathRankException(final MathRankException exception) {
-		log.warn("[ApiExceptionHandler] math rank exception code: {}, and message: {}", exception.getCode(), exception.getMessage(), exception);
 		return ResponseEntity.status(API_EXCEPTION_STATUS)
 			.body(ApiExceptionBody.of(exception.getCode(), exception.getMessage()));
 	}
