@@ -1,6 +1,7 @@
 package kr.co.mathrank.domain.problem.repository;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -18,4 +19,8 @@ public interface CourseRepository extends JpaRepository<Course, Path> {
 	List<Course> queryChildes(@Param("path") final String path, @Param("depthLength") final Integer targetPathLength);
 
 	List<Course> findAllByCourseName(String courseName);
+
+	Optional<Course> findByPath(Path path);
+
+	List<Course> findAllByPathIn(List<Path> paths);
 }

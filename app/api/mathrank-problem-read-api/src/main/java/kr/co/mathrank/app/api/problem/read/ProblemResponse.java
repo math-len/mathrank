@@ -5,6 +5,7 @@ import java.util.Set;
 
 import kr.co.mathrank.client.external.school.SchoolInfo;
 import kr.co.mathrank.client.internal.member.MemberInfo;
+import kr.co.mathrank.domain.problem.dto.CourseQueryContainsParentsResult;
 import kr.co.mathrank.domain.problem.dto.ProblemQueryResult;
 import kr.co.mathrank.domain.problem.entity.AnswerType;
 import kr.co.mathrank.domain.problem.entity.Difficulty;
@@ -12,27 +13,36 @@ import kr.co.mathrank.domain.problem.entity.Difficulty;
 public record ProblemResponse(
 	Long id,
 	MemberResponse memberInfo,
-	String imageSource,
+	CourseTotalResponse course,
+	String problemImage,
+	String solutionImage,
 	Difficulty difficulty,
 	AnswerType type,
 	SchoolResponse schoolInfo,
 	Set<String> answers,
-	LocalDateTime createdAt
+	LocalDateTime createdAt,
+	Integer year,
+	String solutionVideoLink
 ) {
 	public static ProblemResponse from(
 		final ProblemQueryResult result,
 		final MemberInfo memberInfo,
-		final SchoolInfo schoolInfo
+		final SchoolInfo schoolInfo,
+		final CourseQueryContainsParentsResult courseResult
 	) {
 		return new ProblemResponse(
 			result.id(),
 			MemberResponse.from(memberInfo),
+			CourseTotalResponse.from(courseResult),
 			result.imageSource(),
+			result.solutionImage(),
 			result.difficulty(),
 			result.type(),
 			SchoolResponse.from(schoolInfo),
 			result.answer(),
-			result.createdAt()
+			result.createdAt(),
+			result.year(),
+			result.solutionVideoLink()
 		);
 	}
 }

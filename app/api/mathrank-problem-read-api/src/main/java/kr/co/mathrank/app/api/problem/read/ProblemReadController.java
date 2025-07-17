@@ -16,9 +16,11 @@ import kr.co.mathrank.client.external.school.SchoolClient;
 import kr.co.mathrank.client.external.school.SchoolInfo;
 import kr.co.mathrank.client.internal.member.MemberClient;
 import kr.co.mathrank.client.internal.member.MemberInfo;
+import kr.co.mathrank.domain.problem.dto.CourseQueryContainsParentsResult;
 import kr.co.mathrank.domain.problem.dto.ProblemQueryCommand;
 import kr.co.mathrank.domain.problem.dto.ProblemQueryPageResult;
 import kr.co.mathrank.domain.problem.dto.ProblemQueryResult;
+import kr.co.mathrank.domain.problem.service.CourseQueryService;
 import kr.co.mathrank.domain.problem.service.ProblemQueryService;
 import lombok.RequiredArgsConstructor;
 
@@ -27,6 +29,7 @@ import lombok.RequiredArgsConstructor;
 @Tag(name = "문제 API")
 public class ProblemReadController {
 	private final ProblemQueryService problemQueryService;
+	private final CourseQueryService courseQueryService;
 	private final MemberClient memberClient;
 	private final SchoolClient schoolClient;
 
@@ -38,18 +41,19 @@ public class ProblemReadController {
 		final ProblemQueryPageResult pageQueryResult = problemQueryService.query(command);
 
 		final ProblemPageResponse containsUserName = ProblemPageResponse.from(
-			withUserName(pageQueryResult.queryResults()), pageQueryResult);
+			withOtherDatas(pageQueryResult.queryResults()), pageQueryResult);
 
 		return ResponseEntity.ok(containsUserName);
 	}
 
-	private List<ProblemResponse> withUserName(final List<ProblemQueryResult> queryResults) {
+	private List<ProblemResponse> withOtherDatas(final List<ProblemQueryResult> queryResults) {
 		return queryResults.stream()
 			.map(problem -> {
 				final MemberInfo info = memberClient.getMemberInfo(problem.memberId());
 				final SchoolInfo schoolInfo = schoolClient.getSchool(RequestType.JSON.getType(), problem.schoolCode())
 					.orElse(SchoolInfo.none());
-				return ProblemResponse.from(problem, info, schoolInfo);
+				final CourseQueryContainsParentsResult result = courseQueryService.queryParents(problem.path());
+				return ProblemResponse.from(problem, info, schoolInfo, result);
 			})
 			.toList();
 	}
