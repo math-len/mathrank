@@ -1,6 +1,10 @@
 package kr.co.mathrank.domain.problem.entity;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import jakarta.persistence.Embeddable;
+import jakarta.persistence.Transient;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -61,6 +65,16 @@ public class Path {
 		final String nextChunk = nextChunk(rightNextChunk);
 
 		return new Path(this.path + nextChunk);
+	}
+
+	@Transient
+	public List<Path> getUpperPaths() {
+		final int currentPathDepth = getDepth();
+		final List<Path> parents = new ArrayList<>();
+		for (int i = 1; i < currentPathDepth; i++) {
+			parents.add(new Path(this.path.substring(0, i * DEPTH_CHUNK_SIZE)));
+		}
+		return parents;
 	}
 
 	private String nextChunk(final String chunk) {
