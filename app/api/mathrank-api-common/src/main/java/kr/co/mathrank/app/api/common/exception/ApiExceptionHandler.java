@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import jakarta.servlet.ServletException;
 import jakarta.validation.ConstraintViolationException;
+import kr.co.mathrank.common.exception.HttpMathRankException;
 import kr.co.mathrank.common.exception.MathRankException;
 import lombok.extern.slf4j.Slf4j;
 
@@ -40,6 +41,12 @@ public class ApiExceptionHandler {
 	@ExceptionHandler(MathRankException.class)
 	public ResponseEntity<ApiExceptionBody> handleMathRankException(final MathRankException exception) {
 		return ResponseEntity.status(API_EXCEPTION_STATUS)
+			.body(ApiExceptionBody.of(exception.getCode(), exception.getMessage()));
+	}
+
+	@ExceptionHandler(HttpMathRankException.class)
+	public ResponseEntity<ApiExceptionBody> handleHttpMathRankException(final HttpMathRankException exception) {
+		return ResponseEntity.status(exception.getHttpStatusCode())
 			.body(ApiExceptionBody.of(exception.getCode(), exception.getMessage()));
 	}
 }
