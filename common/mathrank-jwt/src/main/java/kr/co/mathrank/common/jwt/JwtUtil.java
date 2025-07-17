@@ -62,13 +62,12 @@ public class JwtUtil {
 		try {
 			final Claims claims = this.parseToken(token);
 			return new UserInfo(
-				getMemberId(claims).orElseThrow(),
-				getMemberRole(claims).orElseThrow(),
-				getMemberName(claims).orElseThrow()
+				getMemberId(claims).orElseThrow(() -> new IllegalArgumentException("cannot find member id from token")),
+				getMemberRole(claims).orElseThrow(() -> new IllegalArgumentException("cannot find member role from token")),
+				getMemberName(claims).orElseThrow(() -> new IllegalArgumentException("cannot find member name from token"))
 			);
 		} catch (Exception e) {
-			log.error("[JwtUtil.parse] error occurred with: {}", e.getMessage(), e);
-			throw new JwtException(e.getMessage());
+			throw new JwtException(e);
 		}
 	}
 
