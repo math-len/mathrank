@@ -2,9 +2,18 @@
 
 <configuration>
     <springProperty name="SERVICE_NAME" source="spring.application.name"/>
-    <include resource="console-error-appender.xml"/>
-    <include resource="console-warn-appender.xml"/>
-    <include resource="console-info-appender.xml"/>
+
+    <springProfile name="develop">
+        <include resource="console-error-appender.xml"/>
+        <include resource="console-warn-appender.xml"/>
+        <include resource="console-info-appender.xml"/>
+    </springProfile>
+
+    <springProfile name="deploy">
+        <include resource="file-error-appender.xml"/>
+        <include resource="file-warn-appender.xml"/>
+        <include resource="file-info-appender.xml"/>
+    </springProfile>
 
     <root level="info">
         <appender-ref ref="INFO"/>
