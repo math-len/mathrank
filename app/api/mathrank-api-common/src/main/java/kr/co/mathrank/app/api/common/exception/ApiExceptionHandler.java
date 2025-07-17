@@ -2,6 +2,7 @@ package kr.co.mathrank.app.api.common.exception;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
@@ -24,8 +25,8 @@ public class ApiExceptionHandler {
 			.body(ApiExceptionBody.of(1000, exception.getMessage()));
 	}
 
-	@ExceptionHandler(ServletException.class)
-	public ResponseEntity<ApiExceptionBody> handleServletException(final ServletException exception) {
+	@ExceptionHandler({ServletException.class, HttpMessageNotReadableException.class})
+	public ResponseEntity<ApiExceptionBody> handleServletException(final Exception exception) {
 		log.warn("[ApiExceptionHandler] wrong api access with: {}", exception.getMessage(), exception);
 		return ResponseEntity.status(API_EXCEPTION_STATUS)
 			.body(ApiExceptionBody.of(1001, exception.getMessage()));
