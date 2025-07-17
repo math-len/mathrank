@@ -58,7 +58,7 @@ public class JwtUtil {
 		return new JwtResult(accessToken, refreshToken);
 	}
 
-	public UserInfo parse(@NotNull final String token) {
+	public UserInfo parse(@NotNull final String token) throws JwtException {
 		try {
 			final Claims claims = this.parseToken(token);
 			return new UserInfo(
