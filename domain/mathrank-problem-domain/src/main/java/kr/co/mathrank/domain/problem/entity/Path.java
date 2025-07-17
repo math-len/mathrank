@@ -29,7 +29,7 @@ public class Path {
 	public Path(final String path) {
 		this.path = path;
 		if (getDepth() > MAX_CHUNK_COUNT) {
-			log.error("[Path.new] over max chunk count (curr: {}, max: {})", getDepth(), MAX_CHUNK_COUNT);
+			log.warn("[Path.new] over max chunk count (curr: {}, max: {})", getDepth(), MAX_CHUNK_COUNT);
 			throw new IllegalStateException("over max chunk count");
 		}
 	}
