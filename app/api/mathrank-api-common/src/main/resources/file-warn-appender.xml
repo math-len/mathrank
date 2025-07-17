@@ -21,7 +21,8 @@
                         "logType": "%level",
                         "timestamp": "%date{yyyyMMdd HHmmss.SSSSSS}",
                         "message": "%message",
-                        "service": "${SERVICE_NAME}"
+                        "service": "${SERVICE_NAME}",
+                        "stacktrace": "%ex"
                         }
                     </pattern>
                 </pattern>

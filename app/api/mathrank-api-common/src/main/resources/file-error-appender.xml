@@ -23,7 +23,7 @@
                         "timestamp": "%date{yyyyMMdd HHmmss.SSSSSS}",
                         "message": "%message",
                         "service": "${SERVICE_NAME}",
-                        "stacktrace": "%rEx"
+                        "stacktrace": "%ex"
                         }
                     </pattern>
                 </pattern>
