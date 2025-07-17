@@ -42,6 +42,7 @@ public class CourseService {
 
 		// 존재하지 않는 부모 조회
 		if (!command.parentPath().isBlank() && longestPath == null) {
+			log.warn("[CourseService.register] cannot create path with: {}", command.parentPath());
 			throw new CannotFoundCourseException(command.parentPath());
 		}
 
