@@ -9,4 +9,8 @@ public record CourseQueryResult(
 	public static CourseQueryResult from(Course course) {
 		return new CourseQueryResult(course.getPath().getPath(), course.getCourseName());
 	}
+
+	public static CourseQueryResult none() {
+		return new CourseQueryResult(null, null);
+	}
 }

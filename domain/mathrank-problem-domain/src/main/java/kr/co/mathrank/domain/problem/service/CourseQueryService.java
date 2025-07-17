@@ -1,12 +1,12 @@
 package kr.co.mathrank.domain.problem.service;
 
 import java.util.List;
-import java.util.Optional;
 
 import org.springframework.stereotype.Service;
 import org.springframework.validation.annotation.Validated;
 
 import jakarta.validation.constraints.NotNull;
+import kr.co.mathrank.domain.problem.dto.CourseQueryContainsParentsResult;
 import kr.co.mathrank.domain.problem.dto.CourseQueryResult;
 import kr.co.mathrank.domain.problem.dto.CourseQueryResults;
 import kr.co.mathrank.domain.problem.entity.Path;
@@ -29,13 +29,17 @@ public class CourseQueryService {
 	}
 
 	// 삭제된 상위 경로는 출력되지 않음
-	public CourseQueryResults queryParents(@NotNull final String path) {
+	// 쿼리가 개당 한번씩 호출될것
+	public CourseQueryContainsParentsResult queryParents(@NotNull final String path) {
 		final Path basePath = new Path(path);
-
-		return new CourseQueryResults(basePath.getUpperInclude().stream()
-			.map(courseRepository::findByPath)
-			.flatMap(Optional::stream)
+		final CourseQueryResult result = courseRepository.findByPath(basePath)
 			.map(CourseQueryResult::from)
-			.toList());
+			.orElseGet(CourseQueryResult::none);
+		final List<CourseQueryResult> parents = courseRepository.findAllByPathIn(basePath.getUpperPaths())
+			.stream()
+			.map(CourseQueryResult::from)
+			.toList();
+
+		return new CourseQueryContainsParentsResult(result, parents);
 	}
 }
