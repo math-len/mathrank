@@ -11,6 +11,7 @@ public record ProblemQueryResult(
 	Long id,
 	Long memberId,
 	String imageSource,
+	String path,
 	Difficulty difficulty,
 	AnswerType type,
 	String schoolCode,
@@ -22,6 +23,8 @@ public record ProblemQueryResult(
 			problem.getId(),
 			problem.getMemberId(),
 			problem.getImageSource(),
+			// null 대비
+			problem.getCourse() == null ? "" : problem.getCourse().getPath().getPath(),
 			problem.getDifficulty(),
 			problem.getType(),
 			problem.getSchoolCode(),
