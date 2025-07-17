@@ -2,7 +2,6 @@ package kr.co.mathrank.domain.problem.service;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-import java.util.Collections;
 import java.util.Set;
 import java.util.stream.Stream;
 
@@ -66,7 +65,7 @@ class ProblemServiceTest {
 
 		final Problem updatedProblem = problemRepository.findById(problemId)
 			.orElseThrow();
-		assertEquals("newImage.jpeg", updatedProblem.getImageSource());
+		assertEquals("newImage.jpeg", updatedProblem.getProblemImage());
 		assertEquals(AnswerType.SHORT_ANSWER, updatedProblem.getType());
 		assertEquals(Difficulty.KILLER, updatedProblem.getDifficulty());
 		assertEquals("newTestCode", updatedProblem.getSchoolCode());

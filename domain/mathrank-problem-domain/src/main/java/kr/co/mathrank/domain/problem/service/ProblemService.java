@@ -70,7 +70,7 @@ public class ProblemService {
 		problem.setType(command.answerType());
 		problem.setAnswers(mapToAnswer(command.answers(), problem));
 		problem.setSchoolCode(command.schoolCode());
-		problem.setImageSource(command.imageSource());
+		problem.setProblemImage(command.imageSource());
 		problem.setSolutionVideoLink(command.solutionVideoLink());
 		problem.setSolutionImage(command.solutionImage());
 		problem.setYears(command.year());

@@ -14,12 +14,15 @@ public record ProblemResponse(
 	Long id,
 	MemberResponse memberInfo,
 	CourseTotalResponse course,
-	String imageSource,
+	String problemImage,
+	String solutionImage,
 	Difficulty difficulty,
 	AnswerType type,
 	SchoolResponse schoolInfo,
 	Set<String> answers,
-	LocalDateTime createdAt
+	LocalDateTime createdAt,
+	Integer year,
+	String solutionVideoLink
 ) {
 	public static ProblemResponse from(
 		final ProblemQueryResult result,
@@ -32,11 +35,14 @@ public record ProblemResponse(
 			MemberResponse.from(memberInfo),
 			CourseTotalResponse.from(courseResult),
 			result.imageSource(),
+			result.solutionImage(),
 			result.difficulty(),
 			result.type(),
 			SchoolResponse.from(schoolInfo),
 			result.answer(),
-			result.createdAt()
+			result.createdAt(),
+			result.year(),
+			result.solutionVideoLink()
 		);
 	}
 }
