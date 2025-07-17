@@ -11,22 +11,31 @@ public record ProblemQueryResult(
 	Long id,
 	Long memberId,
 	String imageSource,
+	String path,
 	Difficulty difficulty,
 	AnswerType type,
 	String schoolCode,
 	Set<String> answer,
-	LocalDateTime createdAt
+	LocalDateTime createdAt,
+	Integer year,
+	String solutionVideoLink,
+	String solutionImage
 ) {
 	public static ProblemQueryResult from(Problem problem) {
 		return new ProblemQueryResult(
 			problem.getId(),
 			problem.getMemberId(),
-			problem.getImageSource(),
+			problem.getProblemImage(),
+			// null 대비
+			problem.getCourse() == null ? "" : problem.getCourse().getPath().getPath(),
 			problem.getDifficulty(),
 			problem.getType(),
 			problem.getSchoolCode(),
 			problem.getAnswers(),
-			problem.getCreatedAt()
+			problem.getCreatedAt(),
+			problem.getYears(),
+			problem.getSolutionVideoLink(),
+			problem.getSolutionImage()
 		);
 	}
 }
