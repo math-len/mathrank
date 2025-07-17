@@ -33,7 +33,10 @@ public class LoginService {
 	@Transactional(noRollbackFor = PasswordMismatchedException.class)
 	public JwtLoginResult login(@NotNull @Valid final LoginCommand command) {
 		final Member member = memberRepository.findByLoginId(command.loginId())
-			.orElseThrow(CannotFoundMemberException::new);
+			.orElseThrow(() -> {
+				log.warn("[LoginService.login] cannot find member login id: {}", command.loginId());
+				return new CannotFoundMemberException();
+			});
 
 		final LocalDateTime now = LocalDateTime.now();
 		// lock 인지 확인
