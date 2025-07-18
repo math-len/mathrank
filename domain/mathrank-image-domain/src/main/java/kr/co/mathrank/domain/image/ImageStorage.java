@@ -33,8 +33,8 @@ class ImageStorage {
 			uploadFile.inputStream().close();
 			log.info("[ImageStorage.store] stored image: {}", uploadFile);
 		} catch (IOException e) {
-			log.error("[ImageStorage.save] error occurred: {}, because: {}", uploadFile, e.getMessage(), e);
-			throw new StoreException();
+			log.error("[ImageStorage.store] error occurred: {}, because: {}", uploadFile, e.getMessage(), e);
+			throw new StoreException("이미지를 저장할 수 없습니다: %s".formatted(uploadFile.fullFileName()));
 		}
 	}
 
@@ -50,7 +50,7 @@ class ImageStorage {
 		Resource fileResource = new FileSystemResource(absoluteImagePath);
 		if (!fileResource.exists()) {
 			log.error("[ImageStorage.load] File not found: {}", absoluteImagePath);
-			throw new NoSuchImageException();
+			throw new NoSuchImageException("이미지를 찾을 수 없습니다: %s".formatted(fullFileName));
 		}
 
 		try {
@@ -59,7 +59,7 @@ class ImageStorage {
 				Files.probeContentType(path)), fileResource.contentLength());
 		} catch (IOException | InvalidMediaTypeException | InvalidPathException | SecurityException e) {
 			log.error("[ImageStorage.load] not supported mediaType: {}", fullFileName, e);
-			throw new NotSupportedMediaException();
+			throw new NotSupportedMediaException("이미지를 사용할 수 없습니다: %s".formatted(fullFileName));
 		}
 	}
 

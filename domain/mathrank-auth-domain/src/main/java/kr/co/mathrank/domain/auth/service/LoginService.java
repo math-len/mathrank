@@ -33,7 +33,10 @@ public class LoginService {
 	@Transactional(noRollbackFor = PasswordMismatchedException.class)
 	public JwtLoginResult login(@NotNull @Valid final LoginCommand command) {
 		final Member member = memberRepository.findByLoginId(command.loginId())
-			.orElseThrow(CannotFoundMemberException::new);
+			.orElseThrow(() -> {
+				log.warn("[LoginService.login] cannot find member login id: {}", command.loginId());
+				return new CannotFoundMemberException();
+			});
 
 		final LocalDateTime now = LocalDateTime.now();
 		// lock 인지 확인
@@ -45,6 +48,7 @@ public class LoginService {
 		// 비밀번호 일치
 		if (isMatch(command.password(), member.getPassword())) {
 			member.getLockInfo().unlock();
+			log.info("[LoginService.login] member login success: {}", member.getId());
 			return jwtLoginManager.login(member.getId(), member.getRole(), member.getName());
 		}
 

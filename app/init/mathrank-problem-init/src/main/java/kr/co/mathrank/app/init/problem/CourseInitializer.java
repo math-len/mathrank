@@ -32,6 +32,7 @@ public class CourseInitializer implements CommandLineRunner {
 
 	@Override
 	public void run(String... args) throws Exception {
+		log.info("[CourseInitializer.run] started initialize course by: {}", excelFilePath);
 		try (FileInputStream fis = new FileInputStream(excelFilePath);
 			 Workbook workbook = new XSSFWorkbook(fis)) {
 
@@ -119,9 +120,12 @@ public class CourseInitializer implements CommandLineRunner {
 					.orElseGet(Path::new);
 				courseService.register(new CourseRegisterCommand(cellName, parentPath.getPath()));
 			}
+		} catch (Exception e) {
+			log.warn("[CourseInitializer.run] error occurred in initialize: {}", excelFilePath, e);
+			return;
 		}
 
-		System.out.println("COUNT: " + courseRepository.count());
+		log.info("[CourseInitializer.run] initialized completed - total count: {}", courseRepository.count());
 	}
 }
 

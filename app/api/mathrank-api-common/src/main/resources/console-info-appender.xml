@@ -1,0 +1,28 @@
+<included>
+    <appender name="INFO" class="ch.qos.logback.core.ConsoleAppender">
+        <filter class="ch.qos.logback.classic.filter.LevelFilter">
+            <level>INFO</level>
+            <onMatch>ACCEPT</onMatch>
+            <onMismatch>DENY</onMismatch>
+        </filter>
+        <encoder class="net.logstash.logback.encoder.LoggingEventCompositeJsonEncoder">
+            <providers>
+                <mdc/>
+                <pattern>
+                    <pattern>
+                        {
+                        "logType": "%level",
+                        "timestamp": "%date{yyyyMMdd HHmmss.SSSSSS}",
+                        "message": "%message",
+                        "service": "${SERVICE_NAME}"
+                        }
+                    </pattern>
+                </pattern>
+            </providers>
+            <jsonGeneratorDecorator class="net.logstash.logback.decorate.CompositeJsonGeneratorDecorator">
+                <decorator class="net.logstash.logback.decorate.PrettyPrintingJsonGeneratorDecorator"/>
+            </jsonGeneratorDecorator>
+            <timestampPattern>yyyyMMddHHmmss.SSSSSS</timestampPattern>
+        </encoder>
+    </appender>
+</included>

@@ -8,6 +8,7 @@ import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import kr.co.mathrank.common.jwt.JwtException;
 import kr.co.mathrank.common.jwt.JwtUtil;
 import kr.co.mathrank.common.jwt.UserInfo;
 import kr.co.mathrank.common.role.Role;
@@ -23,19 +24,18 @@ class JwtAuthenticationFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         final String authorizationHeader = request.getHeader(AUTH_HEADER);
+
+        // 헤더가 존재하면 인증됐는지 검사한다.
         if (authorizationHeader != null) {
-            final Role role;
-            final Long userId;
+            UserInfo userInfo;
             try {
-                final UserInfo authInfo = jwtUtils.parse(authorizationHeader);
-                role = authInfo.role();
-                userId = authInfo.userId();
-            } catch (Exception e) {
-                log.warn("Error parsing authorization header : {}", e.toString());
+                userInfo = jwtUtils.parse(authorizationHeader);
+            } catch (JwtException e) {
+                log.warn("[JwtAuthenticationFilter.doFilterInternal] error occurred in parsing access token : {}", e.toString(), e);
                 response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
                 return;
             }
-            filterChain.doFilter(new JwtRequestWrapper(request, new MemberPrincipal(userId, role)), response);
+            filterChain.doFilter(new JwtRequestWrapper(request, new MemberPrincipal(userInfo.userId(), userInfo.role())), response);
         } else {
             filterChain.doFilter(request, response);
         }

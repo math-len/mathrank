@@ -2,11 +2,14 @@ package kr.co.mathrank.app.api.common.exception;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.converter.HttpMessageNotReadableException;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import jakarta.servlet.ServletException;
 import jakarta.validation.ConstraintViolationException;
+import kr.co.mathrank.common.exception.HttpMathRankException;
 import kr.co.mathrank.common.exception.MathRankException;
 import lombok.extern.slf4j.Slf4j;
 
@@ -23,8 +26,8 @@ public class ApiExceptionHandler {
 			.body(ApiExceptionBody.of(1000, exception.getMessage()));
 	}
 
-	@ExceptionHandler(ServletException.class)
-	public ResponseEntity<ApiExceptionBody> handleServletException(final ServletException exception) {
+	@ExceptionHandler({ServletException.class, HttpMessageNotReadableException.class, MethodArgumentNotValidException.class})
+	public ResponseEntity<ApiExceptionBody> handleServletException(final Exception exception) {
 		log.warn("[ApiExceptionHandler] wrong api access with: {}", exception.getMessage(), exception);
 		return ResponseEntity.status(API_EXCEPTION_STATUS)
 			.body(ApiExceptionBody.of(1001, exception.getMessage()));
@@ -39,8 +42,13 @@ public class ApiExceptionHandler {
 
 	@ExceptionHandler(MathRankException.class)
 	public ResponseEntity<ApiExceptionBody> handleMathRankException(final MathRankException exception) {
-		log.warn("[ApiExceptionHandler] math rank exception code: {}, and message: {}", exception.getCode(), exception.getMessage(), exception);
 		return ResponseEntity.status(API_EXCEPTION_STATUS)
+			.body(ApiExceptionBody.of(exception.getCode(), exception.getMessage()));
+	}
+
+	@ExceptionHandler(HttpMathRankException.class)
+	public ResponseEntity<ApiExceptionBody> handleHttpMathRankException(final HttpMathRankException exception) {
+		return ResponseEntity.status(exception.getHttpStatusCode())
 			.body(ApiExceptionBody.of(exception.getCode(), exception.getMessage()));
 	}
 }

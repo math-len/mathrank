@@ -34,8 +34,10 @@ public class MemberRegisterService {
 
 		final Member newMember = Member.of(snowflake.nextId(), command.name(), command.role(), command.loginId(),
 			command.password().encrypt(passwordEncoder));
+		memberRepository.save(newMember);
 
-		return memberRepository.save(newMember).getId();
+		log.info("[MemberRegisterService.register] member saved - memberId: {}", newMember.getId());
+		return newMember.getId();
 	}
 
 	private boolean isExist(final String loginId) {
