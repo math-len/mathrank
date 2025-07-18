@@ -54,6 +54,8 @@ public class ProblemService {
 		problem.setAnswers(answers);
 
 		problemRepository.save(problem);
+		log.info("[ProblemService.save] problem created - id: {}, memberId: {}, course: {}",
+			id, command.requestMemberId(), course.getCourseName());
 		return id;
 	}
 
@@ -74,6 +76,9 @@ public class ProblemService {
 		problem.setSolutionVideoLink(command.solutionVideoLink());
 		problem.setSolutionImage(command.solutionImage());
 		problem.setYears(command.year());
+
+		log.info("[ProblemService.update] problem updated - id: {}, memberId: {}, course: {}",
+			command.problemId(), command.requestMemberId(), command.coursePath());
 	}
 
 	private Course getCourse(String command) {
@@ -88,12 +93,15 @@ public class ProblemService {
 
 		isOwner(command.requestMemberId(), problem);
 
-		log.debug("[ProblemService.delete] Deleting problem with ID: {}", command.problemId());
+		log.info("[ProblemService.delete] problem deleted - id: {}, memberId: {}",
+			command.problemId(), command.requestMemberId());
 		problemRepository.delete(problem);
 	}
 
 	private void isOwner(final Long requestMemberId, final Problem problem) {
 		if (!requestMemberId.equals(problem.getMemberId())) {
+			log.warn("[Problem.isOwner] is not owner - problemId: {}, ownerId: {}, requestMemberId: {}",
+				problem.getId(), problem.getMemberId(), requestMemberId);
 			throw new CannotAccessProblemException();
 		}
 	}

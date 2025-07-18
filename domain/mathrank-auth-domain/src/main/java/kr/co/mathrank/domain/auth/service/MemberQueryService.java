@@ -7,7 +7,9 @@ import jakarta.validation.constraints.NotNull;
 import kr.co.mathrank.domain.auth.dto.MemberInfoResult;
 import kr.co.mathrank.domain.auth.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 @Service
 @Validated
 @RequiredArgsConstructor
@@ -21,6 +23,10 @@ public class MemberQueryService {
 	public MemberInfoResult getInfo(@NotNull final Long memberId) {
 		return memberRepository.findById(memberId)
 			.map(MemberInfoResult::from)
-			.orElseGet(MemberInfoResult::none);
+			.orElseGet(() -> {
+				log.warn("[MemberQueryService.getInfo] cannot find member - memberId: {}", memberId);
+				return MemberInfoResult.none();
+			});
+
 	}
 }

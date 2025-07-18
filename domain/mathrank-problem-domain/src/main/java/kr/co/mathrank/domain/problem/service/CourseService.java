@@ -14,7 +14,9 @@ import kr.co.mathrank.domain.problem.entity.Path;
 import kr.co.mathrank.domain.problem.exception.CannotFoundCourseException;
 import kr.co.mathrank.domain.problem.repository.CourseRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 @Service
 @Validated
 @RequiredArgsConstructor
@@ -23,7 +25,14 @@ public class CourseService {
 
 	@Transactional
 	public String register(@NotNull @Valid final CourseRegisterCommand command) {
-		final Path parentPath = new Path(command.parentPath());
+		Path parentPath;
+		try {
+			parentPath = new Path(command.parentPath());
+		} catch (IllegalStateException e) {
+			log.warn("[CourseService.register] cannot create path with: {}", command.parentPath());
+			throw new CannotFoundCourseException(command.parentPath());
+		}
+
 		final Course longestPath = getLatestPathCourse(parentPath);
 
 		// 첫 삽입일 경우
@@ -33,19 +42,24 @@ public class CourseService {
 
 		// 존재하지 않는 부모 조회
 		if (!command.parentPath().isBlank() && longestPath == null) {
+			log.warn("[CourseService.register] cannot create path with: {}", command.parentPath());
 			throw new CannotFoundCourseException(command.parentPath());
 		}
 
 		final Path childPath = parentPath.nextChild(longestPath.getPath());
 
 		final Course course = Course.of(command.courseName(), childPath);
-		return courseRepository.save(course).getPath().getPath();
+		final String resultPath = courseRepository.save(course).getPath().getPath();
+
+		log.info("[CourseService.register] course saved - courseName: {}, coursePath: {}", course.getCourseName(), course.getPath());
+		return resultPath;
 	}
 
 	private Course getLatestPathCourse(final Path path) {
 		return courseRepository.queryCourseStartsWith(path.getPath(),
 				PageRequest.ofSize(1).withSort(Sort.by(Sort.Direction.DESC, "path")))
 			.stream()
-			.findFirst().orElse(null);
+			.findFirst()
+			.orElse(null);
 	}
 }
