@@ -6,6 +6,7 @@ import org.springdoc.core.annotations.ParameterObject;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import io.swagger.v3.oas.annotations.Operation;
@@ -52,15 +53,27 @@ public class ProblemReadController {
 		return ResponseEntity.ok(containsUserName);
 	}
 
+	@GetMapping(value = "/api/v1/problem/single")
+	public ResponseEntity<ProblemResponse> getProblem(
+		@RequestParam final Long problemId
+	) {
+		final ProblemQueryResult result = problemQueryService.getSingle(problemId);
+		final ProblemResponse response = toResponse(result);
+
+		return ResponseEntity.ok(response);
+	}
+
 	private List<ProblemResponse> withOtherDatas(final List<ProblemQueryResult> queryResults) {
 		return queryResults.stream()
-			.map(problem -> {
-				final MemberInfo info = memberClient.getMemberInfo(problem.memberId());
-				final SchoolInfo schoolInfo = schoolClient.getSchool(RequestType.JSON.getType(), problem.schoolCode())
-					.orElse(SchoolInfo.none());
-				final CourseQueryContainsParentsResult result = courseQueryService.queryParents(problem.path());
-				return ProblemResponse.from(problem, info, schoolInfo, result);
-			})
+			.map(this::toResponse)
 			.toList();
+	}
+
+	private ProblemResponse toResponse(final ProblemQueryResult problem) {
+		final MemberInfo info = memberClient.getMemberInfo(problem.memberId());
+		final SchoolInfo schoolInfo = schoolClient.getSchool(RequestType.JSON.getType(), problem.schoolCode())
+			.orElse(SchoolInfo.none());
+		final CourseQueryContainsParentsResult result = courseQueryService.queryParents(problem.path());
+		return ProblemResponse.from(problem, info, schoolInfo, result);
 	}
 }
