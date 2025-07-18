@@ -10,15 +10,28 @@ import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 import kr.co.mathrank.domain.problem.dto.ProblemQueryCommand;
 import kr.co.mathrank.domain.problem.dto.ProblemQueryPageResult;
+import kr.co.mathrank.domain.problem.dto.ProblemQueryResult;
 import kr.co.mathrank.domain.problem.entity.Problem;
+import kr.co.mathrank.domain.problem.exception.CannotFoundProblemException;
 import kr.co.mathrank.domain.problem.repository.ProblemRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 @Service
 @Validated
 @RequiredArgsConstructor
 public class ProblemQueryService {
 	private final ProblemRepository problemRepository;
+
+	public ProblemQueryResult getSingle(@NotNull final Long problemId) {
+		return problemRepository.findById(problemId)
+			.map(ProblemQueryResult::from)
+			.orElseThrow(() -> {
+				log.warn("[ProblemQueryService.getSingle] cannot find - problemId: {}", problemId);
+				return new CannotFoundProblemException(problemId);
+			});
+	}
 
 	@Transactional
 	public ProblemQueryPageResult query(@NotNull @Valid final ProblemQueryCommand command) {

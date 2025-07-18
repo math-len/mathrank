@@ -6,11 +6,15 @@ import org.springdoc.core.annotations.ParameterObject;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
+import kr.co.mathrank.app.api.common.authentication.Authorization;
+import kr.co.mathrank.app.api.common.authentication.LoginInfo;
+import kr.co.mathrank.app.api.common.authentication.MemberPrincipal;
 import kr.co.mathrank.client.external.school.RequestType;
 import kr.co.mathrank.client.external.school.SchoolClient;
 import kr.co.mathrank.client.external.school.SchoolInfo;
@@ -34,10 +38,13 @@ public class ProblemReadController {
 	private final SchoolClient schoolClient;
 
 	@Operation(summary = "등록된 문제 조회 API", description = "필드를 null 로 설정할 시, 해당 필드는 조건에 포함하지 않습니다. +) coursePath 를 통해 조회시, 하위의 과정의 문제들까지 모두 조회됩니다.")
+	@Authorization(openedForAll = true)
 	@GetMapping(value = "/api/v1/problem")
 	public ResponseEntity<ProblemPageResponse> problems(
-		@ParameterObject @ModelAttribute @Valid final ProblemQueryCommand command
+		@ParameterObject @ModelAttribute @Valid final ProblemQueryRequest request,
+		@LoginInfo final MemberPrincipal loginInfo
 	) {
+		final ProblemQueryCommand command = request.toCommand(loginInfo.memberId());
 		final ProblemQueryPageResult pageQueryResult = problemQueryService.query(command);
 
 		final ProblemPageResponse containsUserName = ProblemPageResponse.from(
@@ -46,15 +53,27 @@ public class ProblemReadController {
 		return ResponseEntity.ok(containsUserName);
 	}
 
+	@GetMapping(value = "/api/v1/problem/single")
+	public ResponseEntity<ProblemResponse> getProblem(
+		@RequestParam final Long problemId
+	) {
+		final ProblemQueryResult result = problemQueryService.getSingle(problemId);
+		final ProblemResponse response = toResponse(result);
+
+		return ResponseEntity.ok(response);
+	}
+
 	private List<ProblemResponse> withOtherDatas(final List<ProblemQueryResult> queryResults) {
 		return queryResults.stream()
-			.map(problem -> {
-				final MemberInfo info = memberClient.getMemberInfo(problem.memberId());
-				final SchoolInfo schoolInfo = schoolClient.getSchool(RequestType.JSON.getType(), problem.schoolCode())
-					.orElse(SchoolInfo.none());
-				final CourseQueryContainsParentsResult result = courseQueryService.queryParents(problem.path());
-				return ProblemResponse.from(problem, info, schoolInfo, result);
-			})
+			.map(this::toResponse)
 			.toList();
+	}
+
+	private ProblemResponse toResponse(final ProblemQueryResult problem) {
+		final MemberInfo info = memberClient.getMemberInfo(problem.memberId());
+		final SchoolInfo schoolInfo = schoolClient.getSchool(RequestType.JSON.getType(), problem.schoolCode())
+			.orElse(SchoolInfo.none());
+		final CourseQueryContainsParentsResult result = courseQueryService.queryParents(problem.path());
+		return ProblemResponse.from(problem, info, schoolInfo, result);
 	}
 }
