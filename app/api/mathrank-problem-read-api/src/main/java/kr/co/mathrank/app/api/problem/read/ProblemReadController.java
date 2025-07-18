@@ -37,7 +37,7 @@ public class ProblemReadController {
 	private final MemberClient memberClient;
 	private final SchoolClient schoolClient;
 
-	@Operation(summary = "등록된 문제 조회 API", description = "필드를 null 로 설정할 시, 해당 필드는 조건에 포함하지 않습니다. +) coursePath 를 통해 조회시, 하위의 과정의 문제들까지 모두 조회됩니다.")
+	@Operation(summary = "문제 페이지 조회 API", description = "각 필드를 null 로 설정할 시, 해당 필드는 조건에 포함하지 않습니다. +) coursePath 를 통해 조회시, 하위의 과정의 문제들까지 모두 조회됩니다.")
 	@Authorization(openedForAll = true)
 	@GetMapping(value = "/api/v1/problem")
 	public ResponseEntity<ProblemPageResponse> problems(
@@ -53,6 +53,7 @@ public class ProblemReadController {
 		return ResponseEntity.ok(containsUserName);
 	}
 
+	@Operation(summary = "문제 단일 조회 API")
 	@GetMapping(value = "/api/v1/problem/single")
 	public ResponseEntity<ProblemResponse> getProblem(
 		@RequestParam final Long problemId
