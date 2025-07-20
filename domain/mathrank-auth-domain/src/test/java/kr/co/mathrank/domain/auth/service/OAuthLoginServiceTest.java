@@ -29,6 +29,8 @@ class OAuthLoginServiceTest {
 	private OAuthClientManager oAuthClientManager;
 	@Autowired
 	private MemberRepository memberRepository;
+	@MockitoBean
+	private JwtLoginManager jwtLoginManager;
 
 	@Container
 	static MySQLContainer<?> mysql = new MySQLContainer<>("mysql:8.0.42")
@@ -61,9 +63,18 @@ class OAuthLoginServiceTest {
 
 		for (int i = 0; i < tryCount; i++) {
 			executorService.submit(() -> {
-				oAuthLoginService.login(command);
-				countDownLatch.countDown();
+				try {
+					oAuthLoginService.login(command);
+				} finally {
+					countDownLatch.countDown();
+				}
 			});
+		}
+
+		try {
+			countDownLatch.await();
+		} catch (InterruptedException e) {
+			throw new RuntimeException(e);
 		}
 
 		Assertions.assertEquals(1, memberRepository.findAllByOAuthIdAndProviderNoLock(oAuthId, kakao).size());
