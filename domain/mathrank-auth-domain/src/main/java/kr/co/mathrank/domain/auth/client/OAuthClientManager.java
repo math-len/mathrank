@@ -6,9 +6,9 @@ import org.springframework.stereotype.Component;
 import org.springframework.validation.annotation.Validated;
 
 import jakarta.annotation.PostConstruct;
+import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 import kr.co.mathrank.domain.auth.dto.OAuthLoginCommand;
-import kr.co.mathrank.domain.auth.entity.OAuthProvider;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -19,7 +19,7 @@ import lombok.extern.slf4j.Slf4j;
 public class OAuthClientManager {
 	private final List<OAuthClientHandler> handlers;
 
-	public MemberInfo getMemberInfo(@NotNull final OAuthLoginCommand command) {
+	public MemberInfo getMemberInfo(@NotNull @Valid final OAuthLoginCommand command) {
 		return handlers.stream()
 			.filter(oAuthClientHandler -> oAuthClientHandler.supports(command.provider()))
 			.findAny()

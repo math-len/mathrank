@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.RestController;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.validation.Valid;
 import kr.co.mathrank.app.api.auth.cookie.RefreshTokenCookieManager;
 import kr.co.mathrank.domain.auth.dto.JwtLoginResult;
 import kr.co.mathrank.domain.auth.entity.OAuthProvider;
@@ -52,7 +53,7 @@ public class LoginController {
 	@GetMapping("/api/v1/auth/login/oauth/{provider}")
 	public ResponseEntity<LoginResponse> loginByoAuth(
 		@PathVariable final OAuthProvider provider,
-		@ParameterObject @ModelAttribute final Requests.OAuthLoginRequest loginRequest,
+		@Valid @ParameterObject @ModelAttribute final Requests.OAuthLoginRequest loginRequest,
 		final HttpServletResponse response
 	) {
 		log.debug("[LoginOAuthController.redirectFromOAuth] redirect from OAuth - provider: {}, info: {}", provider, loginRequest);
