@@ -10,8 +10,10 @@ dependencies {
     implementation project(':common:mathrank-jwt')
     implementation project(':common:mathrank-exception')
 
-    testImplementation 'org.testcontainers:junit-jupiter'
     testImplementation 'org.springframework.boot:spring-boot-testcontainers'
+    testImplementation 'org.testcontainers:junit-jupiter'
+    testImplementation 'org.testcontainers:mysql'
 
     runtimeOnly 'com.h2database:h2'
+    implementation 'com.mysql:mysql-connector-j'
 }

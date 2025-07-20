@@ -16,7 +16,7 @@ import lombok.NoArgsConstructor;
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Table(name = "member", indexes = {
-	@Index(name = "idx_oauthUserId", columnList = "oauth_user_id")
+	@Index(name = "idx_oAuthUserId_oAuthProvider", columnList = "oauth_user_id, oauth_provider")
 })
 @Getter
 public class Member {
