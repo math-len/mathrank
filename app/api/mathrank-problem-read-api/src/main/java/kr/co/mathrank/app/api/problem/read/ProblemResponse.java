@@ -11,7 +11,7 @@ import kr.co.mathrank.domain.problem.entity.AnswerType;
 import kr.co.mathrank.domain.problem.entity.Difficulty;
 
 public record ProblemResponse(
-	Long id,
+	String id,
 	MemberResponse memberInfo,
 	CourseTotalResponse course,
 	String problemImage,
@@ -31,7 +31,7 @@ public record ProblemResponse(
 		final CourseQueryContainsParentsResult courseResult
 	) {
 		return new ProblemResponse(
-			result.id(),
+			String.valueOf(result.id()),
 			MemberResponse.from(memberInfo),
 			CourseTotalResponse.from(courseResult),
 			result.imageSource(),
