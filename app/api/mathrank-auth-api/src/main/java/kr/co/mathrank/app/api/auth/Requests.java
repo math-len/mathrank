@@ -6,6 +6,8 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotNull;
 import kr.co.mathrank.app.api.auth.serializer.PasswordDeserializer;
 import kr.co.mathrank.domain.auth.dto.LoginCommand;
+import kr.co.mathrank.domain.auth.dto.OAuthLoginCommand;
+import kr.co.mathrank.domain.auth.entity.OAuthProvider;
 import kr.co.mathrank.domain.auth.entity.Password;
 
 class Requests {
@@ -19,6 +21,17 @@ class Requests {
 	) {
 		LoginCommand toCommand() {
 			return new LoginCommand(loginId, password);
+		}
+	}
+
+	record OAuthLoginRequest(
+		@NotNull
+		String code,
+		@NotNull
+		String state
+	) {
+		public OAuthLoginCommand toCommand(final OAuthProvider provider) {
+			return new OAuthLoginCommand(code, state, provider);
 		}
 	}
 }
