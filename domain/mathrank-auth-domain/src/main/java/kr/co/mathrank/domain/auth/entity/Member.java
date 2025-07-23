@@ -3,6 +3,7 @@ package kr.co.mathrank.domain.auth.entity;
 import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import org.hibernate.annotations.BatchSize;
 import org.hibernate.annotations.CreationTimestamp;
@@ -21,6 +22,7 @@ import kr.co.mathrank.common.role.Role;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -38,6 +40,7 @@ public class Member {
 	private Role role;
 
 	@Enumerated(EnumType.STRING)
+	@Setter
 	private MemberType memberType;
 
 	@Column(unique = true)
@@ -54,6 +57,7 @@ public class Member {
 	@CreationTimestamp
 	private LocalDateTime createdAt;
 
+	@Setter
 	private Boolean agreeToPrivacyPolicy = false;
 
 	@BatchSize(size = 100)
@@ -81,5 +85,12 @@ public class Member {
 		member.role = role;
 
 		return member;
+	}
+
+	public void setSchools(final Set<String> schoolCodes) {
+		this.relatedSchools.clear();
+		this.relatedSchools.addAll(schoolCodes.stream()
+			.map(code -> School.of(this, code))
+			.collect(Collectors.toSet()));
 	}
 }
