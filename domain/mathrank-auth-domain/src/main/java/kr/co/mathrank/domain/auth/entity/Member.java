@@ -1,5 +1,13 @@
 package kr.co.mathrank.domain.auth.entity;
 
+import java.time.LocalDateTime;
+import java.util.HashSet;
+import java.util.Set;
+
+import org.hibernate.annotations.BatchSize;
+import org.hibernate.annotations.CreationTimestamp;
+
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
@@ -7,6 +15,7 @@ import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
 import jakarta.persistence.Id;
 import jakarta.persistence.Index;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import kr.co.mathrank.common.role.Role;
 import lombok.AccessLevel;
@@ -28,6 +37,9 @@ public class Member {
 	@Enumerated(EnumType.STRING)
 	private Role role;
 
+	@Enumerated(EnumType.STRING)
+	private MemberType memberType;
+
 	@Column(unique = true)
 	private String loginId;
 
@@ -38,6 +50,15 @@ public class Member {
 
 	@Embedded
 	private final LockInfo lockInfo = new LockInfo();
+
+	@CreationTimestamp
+	private LocalDateTime createdAt;
+
+	private Boolean agreeToPrivacyPolicy = false;
+
+	@BatchSize(size = 100)
+	@OneToMany(mappedBy = "member", cascade = CascadeType.PERSIST, orphanRemoval = true)
+	private Set<School> relatedSchools = new HashSet<>();
 
 	public static Member of(Long id, String name, Role role, String loginId, String password) {
 		final Member member = new Member();
