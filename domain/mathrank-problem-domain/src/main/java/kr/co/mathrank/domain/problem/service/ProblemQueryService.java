@@ -36,6 +36,7 @@ public class ProblemQueryService {
 	@Transactional
 	public ProblemQueryPageResult query(@NotNull @Valid final ProblemQueryCommand command) {
 		final List<Problem> problems = problemRepository.query(command.memberId(),
+			command.problemId(),
 			command.difficultyMinInclude(),
 			command.difficultyMaxInclude(),
 			command.answerType(),
@@ -45,6 +46,7 @@ public class ProblemQueryService {
 			command.videoExist(),
 			command.year());
 		final Long totalCount = problemRepository.count(command.memberId(),
+			command.problemId(),
 			command.difficultyMinInclude(),
 			command.difficultyMaxInclude(),
 			command.coursePath(),

@@ -19,7 +19,7 @@ class ProblemQueryRepositoryImpl implements ProblemQueryRepository {
 	private final JPAQueryFactory queryFactory;
 
 	@Override
-	public List<Problem> query(Long memberId, Difficulty difficultyMinInclude,
+	public List<Problem> query(Long memberId, Long problemId, Difficulty difficultyMinInclude,
 		Difficulty difficultyMaxInclude, AnswerType answerType, String path, Integer pageSize, Integer pageNumber,
 		Boolean solutionVideoLinkExist, Integer year) {
 		final QProblem problem = QProblem.problem;
@@ -29,6 +29,7 @@ class ProblemQueryRepositoryImpl implements ProblemQueryRepository {
 			.from(problem)
 			.where(
 				memberIdEq(memberId),
+				problemIdEq(problemId),
 				difficultyIn(difficultyMinInclude, difficultyMaxInclude),
 				answerTypeEq(answerType),
 				problemCourseStartsWith(path),
@@ -49,7 +50,7 @@ class ProblemQueryRepositoryImpl implements ProblemQueryRepository {
 	}
 
 	@Override
-	public Long count(Long memberId, Difficulty difficultyMinInclude, Difficulty difficultyMaxInclude,
+	public Long count(Long memberId, Long problemId, Difficulty difficultyMinInclude, Difficulty difficultyMaxInclude,
 		String coursePath, AnswerType answerType, Boolean solutionVideoLinkExist, Integer year) {
 		final QProblem problem = QProblem.problem;
 
@@ -58,6 +59,7 @@ class ProblemQueryRepositoryImpl implements ProblemQueryRepository {
 			.from(problem)
 			.where(
 				memberIdEq(memberId),
+				problemIdEq(problemId),
 				difficultyIn(difficultyMinInclude, difficultyMaxInclude),
 				answerTypeEq(answerType),
 				problemCourseStartsWith(coursePath),
@@ -72,6 +74,13 @@ class ProblemQueryRepositoryImpl implements ProblemQueryRepository {
 			return null;
 		}
 		return QProblem.problem.memberId.eq(memberId);
+	}
+
+	private BooleanExpression problemIdEq(final Long problemId) {
+		if (problemId == null) {
+			return null;
+		}
+		return QProblem.problem.id.eq(problemId);
 	}
 
 	private BooleanExpression difficultyIn(final Difficulty minInclude, final Difficulty maxInclude) {
