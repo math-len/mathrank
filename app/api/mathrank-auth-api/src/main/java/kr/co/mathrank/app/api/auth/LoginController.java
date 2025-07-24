@@ -23,6 +23,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import kr.co.mathrank.app.api.auth.cookie.RefreshTokenCookieManager;
 import kr.co.mathrank.domain.auth.dto.JwtLoginResult;
+import kr.co.mathrank.domain.auth.dto.JwtOAuthLoginResult;
 import kr.co.mathrank.domain.auth.entity.OAuthProvider;
 import kr.co.mathrank.domain.auth.service.LoginService;
 import kr.co.mathrank.domain.auth.service.OAuthLoginService;
@@ -51,18 +52,18 @@ public class LoginController {
         예시: https://yourapp.com/oauth/callback/kakao
     """)
 	@GetMapping("/api/v1/auth/login/oauth/{provider}")
-	public ResponseEntity<LoginResponse> loginByoAuth(
+	public ResponseEntity<LoginOAuthResponse> loginByoAuth(
 		@PathVariable final OAuthProvider provider,
 		@Valid @ParameterObject @ModelAttribute final Requests.OAuthLoginRequest loginRequest,
 		final HttpServletResponse response
 	) {
 		log.debug("[LoginOAuthController.redirectFromOAuth] redirect from OAuth - provider: {}, info: {}", provider, loginRequest);
 
-		final JwtLoginResult result = oAuthLoginService.login(loginRequest.toCommand(provider));
+		final JwtOAuthLoginResult result = oAuthLoginService.login(loginRequest.toCommand(provider));
 		final ResponseCookie cookie = createRefreshTokenCookie(result.refreshToken(), Duration.ofDays(7));
 		response.setHeader(HttpHeaders.SET_COOKIE, cookie.toString());
 
-		return ResponseEntity.ok(new LoginResponse(result.accessToken(), result.userName()));
+		return ResponseEntity.ok(new LoginOAuthResponse(result.accessToken(), result.userName(), result.isNewUser()));
 	}
 
 	@Operation(summary = "로그인 API", description = "로그인 성공 시, accessToken을 body로 refreshToken을 쿠키로 응답합니다. 중복 로그인 시, 이전에 발급된 refreshToken이 무효화 처리 됩니다.")
