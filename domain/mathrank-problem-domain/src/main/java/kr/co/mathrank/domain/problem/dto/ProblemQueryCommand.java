@@ -8,6 +8,7 @@ import kr.co.mathrank.domain.problem.entity.Difficulty;
 
 public record ProblemQueryCommand(
 	Long memberId,
+	Long problemId,
 	Difficulty difficultyMinInclude,
 	Difficulty difficultyMaxInclude,
 	AnswerType answerType,

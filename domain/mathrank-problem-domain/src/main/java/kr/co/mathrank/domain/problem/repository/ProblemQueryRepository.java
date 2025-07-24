@@ -9,6 +9,7 @@ import kr.co.mathrank.domain.problem.entity.Problem;
 interface ProblemQueryRepository {
 	 List<Problem> query(
 		 Long memberId,
+		 Long problemId,
 		 Difficulty difficultyMinInclude,
 		 Difficulty difficultyMaxInclude,
 		 AnswerType answerType,
@@ -20,6 +21,7 @@ interface ProblemQueryRepository {
 
 	Long count(
 		Long memberId,
+		Long problemId,
 		Difficulty difficultyMinInclude,
 		Difficulty difficultyMaxInclude,
 		String path,

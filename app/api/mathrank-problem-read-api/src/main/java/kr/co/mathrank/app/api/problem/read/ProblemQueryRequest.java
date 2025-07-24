@@ -10,6 +10,7 @@ import kr.co.mathrank.domain.problem.entity.Difficulty;
 public record ProblemQueryRequest(
 	@NotNull
 	Boolean mine,
+	Long problemId,
 	Difficulty difficultyMinInclude,
 	Difficulty difficultyMaxInclude,
 	AnswerType answerType,
@@ -28,6 +29,7 @@ public record ProblemQueryRequest(
 			// true -> 본인 아이디로 지정한다.
 			// false -> null 로 지정한다.
 			mine ? requestMemberId : null,
+			problemId,
 			difficultyMinInclude,
 			difficultyMaxInclude,
 			answerType,
