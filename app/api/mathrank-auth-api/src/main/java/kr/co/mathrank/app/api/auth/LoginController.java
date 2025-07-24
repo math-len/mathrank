@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -22,7 +23,12 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import kr.co.mathrank.app.api.auth.cookie.RefreshTokenCookieManager;
+import kr.co.mathrank.app.api.common.authentication.Authorization;
+import kr.co.mathrank.app.api.common.authentication.LoginInfo;
+import kr.co.mathrank.app.api.common.authentication.MemberPrincipal;
 import kr.co.mathrank.domain.auth.dto.JwtLoginResult;
+import kr.co.mathrank.domain.auth.dto.JwtOAuthLoginResult;
+import kr.co.mathrank.domain.auth.dto.MemberInfoCompleteCommand;
 import kr.co.mathrank.domain.auth.entity.OAuthProvider;
 import kr.co.mathrank.domain.auth.service.LoginService;
 import kr.co.mathrank.domain.auth.service.OAuthLoginService;
@@ -51,18 +57,31 @@ public class LoginController {
         예시: https://yourapp.com/oauth/callback/kakao
     """)
 	@GetMapping("/api/v1/auth/login/oauth/{provider}")
-	public ResponseEntity<LoginResponse> loginByoAuth(
+	public ResponseEntity<LoginOAuthResponse> loginByoAuth(
 		@PathVariable final OAuthProvider provider,
 		@Valid @ParameterObject @ModelAttribute final Requests.OAuthLoginRequest loginRequest,
 		final HttpServletResponse response
 	) {
 		log.debug("[LoginOAuthController.redirectFromOAuth] redirect from OAuth - provider: {}, info: {}", provider, loginRequest);
 
-		final JwtLoginResult result = oAuthLoginService.login(loginRequest.toCommand(provider));
+		final JwtOAuthLoginResult result = oAuthLoginService.login(loginRequest.toCommand(provider));
 		final ResponseCookie cookie = createRefreshTokenCookie(result.refreshToken(), Duration.ofDays(7));
 		response.setHeader(HttpHeaders.SET_COOKIE, cookie.toString());
 
-		return ResponseEntity.ok(new LoginResponse(result.accessToken(), result.userName()));
+		return ResponseEntity.ok(new LoginOAuthResponse(result.accessToken(), result.userName(), result.isNewUser()));
+	}
+
+	@Operation(summary = "oAuth로 등록된 계정에 필요한 정보들을 추가로 등록하는 API", description = "oAuth를 통해 가입된 계정은 필수정보가 누락되어있습니다. 해당 API를 통해 추가 정보를 등록해야 서비스를 제한없이 사용할 수 있습니다.")
+	@Authorization(openedForAll = true)
+	@PutMapping("/api/v1/member/registration")
+	public ResponseEntity<Void> completeRegister(
+		@RequestBody @Valid final MemberRegistrationCompleteRequest request,
+		@LoginInfo final MemberPrincipal memberPrincipal
+	) {
+		final MemberInfoCompleteCommand command = request.toCommand(memberPrincipal.memberId());
+		oAuthLoginService.completeRegister(command);
+
+		return ResponseEntity.ok().build();
 	}
 
 	@Operation(summary = "로그인 API", description = "로그인 성공 시, accessToken을 body로 refreshToken을 쿠키로 응답합니다. 중복 로그인 시, 이전에 발급된 refreshToken이 무효화 처리 됩니다.")

@@ -11,7 +11,6 @@ import kr.co.mathrank.common.snowflake.Snowflake;
 import kr.co.mathrank.domain.auth.dto.MemberRegisterCommand;
 import kr.co.mathrank.domain.auth.entity.Member;
 import kr.co.mathrank.domain.auth.exception.AlreadyExistLoginIdException;
-import kr.co.mathrank.domain.auth.exception.AuthException;
 import kr.co.mathrank.domain.auth.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -33,7 +32,8 @@ public class MemberRegisterService {
 		}
 
 		final Member newMember = Member.of(snowflake.nextId(), command.name(), command.role(), command.loginId(),
-			command.password().encrypt(passwordEncoder));
+			command.password().encrypt(passwordEncoder), command.memberType(), command.agreeToPrivacyPolicy(),
+			command.schoolCodes());
 		memberRepository.save(newMember);
 
 		log.info("[MemberRegisterService.register] member saved - memberId: {}", newMember.getId());

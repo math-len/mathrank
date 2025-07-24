@@ -12,7 +12,7 @@ import lombok.RequiredArgsConstructor;
 
 @RestController
 @RequiredArgsConstructor
-public class MemberController {
+public class MemberQueryController {
 	private final MemberQueryService memberQueryService;
 
 	@Operation(hidden = true)

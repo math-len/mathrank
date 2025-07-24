@@ -1,5 +1,7 @@
 package kr.co.mathrank.domain.auth.service;
 
+import java.util.Collections;
+
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,7 +24,7 @@ class MemberQueryServiceTest {
 	@Test
 	void 존재하는_멤버_조회_성공_테스트() {
 		final long memberId = 1L;
-		final Member member = Member.of(memberId, "testName", Role.USER, "testId", "testPassword");
+		final Member member = Member.of(memberId, "testName", Role.USER, "testId", "testPassword", null, null, Collections.emptySet());
 		memberRepository.save(member);
 
 		Assertions.assertEquals(MemberInfoResult.from(member), memberQueryService.getInfo(memberId));

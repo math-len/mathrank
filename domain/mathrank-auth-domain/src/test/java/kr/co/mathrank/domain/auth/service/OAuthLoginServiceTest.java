@@ -12,11 +12,13 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.DynamicPropertyRegistry;
 import org.springframework.test.context.DynamicPropertySource;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
+import org.springframework.transaction.annotation.Transactional;
 import org.testcontainers.containers.MySQLContainer;
 import org.testcontainers.junit.jupiter.Container;
 
 import kr.co.mathrank.domain.auth.client.MemberInfo;
 import kr.co.mathrank.domain.auth.client.OAuthClientManager;
+import kr.co.mathrank.domain.auth.dto.JwtLoginResult;
 import kr.co.mathrank.domain.auth.dto.OAuthLoginCommand;
 import kr.co.mathrank.domain.auth.entity.OAuthProvider;
 import kr.co.mathrank.domain.auth.repository.MemberRepository;
@@ -58,6 +60,8 @@ class OAuthLoginServiceTest {
 		final MemberInfo memberInfo = new MemberInfo(oAuthId, "nickName");
 		// 항상 memberInfo 리턴
 		Mockito.when(oAuthClientManager.getMemberInfo(command)).thenReturn(memberInfo);
+		Mockito.when(jwtLoginManager.login(Mockito.anyLong(), Mockito.any(), Mockito.any()))
+			.thenReturn(new JwtLoginResult("testAccessToken", "testRefreshToken", "testUserName"));
 
 		final CountDownLatch countDownLatch = new CountDownLatch(tryCount);
 
@@ -78,5 +82,21 @@ class OAuthLoginServiceTest {
 		}
 
 		Assertions.assertEquals(1, memberRepository.findAllByOAuthIdAndProviderNoLock(oAuthId, kakao).size());
+	}
+
+	@Test
+	@Transactional
+	void 등록이_마무리되지_않으면_isNewUser_필드가_true() {
+		final OAuthProvider kakao = OAuthProvider.KAKAO;
+		final OAuthLoginCommand command = new OAuthLoginCommand("testCode", "testState", kakao);
+
+		final long oAuthId = 12345L;
+		final MemberInfo memberInfo = new MemberInfo(oAuthId, "nickName");
+		// 항상 memberInfo 리턴
+		Mockito.when(oAuthClientManager.getMemberInfo(command)).thenReturn(memberInfo);
+		Mockito.when(jwtLoginManager.login(Mockito.anyLong(), Mockito.any(), Mockito.any()))
+			.thenReturn(new JwtLoginResult("testAccessToken", "testRefreshToken", "testUserName"));
+
+		Assertions.assertTrue(oAuthLoginService.login(command).isNewUser());
 	}
 }
