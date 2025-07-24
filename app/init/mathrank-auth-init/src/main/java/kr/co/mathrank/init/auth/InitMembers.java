@@ -1,10 +1,13 @@
 package kr.co.mathrank.init.auth;
 
+import java.util.Collections;
+
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
 
 import kr.co.mathrank.common.role.Role;
 import kr.co.mathrank.domain.auth.dto.MemberRegisterCommand;
+import kr.co.mathrank.domain.auth.entity.MemberType;
 import kr.co.mathrank.domain.auth.entity.Password;
 import kr.co.mathrank.domain.auth.service.MemberRegisterService;
 import lombok.RequiredArgsConstructor;
@@ -20,9 +23,8 @@ public class InitMembers implements CommandLineRunner {
 	public void run(String... args) throws Exception {
 		final String loginId = "test1";
 		final String password = "0000";
-		final MemberRegisterCommand command = new MemberRegisterCommand(loginId, "testName", new Password(password),
-			Role.ADMIN);
-		memberRegisterService.register(new MemberRegisterCommand("test1", "testName", new Password("0000"), Role.ADMIN));
+		memberRegisterService.register(new MemberRegisterCommand("test1", "testName", new Password("0000"), Role.ADMIN, MemberType.NORMAL, true,
+			Collections.emptySet()));
 		log.info("[InitMembers.run] initialized test member - loginId: {}, password: {}", loginId, password);
 	}
 }

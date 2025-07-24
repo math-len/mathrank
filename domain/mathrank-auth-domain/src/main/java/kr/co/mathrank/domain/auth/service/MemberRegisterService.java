@@ -32,7 +32,8 @@ public class MemberRegisterService {
 		}
 
 		final Member newMember = Member.of(snowflake.nextId(), command.name(), command.role(), command.loginId(),
-			command.password().encrypt(passwordEncoder));
+			command.password().encrypt(passwordEncoder), command.memberType(), command.agreeToPrivacyPolicy(),
+			command.schoolCodes());
 		memberRepository.save(newMember);
 
 		log.info("[MemberRegisterService.register] member saved - memberId: {}", newMember.getId());

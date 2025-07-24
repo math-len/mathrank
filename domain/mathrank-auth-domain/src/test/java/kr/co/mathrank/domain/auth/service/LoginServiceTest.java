@@ -1,6 +1,7 @@
 package kr.co.mathrank.domain.auth.service;
 
 import java.time.LocalDateTime;
+import java.util.Collections;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -15,6 +16,7 @@ import kr.co.mathrank.common.role.Role;
 import kr.co.mathrank.domain.auth.dto.LoginCommand;
 import kr.co.mathrank.domain.auth.dto.MemberRegisterCommand;
 import kr.co.mathrank.domain.auth.entity.Member;
+import kr.co.mathrank.domain.auth.entity.MemberType;
 import kr.co.mathrank.domain.auth.entity.Password;
 import kr.co.mathrank.domain.auth.exception.MemberLockedException;
 import kr.co.mathrank.domain.auth.exception.PasswordMismatchedException;
@@ -46,7 +48,9 @@ class LoginServiceTest {
 		final String userName = "testName";
 		final Password password = new Password("test");
 
-		memberRegisterService.register(new MemberRegisterCommand(loginId, userName, password, Role.USER));
+		memberRegisterService.register(
+			new MemberRegisterCommand(loginId, userName, password, Role.USER, MemberType.NORMAL, true,
+				Collections.emptySet()));
 		Assertions.assertNotNull(loginService.login(new LoginCommand(loginId, password)));
 	}
 
@@ -57,7 +61,8 @@ class LoginServiceTest {
 		final Password password = new Password("test");
 		final Password wrongPassword = new Password("wrong");
 
-		memberRegisterService.register(new MemberRegisterCommand(loginId, userName, password, Role.USER));
+		memberRegisterService.register(new MemberRegisterCommand(loginId, userName, password, Role.USER, MemberType.NORMAL, true,
+			Collections.emptySet()));
 		Assertions.assertThrows(
 			PasswordMismatchedException.class, () -> loginService.login(new LoginCommand(loginId, wrongPassword)));
 	}
@@ -69,7 +74,8 @@ class LoginServiceTest {
 		final Password password = new Password("test");
 		final Password wrongPassword = new Password("wrong");
 
-		memberRegisterService.register(new MemberRegisterCommand(loginId, userName, password, Role.USER));
+		memberRegisterService.register(new MemberRegisterCommand(loginId, userName, password, Role.USER, MemberType.NORMAL, true,
+			Collections.emptySet()));
 
 		for (int i = 0; i < 3; i ++) {
 			Assertions.assertThrows(PasswordMismatchedException.class, () -> loginService.login(new LoginCommand(loginId, wrongPassword)));
@@ -84,7 +90,8 @@ class LoginServiceTest {
 		final Password password = new Password("test");
 		final Password wrongPassword = new Password("wrong");
 
-		memberRegisterService.register(new MemberRegisterCommand(loginId, userName, password, Role.USER));
+		memberRegisterService.register(new MemberRegisterCommand(loginId, userName, password, Role.USER, MemberType.NORMAL, true,
+			Collections.emptySet()));
 
 		for (int i = 0; i < 2; i ++) {
 			Assertions.assertThrows(PasswordMismatchedException.class, () -> loginService.login(new LoginCommand(loginId, wrongPassword)));
@@ -101,7 +108,8 @@ class LoginServiceTest {
 		final Password password = new Password("test");
 		final Password wrongPassword = new Password("wrong");
 
-		memberRegisterService.register(new MemberRegisterCommand(loginId, userName, password, Role.USER));
+		memberRegisterService.register(new MemberRegisterCommand(loginId, userName, password, Role.USER, MemberType.NORMAL, true,
+			Collections.emptySet()));
 		for (int i = 0; i < 3; i++) {
 			Assertions.assertThrows(PasswordMismatchedException.class,
 				() -> loginService.login(new LoginCommand(loginId, wrongPassword)));

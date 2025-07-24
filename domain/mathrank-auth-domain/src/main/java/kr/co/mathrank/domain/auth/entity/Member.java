@@ -67,13 +67,16 @@ public class Member {
 	@OneToMany(mappedBy = "member", cascade = CascadeType.PERSIST, orphanRemoval = true)
 	private Set<School> relatedSchools = new HashSet<>();
 
-	public static Member of(Long id, String name, Role role, String loginId, String password) {
+	public static Member of(final Long id, final String name, final Role role, final String loginId,
+		final String password, final MemberType memberType, final Boolean agreeToPrivacyPolicy,
+		final Set<String> schoolCodes) {
 		final Member member = new Member();
 		member.id = id;
 		member.role = role;
 		member.name = name;
 		member.loginId = loginId;
 		member.password = password;
+		member.completeRegister(memberType, agreeToPrivacyPolicy, schoolCodes);
 
 		return member;
 	}
