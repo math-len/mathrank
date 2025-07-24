@@ -60,6 +60,9 @@ public class Member {
 	@Setter
 	private Boolean agreeToPrivacyPolicy = false;
 
+	@Setter
+	private Boolean pending = true;
+
 	@BatchSize(size = 100)
 	@OneToMany(mappedBy = "member", cascade = CascadeType.PERSIST, orphanRemoval = true)
 	private Set<School> relatedSchools = new HashSet<>();
@@ -85,6 +88,13 @@ public class Member {
 		member.role = role;
 
 		return member;
+	}
+
+	public void completeRegister(final MemberType memberType, final Boolean agreeToPrivacyPolicy, final Set<String> schoolCodes) {
+		this.setMemberType(memberType);
+		this.setAgreeToPrivacyPolicy(agreeToPrivacyPolicy);
+		this.setSchools(schoolCodes);
+		this.setPending(false);
 	}
 
 	public void setSchools(final Set<String> schoolCodes) {

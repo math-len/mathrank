@@ -46,9 +46,7 @@ public class MemberRegisterService {
 		memberRepository.findById(command.memberId())
 			.ifPresentOrElse(member -> {
 				// 사용자 존재 시, 업데이트 마무리
-					member.setMemberType(command.memberType());
-					member.setAgreeToPrivacyPolicy(command.agreeToPrivacyPolicy());
-					member.setSchools(command.schoolCodes());
+					member.completeRegister(command.memberType(), command.agreeToPrivacyPolicy(), command.schoolCodes());
 				},
 				() -> {
 				// 사용자를 찾을 수 없을 때, 예외처리
