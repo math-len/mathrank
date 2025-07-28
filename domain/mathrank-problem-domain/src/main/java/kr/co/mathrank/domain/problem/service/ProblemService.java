@@ -46,7 +46,7 @@ public class ProblemService {
 			command.difficulty(),
 			command.answerType(),
 			course,
-			command.schoolCode() == null ? null : command.schoolCode(),
+command.schoolCode(),
 			command.solutionVideoLink(),
 			command.solutionImage(),
 			command.year(),
