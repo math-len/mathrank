@@ -15,6 +15,7 @@ public record ProblemQueryCommand(
 	String coursePath,
 	Boolean videoExist,
 	Integer year,
+	String location,
 	@NotNull
 	@Range(min = 1, max = 20)
 	Integer pageSize,
