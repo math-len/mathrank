@@ -48,7 +48,7 @@ class Requests {
 		@NotNull
 		Long problemId,
 		@NotNull
-		String imageSource,
+		String problemImage,
 		@NotBlank
 		String solutionImage,
 		@NotNull
@@ -68,7 +68,7 @@ class Requests {
 			return new ProblemUpdateCommand(
 				problemId,
 				memberId,
-				imageSource,
+				problemImage,
 				solutionImage,
 				answerType,
 				difficulty,
