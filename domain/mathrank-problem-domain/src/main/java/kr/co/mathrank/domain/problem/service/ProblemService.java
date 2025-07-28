@@ -9,6 +9,9 @@ import org.springframework.validation.annotation.Validated;
 
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
+import kr.co.mathrank.client.external.school.RequestType;
+import kr.co.mathrank.client.external.school.SchoolClient;
+import kr.co.mathrank.client.external.school.SchoolInfo;
 import kr.co.mathrank.common.snowflake.Snowflake;
 import kr.co.mathrank.domain.problem.dto.ProblemDeleteCommand;
 import kr.co.mathrank.domain.problem.dto.ProblemRegisterCommand;
@@ -33,6 +36,7 @@ public class ProblemService {
 	private final ProblemRepository problemRepository;
 	private final CourseRepository courseRepository;
 	private final Snowflake snowflake;
+	private final SchoolLocationManager schoolLocationManager;
 
 	public Long save(@NotNull @Valid final ProblemRegisterCommand command) {
 		final Course course = getCourse(command.coursePath());
@@ -45,10 +49,11 @@ public class ProblemService {
 			command.difficulty(),
 			command.answerType(),
 			course,
-			command.schoolCode(),
+			command.schoolCode() == null ? null : command.schoolCode(),
 			command.solutionVideoLink(),
 			command.solutionImage(),
-			command.year()
+			command.year(),
+			command.schoolCode() == null ? null : schoolLocationManager.getSchoolLocation(command.schoolCode())
 		);
 		final Set<Answer> answers = mapToAnswer(command.answers(), problem);
 		problem.setAnswers(answers);
@@ -59,7 +64,6 @@ public class ProblemService {
 		return id;
 	}
 
-	@Transactional
 	public void update(@NotNull @Valid final ProblemUpdateCommand command) {
 		final Problem problem = problemRepository.findById(command.problemId())
 			.orElseThrow(() -> new CannotFoundProblemException(command.problemId()));
@@ -71,12 +75,18 @@ public class ProblemService {
 		problem.setCourse(course);
 		problem.setType(command.answerType());
 		problem.setAnswers(mapToAnswer(command.answers(), problem));
-		problem.setSchoolCode(command.schoolCode());
 		problem.setProblemImage(command.imageSource());
 		problem.setSolutionVideoLink(command.solutionVideoLink());
 		problem.setSolutionImage(command.solutionImage());
 		problem.setYears(command.year());
+		problem.setSchoolCode(command.schoolCode());
+		if (command.schoolCode() != null) {
+			problem.setLocation(schoolLocationManager.getSchoolLocation(command.schoolCode()));
+		} else {
+			problem.setLocation(null);
+		}
 
+		problemRepository.save(problem);
 		log.info("[ProblemService.update] problem updated - id: {}, memberId: {}, course: {}",
 			command.problemId(), command.requestMemberId(), command.coursePath());
 	}

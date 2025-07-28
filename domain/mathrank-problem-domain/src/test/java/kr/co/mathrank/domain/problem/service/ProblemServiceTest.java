@@ -12,6 +12,7 @@ import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.transaction.annotation.Transactional;
 
 import jakarta.persistence.EntityManager;
@@ -41,6 +42,8 @@ class ProblemServiceTest {
 	private EntityManager entityManager;
 	@Autowired
 	private CourseRepository courseRepository;
+	@MockitoBean
+	private SchoolLocationManager schoolLocationManager;
 
 	@ParameterizedTest
 	@MethodSource("argumentsStream")

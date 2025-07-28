@@ -68,7 +68,7 @@ public class Problem implements Persistable<Long> {
 
 	private String solutionVideoLink;
 
-	@OneToMany(mappedBy = "problem", cascade = CascadeType.PERSIST, orphanRemoval = true)
+	@OneToMany(mappedBy = "problem", cascade = {CascadeType.PERSIST, CascadeType.MERGE}, orphanRemoval = true)
 	@BatchSize(size = 100)
 	private final Set<Answer> answers = new HashSet<>();
 
@@ -79,7 +79,7 @@ public class Problem implements Persistable<Long> {
 
 	public static Problem of(final Long id, final Long memberId, final String problemImage, final Difficulty difficulty,
 		final AnswerType type, final Course course, final String schoolCode,
-		final String solutionVideoLink, final String solutionImage, final Integer year) {
+		final String solutionVideoLink, final String solutionImage, final Integer year, final String location) {
 
 		final Problem problem = new Problem();
 		problem.id = id;
@@ -92,6 +92,7 @@ public class Problem implements Persistable<Long> {
 		problem.solutionVideoLink = solutionVideoLink;
 		problem.solutionImage = solutionImage;
 		problem.years = year;
+		problem.location = location;
 
 		return problem;
 	}

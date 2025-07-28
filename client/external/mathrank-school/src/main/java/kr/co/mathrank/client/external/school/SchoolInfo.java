@@ -8,9 +8,11 @@ public record SchoolInfo(
 	// 학교종류명
 	String SCHUL_KND_SC_NM,
 	// 시도명
-	String LCTN_SC_NM
+	String LCTN_SC_NM,
+	// 도로명 주소
+	String ORG_RDNMA
 ) {
 	public static SchoolInfo none() {
-		return new SchoolInfo(null, null, null, null);
+		return new SchoolInfo(null, null, null, null, null);
 	}
 }
