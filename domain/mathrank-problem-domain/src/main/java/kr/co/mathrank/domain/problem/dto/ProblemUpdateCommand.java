@@ -26,6 +26,7 @@ public record ProblemUpdateCommand(
 	@Size(min = 1, max = 100)
 	Set<String> answers,
 	Integer year,
-	String solutionVideoLink
+	String solutionVideoLink,
+	String memo
 ) {
 }

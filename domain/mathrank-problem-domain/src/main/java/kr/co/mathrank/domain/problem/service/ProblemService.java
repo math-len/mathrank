@@ -9,9 +9,6 @@ import org.springframework.validation.annotation.Validated;
 
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
-import kr.co.mathrank.client.external.school.RequestType;
-import kr.co.mathrank.client.external.school.SchoolClient;
-import kr.co.mathrank.client.external.school.SchoolInfo;
 import kr.co.mathrank.common.snowflake.Snowflake;
 import kr.co.mathrank.domain.problem.dto.ProblemDeleteCommand;
 import kr.co.mathrank.domain.problem.dto.ProblemRegisterCommand;
@@ -53,7 +50,8 @@ public class ProblemService {
 			command.solutionVideoLink(),
 			command.solutionImage(),
 			command.year(),
-			command.schoolCode() == null ? null : schoolLocationManager.getSchoolLocation(command.schoolCode())
+			command.schoolCode() == null ? null : schoolLocationManager.getSchoolLocation(command.schoolCode()),
+			command.memo()
 		);
 		final Set<Answer> answers = mapToAnswer(command.answers(), problem);
 		problem.setAnswers(answers);
@@ -80,11 +78,8 @@ public class ProblemService {
 		problem.setSolutionImage(command.solutionImage());
 		problem.setYears(command.year());
 		problem.setSchoolCode(command.schoolCode());
-		if (command.schoolCode() != null) {
-			problem.setLocation(schoolLocationManager.getSchoolLocation(command.schoolCode()));
-		} else {
-			problem.setLocation(null);
-		}
+		problem.setMemo(command.memo());
+		problem.setLocation(command.schoolCode() == null ? null : schoolLocationManager.getSchoolLocation(command.schoolCode()));
 
 		problemRepository.save(problem);
 		log.info("[ProblemService.update] problem updated - id: {}, memberId: {}, course: {}",

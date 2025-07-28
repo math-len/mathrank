@@ -76,10 +76,11 @@ public class Problem implements Persistable<Long> {
 	@Setter(AccessLevel.NONE)
 	private LocalDateTime createdAt;
 
+	private String memo;
 
 	public static Problem of(final Long id, final Long memberId, final String problemImage, final Difficulty difficulty,
 		final AnswerType type, final Course course, final String schoolCode,
-		final String solutionVideoLink, final String solutionImage, final Integer year, final String location) {
+		final String solutionVideoLink, final String solutionImage, final Integer year, final String location, final String memo) {
 
 		final Problem problem = new Problem();
 		problem.id = id;
@@ -93,6 +94,7 @@ public class Problem implements Persistable<Long> {
 		problem.solutionImage = solutionImage;
 		problem.years = year;
 		problem.location = location;
+		problem.memo = memo;
 
 		return problem;
 	}
