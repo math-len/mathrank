@@ -30,6 +30,7 @@ include(
         'domain:mathrank-problem-domain',
 
         'common',
+        'common:mathrank-page',
         'common:mathrank-exception',
         'common:mathrank-jwt',
         'common:mathrank-role',

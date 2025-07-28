@@ -1,4 +1,4 @@
-package kr.co.mathrank.domain.problem.service;
+package kr.co.mathrank.common.page;
 
 import static org.junit.jupiter.api.Assertions.*;
 

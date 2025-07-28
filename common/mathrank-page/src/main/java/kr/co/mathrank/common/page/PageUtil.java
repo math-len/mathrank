@@ -1,4 +1,4 @@
-package kr.co.mathrank.domain.problem.service;
+package kr.co.mathrank.common.page;
 
 import java.util.Collections;
 import java.util.List;
@@ -7,7 +7,7 @@ import java.util.stream.IntStream;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
-final class PageUtil {
+public final class PageUtil {
 	private static final int MAX_NEXT_PAGE_COUNT = 10;
 
 	public static List<Integer> getNextPages(final int queryPageSize, final int queryPageNumber, final long totalCount, final int queryResultCount) {
