@@ -3,8 +3,8 @@ package kr.co.mathrank.domain.problem.dto;
 import java.time.LocalDateTime;
 import java.util.Set;
 
-import kr.co.mathrank.domain.problem.entity.AnswerType;
-import kr.co.mathrank.domain.problem.entity.Difficulty;
+import kr.co.mathrank.domain.problem.core.AnswerType;
+import kr.co.mathrank.domain.problem.core.Difficulty;
 import kr.co.mathrank.domain.problem.entity.Problem;
 
 public record ProblemQueryResult(

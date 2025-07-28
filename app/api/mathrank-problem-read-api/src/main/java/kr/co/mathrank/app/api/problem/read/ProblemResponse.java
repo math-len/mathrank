@@ -5,10 +5,10 @@ import java.util.Set;
 
 import kr.co.mathrank.client.external.school.SchoolInfo;
 import kr.co.mathrank.client.internal.member.MemberInfo;
+import kr.co.mathrank.domain.problem.core.AnswerType;
+import kr.co.mathrank.domain.problem.core.Difficulty;
 import kr.co.mathrank.domain.problem.dto.CourseQueryContainsParentsResult;
 import kr.co.mathrank.domain.problem.dto.ProblemQueryResult;
-import kr.co.mathrank.domain.problem.entity.AnswerType;
-import kr.co.mathrank.domain.problem.entity.Difficulty;
 
 public record ProblemResponse(
 	String id,

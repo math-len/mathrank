@@ -1,4 +1,4 @@
-package kr.co.mathrank.domain.problem.entity;
+package kr.co.mathrank.domain.problem.core;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;

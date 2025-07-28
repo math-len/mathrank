@@ -2,8 +2,8 @@ package kr.co.mathrank.domain.problem.repository;
 
 import java.util.List;
 
-import kr.co.mathrank.domain.problem.entity.AnswerType;
-import kr.co.mathrank.domain.problem.entity.Difficulty;
+import kr.co.mathrank.domain.problem.core.AnswerType;
+import kr.co.mathrank.domain.problem.core.Difficulty;
 import kr.co.mathrank.domain.problem.entity.Problem;
 
 interface ProblemQueryRepository {

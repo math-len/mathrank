@@ -4,9 +4,10 @@ import java.util.Arrays;
 
 import jakarta.persistence.AttributeConverter;
 import jakarta.persistence.Converter;
+import kr.co.mathrank.domain.problem.core.Difficulty;
 
 @Converter
-class DifficultyConverter implements AttributeConverter<Difficulty, Integer> {
+public class DifficultyConverter implements AttributeConverter<Difficulty, Integer> {
 	@Override
 	public Integer convertToDatabaseColumn(Difficulty attribute) {
 		if (attribute == null) {

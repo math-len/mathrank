@@ -26,6 +26,7 @@ include(
         'domain',
         'domain:mathrank-image-domain',
         'domain:mathrank-auth-domain',
+        'domain:mathrank-problem-core-domain',
         'domain:mathrank-problem-domain',
 
         'common',
