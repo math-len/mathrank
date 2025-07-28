@@ -62,6 +62,8 @@ public class Problem implements Persistable<Long> {
 
 	private String schoolCode;
 
+	private String location;
+
 	private Integer years;
 
 	private String solutionVideoLink;
@@ -73,6 +75,7 @@ public class Problem implements Persistable<Long> {
 	@CreationTimestamp
 	@Setter(AccessLevel.NONE)
 	private LocalDateTime createdAt;
+
 
 	public static Problem of(final Long id, final Long memberId, final String problemImage, final Difficulty difficulty,
 		final AnswerType type, final Course course, final String schoolCode,
