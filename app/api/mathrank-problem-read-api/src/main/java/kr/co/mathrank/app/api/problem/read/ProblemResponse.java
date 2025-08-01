@@ -22,7 +22,8 @@ public record ProblemResponse(
 	Set<String> answers,
 	LocalDateTime createdAt,
 	Integer year,
-	String solutionVideoLink
+	String solutionVideoLink,
+	String memo
 ) {
 	public static ProblemResponse from(
 		final ProblemQueryResult result,
@@ -42,7 +43,8 @@ public record ProblemResponse(
 			result.answer(),
 			result.createdAt(),
 			result.year(),
-			result.solutionVideoLink()
+			result.solutionVideoLink(),
+			result.memo()
 		);
 	}
 }

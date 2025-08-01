@@ -26,7 +26,8 @@ class Requests {
 		@Size(min = 1, max = 100)
 		Set<String> answers,
 		Integer year,
-		String solutionVideoLink
+		String solutionVideoLink,
+		String memo
 	) {
 		public ProblemRegisterCommand toCommand(final Long memberId) {
 			return new ProblemRegisterCommand(memberId,
@@ -38,7 +39,8 @@ class Requests {
 				schoolCode,
 				answers,
 				year,
-				solutionVideoLink);
+				solutionVideoLink,
+				memo);
 		}
 	}
 
@@ -46,7 +48,7 @@ class Requests {
 		@NotNull
 		Long problemId,
 		@NotNull
-		String imageSource,
+		String problemImage,
 		@NotBlank
 		String solutionImage,
 		@NotNull
@@ -59,13 +61,14 @@ class Requests {
 		@Size(min = 1, max = 100)
 		Set<String> answers,
 		Integer year,
-		String solutionVideoLink
+		String solutionVideoLink,
+		String memo
 	) {
 		public ProblemUpdateCommand toCommand(final Long memberId) {
 			return new ProblemUpdateCommand(
 				problemId,
 				memberId,
-				imageSource,
+				problemImage,
 				solutionImage,
 				answerType,
 				difficulty,
@@ -73,7 +76,8 @@ class Requests {
 				schoolCode,
 				answers,
 				year,
-				solutionVideoLink
+				solutionVideoLink,
+				memo
 			);
 		}
 	}

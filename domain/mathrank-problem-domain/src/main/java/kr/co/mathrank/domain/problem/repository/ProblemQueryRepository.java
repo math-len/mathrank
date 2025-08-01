@@ -14,10 +14,12 @@ interface ProblemQueryRepository {
 		 Difficulty difficultyMaxInclude,
 		 AnswerType answerType,
 		 String path,
-		 Integer pageSize,
-		 Integer pageNumber,
 		 Boolean solutionVideoExist,
-		 Integer year);
+		 Integer year,
+		 String location,
+
+		 Integer pageSize,
+		 Integer pageNumber);
 
 	Long count(
 		Long memberId,
@@ -27,5 +29,6 @@ interface ProblemQueryRepository {
 		String path,
 		AnswerType answerType,
 		Boolean solutionVideoExist,
-		Integer year);
+		Integer year,
+		String location);
 }

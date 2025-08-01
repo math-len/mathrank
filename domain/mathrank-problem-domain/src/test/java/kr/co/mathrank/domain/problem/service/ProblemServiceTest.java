@@ -12,6 +12,7 @@ import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.transaction.annotation.Transactional;
 
 import jakarta.persistence.EntityManager;
@@ -41,6 +42,8 @@ class ProblemServiceTest {
 	private EntityManager entityManager;
 	@Autowired
 	private CourseRepository courseRepository;
+	@MockitoBean
+	private SchoolLocationManager schoolLocationManager;
 
 	@ParameterizedTest
 	@MethodSource("argumentsStream")
@@ -57,10 +60,10 @@ class ProblemServiceTest {
 		entityManager.clear();
 
 		final ProblemRegisterCommand command = new ProblemRegisterCommand(1L, "image.jpeg", "image.jpeg", AnswerType.MULTIPLE_CHOICE, path.getPath(), Difficulty.KILLER, "testCode",
-			Set.of("1"), 1001, null);
+			Set.of("1"), 1001, null, null);
 		final Long problemId = problemService.save(command);
 
-		final ProblemUpdateCommand updateCommand = new ProblemUpdateCommand(problemId, 1L, "newImage.jpeg", "newImage.jpeg", AnswerType.SHORT_ANSWER, Difficulty.KILLER, path.getPath(), "newTestCode", Set.of("newAnswer"), 1212, "solutionVideoLink");
+		final ProblemUpdateCommand updateCommand = new ProblemUpdateCommand(problemId, 1L, "newImage.jpeg", "newImage.jpeg", AnswerType.SHORT_ANSWER, Difficulty.KILLER, path.getPath(), "newTestCode", Set.of("newAnswer"), 1212, "solutionVideoLink", null);
 		problemService.update(updateCommand);
 
 		final Problem updatedProblem = problemRepository.findById(problemId)
@@ -80,10 +83,10 @@ class ProblemServiceTest {
 		entityManager.flush();
 		entityManager.clear();
 
-		final ProblemRegisterCommand command = new ProblemRegisterCommand(1L, "image.jpeg", "image.jpeg", AnswerType.MULTIPLE_CHOICE, path.getPath(), Difficulty.KILLER, "testCode", Set.of("test"), 1001, null);
+		final ProblemRegisterCommand command = new ProblemRegisterCommand(1L, "image.jpeg", "image.jpeg", AnswerType.MULTIPLE_CHOICE, path.getPath(), Difficulty.KILLER, "testCode", Set.of("test"), 1001, null, null);
 		final Long problemId = problemService.save(command);
 
-		final ProblemUpdateCommand updateCommand = new ProblemUpdateCommand(problemId, 2L, "newImage.jpeg", "newImage.jpeg", AnswerType.SHORT_ANSWER, Difficulty.KILLER, path.getPath(), "newTestCode", Set.of("newAnswer"), 1212, "solutionVideoLink");
+		final ProblemUpdateCommand updateCommand = new ProblemUpdateCommand(problemId, 2L, "newImage.jpeg", "newImage.jpeg", AnswerType.SHORT_ANSWER, Difficulty.KILLER, path.getPath(), "newTestCode", Set.of("newAnswer"), 1212, "solutionVideoLink", null);
 
 		Assertions.assertThrows(CannotAccessProblemException.class, () -> problemService.update(updateCommand));
 	}
@@ -96,7 +99,7 @@ class ProblemServiceTest {
 		entityManager.flush();
 		entityManager.clear();
 
-		final ProblemRegisterCommand command = new ProblemRegisterCommand(1L, "image.jpeg", "image.jpeg", AnswerType.MULTIPLE_CHOICE, path.getPath(), Difficulty.KILLER, "testCode", Set.of("answer"), 1001, null);
+		final ProblemRegisterCommand command = new ProblemRegisterCommand(1L, "image.jpeg", "image.jpeg", AnswerType.MULTIPLE_CHOICE, path.getPath(), Difficulty.KILLER, "testCode", Set.of("answer"), 1001, null, null);
 		final Long problemId = problemService.save(command);
 
 		entityManager.flush();
@@ -120,7 +123,7 @@ class ProblemServiceTest {
 		entityManager.clear();
 
 		final ProblemRegisterCommand command = new ProblemRegisterCommand(1L, "image.jpeg", "image.jpeg", AnswerType.MULTIPLE_CHOICE,
-			path.getPath(), Difficulty.KILLER, "testCode", Set.of("answer"), 1001, null);
+			path.getPath(), Difficulty.KILLER, "testCode", Set.of("answer"), 1001, null, null);
 		final Long problemId = problemService.save(command);
 
 		final ProblemDeleteCommand deleteCommand = new ProblemDeleteCommand(problemId, 2L);
@@ -130,13 +133,13 @@ class ProblemServiceTest {
 
 	private static Stream<Arguments> argumentsStream() {
 		return Stream.of(
-			Arguments.of(new ProblemRegisterCommand(			null, "image.jpeg", null, AnswerType.MULTIPLE_CHOICE, "aa", Difficulty.KILLER, "testCode", Set.of("answer"), 1001, null)),
-			Arguments.of(new ProblemRegisterCommand(			1L, null, null, AnswerType.MULTIPLE_CHOICE, "aa", Difficulty.KILLER, "testCode", Set.of("answer"), 1001, null)),
-			Arguments.of(new ProblemRegisterCommand(			1L, "image.jpeg", null, null, "aa", Difficulty.KILLER, "testCode", Set.of("answer"), 1001, null)),
-			Arguments.of(new ProblemRegisterCommand(			1L, "image.jpeg", null, AnswerType.MULTIPLE_CHOICE, "aa", null, "testCode", Set.of("answer"), 1001, null)),
-			Arguments.of(new ProblemRegisterCommand(			1L, "image.jpeg", null, AnswerType.MULTIPLE_CHOICE, "aa", Difficulty.KILLER, null, Set.of("answer"), 1001, null)),
-			Arguments.of(new ProblemRegisterCommand(			1L, "image.jpeg", null, AnswerType.MULTIPLE_CHOICE, "aa", Difficulty.KILLER, "testCode", Set.of(), 1001, null)),
-			Arguments.of(new ProblemRegisterCommand(			1L, "image.jpeg", null, AnswerType.MULTIPLE_CHOICE, "aa", Difficulty.KILLER, "testCode", null, 1001, null))
+			Arguments.of(new ProblemRegisterCommand(			null, "image.jpeg", null, AnswerType.MULTIPLE_CHOICE, "aa", Difficulty.KILLER, "testCode", Set.of("answer"), 1001, null, null)),
+			Arguments.of(new ProblemRegisterCommand(			1L, null, null, AnswerType.MULTIPLE_CHOICE, "aa", Difficulty.KILLER, "testCode", Set.of("answer"), 1001, null, null)),
+			Arguments.of(new ProblemRegisterCommand(			1L, "image.jpeg", null, null, "aa", Difficulty.KILLER, "testCode", Set.of("answer"), 1001, null, null)),
+			Arguments.of(new ProblemRegisterCommand(			1L, "image.jpeg", null, AnswerType.MULTIPLE_CHOICE, "aa", null, "testCode", Set.of("answer"), 1001, null, null)),
+			Arguments.of(new ProblemRegisterCommand(			1L, "image.jpeg", null, AnswerType.MULTIPLE_CHOICE, "aa", Difficulty.KILLER, null, Set.of("answer"), 1001, null, null)),
+			Arguments.of(new ProblemRegisterCommand(			1L, "image.jpeg", null, AnswerType.MULTIPLE_CHOICE, "aa", Difficulty.KILLER, "testCode", Set.of(), 1001, null, null)),
+			Arguments.of(new ProblemRegisterCommand(			1L, "image.jpeg", null, AnswerType.MULTIPLE_CHOICE, "aa", Difficulty.KILLER, "testCode", null, 1001, null, null))
 		);
 	}
 }

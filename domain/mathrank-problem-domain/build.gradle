@@ -8,6 +8,7 @@ dependencies {
 
     implementation project(':common:mathrank-snowflake')
     implementation project(':common:mathrank-exception')
+    implementation project(':client:external:mathrank-school')
 
     implementation 'com.querydsl:querydsl-jpa:5.0.0:jakarta'
     annotationProcessor "com.querydsl:querydsl-apt:${dependencyManagement.importedProperties['querydsl.version']}:jakarta"
