@@ -28,6 +28,7 @@ include(
         'domain:mathrank-auth-domain',
         'domain:mathrank-problem-core-domain',
         'domain:mathrank-problem-domain',
+        'domain:mathrank-problem-single-domain',
 
         'common',
         'common:mathrank-page',
