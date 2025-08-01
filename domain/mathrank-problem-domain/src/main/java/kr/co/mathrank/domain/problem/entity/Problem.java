@@ -33,7 +33,8 @@ import lombok.extern.slf4j.Slf4j;
 	@Index(name = "idx_member_id", columnList = "member_id"),
 	@Index(name = "idx_difficulty", columnList = "difficulty"),
 	@Index(name = "idx_type", columnList = "type"),
-	@Index(name = "idx_videoLink", columnList = "solution_video_link")
+	@Index(name = "idx_videoLink", columnList = "solution_video_link"),
+	@Index(name = "idx_location", columnList = "location")
 })
 @Getter
 @Setter
