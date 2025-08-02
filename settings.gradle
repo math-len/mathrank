@@ -20,6 +20,7 @@ include(
         'client',
         'client:internal',
         'client:internal:mathrank-member-client',
+        'client:internal:mathrank-problem-client',
         'client:external',
         'client:external:mathrank-school',
 

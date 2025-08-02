@@ -1,0 +1,55 @@
+package kr.co.mathrank.client.internal.problem;
+
+import java.util.List;
+
+import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.stereotype.Component;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.client.RestClient;
+
+import jakarta.validation.constraints.NotNull;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
+@Component
+@Validated
+public class ProblemClient {
+	private static final String URL_FORMAT = "%s:%s";
+
+	private final ProblemClientProperties properties;
+	private final RestClient problemClient;
+
+	ProblemClient(final ProblemClientProperties properties) {
+		this.properties = properties;
+		this.problemClient = RestClient.builder()
+			.baseUrl(getUrlFormat(properties.host, properties.port))
+			.build();
+	}
+
+	public SolveResult matchAnswer(@NotNull final Long problemId, @NotNull final List<String> answers) {
+		return problemClient.get()
+			.uri(uri -> uri
+				.queryParam("problemId", problemId)
+				.queryParam("answers", answers.toArray())
+				.build())
+			.retrieve()
+			.body(SolveResult.class);
+	}
+
+	private String getUrlFormat(final String host, final Integer port) {
+		return URL_FORMAT.formatted(host, port);
+	}
+
+	@Getter
+	@Configuration
+	@ConfigurationProperties("client.problem")
+	@NoArgsConstructor
+	@Setter
+	static class ProblemClientProperties {
+		private String host = "http://localhost";
+		private Integer port = 8080;
+		private String uri = "/api/inner/v1/problem/solve";
+	}
+}

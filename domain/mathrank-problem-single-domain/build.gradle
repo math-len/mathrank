@@ -7,7 +7,9 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-validation'
 
     implementation project(':common:mathrank-role')
+    implementation project(':common:mathrank-snowflake')
     implementation project(':common:mathrank-exception')
+    implementation project(':client:internal:mathrank-problem-client')
 
     api project(':domain:mathrank-problem-core-domain')
     runtimeOnly 'com.h2database:h2'

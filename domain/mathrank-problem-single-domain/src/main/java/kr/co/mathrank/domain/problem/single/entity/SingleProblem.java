@@ -31,16 +31,16 @@ public class SingleProblem {
 	private Long memberId;
 
 	@OneToMany(mappedBy = "singleProblem", cascade = CascadeType.PERSIST, orphanRemoval = true)
-	private final List<Challenger> challengers = new ArrayList<>();
-
-	private Long challengerCount = 0L;
+	private final List<ChallengeLog> challengeLogs = new ArrayList<>();
 
 	private Long firstTrySuccessCount = 0L;
 
-	private Double accuracy = 0.0D;
-
 	@CreationTimestamp
 	private LocalDateTime singleProblemRegisteredAt;
+
+	public Long increaseFirstTrySuccessCount() {
+		return ++firstTrySuccessCount;
+	}
 
 	public static SingleProblem of(final Long problemId, final Long memberId) {
 		final SingleProblem problem = new SingleProblem();
