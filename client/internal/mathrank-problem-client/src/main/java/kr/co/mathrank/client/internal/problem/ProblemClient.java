@@ -31,6 +31,7 @@ public class ProblemClient {
 	public SolveResult matchAnswer(@NotNull final Long problemId, @NotNull final List<String> answers) {
 		return problemClient.get()
 			.uri(uri -> uri
+				.path(properties.uri)
 				.queryParam("problemId", problemId)
 				.queryParam("answers", answers.toArray())
 				.build())
