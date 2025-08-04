@@ -75,7 +75,7 @@ class SingleProblemServiceTest {
 	}
 
 	@Test
-	void 문제풀이결과_기록은_동시성_문제가_없다() throws InterruptedException {
+	void 같은_사용자의_첫시도_문제_풀이_성공_기록은_한번만_적용되야한다() throws InterruptedException {
 		long memberId = 2L;
 
 		// 풀 문제를 등록한다
@@ -104,6 +104,9 @@ class SingleProblemServiceTest {
 		countDownLatch.await();
 		executorService.shutdown();
 
+		// 같은 사용자에 의해 동시 요청, 결과는 1이 되야한다.
+		Assertions.assertEquals(1, singleProblemRepository.findById(singleProblemId).get().getFirstTrySuccessCount());
+		// 총 결과는 1000개
 		Assertions.assertEquals(tryCount, challengeLogRepository.findAll().size());
 	}
 
