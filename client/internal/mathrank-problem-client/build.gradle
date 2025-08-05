@@ -4,6 +4,6 @@ dependencies {
 
     testImplementation 'org.springframework.boot:spring-boot-starter-web'
 
-    testImplementation project(':app:api:mathrank-problem-solve-api')
+    testImplementation project(':app:api:mathrank-problem-inner-api')
     testImplementation project(':domain:mathrank-problem-domain')
 }

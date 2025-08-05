@@ -1,5 +1,6 @@
 package kr.co.mathrank.app.api.problem.single.controller;
 
+import org.springdoc.core.annotations.ParameterObject;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -28,7 +29,7 @@ public class SingleProblemController {
 	@PostMapping("/api/v1/problem/single/solve")
 	@Authorization(openedForAll = true)
 	public ResponseEntity<Void> solveSingleProblem(
-		@ModelAttribute @Valid final SingleProblemSolveRequest request,
+		@ModelAttribute @ParameterObject @Valid final SingleProblemSolveRequest request,
 		@LoginInfo final MemberPrincipal memberPrincipal
 	) {
 		final SingleProblemSolveCommand command = request.toCommand(memberPrincipal.memberId());

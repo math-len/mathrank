@@ -1,7 +1,5 @@
 package kr.co.mathrank.domain.problem.single.service;
 
-import java.time.LocalDateTime;
-
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.annotation.Validated;
@@ -11,15 +9,13 @@ import jakarta.validation.constraints.NotNull;
 import kr.co.mathrank.client.internal.problem.ProblemClient;
 import kr.co.mathrank.client.internal.problem.SolveResult;
 import kr.co.mathrank.common.role.Role;
-import kr.co.mathrank.common.snowflake.Snowflake;
 import kr.co.mathrank.domain.problem.single.dto.SingleProblemRegisterCommand;
 import kr.co.mathrank.domain.problem.single.dto.SingleProblemSolveCommand;
-import kr.co.mathrank.domain.problem.single.entity.ChallengeLog;
 import kr.co.mathrank.domain.problem.single.entity.SingleProblem;
 import kr.co.mathrank.domain.problem.single.exception.AlreadyRegisteredProblemException;
+import kr.co.mathrank.domain.problem.single.exception.CannotFindProblemException;
 import kr.co.mathrank.domain.problem.single.exception.CannotFindSingleProblemException;
 import kr.co.mathrank.domain.problem.single.exception.CannotRegisterWithThisRoleException;
-import kr.co.mathrank.domain.problem.single.repository.ChallengeLogRepository;
 import kr.co.mathrank.domain.problem.single.repository.SingleProblemRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -44,6 +40,12 @@ public class SingleProblemService {
 		if (command.role() != Role.ADMIN) {
 			log.warn("[SingleProblemService.register] cannot register single problem with this user - userId:{}, userRole: {}", command.memberId(), command.role());
 			throw new CannotRegisterWithThisRoleException();
+		}
+
+		// 존재하는 problem인지 확인한다.
+		if (!problemClient.isExist(command.problemId())) {
+			log.warn("[SingleProblemService.register] problem is not exist - problemId: {}", command.problemId());
+			throw new CannotFindProblemException();
 		}
 
 		final SingleProblem problem = SingleProblem.of(command.problemId(), command.memberId());

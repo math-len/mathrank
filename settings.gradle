@@ -12,7 +12,7 @@ include(
         'app:api:mathrank-image-api',
         'app:api:mathrank-problem-api',
         'app:api:mathrank-problem-read-api',
-        'app:api:mathrank-problem-solve-api',
+        'app:api:mathrank-problem-inner-api',
         'app:api:mathrank-api-common',
         'app:api:mathrank-auth-api',
         'app:api:mathrank-school-read-api',

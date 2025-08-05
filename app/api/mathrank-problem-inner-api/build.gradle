@@ -4,4 +4,5 @@ dependencies {
 
     implementation project(':app:api:mathrank-api-common')
     implementation project(':domain:mathrank-problem-domain')
+    implementation project(':common:mathrank-exception')
 }

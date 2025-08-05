@@ -6,7 +6,7 @@ dependencies {
     implementation project(':app:api:mathrank-image-api')
     implementation project(':app:api:mathrank-problem-api')
     implementation project(':app:api:mathrank-problem-read-api')
-    implementation project(':app:api:mathrank-problem-solve-api')
+    implementation project(':app:api:mathrank-problem-inner-api')
     implementation project(':app:api:mathrank-school-read-api')
     implementation project(':app:api:mathrank-problem-single-api')
 
