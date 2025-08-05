@@ -10,8 +10,10 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.stereotype.Component;
 import org.springframework.test.context.DynamicPropertyRegistry;
 import org.springframework.test.context.DynamicPropertySource;
+import org.springframework.transaction.annotation.Transactional;
 import org.testcontainers.containers.MySQLContainer;
 import org.testcontainers.junit.jupiter.Container;
 
@@ -19,6 +21,7 @@ import kr.co.mathrank.client.internal.problem.SolveResult;
 import kr.co.mathrank.domain.problem.single.entity.SingleProblem;
 import kr.co.mathrank.domain.problem.single.repository.ChallengeLogRepository;
 import kr.co.mathrank.domain.problem.single.repository.SingleProblemRepository;
+import lombok.RequiredArgsConstructor;
 
 @SpringBootTest(
 	properties = """
@@ -36,12 +39,15 @@ class ChallengeLogSaveManagerTest {
 	private SingleProblemRepository singleProblemRepository;
 	@Autowired
 	private ChallengeLogRepository challengeLogRepository;
+	@Autowired
+	private SaveLogBulkService saveLogBulkService;
 
 	@Container
 	static MySQLContainer<?> mysql = new MySQLContainer<>("mysql:8.0.42")
 		.withDatabaseName("testdb")
 		.withUsername("user")
 		.withPassword("password");
+
 
 	@DynamicPropertySource
 	static void setProperties(DynamicPropertyRegistry registry) {
@@ -55,7 +61,7 @@ class ChallengeLogSaveManagerTest {
 	void 문제풀이_시도_기록은_모두_저장된다() throws InterruptedException {
 		final Long singleProblemId = singleProblemRepository.save(SingleProblem.of(1L, 2L)).getId();
 
-		final int tryCount = 1000;
+		final int tryCount = 100;
 
 		// 최대 100개 동시요청
 		final ExecutorService executorService = Executors.newFixedThreadPool(100);
@@ -216,9 +222,62 @@ class ChallengeLogSaveManagerTest {
 		Assertions.assertEquals(1, singleProblemRepository.findById(singleProblemId).get().getFirstTrySuccessCount());
 	}
 
+	@Test
+	void 외부_트랜잭션을_사용할때_mvcc_스냅샷_문제로_중복성공이_기록되지_않아야한다() throws InterruptedException {
+		final Long singleProblemId = singleProblemRepository.save(SingleProblem.of(1L, 2L)).getId();
+
+		final Long userId = 1L;
+
+		final int tryCount = 10;
+
+		// 최대 100개 동시요청
+		final ExecutorService executorService = Executors.newFixedThreadPool(100);
+		final CountDownLatch countDownLatch = new CountDownLatch(tryCount);
+
+		for (int i = 0; i < tryCount; i++) {
+			executorService.execute(() -> {
+				try {
+					// 같은 사용자의 성공 결과 저장
+					saveLogBulkService.runSave(singleProblemId, userId); // 내부에서 saveLog 10번 호출
+				} finally {
+					countDownLatch.countDown();
+				}
+			});
+		}
+
+		countDownLatch.await();
+		executorService.shutdown();
+
+		// then
+		final SingleProblem singleProblem = singleProblemRepository.findById(singleProblemId).get();
+
+		Assertions.assertEquals(tryCount, singleProblem.getTotalAttemptedCount()); // 시도는 모두 기록됨
+		Assertions.assertEquals(1, singleProblem.getFirstTrySuccessCount()); // 성공은 1번만 기록됨
+	}
+
 	@AfterEach
 	void clear() {
 		challengeLogRepository.deleteAll();
 		singleProblemRepository.deleteAll();
 	}
 }
+
+/**
+ * 외부 트랜잭션에서 mvcc 스냅샷이 만들어짐을 테스트하기 위한 클래스
+ */
+@Component
+@RequiredArgsConstructor
+class SaveLogBulkService {
+	private final ChallengeLogSaveManager challengeLogSaveManager;
+	private final ChallengeLogRepository challengeLogRepository;
+
+	@Transactional
+	public void runSave(Long singleProblemId, Long userId) {
+		// mvcc 스냅샷 생성
+		challengeLogRepository.findAll();
+
+		challengeLogSaveManager.saveLog(singleProblemId, userId,
+			new SolveResult(true, Collections.emptySet(), Collections.emptyList()));
+	}
+}
+

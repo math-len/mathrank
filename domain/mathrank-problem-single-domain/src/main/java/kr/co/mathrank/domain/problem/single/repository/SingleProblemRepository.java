@@ -14,7 +14,4 @@ public interface SingleProblemRepository extends JpaRepository<SingleProblem, Lo
 	@Query("SELECT sp FROM SingleProblem sp WHERE sp.id = :singleProblemId")
 	@Lock(LockModeType.PESSIMISTIC_WRITE)
 	Optional<SingleProblem> findByIdForUpdate(@Param("singleProblemId") Long singleProblemId);
-
-	@Query("SELECT COUNT(cl) > 0 FROM ChallengeLog cl WHERE cl.singleProblem.id = :singleProblemId AND cl.memberId = :challengerMemberId")
-	Boolean getAlreadySolved(@Param("singleProblemId") Long singleProblemId, @Param("challengerMemberId") Long challengerMemberId);
 }
