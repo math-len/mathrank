@@ -10,6 +10,10 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.DynamicPropertyRegistry;
+import org.springframework.test.context.DynamicPropertySource;
+import org.testcontainers.containers.MySQLContainer;
+import org.testcontainers.junit.jupiter.Container;
 
 import kr.co.mathrank.client.internal.problem.SolveResult;
 import kr.co.mathrank.domain.problem.single.entity.SingleProblem;
@@ -21,8 +25,10 @@ import kr.co.mathrank.domain.problem.single.repository.SingleProblemRepository;
 		snowflake.node.id=111
 		spring.jpa.show-sql=true
 		spring.jpa.properties.hibernate.format_sql=true
+		spring.jpa.hibernate.ddl-auto=create
 		"""
 )
+
 class ChallengeLogSaveManagerTest {
 	@Autowired
 	private ChallengeLogSaveManager challengeLogSaveManager;
@@ -30,6 +36,20 @@ class ChallengeLogSaveManagerTest {
 	private SingleProblemRepository singleProblemRepository;
 	@Autowired
 	private ChallengeLogRepository challengeLogRepository;
+
+	@Container
+	static MySQLContainer<?> mysql = new MySQLContainer<>("mysql:8.0.42")
+		.withDatabaseName("testdb")
+		.withUsername("user")
+		.withPassword("password");
+
+	@DynamicPropertySource
+	static void setProperties(DynamicPropertyRegistry registry) {
+		mysql.start();
+		registry.add("spring.datasource.url", mysql::getJdbcUrl);
+		registry.add("spring.datasource.username", mysql::getUsername);
+		registry.add("spring.datasource.password", mysql::getPassword);
+	}
 
 	@Test
 	void 여러_사용자들이_문제풀이를_동시에_성공할때_동시성문제_없도록_한다() throws InterruptedException {
@@ -64,7 +84,7 @@ class ChallengeLogSaveManagerTest {
 			() -> Assertions.assertEquals(tryCount, challengeLogRepository.findAllBySingleProblemId(singleProblemId).size()),
 			// 같은 사용자의 "첫 시도 성공"은 단 한 번만 인정되어야 한다.
 			// 결국 1000개로 저장되야 한다
-			() -> Assertions.assertEquals(1000, singleProblemRepository.findById(singleProblemId).get().getFirstTrySuccessCount())
+			() -> Assertions.assertEquals(tryCount, singleProblemRepository.findById(singleProblemId).get().getFirstTrySuccessCount())
 		);
 	}
 

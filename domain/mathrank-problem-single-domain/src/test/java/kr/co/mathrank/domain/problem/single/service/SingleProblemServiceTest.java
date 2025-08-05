@@ -11,8 +11,12 @@ import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.DynamicPropertyRegistry;
+import org.springframework.test.context.DynamicPropertySource;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.transaction.annotation.Transactional;
+import org.testcontainers.containers.MySQLContainer;
+import org.testcontainers.junit.jupiter.Container;
 
 import jakarta.validation.ConstraintViolationException;
 import kr.co.mathrank.client.internal.problem.ProblemClient;
@@ -32,6 +36,7 @@ import lombok.extern.slf4j.Slf4j;
 		snowflake.node.id=111
 		spring.jpa.show-sql=true
 		spring.jpa.properties.hibernate.format_sql=true
+		spring.jpa.hibernate.ddl-auto=create
 		"""
 )
 class SingleProblemServiceTest {
@@ -43,6 +48,21 @@ class SingleProblemServiceTest {
 	private ChallengeLogRepository challengeLogRepository;
 	@Autowired
 	private SingleProblemRepository singleProblemRepository;
+
+	@Container
+	static MySQLContainer<?> mysql = new MySQLContainer<>("mysql:8.0.42")
+		.withDatabaseName("testdb")
+		.withUsername("user")
+		.withPassword("password");
+
+	@DynamicPropertySource
+	static void setProperties(DynamicPropertyRegistry registry) {
+		mysql.start();
+		registry.add("spring.datasource.url", mysql::getJdbcUrl);
+		registry.add("spring.datasource.username", mysql::getUsername);
+		registry.add("spring.datasource.password", mysql::getPassword);
+	}
+
 
 	@Test
 	void 어드민만_문제를_개별문제로_등록할_수_있다() {
