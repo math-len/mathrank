@@ -6,6 +6,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 import kr.co.mathrank.client.internal.problem.SolveResult;
+import kr.co.mathrank.common.dataserializer.DataSerializer;
 import kr.co.mathrank.common.snowflake.Snowflake;
 import kr.co.mathrank.domain.problem.single.entity.ChallengeLog;
 import kr.co.mathrank.domain.problem.single.entity.SingleProblem;
@@ -41,8 +42,13 @@ class ChallengeLogSaveManager {
 			singleProblem.firstTry(solveResult.success());
 		}
 
-		final ChallengeLog challengeLog = ChallengeLog.of(snowflake.nextId(), singleProblem, memberId,
-			solveResult.success(), solveResult.success().toString(), solveResult.realAnswer().toString(),
+		final ChallengeLog challengeLog = ChallengeLog.of(
+			snowflake.nextId(),
+			singleProblem,
+			memberId,
+			solveResult.success(),
+			DataSerializer.serialize(solveResult.success()).orElse("null"),
+			DataSerializer.serialize(solveResult.realAnswer()).orElse("null"),
 			LocalDateTime.now());
 		challengeLogRepository.save(challengeLog);
 

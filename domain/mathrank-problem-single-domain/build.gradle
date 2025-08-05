@@ -9,6 +9,7 @@ dependencies {
     implementation project(':common:mathrank-role')
     implementation project(':common:mathrank-snowflake')
     implementation project(':common:mathrank-exception')
+    implementation project(':common:mathrank-dataserializer')
     implementation project(':client:internal:mathrank-problem-client')
 
     api project(':domain:mathrank-problem-core-domain')
