@@ -3,7 +3,6 @@ package kr.co.mathrank.domain.problem.single.service;
 import java.time.LocalDateTime;
 
 import org.springframework.stereotype.Component;
-import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import kr.co.mathrank.client.internal.problem.SolveResult;
@@ -29,10 +28,22 @@ class ChallengeLogSaveManager {
 		// 사용자 풀이 횟수 락걸기
 		final SingleProblem singleProblem = singleProblemRepository.findByIdForUpdate(singleProblemId)
 			.orElseThrow(CannotFindSingleProblemException::new);
-		final Boolean alreadySolved = singleProblemRepository.getAlreadySolved(singleProblemId, memberId);
+
+		/*
+			개념:  mysql에서 MVCC로 트랜잭션 내 첫 non-locking-read 실행 시점에 스냅샷 생성.
+
+			로직:
+			 1) 각 트랜잭션은 락 획득 전까지 스냅샷을 생성하지 않는다.
+			 2) 락 획득 후, 아래 쿼리(non-locking-read)를 통해 스냅샷을 생성한다.
+			 3) 스냅샷은 최신 커밋 데이터를 기준으로 스냅샷이 생성됨으로, 동시성 문제 없이 데이터를 조회한다.
+
+			 https://dev.mysql.com/doc/refman/8.4/en/innodb-consistent-read.html
+		*/
+		// 이는, 후에 challengLog가 많아졌을 시, 전체 메모리 로드를 방지하기 위함
+		final Boolean alreadyTried = singleProblemRepository.getAlreadySolved(singleProblemId, memberId);
 
 		// 해당 사용자의 풀이 기록이 없을떄 성공 카운트를 증가한다.
-		if (alreadySolved) {
+		if (alreadyTried) {
 			singleProblem.increaseAttemptCount();
 		} else {
 			singleProblem.firstTry(solveResult.success());
