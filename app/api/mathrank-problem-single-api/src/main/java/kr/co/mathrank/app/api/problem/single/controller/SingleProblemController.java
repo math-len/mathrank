@@ -3,6 +3,7 @@ package kr.co.mathrank.app.api.problem.single.controller;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import io.swagger.v3.oas.annotations.Operation;
@@ -11,6 +12,8 @@ import jakarta.validation.Valid;
 import kr.co.mathrank.app.api.common.authentication.Authorization;
 import kr.co.mathrank.app.api.common.authentication.LoginInfo;
 import kr.co.mathrank.app.api.common.authentication.MemberPrincipal;
+import kr.co.mathrank.common.role.Role;
+import kr.co.mathrank.domain.problem.single.dto.SingleProblemRegisterCommand;
 import kr.co.mathrank.domain.problem.single.dto.SingleProblemSolveCommand;
 import kr.co.mathrank.domain.problem.single.service.SingleProblemService;
 import lombok.RequiredArgsConstructor;
@@ -31,6 +34,18 @@ public class SingleProblemController {
 		final SingleProblemSolveCommand command = request.toCommand(memberPrincipal.memberId());
 		singleProblemService.solve(command);
 
+		return ResponseEntity.ok().build();
+	}
+
+	@Operation(summary = "개별 문제 등록 API", description = "특정 문제를 개별문제로 등록합니다. 문제 중복 등록 시도시, 거부됩니다.")
+	@PostMapping("/api/v1/problem/single")
+	@Authorization(values = Role.ADMIN)
+	public ResponseEntity<Void> registerProblem(
+		@RequestParam final Long problemId,
+		@LoginInfo final MemberPrincipal memberPrincipal
+	) {
+		singleProblemService.register(
+			new SingleProblemRegisterCommand(problemId, memberPrincipal.memberId(), memberPrincipal.role()));
 		return ResponseEntity.ok().build();
 	}
 }
