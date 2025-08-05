@@ -1,29 +1,19 @@
 package kr.co.mathrank.domain.problem.single.service;
 
-import java.util.Collections;
-import java.util.concurrent.CountDownLatch;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.DynamicPropertyRegistry;
 import org.springframework.test.context.DynamicPropertySource;
-import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.transaction.annotation.Transactional;
 import org.testcontainers.containers.MySQLContainer;
 import org.testcontainers.junit.jupiter.Container;
 
 import jakarta.validation.ConstraintViolationException;
-import kr.co.mathrank.client.internal.problem.ProblemClient;
-import kr.co.mathrank.client.internal.problem.SolveResult;
 import kr.co.mathrank.common.role.Role;
 import kr.co.mathrank.domain.problem.single.dto.SingleProblemRegisterCommand;
-import kr.co.mathrank.domain.problem.single.dto.SingleProblemSolveCommand;
 import kr.co.mathrank.domain.problem.single.exception.AlreadyRegisteredProblemException;
 import kr.co.mathrank.domain.problem.single.exception.CannotRegisterWithThisRoleException;
 import kr.co.mathrank.domain.problem.single.repository.ChallengeLogRepository;

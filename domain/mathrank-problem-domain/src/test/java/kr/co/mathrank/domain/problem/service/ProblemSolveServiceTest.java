@@ -3,10 +3,7 @@ package kr.co.mathrank.domain.problem.service;
 import java.util.List;
 import java.util.Set;
 
-import org.junit.jupiter.api.AfterAll;
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -20,7 +17,6 @@ import kr.co.mathrank.domain.problem.dto.ProblemSolveResult;
 import kr.co.mathrank.domain.problem.entity.Course;
 import kr.co.mathrank.domain.problem.entity.Path;
 import kr.co.mathrank.domain.problem.repository.CourseRepository;
-import kr.co.mathrank.domain.problem.repository.ProblemRepository;
 import lombok.RequiredArgsConstructor;
 
 @SpringBootTest
