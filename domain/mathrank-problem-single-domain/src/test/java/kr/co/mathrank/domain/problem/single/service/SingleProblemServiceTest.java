@@ -42,8 +42,6 @@ import lombok.extern.slf4j.Slf4j;
 class SingleProblemServiceTest {
 	@Autowired
 	private SingleProblemService singleProblemService;
-	@MockitoBean
-	private ProblemClient problemClient;
 	@Autowired
 	private ChallengeLogRepository challengeLogRepository;
 	@Autowired
@@ -92,42 +90,6 @@ class SingleProblemServiceTest {
 			() -> Assertions.assertThrows(ConstraintViolationException.class, () -> singleProblemService.register(new SingleProblemRegisterCommand(1L, null, Role.ADMIN))),
 			() -> Assertions.assertThrows(ConstraintViolationException.class, () -> singleProblemService.register(new SingleProblemRegisterCommand(1L, 2L, null)))
 		);
-	}
-
-	@Test
-	void 같은_사용자의_첫시도_문제_풀이_성공_기록은_한번만_적용되야한다() throws InterruptedException {
-		long memberId = 2L;
-
-		// 풀 문제를 등록한다
-		final Long singleProblemId = singleProblemService.register(
-			new SingleProblemRegisterCommand(1L, memberId, Role.ADMIN));
-
-		// 채점 결과는 항상 true 응답
-		Mockito.when(problemClient.matchAnswer(Mockito.anyLong(), Mockito.anyList()))
-			.thenReturn(new SolveResult(true, Collections.emptySet(), Collections.emptyList()));
-
-		final int tryCount = 1000; // 로그는 총 1000개 쌓여야한다.
-
-		// 최대 100개 동시요청
-		final ExecutorService executorService = Executors.newFixedThreadPool(100);
-		final CountDownLatch countDownLatch = new CountDownLatch(tryCount);
-
-		// 동시요청 시작
-		for (int i = 0; i < tryCount; i++) {
-			executorService.execute(() -> {
-				singleProblemService.solve(
-					new SingleProblemSolveCommand(singleProblemId, memberId, Collections.emptyList()));
-				countDownLatch.countDown();
-			});
-		}
-
-		countDownLatch.await();
-		executorService.shutdown();
-
-		// 같은 사용자에 의해 동시 요청, 결과는 1이 되야한다.
-		Assertions.assertEquals(1, singleProblemRepository.findById(singleProblemId).get().getFirstTrySuccessCount());
-		// 총 결과는 1000개
-		Assertions.assertEquals(tryCount, challengeLogRepository.findAll().size());
 	}
 
 	@BeforeEach

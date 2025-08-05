@@ -3,6 +3,7 @@ package kr.co.mathrank.domain.problem.single.service;
 import java.time.LocalDateTime;
 
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import kr.co.mathrank.client.internal.problem.SolveResult;
@@ -31,8 +32,10 @@ class ChallengeLogSaveManager {
 		final Boolean alreadySolved = singleProblemRepository.getAlreadySolved(singleProblemId, memberId);
 
 		// 해당 사용자의 풀이 기록이 없을떄 성공 카운트를 증가한다.
-		if (!alreadySolved && solveResult.success()) {
-			singleProblem.increaseFirstTrySuccessCount();
+		if (alreadySolved) {
+			singleProblem.increaseAttemptCount();
+		} else {
+			singleProblem.firstTry(solveResult.success());
 		}
 
 		final ChallengeLog challengeLog = ChallengeLog.of(snowflake.nextId(), singleProblem, memberId,

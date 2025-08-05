@@ -8,12 +8,17 @@ import org.springframework.data.domain.Persistable;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.Id;
+import jakarta.persistence.Index;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.Table;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Entity
+@Table(indexes = {
+	@Index(name = "idx_singleProblemId_memberId", columnList = "single_problem_id, member_id")
+})
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class ChallengeLog implements Persistable<Long> {

@@ -33,13 +33,28 @@ public class SingleProblem {
 	@OneToMany(mappedBy = "singleProblem", cascade = CascadeType.PERSIST, orphanRemoval = true)
 	private final List<ChallengeLog> challengeLogs = new ArrayList<>();
 
-	private Long firstTrySuccessCount = 0L;
+	private Long firstTrySuccessCount = 0L; // 첫번째 시도에서 성공한 횟수
+
+	private Long totalAttemptedCount = 0L; // 문제를 풀려고 시도한 총 횟수
+
+	private Long attemptedUserDistinctCount = 0L; // 해당 문제를 풀려고 한 사용자 수
 
 	@CreationTimestamp
 	private LocalDateTime singleProblemRegisteredAt;
 
-	public Long increaseFirstTrySuccessCount() {
-		return ++firstTrySuccessCount;
+	public void firstTry(final boolean success) {
+		// 첫 시도에 문제 풀이 성공 시
+		if (success) {
+			firstTrySuccessCount++;
+		}
+
+		// 성공여부와 상관없이 첫 시도라면 항상 증가
+		totalAttemptedCount++;
+		attemptedUserDistinctCount++;
+	}
+
+	public void increaseAttemptCount() {
+		totalAttemptedCount++;
 	}
 
 	public static SingleProblem of(final Long problemId, final Long memberId) {
