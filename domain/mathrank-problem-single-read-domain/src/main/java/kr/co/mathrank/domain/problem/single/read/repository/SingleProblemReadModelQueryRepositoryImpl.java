@@ -28,7 +28,7 @@ class SingleProblemReadModelQueryRepositoryImpl implements SingleProblemReadMode
 			.from(model)
 			.where(
 				singleProblemIdMatch(query.singleProblemId()),
-				diffcultyIn(query.difficultyMinInclude(), query.difficultyMaxInclude()),
+				difficultyIn(query.difficultyMinInclude(), query.difficultyMaxInclude()),
 				coursePathMatch(query.coursePath()),
 				answerTypeEqual(query.answerType()),
 				accuracyIn(query.accuracyMinInclude(), query.accuracyMaxInclude()),
@@ -46,7 +46,7 @@ class SingleProblemReadModelQueryRepositoryImpl implements SingleProblemReadMode
 			.from(model)
 			.where(
 				singleProblemIdMatch(query.singleProblemId()),
-				diffcultyIn(query.difficultyMinInclude(), query.difficultyMaxInclude()),
+				difficultyIn(query.difficultyMinInclude(), query.difficultyMaxInclude()),
 				coursePathMatch(query.coursePath()),
 				answerTypeEqual(query.answerType()),
 				accuracyIn(query.accuracyMinInclude(), query.accuracyMaxInclude()),
@@ -63,7 +63,7 @@ class SingleProblemReadModelQueryRepositoryImpl implements SingleProblemReadMode
 		return QSingleProblemReadModel.singleProblemReadModel.id.eq(singleProblemId);
 	}
 
-	private BooleanExpression diffcultyIn(final Difficulty difficultyMinInclude, final Difficulty difficultyMaxInclude) {
+	private BooleanExpression difficultyIn(final Difficulty difficultyMinInclude, final Difficulty difficultyMaxInclude) {
 		if (difficultyMinInclude == null && difficultyMaxInclude == null) {
 			return null;
 		}
