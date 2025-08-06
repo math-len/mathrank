@@ -47,7 +47,7 @@ class ChallengeLogSaveManager {
 			singleProblem,
 			memberId,
 			solveResult.success(),
-			DataSerializer.serialize(solveResult.success()).orElse("null"),
+			DataSerializer.serialize(solveResult.submittedAnswer()).orElse("null"),
 			DataSerializer.serialize(solveResult.realAnswer()).orElse("null"),
 			LocalDateTime.now());
 		challengeLogRepository.save(challengeLog);
