@@ -330,4 +330,49 @@ class SingleProblemReadModelRepositoryTest {
 
 		Assertions.assertEquals(1, singleProblemReadModelRepository.queryPage(query, 10, 1).size());
 	}
+
+	@Test
+	void 정답유형을_조건으로_검색한다() {
+		singleProblemReadModelRepository.saveAll(List.of(
+			SingleProblemReadModel.of(1L, 1L, "image", "path", AnswerType.MULTIPLE_CHOICE, null, 100L, 200L, 100L),
+			SingleProblemReadModel.of(2L, 2L, "image", "path", AnswerType.MULTIPLE_CHOICE, null, 100L, 200L, 100L),
+			SingleProblemReadModel.of(3L, 3L, "image", "path", AnswerType.SHORT_ANSWER, null, 100L, 200L, 100L)
+		));
+
+		Assertions.assertAll(
+			// MULTIPLE_CHOICE만 검색하면 2개
+			() -> Assertions.assertEquals(2, singleProblemReadModelRepository.queryPage(
+				new SingleProblemReadModelQuery(
+					null, null, AnswerType.MULTIPLE_CHOICE, null, null,
+					null, null, null, null
+				), 10, 1
+			).size()),
+
+			// SHORT_ANSWER만 검색하면 1개
+			() -> Assertions.assertEquals(1, singleProblemReadModelRepository.queryPage(
+				new SingleProblemReadModelQuery(
+					null, null, AnswerType.SHORT_ANSWER, null, null,
+					null, null, null, null
+				),
+				10, 1
+			).size()),
+
+			// null로하면 모두 조회 ( 3개 )
+			() -> Assertions.assertEquals(3, singleProblemReadModelRepository.queryPage(
+				new SingleProblemReadModelQuery(
+					null,
+					null,
+					null,
+					null,
+					null,
+					null,
+					null,
+					null,
+					null
+					),
+				10, 1
+			).size())
+		);
+	}
+
 }

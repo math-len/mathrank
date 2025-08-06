@@ -7,6 +7,7 @@ import org.springframework.stereotype.Repository;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 
+import kr.co.mathrank.domain.problem.core.AnswerType;
 import kr.co.mathrank.domain.problem.core.Difficulty;
 import kr.co.mathrank.domain.problem.single.read.dto.SingleProblemReadModelQuery;
 import kr.co.mathrank.domain.problem.single.read.entity.QSingleProblemReadModel;
@@ -29,6 +30,7 @@ class SingleProblemReadModelQueryRepositoryImpl implements SingleProblemReadMode
 				singleProblemIdMatch(query.singleProblemId()),
 				diffcultyIn(query.difficultyMinInclude(), query.difficultyMaxInclude()),
 				coursePathMatch(query.coursePath()),
+				answerTypeEqual(query.answerType()),
 				accuracyIn(query.accuracyMinInclude(), query.accuracyMaxInclude()),
 				totalAttemptCountIn(query.totalAttemptCountMinInclude(), query.totalAttemptCountMaxInclude())
 			)
@@ -46,6 +48,7 @@ class SingleProblemReadModelQueryRepositoryImpl implements SingleProblemReadMode
 				singleProblemIdMatch(query.singleProblemId()),
 				diffcultyIn(query.difficultyMinInclude(), query.difficultyMaxInclude()),
 				coursePathMatch(query.coursePath()),
+				answerTypeEqual(query.answerType()),
 				accuracyIn(query.accuracyMinInclude(), query.accuracyMaxInclude()),
 				totalAttemptCountIn(query.totalAttemptCountMinInclude(), query.totalAttemptCountMaxInclude())
 			)
@@ -90,5 +93,13 @@ class SingleProblemReadModelQueryRepositoryImpl implements SingleProblemReadMode
 		}
 
 		return QSingleProblemReadModel.singleProblemReadModel.totalAttemptedCount.between(attemptCountMinInclude, attemptCountMaxInclude);
+	}
+
+	private BooleanExpression answerTypeEqual(final AnswerType answerType) {
+		if (answerType == null) {
+			return null;
+		}
+
+		return QSingleProblemReadModel.singleProblemReadModel.answerType.eq(answerType);
 	}
 }
