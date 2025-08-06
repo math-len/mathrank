@@ -2,6 +2,7 @@ package kr.co.mathrank.domain.problem.single.read.service;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 import org.junit.jupiter.api.Assertions;
@@ -64,11 +65,11 @@ class SingleProblemQueryServiceTest {
 		// Given
 		repository.saveAll(List.of(
 			// 정답률 30
-			SingleProblemReadModel.of(1L, 1L, "img", "math", null, Difficulty.MID, 300L, 2000L, 1000L),
+			SingleProblemReadModel.of(1L, 1L, "img", "math", null, Difficulty.MID, 300L, 2000L, 1000L, LocalDateTime.now()),
 			// 정답률 10
-			SingleProblemReadModel.of(2L, 2L, "img", "math", null, Difficulty.MID, 100L, 2000L, 1000L),
+			SingleProblemReadModel.of(2L, 2L, "img", "math", null, Difficulty.MID, 100L, 2000L, 1000L, LocalDateTime.now()),
 			// 정답률 20
-			SingleProblemReadModel.of(3L, 3L, "img", "math", null, Difficulty.MID, 200L, 2000L, 1000L)
+			SingleProblemReadModel.of(3L, 3L, "img", "math", null, Difficulty.MID, 200L, 2000L, 1000L, LocalDateTime.now())
 		));
 
 		final SingleProblemReadModelQuery query = new SingleProblemReadModelQuery(

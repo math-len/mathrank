@@ -2,6 +2,7 @@ package kr.co.mathrank.domain.problem.single.read.entity;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.time.LocalDateTime;
 
 import org.springframework.data.domain.Persistable;
 
@@ -67,6 +68,10 @@ public class SingleProblemReadModel implements Persistable<Long> {
 	@Setter(AccessLevel.NONE)
 	private boolean isNew = false;
 
+	private LocalDateTime updatedAt;
+
+	private LocalDateTime createdAt; // singleProblem이 등록된 시점
+
 	public static SingleProblemReadModel of(
 		final Long singleProblemId,
 		final Long problemId,
@@ -76,7 +81,8 @@ public class SingleProblemReadModel implements Persistable<Long> {
 		final Difficulty difficulty,
 		final Long firstTrySuccessCount,
 		final Long totalAttemptedCount,
-		final Long attemptedUserDistinctCount
+		final Long attemptedUserDistinctCount,
+		final LocalDateTime createdAt
 	) {
 		final SingleProblemReadModel model = new SingleProblemReadModel();
 		model.setId(singleProblemId);
@@ -88,6 +94,8 @@ public class SingleProblemReadModel implements Persistable<Long> {
 		model.setFirstTrySuccessCount(firstTrySuccessCount);
 		model.setTotalAttemptedCount(totalAttemptedCount);
 		model.setAttemptedUserDistinctCount(attemptedUserDistinctCount);
+		model.setCreatedAt(createdAt);
+		model.setUpdatedAt(createdAt);
 		model.isNew = true;
 
 		return model;

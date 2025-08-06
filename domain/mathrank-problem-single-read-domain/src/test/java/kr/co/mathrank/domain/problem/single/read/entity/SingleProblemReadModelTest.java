@@ -1,5 +1,7 @@
 package kr.co.mathrank.domain.problem.single.read.entity;
 
+import java.time.LocalDateTime;
+
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -56,7 +58,8 @@ class SingleProblemReadModelTest {
 			Difficulty.HIGH,
 			100L,
 			2000L,
-			1000L
+			1000L,
+			LocalDateTime.now()
 		);
 
 		repository.save(readModel);
@@ -79,7 +82,8 @@ class SingleProblemReadModelTest {
 			Difficulty.HIGH,
 			100L,
 			2000L,
-			1000L
+			1000L,
+			LocalDateTime.now()
 		);
 		repository.save(readModel);
 
