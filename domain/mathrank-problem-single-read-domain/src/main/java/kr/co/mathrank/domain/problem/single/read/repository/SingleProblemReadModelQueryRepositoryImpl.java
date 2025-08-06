@@ -27,12 +27,7 @@ class SingleProblemReadModelQueryRepositoryImpl implements SingleProblemReadMode
 		return queryFactory.select(model)
 			.from(model)
 			.where(
-				singleProblemIdMatch(query.singleProblemId()),
-				difficultyIn(query.difficultyMinInclude(), query.difficultyMaxInclude()),
-				coursePathMatch(query.coursePath()),
-				answerTypeEqual(query.answerType()),
-				accuracyIn(query.accuracyMinInclude(), query.accuracyMaxInclude()),
-				totalAttemptCountIn(query.totalAttemptCountMinInclude(), query.totalAttemptCountMaxInclude())
+				createWherePredicates(query)
 			)
 			.offset((pageNumber - 1) * pageSize)
 			.limit(pageSize)
@@ -45,14 +40,20 @@ class SingleProblemReadModelQueryRepositoryImpl implements SingleProblemReadMode
 		return queryFactory.select(model.count())
 			.from(model)
 			.where(
-				singleProblemIdMatch(query.singleProblemId()),
-				difficultyIn(query.difficultyMinInclude(), query.difficultyMaxInclude()),
-				coursePathMatch(query.coursePath()),
-				answerTypeEqual(query.answerType()),
-				accuracyIn(query.accuracyMinInclude(), query.accuracyMaxInclude()),
-				totalAttemptCountIn(query.totalAttemptCountMinInclude(), query.totalAttemptCountMaxInclude())
+				createWherePredicates(query)
 			)
 			.fetchOne();
+	}
+
+	private BooleanExpression[] createWherePredicates(SingleProblemReadModelQuery query) {
+		return new BooleanExpression[] {
+			singleProblemIdMatch(query.singleProblemId()),
+			difficultyIn(query.difficultyMinInclude(), query.difficultyMaxInclude()),
+			coursePathMatch(query.coursePath()),
+			accuracyIn(query.accuracyMinInclude(), query.accuracyMaxInclude()),
+			totalAttemptCountIn(query.totalAttemptCountMinInclude(), query.totalAttemptCountMaxInclude()),
+			answerTypeEqual(query.answerType()),
+		};
 	}
 
 	private BooleanExpression singleProblemIdMatch(final Long singleProblemId) {
