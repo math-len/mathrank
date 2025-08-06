@@ -5,8 +5,10 @@ import java.util.Set;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.transaction.annotation.Transactional;
 
 import kr.co.mathrank.domain.problem.core.AnswerType;
@@ -29,6 +31,8 @@ class ProblemSolveServiceTest {
 	private ProblemService problemService;
 	@Autowired
 	private CourseRepository courseRepository;
+	@MockitoBean
+	private SchoolLocationManager schoolLocationManager;
 
 	@Test
 	void 제출된_정답이_실제_정답이랑_정확히_일치할때_성공한다() {
@@ -36,8 +40,11 @@ class ProblemSolveServiceTest {
 		final Course course = Course.of("test", path);
 		courseRepository.save(course);
 
+		Mockito.when(schoolLocationManager.getSchoolLocation(Mockito.anyString())).thenReturn("test");
+
 		final ProblemRegisterCommand command = new ProblemRegisterCommand(1L, "image.jpeg", "image.jpeg", AnswerType.MULTIPLE_CHOICE, path.getPath(), Difficulty.KILLER, "testCode",
-			Set.of("1"), 1001, null);
+			Set.of("1"), 1001, null, null);
+
 		final Long problemId = problemService.save(command);
 
 		// 실제 정답 : 1
@@ -53,8 +60,10 @@ class ProblemSolveServiceTest {
 		final Course course = Course.of("test", path);
 		courseRepository.save(course);
 
+		Mockito.when(schoolLocationManager.getSchoolLocation(Mockito.anyString())).thenReturn("test");
+
 		final ProblemRegisterCommand command = new ProblemRegisterCommand(1L, "image.jpeg", "image.jpeg", AnswerType.MULTIPLE_CHOICE, path.getPath(), Difficulty.KILLER, "testCode",
-			Set.of("1"), 1001, null);
+			Set.of("1"), 1001, null, null);
 		final Long problemId = problemService.save(command);
 
 		// 정답인 1에, 추가로 2까지 포함하여 제출한다
@@ -71,10 +80,11 @@ class ProblemSolveServiceTest {
 		final Course course = Course.of("test", path);
 		courseRepository.save(course);
 
-		final ProblemRegisterCommand command = new ProblemRegisterCommand(1L, "image.jpeg", "image.jpeg", AnswerType.MULTIPLE_CHOICE, path.getPath(), Difficulty.KILLER, "testCode",
-			Set.of("1"), 1001, null);
-		final Long problemId = problemService.save(command);
+		Mockito.when(schoolLocationManager.getSchoolLocation(Mockito.anyString())).thenReturn("test");
 
+		final ProblemRegisterCommand command = new ProblemRegisterCommand(1L, "image.jpeg", "image.jpeg", AnswerType.MULTIPLE_CHOICE, path.getPath(), Difficulty.KILLER, "testCode",
+			Set.of("1"), 1001, null, null);
+		final Long problemId = problemService.save(command);
 
 		// 정답인 1을 미포함
 		// 실제 정답 : 1
