@@ -47,7 +47,7 @@ public class ProblemSolveController {
 			problemQueryService.getSingle(problemId);
 			return ResponseEntity.ok().build();
 		} catch (CannotFoundProblemException e) {
-			return ResponseEntity.noContent().build();
+			return ResponseEntity.notFound().build();
 		}
 	}
 }
