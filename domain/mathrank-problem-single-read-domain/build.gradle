@@ -5,7 +5,6 @@ dependencies {
     testImplementation 'org.testcontainers:junit-jupiter'
     testImplementation 'org.springframework.boot:spring-boot-testcontainers'
     testImplementation 'org.testcontainers:mysql'
-    testImplementation 'org.testcontainers:mysql'
 
     runtimeOnly 'com.mysql:mysql-connector-j'
 
