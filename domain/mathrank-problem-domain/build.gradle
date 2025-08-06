@@ -13,6 +13,7 @@ dependencies {
     implementation project(':common:mathrank-snowflake')
     implementation project(':common:mathrank-exception')
     implementation project(':common:mathrank-page')
+    implementation project(':client:external:mathrank-school')
     api project(':domain:mathrank-problem-core-domain')
 
     implementation 'com.querydsl:querydsl-jpa:5.0.0:jakarta'

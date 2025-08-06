@@ -33,6 +33,7 @@ public class ProblemService {
 	private final ProblemRepository problemRepository;
 	private final CourseRepository courseRepository;
 	private final Snowflake snowflake;
+	private final SchoolLocationManager schoolLocationManager;
 
 	public Long save(@NotNull @Valid final ProblemRegisterCommand command) {
 		final Course course = getCourse(command.coursePath());
@@ -45,10 +46,12 @@ public class ProblemService {
 			command.difficulty(),
 			command.answerType(),
 			course,
-			command.schoolCode(),
+command.schoolCode(),
 			command.solutionVideoLink(),
 			command.solutionImage(),
-			command.year()
+			command.year(),
+			command.schoolCode() == null ? null : schoolLocationManager.getSchoolLocation(command.schoolCode()),
+			command.memo()
 		);
 		final Set<Answer> answers = mapToAnswer(command.answers(), problem);
 		problem.setAnswers(answers);
@@ -59,7 +62,6 @@ public class ProblemService {
 		return id;
 	}
 
-	@Transactional
 	public void update(@NotNull @Valid final ProblemUpdateCommand command) {
 		final Problem problem = problemRepository.findById(command.problemId())
 			.orElseThrow(() -> new CannotFoundProblemException(command.problemId()));
@@ -71,12 +73,15 @@ public class ProblemService {
 		problem.setCourse(course);
 		problem.setType(command.answerType());
 		problem.setAnswers(mapToAnswer(command.answers(), problem));
-		problem.setSchoolCode(command.schoolCode());
 		problem.setProblemImage(command.imageSource());
 		problem.setSolutionVideoLink(command.solutionVideoLink());
 		problem.setSolutionImage(command.solutionImage());
 		problem.setYears(command.year());
+		problem.setSchoolCode(command.schoolCode());
+		problem.setMemo(command.memo());
+		problem.setLocation(command.schoolCode() == null ? null : schoolLocationManager.getSchoolLocation(command.schoolCode()));
 
+		problemRepository.save(problem);
 		log.info("[ProblemService.update] problem updated - id: {}, memberId: {}, course: {}",
 			command.problemId(), command.requestMemberId(), command.coursePath());
 	}

@@ -20,8 +20,8 @@ class ProblemQueryRepositoryImpl implements ProblemQueryRepository {
 
 	@Override
 	public List<Problem> query(Long memberId, Long problemId, Difficulty difficultyMinInclude,
-		Difficulty difficultyMaxInclude, AnswerType answerType, String path, Integer pageSize, Integer pageNumber,
-		Boolean solutionVideoLinkExist, Integer year) {
+		Difficulty difficultyMaxInclude, AnswerType answerType, String path, Boolean solutionVideoExist, Integer year,
+		String location, Integer pageSize, Integer pageNumber) {
 		final QProblem problem = QProblem.problem;
 
 		final List<Problem> problems = queryFactory.query()
@@ -33,8 +33,9 @@ class ProblemQueryRepositoryImpl implements ProblemQueryRepository {
 				difficultyIn(difficultyMinInclude, difficultyMaxInclude),
 				answerTypeEq(answerType),
 				problemCourseStartsWith(path),
-				solutionVideoLinkExist(solutionVideoLinkExist),
-				yearMatch(year)
+				solutionVideoLinkExist(solutionVideoExist),
+				yearMatch(year),
+				locationMatch(location)
 			)
 			.offset((pageNumber - 1) * pageSize)
 			.limit(pageSize)
@@ -51,7 +52,7 @@ class ProblemQueryRepositoryImpl implements ProblemQueryRepository {
 
 	@Override
 	public Long count(Long memberId, Long problemId, Difficulty difficultyMinInclude, Difficulty difficultyMaxInclude,
-		String coursePath, AnswerType answerType, Boolean solutionVideoLinkExist, Integer year) {
+		String path, AnswerType answerType, Boolean solutionVideoExist, Integer year, String location) {
 		final QProblem problem = QProblem.problem;
 
 		return queryFactory.query()
@@ -62,9 +63,10 @@ class ProblemQueryRepositoryImpl implements ProblemQueryRepository {
 				problemIdEq(problemId),
 				difficultyIn(difficultyMinInclude, difficultyMaxInclude),
 				answerTypeEq(answerType),
-				problemCourseStartsWith(coursePath),
-				solutionVideoLinkExist(solutionVideoLinkExist),
-				yearMatch(year)
+				problemCourseStartsWith(path),
+				solutionVideoLinkExist(solutionVideoExist),
+				yearMatch(year),
+				locationMatch(location)
 			)
 			.fetchOne();
 	}
@@ -119,5 +121,12 @@ class ProblemQueryRepositoryImpl implements ProblemQueryRepository {
 			return null;
 		}
 		return QProblem.problem.years.eq(year);
+	}
+
+	private BooleanExpression locationMatch(final String location) {
+		if (location == null) {
+			return null;
+		}
+		return QProblem.problem.location.contains(location);
 	}
 }

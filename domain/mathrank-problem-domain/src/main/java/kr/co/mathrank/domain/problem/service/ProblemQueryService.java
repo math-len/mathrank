@@ -42,10 +42,11 @@ public class ProblemQueryService {
 			command.difficultyMaxInclude(),
 			command.answerType(),
 			command.coursePath(),
-			command.pageSize(),
-			command.pageNumber(),
 			command.videoExist(),
-			command.year());
+			command.year(),
+			command.location(),
+			command.pageSize(),
+			command.pageNumber());
 		final Long totalCount = problemRepository.count(command.memberId(),
 			command.problemId(),
 			command.difficultyMinInclude(),
@@ -53,7 +54,8 @@ public class ProblemQueryService {
 			command.coursePath(),
 			command.answerType(),
 			command.videoExist(),
-			command.year());
+			command.year(),
+			command.location());
 
 		return ProblemQueryPageResult.of(
 			problems,

@@ -17,6 +17,7 @@ public record ProblemQueryRequest(
 	String coursePath,
 	Boolean videoExist,
 	Integer year,
+	String location,
 	@NotNull
 	@Range(min = 1, max = 20)
 	Integer pageSize,
@@ -36,6 +37,7 @@ public record ProblemQueryRequest(
 			coursePath,
 			videoExist,
 			year,
+			location,
 			pageSize,
 			pageNumber
 		);

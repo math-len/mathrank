@@ -19,7 +19,8 @@ public record ProblemQueryResult(
 	LocalDateTime createdAt,
 	Integer year,
 	String solutionVideoLink,
-	String solutionImage
+	String solutionImage,
+	String memo
 ) {
 	public static ProblemQueryResult from(Problem problem) {
 		return new ProblemQueryResult(
@@ -35,7 +36,8 @@ public record ProblemQueryResult(
 			problem.getCreatedAt(),
 			problem.getYears(),
 			problem.getSolutionVideoLink(),
-			problem.getSolutionImage()
+			problem.getSolutionImage(),
+			problem.getMemo()
 		);
 	}
 }

@@ -35,7 +35,8 @@ import lombok.extern.slf4j.Slf4j;
 	@Index(name = "idx_member_id", columnList = "member_id"),
 	@Index(name = "idx_difficulty", columnList = "difficulty"),
 	@Index(name = "idx_type", columnList = "type"),
-	@Index(name = "idx_videoLink", columnList = "solution_video_link")
+	@Index(name = "idx_videoLink", columnList = "solution_video_link"),
+	@Index(name = "idx_location", columnList = "location")
 })
 @Getter
 @Setter
@@ -64,11 +65,13 @@ public class Problem implements Persistable<Long> {
 
 	private String schoolCode;
 
+	private String location;
+
 	private Integer years;
 
 	private String solutionVideoLink;
 
-	@OneToMany(mappedBy = "problem", cascade = CascadeType.PERSIST, orphanRemoval = true)
+	@OneToMany(mappedBy = "problem", cascade = {CascadeType.PERSIST, CascadeType.MERGE}, orphanRemoval = true)
 	@BatchSize(size = 100)
 	private final Set<Answer> answers = new HashSet<>();
 
@@ -76,9 +79,11 @@ public class Problem implements Persistable<Long> {
 	@Setter(AccessLevel.NONE)
 	private LocalDateTime createdAt;
 
+	private String memo;
+
 	public static Problem of(final Long id, final Long memberId, final String problemImage, final Difficulty difficulty,
 		final AnswerType type, final Course course, final String schoolCode,
-		final String solutionVideoLink, final String solutionImage, final Integer year) {
+		final String solutionVideoLink, final String solutionImage, final Integer year, final String location, final String memo) {
 
 		final Problem problem = new Problem();
 		problem.id = id;
@@ -91,6 +96,8 @@ public class Problem implements Persistable<Long> {
 		problem.solutionVideoLink = solutionVideoLink;
 		problem.solutionImage = solutionImage;
 		problem.years = year;
+		problem.location = location;
+		problem.memo = memo;
 
 		return problem;
 	}
