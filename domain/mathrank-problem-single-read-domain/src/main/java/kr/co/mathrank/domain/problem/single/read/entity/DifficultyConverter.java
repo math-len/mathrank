@@ -1,6 +1,9 @@
 package kr.co.mathrank.domain.problem.single.read.entity;
 
 import java.util.Arrays;
+import java.util.Map;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 import jakarta.persistence.AttributeConverter;
 import jakarta.persistence.Converter;
@@ -8,6 +11,9 @@ import kr.co.mathrank.domain.problem.core.Difficulty;
 
 @Converter
 public class DifficultyConverter implements AttributeConverter<Difficulty, Integer> {
+	private static final Map<Integer, Difficulty> DIFFICULTY_LOOK_UP = Arrays.stream(Difficulty.values())
+		.collect(Collectors.toMap(Difficulty::getPriority, Function.identity()));
+
 	@Override
 	public Integer convertToDatabaseColumn(Difficulty attribute) {
 		if (attribute == null) {
@@ -22,9 +28,6 @@ public class DifficultyConverter implements AttributeConverter<Difficulty, Integ
 			return null;
 		}
 		final int primitive = dbData;
-		return Arrays.stream(Difficulty.values())
-			.filter(diff -> diff.getPriority() == primitive)
-			.findAny()
-			.orElse(null);
+		return DIFFICULTY_LOOK_UP.getOrDefault(primitive, null);
 	}
 }
