@@ -317,15 +317,15 @@ class SingleProblemReadModelRepositoryTest {
 
 		// 조건: 정답률 [30~30], 시도수 [500~500], 난이도 MID, 코스경로 "math"
 		final SingleProblemReadModelQuery query = new SingleProblemReadModelQuery(
-			null, // id
-			"math", // coursePath startsWith
-			null, // problemId
+			null,
+			"math",
+			null,
 			Difficulty.MID,
 			Difficulty.MID,
-			30, // accuracy min
-			30, // accuracy max
-			500L, // attempt count min
-			500L  // attempt count max
+			30,
+			30,
+			500L,
+			500L
 		);
 
 		Assertions.assertEquals(1, singleProblemReadModelRepository.queryPage(query, 10, 1).size());
