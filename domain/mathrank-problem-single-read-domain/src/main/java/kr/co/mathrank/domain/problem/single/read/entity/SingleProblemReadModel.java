@@ -15,6 +15,7 @@ import jakarta.persistence.Index;
 import jakarta.persistence.PrePersist;
 import jakarta.persistence.PreUpdate;
 import jakarta.persistence.Table;
+import jakarta.persistence.Transient;
 import kr.co.mathrank.domain.problem.core.AnswerType;
 import kr.co.mathrank.domain.problem.core.Difficulty;
 import lombok.AccessLevel;
@@ -62,6 +63,10 @@ public class SingleProblemReadModel implements Persistable<Long> {
 	@Setter(AccessLevel.NONE)
 	private Double accuracy; // 정답률 계산: (firstTrySuccessCount / attemptedUserDistinctCount) * 100
 
+	@Transient
+	@Setter(AccessLevel.NONE)
+	private boolean isNew = false;
+
 	public static SingleProblemReadModel of(
 		final Long singleProblemId,
 		final Long problemId,
@@ -83,6 +88,7 @@ public class SingleProblemReadModel implements Persistable<Long> {
 		model.setFirstTrySuccessCount(firstTrySuccessCount);
 		model.setTotalAttemptedCount(totalAttemptedCount);
 		model.setAttemptedUserDistinctCount(attemptedUserDistinctCount);
+		model.isNew = true;
 
 		return model;
 	}
@@ -105,6 +111,6 @@ public class SingleProblemReadModel implements Persistable<Long> {
 
 	@Override
 	public boolean isNew() {
-		return accuracy == null;
+		return isNew;
 	}
 }
