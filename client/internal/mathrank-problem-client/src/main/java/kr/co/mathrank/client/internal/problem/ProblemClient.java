@@ -14,7 +14,9 @@ import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 @Component
 @Validated
 public class ProblemClient {
@@ -22,8 +24,11 @@ public class ProblemClient {
 	private final RestClient problemClient;
 
 	ProblemClient(final ProblemClientProperties properties) {
+		final String url = URL_FORMAT.formatted(properties.getHost(), properties.getPort());
+		log.info("[ProblemClient.new] initialized with url: {}", url);
+
 		this.problemClient = RestClient.builder()
-			.baseUrl(getUrlFormat(properties.host, properties.port))
+			.baseUrl(url)
 			.build();
 	}
 
@@ -51,17 +56,16 @@ public class ProblemClient {
 		return statusCode.isSameCodeAs(HttpStatus.OK);
 	}
 
-	private String getUrlFormat(final String host, final Integer port) {
-		return URL_FORMAT.formatted(host, port);
-	}
-
 	@Getter
 	@Configuration
 	@ConfigurationProperties("client.problem")
 	@NoArgsConstructor
 	@Setter
+	@Validated
 	static class ProblemClientProperties {
-		private String host = "http://localhost";
-		private Integer port = 8080;
+		@NotNull
+		private String host;
+		@NotNull
+		private Integer port;
 	}
 }

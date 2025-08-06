@@ -24,14 +24,7 @@ import kr.co.mathrank.domain.problem.single.repository.SingleProblemRepository;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
-@SpringBootTest(
-	properties = """
-		snowflake.node.id=111
-		spring.jpa.show-sql=true
-		spring.jpa.properties.hibernate.format_sql=true
-		spring.jpa.hibernate.ddl-auto=create
-		"""
-)
+@SpringBootTest
 class SingleProblemServiceTest {
 	@Autowired
 	private SingleProblemService singleProblemService;

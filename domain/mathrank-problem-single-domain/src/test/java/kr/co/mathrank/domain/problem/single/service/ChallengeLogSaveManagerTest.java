@@ -23,15 +23,7 @@ import kr.co.mathrank.domain.problem.single.repository.ChallengeLogRepository;
 import kr.co.mathrank.domain.problem.single.repository.SingleProblemRepository;
 import lombok.RequiredArgsConstructor;
 
-@SpringBootTest(
-	properties = """
-		snowflake.node.id=111
-		spring.jpa.show-sql=true
-		spring.jpa.properties.hibernate.format_sql=true
-		spring.jpa.hibernate.ddl-auto=create
-		"""
-)
-
+@SpringBootTest
 class ChallengeLogSaveManagerTest {
 	@Autowired
 	private ChallengeLogSaveManager challengeLogSaveManager;
