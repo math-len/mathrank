@@ -17,6 +17,7 @@ import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import kr.co.mathrank.domain.problem.core.AnswerType;
 import kr.co.mathrank.domain.problem.core.Difficulty;
+import kr.co.mathrank.domain.problem.single.read.dto.SingleProblemAttemptStatsUpdateCommand;
 import kr.co.mathrank.domain.problem.single.read.dto.SingleProblemReadModelUpdateCommand;
 import kr.co.mathrank.domain.problem.single.read.entity.SingleProblemReadModel;
 import kr.co.mathrank.domain.problem.single.read.repository.SingleProblemReadModelRepository;
@@ -145,4 +146,91 @@ class SingleProblemUpdateServiceTest {
 		Assertions.assertEquals(AnswerType.MULTIPLE_CHOICE, loaded.getAnswerType());
 	}
 
+	@Test
+	void updatedAt이_더_최신일_경우_통계가_정상적으로_업데이트된다() {
+		final Long singleProblemId = 1L;
+		final LocalDateTime beforeTime = LocalDateTime.now();
+		final LocalDateTime updatedTime = beforeTime.plusMinutes(1);
+
+		// 기존 모델 저장
+		final SingleProblemReadModel model = SingleProblemReadModel.of(
+			1L,
+			singleProblemId,
+			"img",
+			"path",
+			AnswerType.MULTIPLE_CHOICE,
+			Difficulty.MID,
+			100L,
+			2000L,
+			1000L,
+			beforeTime
+		);
+		singleProblemReadModelRepository.save(model);
+		entityManager.flush();
+		entityManager.clear();
+
+		// When: 더 최신 updatedAt으로 커맨드 실행
+		final SingleProblemAttemptStatsUpdateCommand command = new SingleProblemAttemptStatsUpdateCommand(
+			singleProblemId,
+			200L, 300L, 4000L,
+			updatedTime
+		);
+
+		singleProblemUpdateService.updateAttemptStatistics(command);
+		entityManager.flush();
+		entityManager.clear();
+
+		// Then: 업데이트가 반영되어야 한다.
+		final SingleProblemReadModel updated = singleProblemReadModelRepository.findById(singleProblemId).orElseThrow();
+		Assertions.assertAll(
+			() -> Assertions.assertEquals(200L, updated.getFirstTrySuccessCount()),
+			() -> Assertions.assertEquals(300L, updated.getTotalAttemptedCount()),
+			() -> Assertions.assertEquals(4000L, updated.getAttemptedUserDistinctCount()),
+			() -> Assertions.assertEquals(updatedTime, updated.getUpdatedAt())
+		);
+	}
+
+	@Test
+	void updatedAt이_과거인_경우_통계가_업데이트되지_않는다() {
+		// Given
+		final Long singleProblemId = 2L;
+		final LocalDateTime initialTime = LocalDateTime.now();
+		final LocalDateTime pastTime = initialTime.minusHours(1);
+
+		final SingleProblemReadModel model = SingleProblemReadModel.of(
+			2L,
+			singleProblemId,
+			"img",
+			"path",
+			AnswerType.MULTIPLE_CHOICE,
+			Difficulty.MID,
+			100L,
+			2000L,
+			1000L,
+			initialTime
+		);
+		singleProblemReadModelRepository.save(model);
+		entityManager.flush();
+		entityManager.clear();
+
+		// When: 더 과거 updatedAt으로 커맨드 실행
+		final SingleProblemAttemptStatsUpdateCommand command = new SingleProblemAttemptStatsUpdateCommand(
+			singleProblemId,
+			999L, 999L, 9999L,
+			pastTime
+		);
+
+		singleProblemUpdateService.updateAttemptStatistics(command);
+		entityManager.flush();
+		entityManager.clear();
+
+		// Then: 기존 값이 유지되어야 한다.
+		final SingleProblemReadModel updated = singleProblemReadModelRepository.findById(singleProblemId).orElseThrow();
+		Assertions.assertAll(
+			() -> Assertions.assertEquals(100L, updated.getFirstTrySuccessCount()),
+			() -> Assertions.assertEquals(2000L, updated.getTotalAttemptedCount()),
+			() -> Assertions.assertEquals(1000L, updated.getAttemptedUserDistinctCount()),
+			() -> Assertions.assertEquals(initialTime, updated.getUpdatedAt())
+		);
+	}
 }

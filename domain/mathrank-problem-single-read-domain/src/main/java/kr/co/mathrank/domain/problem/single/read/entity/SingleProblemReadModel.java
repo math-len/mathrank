@@ -70,6 +70,7 @@ public class SingleProblemReadModel implements Persistable<Long> {
 
 	private LocalDateTime updatedAt;
 
+	@Setter(AccessLevel.PRIVATE)
 	private LocalDateTime createdAt; // singleProblem이 등록된 시점
 
 	public static SingleProblemReadModel of(

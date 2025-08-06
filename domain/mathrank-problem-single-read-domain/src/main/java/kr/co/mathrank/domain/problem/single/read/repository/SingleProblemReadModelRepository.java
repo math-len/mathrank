@@ -15,4 +15,8 @@ public interface SingleProblemReadModelRepository
 	@Query("SELECT sp FROM SingleProblemReadModel sp WHERE sp.problemId = :problemId")
 	@Lock(LockModeType.PESSIMISTIC_WRITE)
 	Optional<SingleProblemReadModel> findByProblemIdForUpdate(@Param("problemId") Long problemId);
+
+	@Query("SELECT sp FROM SingleProblemReadModel sp WHERE sp.id = :singleProblemId")
+	@Lock(LockModeType.PESSIMISTIC_WRITE)
+	Optional<SingleProblemReadModel> findByIdForUpdate(@Param("singleProblemId") Long singleProblemId);
 }
