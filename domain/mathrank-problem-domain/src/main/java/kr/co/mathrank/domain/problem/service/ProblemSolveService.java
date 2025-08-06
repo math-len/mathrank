@@ -1,5 +1,6 @@
 package kr.co.mathrank.domain.problem.service;
 
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -38,15 +39,9 @@ public class ProblemSolveService {
 	}
 
 	private boolean match(final List<String> submittedAnswer, final Set<String> correctAnswer) {
-		// 제출된 정답이 정답을 모두 포함하는지
-		for (final String currCorrectAnswer : correctAnswer) {
-			if (!submittedAnswer.contains(currCorrectAnswer)) {
-				// 제출된 정답에 실제 정답이 포함되지 않았음
-				return false;
-			}
-		}
-
-		// 추가적인 정답을 제출했음
-		return submittedAnswer.size() == correctAnswer.size();
+		// Using a Set for comparison handles order and uniqueness automatically.
+		// The size check is important to fail early if counts don't match,
+		// and to handle cases where submittedAnswer might have duplicates.
+		return submittedAnswer.size() == correctAnswer.size() && new HashSet<>(submittedAnswer).equals(correctAnswer);
 	}
 }
