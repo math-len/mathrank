@@ -9,6 +9,7 @@ import org.springframework.test.context.DynamicPropertySource;
 import org.springframework.transaction.annotation.Transactional;
 import org.testcontainers.containers.MySQLContainer;
 import org.testcontainers.junit.jupiter.Container;
+import org.testcontainers.junit.jupiter.Testcontainers;
 
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
@@ -24,6 +25,7 @@ spring.jpa.show-sql=true
 spring.jpa.hibernate.ddl-auto=create
 """
 )
+@Testcontainers
 class SingleProblemReadModelTest {
 	@Autowired
 	private SingleProblemReadModelRepository repository;
@@ -36,10 +38,8 @@ class SingleProblemReadModelTest {
 		.withUsername("user")
 		.withPassword("password");
 
-
 	@DynamicPropertySource
 	static void setProperties(DynamicPropertyRegistry registry) {
-		mysql.start();
 		registry.add("spring.datasource.url", mysql::getJdbcUrl);
 		registry.add("spring.datasource.username", mysql::getUsername);
 		registry.add("spring.datasource.password", mysql::getPassword);
