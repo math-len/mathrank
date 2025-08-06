@@ -15,5 +15,5 @@ public interface ChallengeLogRepository extends JpaRepository<ChallengeLog, Long
 
 	@Query("SELECT cl FROM ChallengeLog cl WHERE cl.singleProblem.id = :singleProblemId AND cl.memberId = :challengerMemberId")
 	@Lock(LockModeType.PESSIMISTIC_READ)
-	List<ChallengeLog> findAllBySingleProblemIdAndChallengerMemberIdForShare(@Param("singleProblemId") Long singleProblemId, @Param("challengerMemberId") Long challengerMemberId);;
+	List<ChallengeLog> findAllBySingleProblemIdAndChallengerMemberIdForShare(@Param("singleProblemId") Long singleProblemId, @Param("challengerMemberId") Long challengerMemberId);
 }
