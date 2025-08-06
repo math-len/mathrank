@@ -24,8 +24,8 @@ public class SingleProblemQueryService {
 
 	public SingleProblemReadModelPageResult queryPage(
 		@NotNull @Valid final SingleProblemReadModelQuery query,
-		@NotNull @Range(min = 1, max = 100) final Integer pageSize,
-		@NotNull @Range(max = 2000) final Integer pageNumber
+		@NotNull @Range(min = 1, max = 20) final Integer pageSize,
+		@NotNull @Range(max = 999) final Integer pageNumber // 1000 - 1 ( 1 페이지는 오프셋 0임으로 )
 	) {
 		final List<SingleProblemReadModel> readModels = singleProblemRepository.queryPage(query, pageSize, pageNumber);
 		final Long count = singleProblemRepository.count(query);

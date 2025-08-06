@@ -15,6 +15,7 @@ import org.testcontainers.containers.MySQLContainer;
 import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
 
+import jakarta.validation.ConstraintViolationException;
 import kr.co.mathrank.domain.problem.core.Difficulty;
 import kr.co.mathrank.domain.problem.single.read.dto.SingleProblemReadModelPageResult;
 import kr.co.mathrank.domain.problem.single.read.dto.SingleProblemReadModelQuery;
@@ -48,6 +49,14 @@ class SingleProblemQueryServiceTest {
 		registry.add("spring.datasource.url", mysql::getJdbcUrl);
 		registry.add("spring.datasource.username", mysql::getUsername);
 		registry.add("spring.datasource.password", mysql::getPassword);
+	}
+
+	@Test
+	void 오프셋이_20_000초과로_조회할_수_없다() {
+		final SingleProblemReadModelQuery query = new SingleProblemReadModelQuery(null, "math", null, Difficulty.MID, Difficulty.MID, 10, 30, null, null);
+
+		// 20000이상임으로 불가
+		Assertions.assertThrows(ConstraintViolationException.class, () -> queryService.queryPage(query, 20, 1000));
 	}
 
 	@Test
