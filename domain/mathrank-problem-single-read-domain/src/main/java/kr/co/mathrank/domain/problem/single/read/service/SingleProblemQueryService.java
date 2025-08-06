@@ -24,8 +24,8 @@ public class SingleProblemQueryService {
 
 	public SingleProblemReadModelPageResult queryPage(
 		@NotNull @Valid final SingleProblemReadModelQuery query,
-		@NotNull @Range(min = 1, max = 100) final Integer pageSize,
-		@NotNull @Range(max = 2000) final Integer pageNumber
+		@NotNull @Range(min = 1, max = 20) final Integer pageSize,
+		@NotNull @Range(max = 1000) final Integer pageNumber // 페이지 번호 (1부터 시작). 내부 offset 계산 시 사용됨: offset = (pageNumber - 1) * pageSize
 	) {
 		final List<SingleProblemReadModel> readModels = singleProblemRepository.queryPage(query, pageSize, pageNumber);
 		final Long count = singleProblemRepository.count(query);
