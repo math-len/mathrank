@@ -76,7 +76,7 @@ public class SingleProblemUpdateService {
 	public void updateAttemptStatistics(@NotNull @Valid final SingleProblemAttemptStatsUpdateCommand command) {
 		final SingleProblemReadModel model = singleProblemReadModelRepository.findByIdForUpdate(command.singleProblemId())
 			.orElseThrow(() -> {
-				log.warn("[SingleProblemUpdateService.updateAttemptStatistics] cannot find problemId: {}", command.singleProblemId());
+log.warn("[SingleProblemUpdateService.updateAttemptStatistics] cannot find singleProblemId: {}", command.singleProblemId());
 				return new CannotFoundProblemException();
 			});
 
