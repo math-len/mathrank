@@ -19,12 +19,9 @@ import lombok.Setter;
 @Validated
 public class ProblemClient {
 	private static final String URL_FORMAT = "%s:%s";
-
-	private final ProblemClientProperties properties;
 	private final RestClient problemClient;
 
 	ProblemClient(final ProblemClientProperties properties) {
-		this.properties = properties;
 		this.problemClient = RestClient.builder()
 			.baseUrl(getUrlFormat(properties.host, properties.port))
 			.build();
@@ -33,9 +30,9 @@ public class ProblemClient {
 	public SolveResult matchAnswer(@NotNull final Long problemId, @NotNull final List<String> answers) {
 		return problemClient.get()
 			.uri(uri -> uri
-				.path(properties.uri)
+				.path("/api/inner/v1/problem/solve")
 				.queryParam("problemId", problemId)
-				.queryParam("answers", answers.toArray())
+				.queryParam("answers", answers)
 				.build())
 			.retrieve()
 			.body(SolveResult.class);
@@ -43,7 +40,8 @@ public class ProblemClient {
 
 	public boolean isExist(final Long problemId) {
 		final HttpStatusCode statusCode = problemClient.head()
-			.uri(uriBuilder -> uriBuilder.path("/api/inner/v1/problem")
+			.uri(uriBuilder -> uriBuilder
+				.path("/api/inner/v1/problem")
 				.queryParam("problemId", problemId)
 				.build())
 			.retrieve()
@@ -65,6 +63,5 @@ public class ProblemClient {
 	static class ProblemClientProperties {
 		private String host = "http://localhost";
 		private Integer port = 8080;
-		private String uri = "/api/inner/v1/problem/solve";
 	}
 }
