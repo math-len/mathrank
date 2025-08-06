@@ -1,0 +1,71 @@
+package kr.co.mathrank.client.internal.problem;
+
+import java.util.List;
+
+import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpStatusCode;
+import org.springframework.stereotype.Component;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.client.RestClient;
+
+import jakarta.validation.constraints.NotNull;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
+@Component
+@Validated
+public class ProblemClient {
+	private static final String URL_FORMAT = "%s:%s";
+	private final RestClient problemClient;
+
+	ProblemClient(final ProblemClientProperties properties) {
+		final String url = URL_FORMAT.formatted(properties.getHost(), properties.getPort());
+		log.info("[ProblemClient.new] initialized with url: {}", url);
+
+		this.problemClient = RestClient.builder()
+			.baseUrl(url)
+			.build();
+	}
+
+	public SolveResult matchAnswer(@NotNull final Long problemId, @NotNull final List<String> answers) {
+		return problemClient.get()
+			.uri(uri -> uri
+				.path("/api/inner/v1/problem/solve")
+				.queryParam("problemId", problemId)
+				.queryParam("answers", answers)
+				.build())
+			.retrieve()
+			.body(SolveResult.class);
+	}
+
+	public boolean isExist(final Long problemId) {
+		final HttpStatusCode statusCode = problemClient.head()
+			.uri(uriBuilder -> uriBuilder
+				.path("/api/inner/v1/problem")
+				.queryParam("problemId", problemId)
+				.build())
+			.retrieve()
+			.toBodilessEntity()
+			.getStatusCode();
+
+		return statusCode.isSameCodeAs(HttpStatus.OK);
+	}
+
+	@Getter
+	@Configuration
+	@ConfigurationProperties("client.problem")
+	@NoArgsConstructor
+	@Setter
+	@Validated
+	static class ProblemClientProperties {
+		@NotNull
+		private String host;
+		@NotNull
+		private Integer port;
+	}
+}

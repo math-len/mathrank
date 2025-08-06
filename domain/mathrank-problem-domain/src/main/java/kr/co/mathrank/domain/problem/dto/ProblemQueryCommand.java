@@ -3,8 +3,8 @@ package kr.co.mathrank.domain.problem.dto;
 import org.hibernate.validator.constraints.Range;
 
 import jakarta.validation.constraints.NotNull;
-import kr.co.mathrank.domain.problem.entity.AnswerType;
-import kr.co.mathrank.domain.problem.entity.Difficulty;
+import kr.co.mathrank.domain.problem.core.AnswerType;
+import kr.co.mathrank.domain.problem.core.Difficulty;
 
 public record ProblemQueryCommand(
 	Long memberId,

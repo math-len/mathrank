@@ -11,7 +11,6 @@ import jakarta.servlet.http.HttpServletResponse;
 import kr.co.mathrank.common.jwt.JwtException;
 import kr.co.mathrank.common.jwt.JwtUtil;
 import kr.co.mathrank.common.jwt.UserInfo;
-import kr.co.mathrank.common.role.Role;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 

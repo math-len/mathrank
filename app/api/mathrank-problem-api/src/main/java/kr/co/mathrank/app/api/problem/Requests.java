@@ -5,10 +5,10 @@ import java.util.Set;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
+import kr.co.mathrank.domain.problem.core.AnswerType;
+import kr.co.mathrank.domain.problem.core.Difficulty;
 import kr.co.mathrank.domain.problem.dto.ProblemRegisterCommand;
 import kr.co.mathrank.domain.problem.dto.ProblemUpdateCommand;
-import kr.co.mathrank.domain.problem.entity.AnswerType;
-import kr.co.mathrank.domain.problem.entity.Difficulty;
 
 class Requests {
 	record ProblemRegisterRequest(

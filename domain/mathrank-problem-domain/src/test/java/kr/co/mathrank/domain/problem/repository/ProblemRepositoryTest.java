@@ -13,10 +13,10 @@ import org.springframework.transaction.annotation.Transactional;
 
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
+import kr.co.mathrank.domain.problem.core.AnswerType;
+import kr.co.mathrank.domain.problem.core.Difficulty;
 import kr.co.mathrank.domain.problem.entity.Answer;
-import kr.co.mathrank.domain.problem.entity.AnswerType;
 import kr.co.mathrank.domain.problem.entity.Course;
-import kr.co.mathrank.domain.problem.entity.Difficulty;
 import kr.co.mathrank.domain.problem.entity.Path;
 import kr.co.mathrank.domain.problem.entity.Problem;
 

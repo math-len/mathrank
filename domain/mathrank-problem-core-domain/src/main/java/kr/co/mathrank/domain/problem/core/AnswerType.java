@@ -1,4 +1,4 @@
-package kr.co.mathrank.domain.problem.entity;
+package kr.co.mathrank.domain.problem.core;
 
 public enum AnswerType {
 	MULTIPLE_CHOICE,

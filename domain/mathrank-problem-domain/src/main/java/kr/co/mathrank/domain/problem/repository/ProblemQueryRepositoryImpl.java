@@ -7,8 +7,8 @@ import org.springframework.stereotype.Repository;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 
-import kr.co.mathrank.domain.problem.entity.AnswerType;
-import kr.co.mathrank.domain.problem.entity.Difficulty;
+import kr.co.mathrank.domain.problem.core.AnswerType;
+import kr.co.mathrank.domain.problem.core.Difficulty;
 import kr.co.mathrank.domain.problem.entity.Problem;
 import kr.co.mathrank.domain.problem.entity.QProblem;
 import lombok.RequiredArgsConstructor;

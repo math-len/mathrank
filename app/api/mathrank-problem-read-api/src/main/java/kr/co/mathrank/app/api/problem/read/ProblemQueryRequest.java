@@ -3,9 +3,9 @@ package kr.co.mathrank.app.api.problem.read;
 import org.hibernate.validator.constraints.Range;
 
 import jakarta.validation.constraints.NotNull;
+import kr.co.mathrank.domain.problem.core.AnswerType;
+import kr.co.mathrank.domain.problem.core.Difficulty;
 import kr.co.mathrank.domain.problem.dto.ProblemQueryCommand;
-import kr.co.mathrank.domain.problem.entity.AnswerType;
-import kr.co.mathrank.domain.problem.entity.Difficulty;
 
 public record ProblemQueryRequest(
 	@NotNull
