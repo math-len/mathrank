@@ -4,6 +4,7 @@ import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Lock;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
@@ -19,4 +20,6 @@ public interface SingleProblemReadModelRepository
 	@Query("SELECT sp FROM SingleProblemReadModel sp WHERE sp.id = :singleProblemId")
 	@Lock(LockModeType.PESSIMISTIC_WRITE)
 	Optional<SingleProblemReadModel> findByIdForUpdate(@Param("singleProblemId") Long singleProblemId);
+
+	void deleteByProblemId(Long problemId);
 }
