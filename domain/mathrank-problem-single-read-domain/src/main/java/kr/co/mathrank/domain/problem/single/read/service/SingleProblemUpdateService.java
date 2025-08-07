@@ -89,6 +89,6 @@ log.warn("[SingleProblemUpdateService.updateAttemptStatistics] cannot find singl
 			log.info("[SingleProblemUpdateService.updateAttemptStatistics] read model updated: {}", command);
 			return;
 		}
-		log.warn("[SingleProblemUpdateService.updateAttemptStatistics] read model not updated: {}", command);
+		log.info("[SingleProblemUpdateService.updateAttemptStatistics] read model not updated: {}", command);
 	}
 }
