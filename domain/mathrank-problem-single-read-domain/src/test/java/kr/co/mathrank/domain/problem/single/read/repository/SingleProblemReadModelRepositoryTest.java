@@ -1,5 +1,6 @@
 package kr.co.mathrank.domain.problem.single.read.repository;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 import org.junit.jupiter.api.Assertions;
@@ -56,7 +57,8 @@ class SingleProblemReadModelRepositoryTest {
 				Difficulty.KILLER, // 가중치 60
 				100L,
 				2000L,
-				1000L
+				1000L,
+				LocalDateTime.now()
 			),
 			SingleProblemReadModel.of(
 				2L,
@@ -67,7 +69,8 @@ class SingleProblemReadModelRepositoryTest {
 				Difficulty.MID, // 가중치 30
 				100L,
 				2000L,
-				1000L
+				1000L,
+				LocalDateTime.now()
 			),
 			SingleProblemReadModel.of(
 				3L,
@@ -78,7 +81,8 @@ class SingleProblemReadModelRepositoryTest {
 				Difficulty.LOW, // 가중치 10
 				100L,
 				2000L,
-				1000L
+				1000L,
+				LocalDateTime.now()
 			)
 		));
 
@@ -148,7 +152,8 @@ class SingleProblemReadModelRepositoryTest {
 				null,
 				100L,
 				2000L,
-				1000L
+				1000L,
+				LocalDateTime.now()
 			),
 
 			// 정답률 20
@@ -161,7 +166,8 @@ class SingleProblemReadModelRepositoryTest {
 				null,
 				200L,
 				2000L,
-				1000L
+				1000L,
+				LocalDateTime.now()
 			),
 
 			// 정답률 30
@@ -174,7 +180,8 @@ class SingleProblemReadModelRepositoryTest {
 				null,
 				300L,
 				2000L,
-				1000L
+				1000L,
+				LocalDateTime.now()
 			)
 		));
 
@@ -217,9 +224,12 @@ class SingleProblemReadModelRepositoryTest {
 	@Test
 	void 코스경로를_조건으로_검색한다() {
 		singleProblemReadModelRepository.saveAll(List.of(
-			SingleProblemReadModel.of(1L, 1L, "image", "math/algebra", null, null, 100L, 200L, 100L),
-			SingleProblemReadModel.of(2L, 2L, "image", "math/geometry", null, null, 100L, 200L, 100L),
-			SingleProblemReadModel.of(3L, 3L, "image", "science/physics", null, null, 100L, 200L, 100L)
+			SingleProblemReadModel.of(1L, 1L, "image", "math/algebra", null, null, 100L, 200L, 100L,
+				LocalDateTime.now()),
+			SingleProblemReadModel.of(2L, 2L, "image", "math/geometry", null, null, 100L, 200L, 100L,
+				LocalDateTime.now()),
+			SingleProblemReadModel.of(3L, 3L, "image", "science/physics", null, null, 100L, 200L, 100L,
+				LocalDateTime.now())
 		));
 
 		Assertions.assertAll(
@@ -255,11 +265,11 @@ class SingleProblemReadModelRepositoryTest {
 	@Test
 	void 시도수를_조건으로_검색한다() {
 		singleProblemReadModelRepository.saveAll(List.of(
-			SingleProblemReadModel.of(1L, 1L, "image", "path", null, null, 100L, 200L, 100L),
+			SingleProblemReadModel.of(1L, 1L, "image", "path", null, null, 100L, 200L, 100L, LocalDateTime.now()),
 			// totalAttemptedCount = 200
-			SingleProblemReadModel.of(2L, 2L, "image", "path", null, null, 100L, 300L, 100L),
+			SingleProblemReadModel.of(2L, 2L, "image", "path", null, null, 100L, 300L, 100L, LocalDateTime.now()),
 			// totalAttemptedCount = 300
-			SingleProblemReadModel.of(3L, 3L, "image", "path", null, null, 100L, 500L, 100L)
+			SingleProblemReadModel.of(3L, 3L, "image", "path", null, null, 100L, 500L, 100L, LocalDateTime.now())
 			// totalAttemptedCount = 500
 		));
 
@@ -300,19 +310,19 @@ class SingleProblemReadModelRepositoryTest {
 	void 복합조건으로_검색한다() {
 		singleProblemReadModelRepository.saveAll(List.of(
 			// 해당 조건에 부합 (정답률 30, 시도수 500, 난이도 MID, 코스 "math")
-			SingleProblemReadModel.of(1L, 1L, "image", "math/algebra", null, Difficulty.MID, 300L, 500L, 1000L),
+			SingleProblemReadModel.of(1L, 1L, "image", "math/algebra", null, Difficulty.MID, 300L, 500L, 1000L, LocalDateTime.now()),
 
 			// 정답률 미달 (20)
-			SingleProblemReadModel.of(2L, 2L, "image", "math/algebra", null, Difficulty.MID, 200L, 500L, 1000L),
+			SingleProblemReadModel.of(2L, 2L, "image", "math/algebra", null, Difficulty.MID, 200L, 500L, 1000L, LocalDateTime.now()),
 
 			// 시도수 초과 (600)
-			SingleProblemReadModel.of(3L, 3L, "image", "math/algebra", null, Difficulty.MID, 300L, 600L, 1000L),
+			SingleProblemReadModel.of(3L, 3L, "image", "math/algebra", null, Difficulty.MID, 300L, 600L, 1000L, LocalDateTime.now()),
 
 			// 난이도 다름 (LOW)
-			SingleProblemReadModel.of(4L, 4L, "image", "math/algebra", null, Difficulty.LOW, 300L, 500L, 1000L),
+			SingleProblemReadModel.of(4L, 4L, "image", "math/algebra", null, Difficulty.LOW, 300L, 500L, 1000L, LocalDateTime.now()),
 
 			// 코스경로 다름 ("science")
-			SingleProblemReadModel.of(5L, 5L, "image", "science/physics", null, Difficulty.MID, 300L, 500L, 1000L)
+			SingleProblemReadModel.of(5L, 5L, "image", "science/physics", null, Difficulty.MID, 300L, 500L, 1000L, LocalDateTime.now())
 		));
 
 		// 조건: 정답률 [30~30], 시도수 [500~500], 난이도 MID, 코스경로 "math"
@@ -334,9 +344,9 @@ class SingleProblemReadModelRepositoryTest {
 	@Test
 	void 정답유형을_조건으로_검색한다() {
 		singleProblemReadModelRepository.saveAll(List.of(
-			SingleProblemReadModel.of(1L, 1L, "image", "path", AnswerType.MULTIPLE_CHOICE, null, 100L, 200L, 100L),
-			SingleProblemReadModel.of(2L, 2L, "image", "path", AnswerType.MULTIPLE_CHOICE, null, 100L, 200L, 100L),
-			SingleProblemReadModel.of(3L, 3L, "image", "path", AnswerType.SHORT_ANSWER, null, 100L, 200L, 100L)
+			SingleProblemReadModel.of(1L, 1L, "image", "path", AnswerType.MULTIPLE_CHOICE, null, 100L, 200L, 100L, LocalDateTime.now()),
+			SingleProblemReadModel.of(2L, 2L, "image", "path", AnswerType.MULTIPLE_CHOICE, null, 100L, 200L, 100L, LocalDateTime.now()),
+			SingleProblemReadModel.of(3L, 3L, "image", "path", AnswerType.SHORT_ANSWER, null, 100L, 200L, 100L, LocalDateTime.now())
 		));
 
 		Assertions.assertAll(
