@@ -59,15 +59,15 @@ public class SingleProblemUpdateService {
 	/**
 	 * 사용자들의 문제 풀이 통계 정보를 업데이트합니다.
 	 *
-	 * <p>해당 메서드는 다음 세 가지 통계 정보를 갱신합니다:
+	 * <p>해당 메서드는 다음 세 가지 통계 정보를 갱신합니다
 	 * <ul>
 	 *   <li>최초 시도 성공 횟수 (firstTrySuccessCount)</li>
 	 *   <li>고유 사용자 시도 수 (attemptedUserDistinctCount)</li>
 	 *   <li>전체 시도 횟수 (totalAttemptedCount)</li>
 	 * </ul>
 	 *
-	 * <p>업데이트는 idempotency 를 보장하기 위해,
-	 * 전달받은 updatedAt 값이 기존보다 더 최신인 경우에만 수행됩니다.
+	 * <p> 업데이트는 idempotency 를 보장하기 위해,
+	 * totalAttemptedCount 가 증가하는 속성을 활용합니다
 	 *
 	 * @param command 업데이트 대상 정보와 수정 시간을 포함한 명령 객체
 	 * @throws CannotFoundProblemException 문제 ID에 해당하는 읽기 모델이 존재하지 않을 경우
@@ -80,13 +80,12 @@ log.warn("[SingleProblemUpdateService.updateAttemptStatistics] cannot find singl
 				return new CannotFoundProblemException();
 			});
 
-		// idempotency 보장을 위해, 커맨드의 updatedAt이 더 최신일 때만 업데이트 수행
-		if (command.updatedAt().isAfter(model.getUpdatedAt())) {
+		// idempotency 보장을 위해,totalAttemptedCount를 기준으로 업데이트
+		if (command.totalAttemptedCount() > model.getTotalAttemptedCount()) {
 			model.setFirstTrySuccessCount(command.firstTrySuccessCount());
 			model.setAttemptedUserDistinctCount(command.attemptedUserDistinctCount());
 			model.setTotalAttemptedCount(command.totalAttemptedCount());
 
-			model.setUpdatedAt(command.updatedAt());
 			log.info("[SingleProblemUpdateService.updateAttemptStatistics] read model updated: {}", command);
 			return;
 		}

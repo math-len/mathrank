@@ -12,8 +12,6 @@ public record SingleProblemAttemptStatsUpdateCommand(
 	@NotNull
 	Long totalAttemptedCount,
 	@NotNull
-	Long attemptedUserDistinctCount,
-	@NotNull
-	LocalDateTime updatedAt
+	Long attemptedUserDistinctCount
 ) {
 }

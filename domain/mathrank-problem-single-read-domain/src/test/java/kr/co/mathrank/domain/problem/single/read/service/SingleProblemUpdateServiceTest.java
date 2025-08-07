@@ -20,6 +20,7 @@ import kr.co.mathrank.domain.problem.core.Difficulty;
 import kr.co.mathrank.domain.problem.single.read.dto.SingleProblemAttemptStatsUpdateCommand;
 import kr.co.mathrank.domain.problem.single.read.dto.SingleProblemReadModelUpdateCommand;
 import kr.co.mathrank.domain.problem.single.read.entity.SingleProblemReadModel;
+import kr.co.mathrank.domain.problem.single.read.exception.CannotFoundProblemException;
 import kr.co.mathrank.domain.problem.single.read.repository.SingleProblemReadModelRepository;
 
 @SpringBootTest(
@@ -147,90 +148,71 @@ class SingleProblemUpdateServiceTest {
 	}
 
 	@Test
-	void updatedAt이_더_최신일_경우_통계가_정상적으로_업데이트된다() {
-		final Long singleProblemId = 1L;
-		final LocalDateTime beforeTime = LocalDateTime.now();
-		final LocalDateTime updatedTime = beforeTime.plusMinutes(1);
-
-		// 기존 모델 저장
+	void command의_totalAttemptedCount가_기존보다_클때_업데이트된다() {
+		// given
+		final long problemId = 10L;
 		final SingleProblemReadModel model = SingleProblemReadModel.of(
-			1L,
-			singleProblemId,
-			"img",
-			"path",
-			AnswerType.MULTIPLE_CHOICE,
-			Difficulty.MID,
-			100L,
-			2000L,
-			1000L,
-			beforeTime
+			problemId, problemId, "img", "coursePath", AnswerType.SHORT_ANSWER, Difficulty.LOW,
+			1L, 5L, 10L, LocalDateTime.now()
 		);
 		singleProblemReadModelRepository.save(model);
+
 		entityManager.flush();
 		entityManager.clear();
 
-		// When: 더 최신 updatedAt으로 커맨드 실행
-		final SingleProblemAttemptStatsUpdateCommand command = new SingleProblemAttemptStatsUpdateCommand(
-			singleProblemId,
-			200L, 300L, 4000L,
-			updatedTime
-		);
+		// when
+		singleProblemUpdateService.updateAttemptStatistics(new SingleProblemAttemptStatsUpdateCommand(
+			problemId, 2L, 6L, 11L
+		));
 
-		singleProblemUpdateService.updateAttemptStatistics(command);
 		entityManager.flush();
 		entityManager.clear();
 
-		// Then: 업데이트가 반영되어야 한다.
-		final SingleProblemReadModel updated = singleProblemReadModelRepository.findById(singleProblemId).orElseThrow();
-		Assertions.assertAll(
-			() -> Assertions.assertEquals(200L, updated.getFirstTrySuccessCount()),
-			() -> Assertions.assertEquals(300L, updated.getTotalAttemptedCount()),
-			() -> Assertions.assertEquals(4000L, updated.getAttemptedUserDistinctCount()),
-			() -> Assertions.assertEquals(updatedTime, updated.getUpdatedAt())
-		);
+		// then
+		final SingleProblemReadModel updated = singleProblemReadModelRepository.findById(problemId).orElseThrow();
+		Assertions.assertEquals(2L, updated.getFirstTrySuccessCount());
+		Assertions.assertEquals(6L, updated.getTotalAttemptedCount());
+		Assertions.assertEquals(11L, updated.getAttemptedUserDistinctCount());
 	}
 
 	@Test
-	void updatedAt이_과거인_경우_통계가_업데이트되지_않는다() {
-		// Given
-		final Long singleProblemId = 2L;
-		final LocalDateTime initialTime = LocalDateTime.now();
-		final LocalDateTime pastTime = initialTime.minusHours(1);
-
+	void command의_totalAttemptedCount가_기존값이하이면_업데이트되지_않는다() {
+		// given
+		final long problemId = 11L;
 		final SingleProblemReadModel model = SingleProblemReadModel.of(
-			2L,
-			singleProblemId,
-			"img",
-			"path",
-			AnswerType.MULTIPLE_CHOICE,
-			Difficulty.MID,
-			100L,
-			2000L,
-			1000L,
-			initialTime
+			problemId, problemId, "img", "coursePath", AnswerType.SHORT_ANSWER, Difficulty.LOW,
+			3L, 6L, 10L, LocalDateTime.now()
 		);
 		singleProblemReadModelRepository.save(model);
+
 		entityManager.flush();
 		entityManager.clear();
 
-		// When: 더 과거 updatedAt으로 커맨드 실행
-		final SingleProblemAttemptStatsUpdateCommand command = new SingleProblemAttemptStatsUpdateCommand(
-			singleProblemId,
-			999L, 999L, 9999L,
-			pastTime
-		);
+		// when
+		singleProblemUpdateService.updateAttemptStatistics(new SingleProblemAttemptStatsUpdateCommand(
+			problemId, 999L, 6L, 10L
+		));
 
-		singleProblemUpdateService.updateAttemptStatistics(command);
 		entityManager.flush();
 		entityManager.clear();
 
-		// Then: 기존 값이 유지되어야 한다.
-		final SingleProblemReadModel updated = singleProblemReadModelRepository.findById(singleProblemId).orElseThrow();
-		Assertions.assertAll(
-			() -> Assertions.assertEquals(100L, updated.getFirstTrySuccessCount()),
-			() -> Assertions.assertEquals(2000L, updated.getTotalAttemptedCount()),
-			() -> Assertions.assertEquals(1000L, updated.getAttemptedUserDistinctCount()),
-			() -> Assertions.assertEquals(initialTime, updated.getUpdatedAt())
-		);
+		// then
+		final SingleProblemReadModel updated = singleProblemReadModelRepository.findById(problemId).orElseThrow();
+		Assertions.assertEquals(3L, updated.getFirstTrySuccessCount());
+		Assertions.assertEquals(6L, updated.getTotalAttemptedCount());
+		Assertions.assertEquals(10L, updated.getAttemptedUserDistinctCount());
+	}
+
+	@Test
+	void 존재하지_않는_problemId이면_예외를_던진다() {
+		// given
+		final long nonexistentId = 9999L;
+
+		// expect
+		Assertions.assertThrows(CannotFoundProblemException.class, () -> {
+			singleProblemUpdateService.updateAttemptStatistics(new SingleProblemAttemptStatsUpdateCommand(
+				nonexistentId, 1L, 2L, 3L
+			));
+		});
 	}
 }
