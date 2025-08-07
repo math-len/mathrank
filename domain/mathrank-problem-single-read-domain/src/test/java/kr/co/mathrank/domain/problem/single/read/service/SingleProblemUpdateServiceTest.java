@@ -93,7 +93,7 @@ class SingleProblemUpdateServiceTest {
 		final String outdatedPath = "outdatedPath";
 		final long problemId = 2L;
 
-		final LocalDateTime latestTime = LocalDateTime.now();
+		final LocalDateTime latestTime = LocalDateTime.of(2020, 1, 1, 0, 0);
 		final LocalDateTime outdatedTime = latestTime.minusDays(1L);
 
 		final SingleProblemReadModel model = SingleProblemReadModel.of(
@@ -127,7 +127,7 @@ class SingleProblemUpdateServiceTest {
 		final String updatedPath = "updatedPath";
 		final long problemId = 3L;
 
-		final LocalDateTime time = LocalDateTime.now();
+		final LocalDateTime time = LocalDateTime.of(2020, 1, 1, 0, 0);
 
 		final SingleProblemReadModel model = SingleProblemReadModel.of(
 			problemId, problemId, "img", beforePath, AnswerType.MULTIPLE_CHOICE, Difficulty.MID,
@@ -158,9 +158,10 @@ class SingleProblemUpdateServiceTest {
 	void command의_totalAttemptedCount가_기존보다_클때_업데이트된다() {
 		// given
 		final long problemId = 10L;
+		final LocalDateTime time = LocalDateTime.of(2020, 1, 1, 0, 0);
 		final SingleProblemReadModel model = SingleProblemReadModel.of(
 			problemId, problemId, "img", "coursePath", AnswerType.SHORT_ANSWER, Difficulty.LOW,
-			1L, 5L, 10L, LocalDateTime.now()
+			1L, 5L, 10L, time
 		);
 		singleProblemReadModelRepository.save(model);
 
@@ -187,9 +188,10 @@ class SingleProblemUpdateServiceTest {
 	void command의_totalAttemptedCount가_기존값이하이면_업데이트되지_않는다() {
 		// given
 		final long problemId = 11L;
+		final LocalDateTime time = LocalDateTime.of(2020, 1, 1, 0, 0);
 		final SingleProblemReadModel model = SingleProblemReadModel.of(
 			problemId, problemId, "img", "coursePath", AnswerType.SHORT_ANSWER, Difficulty.LOW,
-			3L, 6L, 10L, LocalDateTime.now()
+			3L, 6L, 10L, time
 		);
 		singleProblemReadModelRepository.save(model);
 
@@ -229,7 +231,7 @@ class SingleProblemUpdateServiceTest {
 	void 문제정보와_통계정보가_여러_스레드에서_경합해도_최신값이_반영된다() throws InterruptedException {
 		// given
 		final long problemId = 200L;
-		final LocalDateTime baseTime = LocalDateTime.now().minusDays(5);
+		final LocalDateTime baseTime = LocalDateTime.of(2020, 1, 1, 0, 0);
 
 		final SingleProblemReadModel model = SingleProblemReadModel.of(
 			problemId, problemId, "img", "initialPath", AnswerType.SHORT_ANSWER, Difficulty.LOW,
