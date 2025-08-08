@@ -22,6 +22,7 @@ import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import kr.co.mathrank.common.event.Event;
 import kr.co.mathrank.domain.problem.core.AnswerType;
 import kr.co.mathrank.domain.problem.core.Difficulty;
+import kr.co.mathrank.domain.problem.single.read.dto.SingleProblemAttemptStatsUpdateCommand;
 import kr.co.mathrank.domain.problem.single.read.dto.SingleProblemReadModelUpdateCommand;
 import kr.co.mathrank.domain.problem.single.read.service.SingleProblemUpdateService;
 
@@ -99,5 +100,55 @@ class SingleProblemReadModelConsumerTest {
 
 		// 서비스의 어떤 메소드도 호출되지 않았음을 검증합니다.
 		verifyNoInteractions(singleProblemUpdateService);
+	}
+
+	@Test
+	@DisplayName("유효한 통계 업데이트 이벤트를 수신하면, 서비스 로직을 호출한다")
+	void whenGivenValidEvent_thenCallsService() {
+		// given
+		final long singleProblemId = 123L;
+		final long firstTrySuccessCount = 1L;
+		final long attemptedUserDistinctCount = 2L;
+		final long totalAttemptedCount = 3L;
+		final var payload = new SingleProblemStatisticsUpdatedPayload(singleProblemId, firstTrySuccessCount,
+			totalAttemptedCount, attemptedUserDistinctCount);
+		final Event<SingleProblemStatisticsUpdatedPayload> event = Event.of(1L, payload);
+		final String message = event.serialize();
+
+		// when
+		kafkaTemplate.send(SingleProblemReadModelUpdateMessageConsumer.SINGLE_PROBLEM_STATISTICS_UPDATED_TOPIC,
+			message);
+
+		// then
+		final ArgumentCaptor<SingleProblemAttemptStatsUpdateCommand> commandCaptor =
+			ArgumentCaptor.forClass(SingleProblemAttemptStatsUpdateCommand.class);
+
+		// Awaitility를 사용하여 최대 5초 동안 서비스가 호출될 때까지 기다립니다.
+		await().atMost(5, TimeUnit.SECONDS)
+			.untilAsserted(() ->
+				verify(singleProblemUpdateService, times(1)).updateAttemptStatistics(commandCaptor.capture())
+			);
+
+		// 서비스에 전달된 Command 객체의 내용이 페이로드와 일치하는지 확인합니다.
+		final SingleProblemAttemptStatsUpdateCommand capturedCommand = commandCaptor.getValue();
+		assertThat(capturedCommand.singleProblemId()).isEqualTo(singleProblemId);
+		assertThat(capturedCommand.firstTrySuccessCount()).isEqualTo(firstTrySuccessCount);
+		assertThat(capturedCommand.attemptedUserDistinctCount()).isEqualTo(attemptedUserDistinctCount);
+		assertThat(capturedCommand.totalAttemptedCount()).isEqualTo(totalAttemptedCount);
+	}
+
+	@Test
+	@DisplayName("유효하지 않은 형식의 메시지를 수신하면, 서비스 로직을 호출하지 않는다")
+	void whenGivenInvalidEvent_thenDoesNotCallService() {
+		// given
+		final String invalidMessage = "this is not a valid json";
+
+		// when
+		kafkaTemplate.send(SingleProblemReadModelUpdateMessageConsumer.SINGLE_PROBLEM_STATISTICS_UPDATED_TOPIC,
+			invalidMessage);
+
+		// then
+		// Mockito의 after()를 사용하여 1초 동안 기다린 후에도 서비스가 호출되지 않았음을 검증합니다.
+		verify(singleProblemUpdateService, after(1000).never()).updateAttemptStatistics(any());
 	}
 }
