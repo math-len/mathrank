@@ -33,11 +33,7 @@ import kr.co.mathrank.domain.problem.single.read.service.SingleProblemUpdateServ
 @TestPropertySource(
 	properties = "spring.kafka.consumer.auto-offset-reset=earliest" // 리밸런싱 후, 토픽의 첫 오프셋 부터 읽도록 설정
 )
-@EmbeddedKafka(
-	topics = SingleProblemReadModelUpdateMessageConsumer.PROBLEM_INFO_UPDATED_TOPIC
-)
-// 테스트 간 컨텍스트를 초기화하여 테스트 격리 수준을 높입니다.
-@DirtiesContext
+@EmbeddedKafka
 @DisplayName("SingleProblemReadModelConsumer 통합 테스트")
 class SingleProblemReadModelConsumerTest {
 	@Autowired
