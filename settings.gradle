@@ -19,6 +19,7 @@ include(
         'app:api:mathrank-school-read-api',
         'app:batch',
         'app:consumer',
+        'app:consumer:mathrank-problem-single-consumer',
 
         'client',
         'client:internal',
