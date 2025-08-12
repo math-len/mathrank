@@ -1,6 +1,11 @@
+plugins {
+    id 'java-library'
+}
+
 dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-web'
     implementation 'org.springframework.boot:spring-boot-starter-validation'
+    api project(':domain:mathrank-problem-core-domain')
 
     testImplementation 'org.springframework.boot:spring-boot-starter-web'
 

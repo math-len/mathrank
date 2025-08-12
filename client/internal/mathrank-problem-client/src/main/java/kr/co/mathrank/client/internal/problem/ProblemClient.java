@@ -4,8 +4,6 @@ import java.util.List;
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.HttpStatusCode;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.client.RestClient;
@@ -43,17 +41,14 @@ public class ProblemClient {
 			.body(SolveResult.class);
 	}
 
-	public boolean isExist(final Long problemId) {
-		final HttpStatusCode statusCode = problemClient.head()
+	public ProblemQueryResult fetchProblemInfo(final Long problemId) {
+		return problemClient.head()
 			.uri(uriBuilder -> uriBuilder
 				.path("/api/inner/v1/problem")
 				.queryParam("problemId", problemId)
 				.build())
 			.retrieve()
-			.toBodilessEntity()
-			.getStatusCode();
-
-		return statusCode.isSameCodeAs(HttpStatus.OK);
+			.body(ProblemQueryResult.class);
 	}
 
 	@Getter
