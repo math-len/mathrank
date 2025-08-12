@@ -27,8 +27,8 @@ public class SingleProblemReadController {
 	@Authorization(openedForAll = true)
 	public ResponseEntity<SingleProblemReadModelPageResult> getSingleProblems(
 		@ModelAttribute @ParameterObject final SingleProblemQueryRequest query,
-		@Range(min = 1, max = 20) @RequestParam("pageNumber") final Integer pageNumber,
-		@Max(1000) @RequestParam("pageSize") final Integer pageSize
+		@Range(min = 1, max = 1000) @RequestParam final Integer pageNumber,
+		@Range(min = 1, max = 20) @RequestParam final Integer pageSize
 	) {
 		final SingleProblemReadModelPageResult result = singleProblemQueryService.queryPage(query.toQuery(), pageSize,
 			pageNumber);
