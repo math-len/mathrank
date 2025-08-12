@@ -1,0 +1,10 @@
+dependencies {
+    implementation 'org.springframework.boot:spring-boot-starter'
+    implementation 'org.springframework.kafka:spring-kafka'
+
+    implementation project(':domain:mathrank-problem-single-read-domain')
+    implementation project(':domain:mathrank-problem-core-domain')
+    implementation project(':common:mathrank-event')
+
+    testImplementation 'org.springframework.kafka:spring-kafka-test'
+}
