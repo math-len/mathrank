@@ -7,6 +7,7 @@ import org.springframework.validation.annotation.Validated;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 import kr.co.mathrank.client.internal.problem.ProblemClient;
+import kr.co.mathrank.client.internal.problem.ProblemQueryResult;
 import kr.co.mathrank.client.internal.problem.SolveResult;
 import kr.co.mathrank.common.role.Role;
 import kr.co.mathrank.domain.problem.single.dto.SingleProblemRegisterCommand;
@@ -43,8 +44,10 @@ public class SingleProblemService {
 		}
 
 		// 존재하는 problem인지 확인한다.
-		if (!problemClient.isExist(command.problemId())) {
-			log.warn("[SingleProblemService.register] problem is not exist - problemId: {}", command.problemId());
+		try {
+			problemClient.fetchProblemInfo(command.problemId());
+		} catch (RuntimeException e) {
+			log.warn("[ProblemInfoManager.fetch] problem is not exist - problemId: {}", command.problemId(), e);
 			throw new CannotFindProblemException();
 		}
 
