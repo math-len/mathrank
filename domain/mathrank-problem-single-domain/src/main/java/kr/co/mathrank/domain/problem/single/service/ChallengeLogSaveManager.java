@@ -7,6 +7,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import kr.co.mathrank.client.internal.problem.SolveResult;
 import kr.co.mathrank.common.dataserializer.DataSerializer;
+import kr.co.mathrank.common.event.EventPayload;
+import kr.co.mathrank.common.outbox.TransactionalOutboxPublisher;
 import kr.co.mathrank.common.snowflake.Snowflake;
 import kr.co.mathrank.domain.problem.single.entity.ChallengeLog;
 import kr.co.mathrank.domain.problem.single.entity.SingleProblem;
@@ -23,6 +25,7 @@ class ChallengeLogSaveManager {
 	private final Snowflake snowflake;
 	private final SingleProblemRepository singleProblemRepository;
 	private final ChallengeLogRepository challengeLogRepository;
+	private final TransactionalOutboxPublisher outboxPublisher;
 
 	@Transactional
 	public void saveLog(final Long singleProblemId, final Long memberId, final SolveResult solveResult) {
@@ -52,7 +55,33 @@ class ChallengeLogSaveManager {
 			LocalDateTime.now());
 		challengeLogRepository.save(challengeLog);
 
+		// 이벤트 발행
+		publishChallengeLog(challengeLog, singleProblem);
+
 		log.info("[SingleProblemService.solve] solve log registered - singleProblemId: {}, memberId: {}, success: {}",
 			singleProblem.getId(), memberId, solveResult.success());
+	}
+
+	private void publishChallengeLog(final ChallengeLog challengeLog, final SingleProblem singleProblem) {
+		outboxPublisher.publish("single-problem-solved", new SingleProblemSolvedEventPayload(
+			singleProblem.getId(),
+			singleProblem.getProblemId(),
+			challengeLog.getMemberId(),
+			challengeLog.getSuccess(),
+			singleProblem.getFirstTrySuccessCount(),
+			singleProblem.getTotalAttemptedCount(),
+			singleProblem.getAttemptedUserDistinctCount()
+		));
+	}
+
+	private record SingleProblemSolvedEventPayload(
+		Long singleProblemId,
+		Long problemId,
+		Long memberId,
+		Boolean success,
+		Long firstTrySuccessCount,
+		Long totalAttemptedCount,
+		Long attemptedUserDistinctCount
+	) implements EventPayload {
 	}
 }
