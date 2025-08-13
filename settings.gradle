@@ -44,5 +44,6 @@ include(
         'common:mathrank-dataserializer',
         'common:mathrank-snowflake',
         'common:mathrank-outbox',
+        'common:mathrank-event-publisher',
         'common:mathrank-event'
 )
