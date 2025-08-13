@@ -29,6 +29,7 @@ public class SingleProblemService {
 	private final ChallengeLogSaveManager challengeLogSaveManager;
 
 	private final ProblemInfoManager problemInfoManager;
+	private final SingleProblemRegisterManager singleProblemRegisterManager;
 
 	/**
 	 * 문제를 개별문제로 등록하기 위한 API입니다.
@@ -43,18 +44,18 @@ public class SingleProblemService {
 
 		// 존재하는 problem인지 확인한다.
 		final ProblemQueryResult result = problemInfoManager.fetch(command.problemId());
+		final SingleProblem singleProblem = SingleProblem.of(command.problemId(), command.memberId());
 
-		final SingleProblem problem = SingleProblem.of(command.problemId(), command.memberId());
 		try {
-			singleProblemRepository.save(problem);
+			singleProblemRegisterManager.register(singleProblem, result);
 		} catch (DataIntegrityViolationException e) {
 			// 이미 등록된 문제는 다시 등록할 수 없다.
-			log.warn("[SingleProblemService.register] cannot register single problem duplicated: {}", command.problemId());
+			log.warn("[SingleProblemService.register] cannot register single problem duplicated: {}",
+				command.problemId(), e);
 			throw new AlreadyRegisteredProblemException();
 		}
-
-		log.info("[SingleProblemService.register] single problem registered - singleProblemId: {}, problemId: {}", problem.getId(), problem.getProblemId());
-		return problem.getId();
+		log.info("[SingleProblemService.register] single problem registered - singleProblemId: {}, problemId: {}", singleProblem.getId(), singleProblem.getProblemId());
+		return singleProblem.getId();
 	}
 
 	/**
