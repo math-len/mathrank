@@ -1,29 +1,25 @@
 package kr.co.mathrank.common.outbox;
 
-import java.util.concurrent.TimeUnit;
-
-import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Component;
 
+import kr.co.mathrank.common.event.publisher.EventPublishException;
+import kr.co.mathrank.common.event.publisher.EventPublisher;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 @Component
 @RequiredArgsConstructor
 @Slf4j
-class KafkaEventPublisher {
-    private final KafkaTemplate<String, String> kafkaTemplate;
+class OutboxEventPublisher {
     private final OutboxEventRepository eventOutboxRepository;
+    private final EventPublisher eventPublisher;
 
     public void publishEvent(final Outbox outbox) {
         try {
-            kafkaTemplate.send(
-                    outbox.getTopic(),
-                    outbox.getPayload()
-            ).get(1L, TimeUnit.SECONDS);
+            eventPublisher.publish(outbox.getTopic(), outbox.getPayload());
             eventOutboxRepository.delete(outbox);
             log.info("Published outbox event {}", outbox);
-        } catch (Exception e) {
+        } catch (EventPublishException e) {
             log.error("Error publishing outbox {}", outbox, e);
             throw new RuntimeException(e);
         }
