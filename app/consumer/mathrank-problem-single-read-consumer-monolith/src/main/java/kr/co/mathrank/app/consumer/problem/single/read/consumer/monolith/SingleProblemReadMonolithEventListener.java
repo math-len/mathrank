@@ -29,9 +29,9 @@ public class SingleProblemReadMonolithEventListener {
 	private final SingleProblemUpdateService singleProblemUpdateService;
 	private final SingleProblemReadModelRegisterService singleProblemReadModelRegisterService;
 
-	private String problemUpdatedEventTopic = "problem-info-updated";
-	private String singleProblemSolvedEventTopic = "single-problem-solved";
-	private String singlePRoblemRegisteredEventToic = "single-problem-registered";
+	private static String PROBLEM_INFO_UPDATED_TOPIC = "problem-info-updated";
+	private static String SINGLE_PROBLEM_SOLED_TOPIC = "single-problem-solved";
+	private static String SINGLE_PROBLEM_REGISTERED_TOPIC = "single-problem-registered";
 
 	/**
 	 * 문제 정보가 업데이트되는 이벤트를 처리
@@ -41,7 +41,7 @@ public class SingleProblemReadMonolithEventListener {
 	@Async("infoUpdatedMessageProcessingExecutor")
 	@EventListener(MonolithEvent.class)
 	public void listenInfoUpdatedEvent(final MonolithEvent monolithEvent) {
-		if (!monolithEvent.isExpectedTopic(problemUpdatedEventTopic)) {
+		if (!monolithEvent.isExpectedTopic(PROBLEM_INFO_UPDATED_TOPIC)) {
 			return;
 		}
 		log.debug("[SingleProblemReadMonolithEventListener.listenInfoUpdatedEvent] Monolith event received: {}", monolithEvent);
@@ -57,7 +57,7 @@ public class SingleProblemReadMonolithEventListener {
 	@Async("singleProblemSolvedMessageProcessingExecutor")
 	@EventListener(MonolithEvent.class)
 	public void listenSingleProblemSolvedEvent(final MonolithEvent monolithEvent) {
-		if (!monolithEvent.isExpectedTopic(singleProblemSolvedEventTopic)) {
+		if (!monolithEvent.isExpectedTopic(SINGLE_PROBLEM_SOLED_TOPIC)) {
 			return;
 		}
 		log.debug("[SingleProblemReadMonolithEventListener.listenSingleProblemSolvedEvent] Monolith event received: {}", monolithEvent);
@@ -73,7 +73,7 @@ public class SingleProblemReadMonolithEventListener {
 	@Async("singleProblemRegisteredMessageProcessingExecutor")
 	@EventListener(MonolithEvent.class)
 	public void listenSingleProblemRegisteredEvent(final MonolithEvent monolithEvent) {
-		if (!monolithEvent.isExpectedTopic(singlePRoblemRegisteredEventToic)) {
+		if (!monolithEvent.isExpectedTopic(SINGLE_PROBLEM_REGISTERED_TOPIC)) {
 			return;
 		}
 		log.debug("[SingleProblemReadMonolithEventListener.listenSingleProblemRegisteredEvent] Monolith event received: {}", monolithEvent);
