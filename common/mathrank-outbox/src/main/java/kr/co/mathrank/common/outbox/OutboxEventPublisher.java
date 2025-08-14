@@ -21,7 +21,7 @@ class OutboxEventPublisher {
             log.info("Published outbox event {}", outbox);
         } catch (EventPublishException e) {
             log.error("Error publishing outbox {}", outbox, e);
-            throw new RuntimeException(e);
+            throw e;
         }
     }
 }
