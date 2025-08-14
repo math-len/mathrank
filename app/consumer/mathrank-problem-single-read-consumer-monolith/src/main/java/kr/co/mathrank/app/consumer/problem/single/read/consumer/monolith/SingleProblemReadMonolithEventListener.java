@@ -14,6 +14,14 @@ import kr.co.mathrank.domain.problem.single.read.service.SingleProblemUpdateServ
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
+/**
+ * 모놀리식 환경에서 발생하는 단일 문제(Single Problem) 관련 이벤트를 구독하여
+ * Read Model을 갱신하거나 신규 등록하는 리스너.
+ *
+ * - problem-info-updated: 문제 정보 변경
+ * - single-problem-solved: 문제 풀이 통계 업데이트
+ * - single-problem-registered: 단일 문제 신규 등록
+ */
 @Slf4j
 @Component
 @RequiredArgsConstructor
@@ -25,6 +33,11 @@ public class SingleProblemReadMonolithEventListener {
 	private String singleProblemSolvedEventTopic = "single-problem-solved";
 	private String singlePRoblemRegisteredEventToic = "single-problem-registered";
 
+	/**
+	 * 문제 정보가 업데이트되는 이벤트를 처리
+	 * - Topic: problem-info-updated
+	 * - 처리 로직: 문제 기본 정보(제목, 이미지, 난이도 등)를 업데이트
+	 */
 	@Async("infoUpdatedMessageProcessingExecutor")
 	@EventListener(MonolithEvent.class)
 	public void listenInfoUpdatedEvent(final MonolithEvent monolithEvent) {
@@ -36,6 +49,11 @@ public class SingleProblemReadMonolithEventListener {
 		singleProblemUpdateService.updateProblemInfo(event.getPayload().toCommand());
 	}
 
+	/**
+	 * 문제 풀이 통계(시도 횟수, 정답 횟수 등)를 업데이트하는 이벤트 처리
+	 * - Topic: single-problem-solved
+	 * - 처리 로직: 해당 문제의 시도/정답 통계 반영
+	 */
 	@Async("singleProblemSolvedMessageProcessingExecutor")
 	@EventListener(MonolithEvent.class)
 	public void listenSingleProblemSolvedEvent(final MonolithEvent monolithEvent) {
@@ -47,6 +65,11 @@ public class SingleProblemReadMonolithEventListener {
 		singleProblemUpdateService.updateAttemptStatistics(event.getPayload().toCommand());
 	}
 
+	/**
+	 * 신규 단일 문제 등록 이벤트 처리
+	 * - Topic: single-problem-registered
+	 * - 처리 로직: Read Model에 신규 문제 데이터 저장
+	 */
 	@Async("singleProblemRegisteredMessageProcessingExecutor")
 	@EventListener(MonolithEvent.class)
 	public void listenSingleProblemRegisteredEvent(final MonolithEvent monolithEvent) {
