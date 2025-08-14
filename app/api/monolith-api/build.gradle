@@ -13,4 +13,6 @@ dependencies {
 
     implementation project(':app:init:mathrank-problem-init')
     implementation project(':app:init:mathrank-auth-init')
+
+    implementation project(':app:consumer:mathrank-problem-single-read-consumer-monolith')
 }
