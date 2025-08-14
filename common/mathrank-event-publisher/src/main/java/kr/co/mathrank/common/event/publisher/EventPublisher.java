@@ -1,5 +1,8 @@
 package kr.co.mathrank.common.event.publisher;
 
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+
 /**
  * 메시지 브로커를 통한 이벤트 발행을 추상화한 인터페이스입니다.
  * <p>
@@ -21,9 +24,9 @@ public interface EventPublisher {
 	/**
 	 * 지정한 토픽으로 이벤트를 발행합니다.
 	 *
-	 * @param topic   브로커에서 구독하는 토픽 이름
-	 * @param payload 전송할 이벤트 데이터(직렬화된 문자열)
+	 * @param topic   브로커에서 구독하는 토픽 이름 not null
+	 * @param payload 전송할 이벤트 데이터(직렬화된 문자열) not null
 	 * @throws EventPublishException 발행 실패 시 발생
 	 */
-	void publish(String topic, String payload) throws EventPublishException;
+	void publish(@NotNull String topic, @NotNull String payload) throws EventPublishException;
 }
