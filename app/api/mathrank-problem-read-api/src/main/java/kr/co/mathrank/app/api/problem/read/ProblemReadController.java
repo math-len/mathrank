@@ -6,6 +6,7 @@ import org.springdoc.core.annotations.ParameterObject;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -54,9 +55,9 @@ public class ProblemReadController {
 	}
 
 	@Operation(summary = "문제 단일 조회 API")
-	@GetMapping(value = "/api/v1/problem/single")
+	@GetMapping(value = "/api/v1/problem/{problemId}")
 	public ResponseEntity<ProblemResponse> getProblem(
-		@RequestParam final Long problemId
+		@PathVariable final Long problemId
 	) {
 		final ProblemQueryResult result = problemQueryService.getSingle(problemId);
 		final ProblemResponse response = toResponse(result);
