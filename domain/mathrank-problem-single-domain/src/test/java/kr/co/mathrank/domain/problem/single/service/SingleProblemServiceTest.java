@@ -1,5 +1,6 @@
 package kr.co.mathrank.domain.problem.single.service;
 
+import org.jetbrains.annotations.NotNull;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -15,6 +16,7 @@ import org.testcontainers.junit.jupiter.Container;
 
 import jakarta.validation.ConstraintViolationException;
 import kr.co.mathrank.client.internal.problem.ProblemClient;
+import kr.co.mathrank.client.internal.problem.ProblemQueryResult;
 import kr.co.mathrank.common.role.Role;
 import kr.co.mathrank.domain.problem.single.dto.SingleProblemRegisterCommand;
 import kr.co.mathrank.domain.problem.single.exception.AlreadyRegisteredProblemException;
@@ -52,7 +54,9 @@ class SingleProblemServiceTest {
 
 	@Test
 	void 어드민만_문제를_개별문제로_등록할_수_있다() {
-		Mockito.when(problemClient.isExist(Mockito.any())).thenReturn(true);
+		Mockito.when(problemClient.fetchProblemInfo(Mockito.any())).thenReturn(
+			getEmptyResult()
+		);
 
 		Assertions.assertDoesNotThrow(() -> singleProblemService.register(new SingleProblemRegisterCommand(1L, 2L, Role.ADMIN)));
 	}
@@ -67,7 +71,7 @@ class SingleProblemServiceTest {
 	void 이미_등록된_문제는_다시_등록할_수_없다() {
 		final Long problemId = 1L;
 
-		Mockito.when(problemClient.isExist(Mockito.any())).thenReturn(true);
+		Mockito.when(problemClient.fetchProblemInfo(Mockito.any())).thenReturn(getEmptyResult());
 
 		singleProblemService.register(new SingleProblemRegisterCommand(problemId, 2L, Role.ADMIN));
 		Assertions.assertThrows(AlreadyRegisteredProblemException.class, () -> singleProblemService.register(new SingleProblemRegisterCommand(problemId, 2L, Role.ADMIN)));
@@ -88,5 +92,22 @@ class SingleProblemServiceTest {
 	void clear() {
 		singleProblemRepository.deleteAll();
 		challengeLogRepository.deleteAll();
+	}
+
+	private static ProblemQueryResult getEmptyResult() {
+		return new ProblemQueryResult(
+			null,
+			null,
+			null,
+			null,
+			null, null,
+			null,
+			null,
+			null,
+			null,
+			null,
+			null,
+			null
+		);
 	}
 }

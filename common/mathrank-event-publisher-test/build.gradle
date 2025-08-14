@@ -1,0 +1,4 @@
+dependencies {
+    implementation 'org.springframework.boot:spring-boot-starter'
+    implementation project(':common:mathrank-event-publisher')
+}

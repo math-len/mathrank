@@ -6,14 +6,13 @@ import org.springframework.validation.annotation.Validated;
 
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
-import kr.co.mathrank.client.internal.problem.ProblemClient;
+import kr.co.mathrank.client.internal.problem.ProblemQueryResult;
 import kr.co.mathrank.client.internal.problem.SolveResult;
 import kr.co.mathrank.common.role.Role;
 import kr.co.mathrank.domain.problem.single.dto.SingleProblemRegisterCommand;
 import kr.co.mathrank.domain.problem.single.dto.SingleProblemSolveCommand;
 import kr.co.mathrank.domain.problem.single.entity.SingleProblem;
 import kr.co.mathrank.domain.problem.single.exception.AlreadyRegisteredProblemException;
-import kr.co.mathrank.domain.problem.single.exception.CannotFindProblemException;
 import kr.co.mathrank.domain.problem.single.exception.CannotFindSingleProblemException;
 import kr.co.mathrank.domain.problem.single.exception.CannotRegisterWithThisRoleException;
 import kr.co.mathrank.domain.problem.single.repository.SingleProblemRepository;
@@ -29,7 +28,8 @@ public class SingleProblemService {
 
 	private final ChallengeLogSaveManager challengeLogSaveManager;
 
-	private final ProblemClient problemClient;
+	private final ProblemInfoManager problemInfoManager;
+	private final SingleProblemRegisterManager singleProblemRegisterManager;
 
 	/**
 	 * 문제를 개별문제로 등록하기 위한 API입니다.
@@ -43,22 +43,19 @@ public class SingleProblemService {
 		}
 
 		// 존재하는 problem인지 확인한다.
-		if (!problemClient.isExist(command.problemId())) {
-			log.warn("[SingleProblemService.register] problem is not exist - problemId: {}", command.problemId());
-			throw new CannotFindProblemException();
-		}
+		final ProblemQueryResult result = problemInfoManager.fetch(command.problemId());
+		final SingleProblem singleProblem = SingleProblem.of(command.problemId(), command.memberId());
 
-		final SingleProblem problem = SingleProblem.of(command.problemId(), command.memberId());
 		try {
-			singleProblemRepository.save(problem);
+			singleProblemRegisterManager.register(singleProblem, result);
 		} catch (DataIntegrityViolationException e) {
 			// 이미 등록된 문제는 다시 등록할 수 없다.
-			log.warn("[SingleProblemService.register] cannot register single problem duplicated: {}", command.problemId());
+			log.warn("[SingleProblemService.register] cannot register single problem duplicated: {}",
+				command.problemId(), e);
 			throw new AlreadyRegisteredProblemException();
 		}
-
-		log.info("[SingleProblemService.register] single problem registered - singleProblemId: {}, problemId: {}", problem.getId(), problem.getProblemId());
-		return problem.getId();
+		log.info("[SingleProblemService.register] single problem registered - singleProblemId: {}, problemId: {}", singleProblem.getId(), singleProblem.getProblemId());
+		return singleProblem.getId();
 	}
 
 	/**
@@ -74,7 +71,7 @@ public class SingleProblemService {
 			});
 		// 채점 서비스 호출.
 		// 외부 호출임에 따라, 트랜잭션 제거
-		final SolveResult solveResult = problemClient.matchAnswer(singleProblem.getProblemId(), command.answers());
+		final SolveResult solveResult = problemInfoManager.solve(singleProblem.getProblemId(), command.answers());
 
 		challengeLogSaveManager.saveLog(singleProblem.getId(), command.memberId(), solveResult);
 	}

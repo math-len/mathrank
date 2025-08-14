@@ -79,6 +79,8 @@ public class Problem implements Persistable<Long> {
 	@Setter(AccessLevel.NONE)
 	private LocalDateTime createdAt;
 
+	private LocalDateTime updatedAt;
+
 	private String memo;
 
 	public static Problem of(final Long id, final Long memberId, final String problemImage, final Difficulty difficulty,
