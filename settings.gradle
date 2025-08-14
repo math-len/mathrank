@@ -20,6 +20,7 @@ include(
         'app:batch',
         'app:consumer',
         'app:consumer:mathrank-problem-single-consumer',
+        'app:consumer:mathrank-problem-single-read-consumer-monolith',
 
         'client',
         'client:internal',
