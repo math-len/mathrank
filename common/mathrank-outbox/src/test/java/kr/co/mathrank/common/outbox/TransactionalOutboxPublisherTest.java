@@ -8,8 +8,9 @@ import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
+
+import kr.co.mathrank.common.event.publisher.EventPublisher;
 
 @SpringBootTest(properties = """
 	snowflake.node.id=1
@@ -17,7 +18,7 @@ import org.springframework.test.context.bean.override.mockito.MockitoBean;
 	""")
 public class TransactionalOutboxPublisherTest {
 	@MockitoBean
-	private KafkaTemplate<String, String> kafkaTemplate;
+	private EventPublisher eventPublisher;
 
 	@Autowired
 	private TestPublisher testPublisher;
@@ -31,9 +32,9 @@ public class TransactionalOutboxPublisherTest {
 
 	@Test
 	void 이벤트_발행_성공_시_아웃박스_삭제() {
-		Mockito.doReturn(CompletableFuture.completedFuture(null))
-			.when(kafkaTemplate)
-			.send(Mockito.anyString(), Mockito.anyString());
+		Mockito.doNothing()
+			.when(eventPublisher)
+			.publish(Mockito.anyString(), Mockito.anyString());
 		testPublisher.publish();
 
 		try {
@@ -47,7 +48,7 @@ public class TransactionalOutboxPublisherTest {
 
 	@Test
 	void 이벤트_발행_실패시_아웃박스가_저장() {
-		Mockito.doThrow(new RuntimeException()).when(kafkaTemplate).send(Mockito.anyString(), Mockito.anyString());
+		Mockito.doThrow(new RuntimeException()).when(eventPublisher).publish(Mockito.anyString(), Mockito.anyString());
 		testPublisher.publish();
 
 		try {

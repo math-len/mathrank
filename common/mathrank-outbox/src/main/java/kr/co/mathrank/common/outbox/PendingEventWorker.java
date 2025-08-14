@@ -13,12 +13,12 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 class PendingEventWorker {
     private final OutboxEventRepository eventOutboxRepository;
-    private final KafkaEventPublisher kafkaEventPublisher;
+    private final OutboxEventPublisher outboxEventPublisher;
 
     @Scheduled(initialDelayString = "${event.pending.initial:30}", fixedDelayString = "${event.pending.interval:30}", timeUnit = TimeUnit.SECONDS, scheduler = "pendingMessageWorker")
     public void publishPendingEvents() {
         eventOutboxRepository.findAll()
-                .forEach(kafkaEventPublisher::publishEvent);
+                .forEach(outboxEventPublisher::publishEvent);
         log.info("Publishing pending events completed");
     }
 }

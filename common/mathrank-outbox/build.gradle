@@ -1,11 +1,11 @@
 dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
     implementation 'org.springframework.boot:spring-boot-starter-validation'
-    implementation 'org.springframework.kafka:spring-kafka'
 
     runtimeOnly 'com.h2database:h2'
 
     implementation project(":common:mathrank-dataserializer")
+    implementation project(":common:mathrank-event-publisher")
     implementation project(":common:mathrank-event")
     implementation project(":common:mathrank-snowflake")
 }

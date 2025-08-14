@@ -8,8 +8,9 @@ import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
+
+import kr.co.mathrank.common.event.publisher.EventPublisher;
 
 @SpringBootTest(properties = """
 	snowflake.node.id=1
@@ -18,7 +19,7 @@ import org.springframework.test.context.bean.override.mockito.MockitoBean;
 	""")
 class PendingEventWorkerTest {
 	@MockitoBean
-	private KafkaTemplate<String, String> kafkaTemplate;
+	private EventPublisher eventPublisher;
 
 	@Autowired
 	private OutboxEventRepository outboxEventRepository;
@@ -30,9 +31,9 @@ class PendingEventWorkerTest {
 
 	@Test
 	void 이벤트_발행_실패시_주기적으로_처리된다() {
-		Mockito.doReturn(CompletableFuture.completedFuture(null))
-			.when(kafkaTemplate)
-			.send(Mockito.anyString(), Mockito.anyString());
+		Mockito.doNothing()
+			.when(eventPublisher)
+			.publish(Mockito.anyString(), Mockito.anyString());
 		outboxEventRepository.save(Outbox.of(1L, "testTopic", "testPayload"));
 
 		try {
