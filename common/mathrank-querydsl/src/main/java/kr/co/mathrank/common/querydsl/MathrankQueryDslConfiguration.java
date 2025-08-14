@@ -1,4 +1,4 @@
-package kr.co.mathrank.domain.problem;
+package kr.co.mathrank.common.querydsl;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -9,7 +9,7 @@ import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 
 @Configuration
-class ProblemQueryConfiguration {
+public class MathrankQueryDslConfiguration {
 	@PersistenceContext
 	private EntityManager entityManager;
 

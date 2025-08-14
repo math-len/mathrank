@@ -13,6 +13,7 @@ dependencies {
 
     implementation project(':common:mathrank-page')
     implementation project(':common:mathrank-exception')
+    implementation project(':common:mathrank-querydsl')
 
     // query dsl
     implementation 'com.querydsl:querydsl-jpa:5.0.0:jakarta'

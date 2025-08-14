@@ -38,6 +38,7 @@ include(
         'domain:mathrank-problem-single-read-domain',
 
         'common',
+        'common:mathrank-querydsl',
         'common:mathrank-page',
         'common:mathrank-exception',
         'common:mathrank-jwt',
