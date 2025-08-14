@@ -13,6 +13,8 @@ dependencies {
     implementation project(':common:mathrank-snowflake')
     implementation project(':common:mathrank-exception')
     implementation project(':common:mathrank-page')
+    implementation project(':common:mathrank-outbox')
+    implementation project(':common:mathrank-event')
     implementation project(':client:external:mathrank-school')
     api project(':domain:mathrank-problem-core-domain')
 
@@ -20,6 +22,8 @@ dependencies {
     annotationProcessor "com.querydsl:querydsl-apt:${dependencyManagement.importedProperties['querydsl.version']}:jakarta"
     annotationProcessor "jakarta.annotation:jakarta.annotation-api"
     annotationProcessor "jakarta.persistence:jakarta.persistence-api"
+
+    testRuntimeOnly project(':common:mathrank-event-publisher-test')
 }
 
 def querydslSrcDir = 'src/main/generated'

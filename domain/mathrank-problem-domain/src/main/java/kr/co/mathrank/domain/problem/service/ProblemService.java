@@ -9,6 +9,7 @@ import org.springframework.validation.annotation.Validated;
 
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
+import kr.co.mathrank.common.outbox.TransactionalOutboxPublisher;
 import kr.co.mathrank.common.snowflake.Snowflake;
 import kr.co.mathrank.domain.problem.dto.ProblemDeleteCommand;
 import kr.co.mathrank.domain.problem.dto.ProblemRegisterCommand;
@@ -34,6 +35,8 @@ public class ProblemService {
 	private final CourseRepository courseRepository;
 	private final Snowflake snowflake;
 	private final SchoolLocationManager schoolLocationManager;
+	private final TransactionalOutboxPublisher transactionalOutboxPublisher;
+	private final ProblemUpdateManager problemUpdateManager;
 
 	public Long save(@NotNull @Valid final ProblemRegisterCommand command) {
 		final Course course = getCourse(command.coursePath());
@@ -63,27 +66,8 @@ command.schoolCode(),
 	}
 
 	public void update(@NotNull @Valid final ProblemUpdateCommand command) {
-		final Problem problem = problemRepository.findById(command.problemId())
-			.orElseThrow(() -> new CannotFoundProblemException(command.problemId()));
-		final Course course = getCourse(command.coursePath());
-
-		isOwner(command.requestMemberId(), problem);
-
-		problem.setDifficulty(command.difficulty());
-		problem.setCourse(course);
-		problem.setType(command.answerType());
-		problem.setAnswers(mapToAnswer(command.answers(), problem));
-		problem.setProblemImage(command.imageSource());
-		problem.setSolutionVideoLink(command.solutionVideoLink());
-		problem.setSolutionImage(command.solutionImage());
-		problem.setYears(command.year());
-		problem.setSchoolCode(command.schoolCode());
-		problem.setMemo(command.memo());
-		problem.setLocation(command.schoolCode() == null ? null : schoolLocationManager.getSchoolLocation(command.schoolCode()));
-
-		problemRepository.save(problem);
-		log.info("[ProblemService.update] problem updated - id: {}, memberId: {}, course: {}",
-			command.problemId(), command.requestMemberId(), command.coursePath());
+		final String schoolLocation = schoolLocationManager.getSchoolLocation(command.schoolCode());
+		problemUpdateManager.update(command, schoolLocation);
 	}
 
 	private Course getCourse(String command) {

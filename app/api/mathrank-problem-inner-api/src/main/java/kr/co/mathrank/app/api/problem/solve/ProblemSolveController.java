@@ -4,15 +4,13 @@ import java.util.List;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import io.swagger.v3.oas.annotations.Operation;
+import kr.co.mathrank.domain.problem.dto.ProblemQueryResult;
 import kr.co.mathrank.domain.problem.dto.ProblemSolveCommand;
 import kr.co.mathrank.domain.problem.dto.ProblemSolveResult;
-import kr.co.mathrank.domain.problem.exception.CannotFoundProblemException;
 import kr.co.mathrank.domain.problem.service.ProblemQueryService;
 import kr.co.mathrank.domain.problem.service.ProblemSolveService;
 import lombok.RequiredArgsConstructor;
@@ -34,20 +32,16 @@ public class ProblemSolveController {
 	}
 
 	/**
-	 * 문제가 존재하는지 확인
+	 * 문제를 불러온다
 	 * @param problemId
 	 * @return
 	 */
 	@Operation(hidden = true)
-	@RequestMapping(method = RequestMethod.HEAD, value = "/api/inner/v1/problem")
-	public ResponseEntity<Void> isExist(
+	@GetMapping("/api/inner/v1/problem")
+	public ResponseEntity<ProblemQueryResult> find(
 		@RequestParam final Long problemId
 	) {
-		try {
-			problemQueryService.getSingle(problemId);
-			return ResponseEntity.ok().build();
-		} catch (CannotFoundProblemException e) {
-			return ResponseEntity.notFound().build();
-		}
+		final ProblemQueryResult queryResult = problemQueryService.getSingle(problemId);
+		return ResponseEntity.ok(queryResult);
 	}
 }
