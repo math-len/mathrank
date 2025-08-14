@@ -11,4 +11,5 @@ dependencies {
 
     testImplementation project(':app:api:mathrank-problem-inner-api')
     testImplementation project(':domain:mathrank-problem-domain')
+    testRuntimeOnly project(':common:mathrank-event-publisher-test')
 }
