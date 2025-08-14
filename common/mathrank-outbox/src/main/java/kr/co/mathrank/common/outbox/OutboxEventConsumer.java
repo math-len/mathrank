@@ -13,7 +13,7 @@ import lombok.extern.slf4j.Slf4j;
 @RequiredArgsConstructor
 class OutboxEventConsumer {
     private final OutboxEventRepository outboxEventRepository;
-    private final KafkaEventPublisher kafkaEventPublisher;
+    private final OutboxEventPublisher outboxEventPublisher;
 
     @TransactionalEventListener(phase = TransactionPhase.BEFORE_COMMIT)
     public void saveEvent(final Outbox outbox) {
@@ -24,7 +24,7 @@ class OutboxEventConsumer {
     @Async("outboxEventExecutor")
     @TransactionalEventListener(phase = TransactionPhase.AFTER_COMMIT)
     public void publishEvent(final Outbox outbox) {
-        kafkaEventPublisher.publishEvent(outbox);
+        outboxEventPublisher.publishEvent(outbox);
         log.info("[OutboxEventConsumer.publishEvent]: event: {}", outbox);
     }
 }
