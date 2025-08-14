@@ -8,4 +8,6 @@ dependencies {
     implementation project(":common:mathrank-event-publisher")
     implementation project(":common:mathrank-event")
     implementation project(":common:mathrank-snowflake")
+
+    testImplementation project(':common:mathrank-event-publisher-test')
 }
