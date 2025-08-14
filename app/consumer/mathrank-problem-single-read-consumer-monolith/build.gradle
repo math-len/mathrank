@@ -1,0 +1,9 @@
+dependencies {
+    implementation 'org.springframework.boot:spring-boot-starter'
+
+    implementation project(':common:mathrank-event')
+    implementation project(':common:mathrank-event-publisher')
+    implementation project(':common:mathrank-event-publisher-monolith')
+    implementation project(':domain:mathrank-problem-single-read-domain')
+    implementation project(':domain:mathrank-problem-core-domain')
+}
