@@ -45,6 +45,7 @@ include(
         'common:mathrank-snowflake',
         'common:mathrank-outbox',
         'common:mathrank-event-publisher',
+        'common:mathrank-event-publisher-test',
         'common:mathrank-event-publisher-monolith',
         'common:mathrank-event'
 )
