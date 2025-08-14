@@ -15,6 +15,7 @@ dependencies {
     implementation project(':common:mathrank-page')
     implementation project(':common:mathrank-outbox')
     implementation project(':common:mathrank-event')
+    implementation project(':common:mathrank-querydsl')
     implementation project(':client:external:mathrank-school')
     api project(':domain:mathrank-problem-core-domain')
 
