@@ -17,11 +17,25 @@ import org.springframework.boot.test.context.SpringBootTest;
 import jakarta.validation.ConstraintViolationException;
 import kr.co.mathrank.common.role.Role;
 import kr.co.mathrank.domain.problem.assessment.dto.AssessmentRegisterCommand;
+import kr.co.mathrank.domain.problem.assessment.exception.AssessmentRegisterException;
 
 @SpringBootTest
 class AssessmentRegisterServiceTest {
 	@Autowired
 	private AssessmentRegisterService assessmentRegisterService;
+
+	@Test
+	void 관리자가_아니면_시험지_생성_불가능하다() {
+		Assertions.assertThrows(AssessmentRegisterException.class, () -> assessmentRegisterService.register(
+			new AssessmentRegisterCommand(
+				1L,
+				Role.USER,
+				"새로운 수학 문제집",
+				List.of(101L, 102L, 103L),
+				Duration.ofMinutes(100)
+			))
+		);
+	}
 
 	@DisplayName("register 메서드에 null을 전달하면 ConstraintViolationException이 발생한다.")
 	@Test
