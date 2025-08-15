@@ -54,6 +54,7 @@ public class SchoolQueryController {
 	) {
 		return ResponseEntity.ok(schoolClient.getSchoolsByCityName(RequestType.JSON.getType(), cityName).getSchoolInfo()
 			.stream()
+			.filter(schoolInfo -> schoolInfo.ORG_RDNMA() != null)
 			.filter(schoolInfo -> schoolInfo.ORG_RDNMA().contains(district))
 			.map(SchoolResponse::from)
 			.toList());
