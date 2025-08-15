@@ -10,11 +10,11 @@ import jakarta.persistence.Converter;
 public class AssessmentDurationConverter implements AttributeConverter<Duration, Time> {
 	@Override
 	public Time convertToDatabaseColumn(Duration attribute) {
-		return new Time(attribute.toMillis());
+		return attribute == null ? null : new Time(attribute.toMillis());
 	}
 
 	@Override
 	public Duration convertToEntityAttribute(Time dbData) {
-		return Duration.ofMillis(dbData.getTime());
+		return dbData == null ? null : Duration.ofMillis(dbData.getTime());
 	}
 }
