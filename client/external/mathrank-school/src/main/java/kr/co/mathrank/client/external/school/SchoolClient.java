@@ -47,4 +47,25 @@ public class SchoolClient {
 			.retrieve()
 			.body(SchoolResponse.class);
 	}
+
+	/**
+	 * 도시 이름 기반으로 학교 목록을 조회합니다.
+	 * NEIS API는 도시 이름으로 조회 시 최대 1000개의 결과만 반환하므로, 모든 결과를 가져오기 위해 페이지 크기를 1000으로 고정합니다.
+	 *
+	 * @param type 요청 타입 (ex: "json")
+	 * @param cityName 도시 전체 이름 (ex: "부산광역시", "서울특별시")
+	 * @return 해당 도시의 학교 정보가 담긴 응답 객체
+	 */
+	public SchoolResponse getSchoolsByCityName(String type, String cityName) {
+		return restClient.get()
+			.uri(uriBuilder -> uriBuilder.path("/hub/schoolInfo")
+				.queryParam("Type", type)
+				.queryParam("pIndex", 1)
+				.queryParam("pSize", 1000)
+				.queryParam("KEY", key)
+				.queryParam("LCTN_SC_NM", cityName)
+				.build())
+			.retrieve()
+			.body(SchoolResponse.class);
+	}
 }
