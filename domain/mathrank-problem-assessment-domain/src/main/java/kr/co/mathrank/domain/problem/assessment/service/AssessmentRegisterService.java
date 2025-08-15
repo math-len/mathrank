@@ -27,7 +27,7 @@ public class AssessmentRegisterService {
 			throw new AssessmentRegisterException();
 		}
 		// 관리자만 문제집 등록이 가능하다
-		final Assessment assessment = Assessment.of(command.registerMemberId(), command.assessmentName());
+		final Assessment assessment = Assessment.of(command.registerMemberId(), command.assessmentName(), command.minutes());
 		assessment.setAssessmentItems(command.problemIds());
 
 		assessmentRepository.save(assessment);

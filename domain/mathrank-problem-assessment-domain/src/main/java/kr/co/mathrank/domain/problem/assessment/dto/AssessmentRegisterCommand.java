@@ -1,11 +1,13 @@
 package kr.co.mathrank.domain.problem.assessment.dto;
 
+import java.time.Duration;
 import java.util.List;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import kr.co.mathrank.common.role.Role;
+import kr.co.mathrank.domain.problem.assessment.constraint.AssessmentDurationConstraint;
 
 public record AssessmentRegisterCommand(
 	@NotNull
@@ -19,6 +21,10 @@ public record AssessmentRegisterCommand(
 
 	@NotNull
 	@Size(min = 1)
-	List<Long> problemIds
+	List<Long> problemIds,
+
+	@NotNull
+	@AssessmentDurationConstraint(minIncludeMinutes = 1, maxIncludeMinutes = 60 * 10)
+	Duration minutes // 시험 시간
 ) {
 }

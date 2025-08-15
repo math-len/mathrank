@@ -1,5 +1,6 @@
 package kr.co.mathrank.domain.problem.assessment.entity;
 
+import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -8,6 +9,7 @@ import org.hibernate.annotations.BatchSize;
 import org.hibernate.annotations.CreationTimestamp;
 
 import jakarta.persistence.CascadeType;
+import jakarta.persistence.Convert;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -31,6 +33,9 @@ public class Assessment {
 
 	private String assessmentName;
 
+	@Convert(converter = AssessmentDurationConverter.class)
+	private Duration assessmentDuration;
+
 	@OneToMany(mappedBy = "assessment", orphanRemoval = true, cascade = CascadeType.PERSIST)
 	private final List<AssessmentItem> assessmentItems = new ArrayList<>();
 
@@ -45,10 +50,11 @@ public class Assessment {
 		}
 	}
 
-	public static Assessment of(final Long registerMemberId, final String assessmentName) {
+	public static Assessment of(final Long registerMemberId, final String assessmentName, final Duration assessmentDuration) {
 		final Assessment assessment = new Assessment();
 		assessment.setRegisterMemberId(registerMemberId);
 		assessment.setAssessmentName(assessmentName);
+		assessment.setAssessmentDuration(assessmentDuration);
 
 		return assessment;
 	}

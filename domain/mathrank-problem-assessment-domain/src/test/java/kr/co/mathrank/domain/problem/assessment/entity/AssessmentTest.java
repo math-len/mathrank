@@ -1,5 +1,6 @@
 package kr.co.mathrank.domain.problem.assessment.entity;
 
+import java.time.Duration;
 import java.util.List;
 
 import org.junit.jupiter.api.Assertions;
@@ -24,7 +25,7 @@ class AssessmentTest {
 
 	@Test
 	void 시험지_생성시_문항들은_1번부터_순서대로_등록된다() {
-		final Assessment assessment = Assessment.of(1L, "test");
+		final Assessment assessment = Assessment.of(1L, "test", Duration.ofMinutes(100L));
 		// 시험 문제 번호
 		assessment.setAssessmentItems(List.of(345L, 212L, 120232L, 1221323L));
 
@@ -42,7 +43,7 @@ class AssessmentTest {
 
 	@Test
 	void 시험지내_문제_수정은_전체를_바꿔야한다() {
-		final Assessment assessment = Assessment.of(1L, "test");
+		final Assessment assessment = Assessment.of(1L, "test", Duration.ofMinutes(100L));
 		// 바꾸기 전 시험 문제 번호
 		assessment.setAssessmentItems(List.of(345L, 212L, 120232L, 1221323L));
 
@@ -63,7 +64,7 @@ class AssessmentTest {
 	@Test
 	@Transactional
 	void 트랜잭션_안에서_문항_변경시_DB_정상반영() {
-		final Assessment assessment = Assessment.of(1L, "test");
+		final Assessment assessment = Assessment.of(1L, "test", Duration.ofMinutes(100L));
 		// 시험 문제 번호
 		assessment.setAssessmentItems(List.of(345L, 212L, 120232L, 1221323L));
 
