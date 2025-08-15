@@ -20,7 +20,7 @@ public class AssessmentDurationRangeValidator implements ConstraintValidator<Ass
 		if (value == null) {
 			return true; // @NotNull은 별도 처리
 		}
-		long millis = value.toMinutes();
-		return millis >= minIncludeMinutes && millis <= maxIncludeMinutes;
+		long minutes = value.toMinutes();
+		return minutes >= minIncludeMinutes && minutes <= maxIncludeMinutes;
 	}
 }
