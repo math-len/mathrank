@@ -17,6 +17,7 @@ import lombok.Setter;
 class AssessmentItem {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Setter(AccessLevel.NONE)
 	private Long id;
 
 	private Integer sequence;

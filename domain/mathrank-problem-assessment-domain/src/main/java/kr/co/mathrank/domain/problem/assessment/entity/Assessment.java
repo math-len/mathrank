@@ -27,6 +27,7 @@ import lombok.Setter;
 public class Assessment {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Setter(AccessLevel.NONE)
 	private Long id;
 
 	private Long registerMemberId;
@@ -52,9 +53,9 @@ public class Assessment {
 
 	public static Assessment of(final Long registerMemberId, final String assessmentName, final Duration assessmentDuration) {
 		final Assessment assessment = new Assessment();
-		assessment.setRegisterMemberId(registerMemberId);
-		assessment.setAssessmentName(assessmentName);
-		assessment.setAssessmentDuration(assessmentDuration);
+		assessment.registerMemberId = registerMemberId;
+		assessment.assessmentName = assessmentName;
+		assessment.assessmentDuration = assessmentDuration;
 
 		return assessment;
 	}
