@@ -39,4 +39,12 @@ class SchoolClientTest {
 		final Optional<SchoolInfo> info = schoolClient.getSchool(RequestType.JSON.getType(), "7150129123ㅇㅁㅈㅇㄴㅇ");
 		Assertions.assertTrue(info.isEmpty());
 	}
+
+	@Test
+	void 도시_이름으로_전체_조회하기() {
+		final SchoolResponse schoolResponse = schoolClient.getSchoolsByCityName(RequestType.JSON.getType(), "부산광역시");
+
+		// 테스트 환경에서 api 키 사용 안함으로 default 값인 5로만 획득
+		Assertions.assertEquals(5, schoolResponse.getSchoolInfo().size());
+	}
 }

@@ -47,4 +47,23 @@ public class SchoolClient {
 			.retrieve()
 			.body(SchoolResponse.class);
 	}
+
+	/**
+	 *
+	 * @param type
+	 * @param cityName ex) 부산광역시, 서울특별시, 인천광역시
+	 * @return
+	 */
+	public SchoolResponse getSchoolsByCityName(String type, String cityName) {
+		return restClient.get()
+			.uri(uriBuilder -> uriBuilder.path("/hub/schoolInfo")
+				.queryParam("Type", type)
+				.queryParam("pIndex", 1)
+				.queryParam("pSize", 1000)
+				.queryParam("KEY", key)
+				.queryParam("LCTN_SC_NM", cityName)
+				.build())
+			.retrieve()
+			.body(SchoolResponse.class);
+	}
 }
