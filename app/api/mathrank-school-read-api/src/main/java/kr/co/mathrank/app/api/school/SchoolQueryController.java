@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import kr.co.mathrank.client.external.school.RequestType;
 import kr.co.mathrank.client.external.school.SchoolClient;
@@ -39,5 +40,22 @@ public class SchoolQueryController {
 				.getSchoolInfo().stream()
 				.map(SchoolResponse::from)
 				.toList());
+	}
+
+	@Operation(summary = "학교 위치 정보기반 학교 조회 API", description = "cityName에 주의해야합니다. 반드시 서울특별시, 부산광역시 와 같은 풀네임으로 검색해야 합니다. ex) 부산 (X), 서울 (X)")
+	@GetMapping("/api/v1/schools/by-address")
+	public ResponseEntity<List<SchoolResponse>> loadSchoolsByAddress(
+		@RequestParam
+		@Parameter(description = "도시이름", example = "서울특별시")
+		final String cityName,
+		@RequestParam
+		@Parameter(description = "구 이름", example = "서구")
+		final String district
+	) {
+		return ResponseEntity.ok(schoolClient.getSchoolsByCityName(RequestType.JSON.getType(), cityName).getSchoolInfo()
+			.stream()
+			.filter(schoolInfo -> schoolInfo.ORG_RDNMA().contains(district))
+			.map(SchoolResponse::from)
+			.toList());
 	}
 }
