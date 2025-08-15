@@ -29,9 +29,9 @@ class AssessmentItem {
 
 	public static AssessmentItem of(final Integer sequence, final Long problemId, final Assessment assessment) {
 		final AssessmentItem item = new AssessmentItem();
-		item.setSequence(sequence);
-		item.setProblemId(problemId);
-		item.setAssessment(assessment);
+		item.sequence = sequence;
+		item.problemId = problemId;
+		item.assessment = assessment;
 
 		return item;
 	}
