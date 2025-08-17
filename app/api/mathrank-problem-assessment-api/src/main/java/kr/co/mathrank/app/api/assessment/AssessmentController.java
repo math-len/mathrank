@@ -1,5 +1,6 @@
 package kr.co.mathrank.app.api.assessment;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -32,6 +33,6 @@ public class AssessmentController {
 		final AssessmentRegisterCommand command = request.toCommand(memberPrincipal.memberId(), memberPrincipal.role());
 		assessmentRegisterService.register(command);
 
-		return ResponseEntity.ok().build();
+		return ResponseEntity.status(HttpStatus.CREATED).build();
 	}
 }
