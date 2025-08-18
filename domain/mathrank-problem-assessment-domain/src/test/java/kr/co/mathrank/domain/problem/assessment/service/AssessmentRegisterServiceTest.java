@@ -26,6 +26,65 @@ class AssessmentRegisterServiceTest {
 	private AssessmentRegisterService assessmentRegisterService;
 
 	@Test
+	void 문제_점수는_음수일_수_없다() {
+		Assertions.assertThrows(
+			ConstraintViolationException.class,
+			() -> assessmentRegisterService.register(new AssessmentRegisterCommand(
+				1L,
+				Role.ADMIN,
+				"testName",
+				List.of(new AssessmentItemRegisterCommand(1L, -10)), // 점수가 음수
+				Duration.ofMinutes(10L)
+			))
+		);
+	}
+
+	@Test
+	void 총합이_100점이_아니면_예외() {
+		Assertions.assertThrows(
+			ConstraintViolationException.class,
+			() -> assessmentRegisterService.register(new AssessmentRegisterCommand(
+				1L,
+				Role.ADMIN,
+				"testName",
+				List.of(new AssessmentItemRegisterCommand(1L, 10)), // 총합이 10점임
+				Duration.ofMinutes(10L)
+			))
+		);
+	}
+
+	@Test
+	void 총합이_100이면_통과() {
+		Assertions.assertDoesNotThrow(
+			() -> assessmentRegisterService.register(new AssessmentRegisterCommand(
+				1L,
+				Role.ADMIN,
+				"testName",
+				List.of(
+					// 총합이 100점임
+					new AssessmentItemRegisterCommand(1L, 50),
+					new AssessmentItemRegisterCommand(1L, 50)
+				),
+				Duration.ofMinutes(10L)
+			))
+		);
+	}
+
+	@Test
+	void 문제는_반드시_하나이상이여야_한다() {
+		Assertions.assertThrows(
+			ConstraintViolationException.class,
+			() -> assessmentRegisterService.register(new AssessmentRegisterCommand(
+				1L,
+				Role.ADMIN,
+				"testName",
+				Collections.emptyList(),
+				Duration.ofMinutes(10L)
+			))
+		);
+	}
+
+	@Test
 	void 관리자가_아니면_시험지_생성_불가능하다() {
 		Assertions.assertThrows(AssessmentRegisterException.class, () -> assessmentRegisterService.register(
 			new AssessmentRegisterCommand(
