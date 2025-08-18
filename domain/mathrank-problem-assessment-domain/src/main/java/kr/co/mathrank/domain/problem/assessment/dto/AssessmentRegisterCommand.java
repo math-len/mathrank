@@ -21,7 +21,7 @@ public record AssessmentRegisterCommand(
 
 	@NotNull
 	@Size(min = 1)
-	List<Long> problemIds,
+	List<AssessmentItemRegisterCommand> assessmentItems,
 
 	@NotNull
 	@AssessmentDurationConstraint(minIncludeMinutes = 1, maxIncludeMinutes = 60 * 10)
