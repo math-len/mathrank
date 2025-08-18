@@ -8,6 +8,7 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import kr.co.mathrank.common.role.Role;
 import kr.co.mathrank.domain.problem.assessment.constraint.AssessmentDurationConstraint;
+import kr.co.mathrank.domain.problem.assessment.constraint.ScoreSum;
 
 public record AssessmentRegisterCommand(
 	@NotNull
@@ -21,6 +22,7 @@ public record AssessmentRegisterCommand(
 
 	@NotNull
 	@Size(min = 1)
+	@ScoreSum
 	List<AssessmentItemRegisterCommand> assessmentItems,
 
 	@NotNull
