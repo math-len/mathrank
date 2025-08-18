@@ -1,6 +1,7 @@
 package kr.co.mathrank.domain.problem.assessment.constraint;
 
 import java.util.List;
+import java.util.Objects;
 
 import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;
@@ -17,6 +18,7 @@ class ScoreSumConstraintValidator implements ConstraintValidator<ScoreSum, List<
 
 		final int currentSum = value.stream()
 			.map(AssessmentItemRegisterCommand::score)
+			.filter(Objects::nonNull)
 			.mapToInt(Integer::intValue)
 			.sum();
 		return currentSum == SCORE_SUM;
