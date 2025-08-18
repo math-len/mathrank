@@ -9,7 +9,6 @@ import org.hibernate.annotations.CreationTimestamp;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Convert;
-import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -37,9 +36,8 @@ public class Assessment {
 	@Convert(converter = AssessmentDurationConverter.class)
 	private Duration assessmentDuration;
 
-	@Embedded
-	@Getter(AccessLevel.NONE)
-	private AssessmentItems assessmentItems = new AssessmentItems();
+	@OneToMany(mappedBy = "assessment", orphanRemoval = true, cascade = CascadeType.PERSIST)
+	private final List<AssessmentItem> assessmentItems = new ArrayList<>();
 
 	@CreationTimestamp
 	@Setter(AccessLevel.NONE)
@@ -54,11 +52,24 @@ public class Assessment {
 		return assessment;
 	}
 
-	public void updateAssessmentItems(final List<Long> problemIds, final List<Integer> scores) {
-		this.assessmentItems.updateAssessmentItems(problemIds, scores, this);
-	}
+	/**
+	 * 주어진 문항 목록으로 현재 평가의 문항들을 <b>완전히 교체</b>합니다.
+	 * <p>
+	 * 기존에 등록된 문항은 모두 제거되며(영속성 설정에 따라 orphanRemoval 시 DB에서 삭제될 수 있음),
+	 * 전달된 목록의 <i>순서</i>를 기준으로 각 항목의 {@code sequence}를 1부터 재부여하고,
+	 * 부모 연관({@code assessment})을 현재 엔티티로 설정합니다.
+	 * </p>
+	 */
+	public void replaceItems(final List<AssessmentItem> items) {
+		this.assessmentItems.clear();
 
-	public List<AssessmentItem> getAssessmentItems() {
-		return this.assessmentItems.getAssessmentItems();
+		for (int i = 0; i < items.size(); i++) {
+			final AssessmentItem item = items.get(i);
+			final int sequence = i + 1; // 문제 번호 부여
+			item.setSequence(sequence);
+			item.setAssessment(this);
+
+			this.assessmentItems.add(item);
+		}
 	}
 }
