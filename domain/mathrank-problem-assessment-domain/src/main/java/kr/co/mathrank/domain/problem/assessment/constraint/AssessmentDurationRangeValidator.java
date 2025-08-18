@@ -5,7 +5,7 @@ import java.time.Duration;
 import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;
 
-public class AssessmentDurationRangeValidator implements ConstraintValidator<AssessmentDurationConstraint, Duration> {
+class AssessmentDurationRangeValidator implements ConstraintValidator<AssessmentDurationConstraint, Duration> {
 	private long minIncludeMinutes;
 	private long maxIncludeMinutes;
 

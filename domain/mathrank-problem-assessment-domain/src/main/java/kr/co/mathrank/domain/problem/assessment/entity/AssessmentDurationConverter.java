@@ -7,7 +7,7 @@ import jakarta.persistence.AttributeConverter;
 import jakarta.persistence.Converter;
 
 @Converter
-public class AssessmentDurationConverter implements AttributeConverter<Duration, Time> {
+class AssessmentDurationConverter implements AttributeConverter<Duration, Time> {
 	@Override
 	public Time convertToDatabaseColumn(Duration attribute) {
 		return attribute == null ? null : new Time(attribute.toMillis());

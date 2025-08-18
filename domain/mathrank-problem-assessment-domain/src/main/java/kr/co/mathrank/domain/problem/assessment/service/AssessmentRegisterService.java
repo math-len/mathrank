@@ -1,13 +1,17 @@
 package kr.co.mathrank.domain.problem.assessment.service;
 
+import java.util.List;
+
 import org.springframework.stereotype.Service;
 import org.springframework.validation.annotation.Validated;
 
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 import kr.co.mathrank.common.role.Role;
+import kr.co.mathrank.domain.problem.assessment.dto.AssessmentItemRegisterCommand;
 import kr.co.mathrank.domain.problem.assessment.dto.AssessmentRegisterCommand;
 import kr.co.mathrank.domain.problem.assessment.entity.Assessment;
+import kr.co.mathrank.domain.problem.assessment.entity.AssessmentItem;
 import kr.co.mathrank.domain.problem.assessment.exception.AssessmentRegisterException;
 import kr.co.mathrank.domain.problem.assessment.repository.AssessmentRepository;
 import lombok.RequiredArgsConstructor;
@@ -28,10 +32,17 @@ public class AssessmentRegisterService {
 		}
 		// 관리자만 문제집 등록이 가능하다
 		final Assessment assessment = Assessment.of(command.registerMemberId(), command.assessmentName(), command.minutes());
-		assessment.setAssessmentItems(command.problemIds());
+		final List<AssessmentItem> items = toItems(command.assessmentItems());
+		assessment.replaceItems(items);
 
 		assessmentRepository.save(assessment);
 		log.info("[AssessmentRegisterService.register] successfully registered assessment - assessmentId: {}, command: {}", assessment.getId(), command);
 		return assessment.getId();
+	}
+
+	private List<AssessmentItem> toItems(final List<AssessmentItemRegisterCommand> commands) {
+		return commands.stream()
+			.map(item -> AssessmentItem.of(item.problemId(), item.score()))
+			.toList();
 	}
 }

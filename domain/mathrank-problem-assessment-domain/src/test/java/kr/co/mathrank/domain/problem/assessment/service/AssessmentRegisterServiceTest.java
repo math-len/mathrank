@@ -16,6 +16,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 
 import jakarta.validation.ConstraintViolationException;
 import kr.co.mathrank.common.role.Role;
+import kr.co.mathrank.domain.problem.assessment.dto.AssessmentItemRegisterCommand;
 import kr.co.mathrank.domain.problem.assessment.dto.AssessmentRegisterCommand;
 import kr.co.mathrank.domain.problem.assessment.exception.AssessmentRegisterException;
 
@@ -25,13 +26,73 @@ class AssessmentRegisterServiceTest {
 	private AssessmentRegisterService assessmentRegisterService;
 
 	@Test
+	void 문제_점수는_음수일_수_없다() {
+		Assertions.assertThrows(
+			ConstraintViolationException.class,
+			() -> assessmentRegisterService.register(new AssessmentRegisterCommand(
+				1L,
+				Role.ADMIN,
+				"testName",
+				List.of(new AssessmentItemRegisterCommand(1L, -10)), // 점수가 음수
+				Duration.ofMinutes(10L)
+			))
+		);
+	}
+
+	@Test
+	void 총합이_100점이_아니면_예외() {
+		Assertions.assertThrows(
+			ConstraintViolationException.class,
+			() -> assessmentRegisterService.register(new AssessmentRegisterCommand(
+				1L,
+				Role.ADMIN,
+				"testName",
+				List.of(new AssessmentItemRegisterCommand(1L, 10)), // 총합이 10점임
+				Duration.ofMinutes(10L)
+			))
+		);
+	}
+
+	@Test
+	void 총합이_100이면_통과() {
+		Assertions.assertDoesNotThrow(
+			() -> assessmentRegisterService.register(new AssessmentRegisterCommand(
+				1L,
+				Role.ADMIN,
+				"testName",
+				List.of(
+					// 총합이 100점임
+					new AssessmentItemRegisterCommand(1L, 50),
+					new AssessmentItemRegisterCommand(1L, 50)
+				),
+				Duration.ofMinutes(10L)
+			))
+		);
+	}
+
+	@Test
+	void 문제는_반드시_하나이상이여야_한다() {
+		Assertions.assertThrows(
+			ConstraintViolationException.class,
+			() -> assessmentRegisterService.register(new AssessmentRegisterCommand(
+				1L,
+				Role.ADMIN,
+				"testName",
+				Collections.emptyList(),
+				Duration.ofMinutes(10L)
+			))
+		);
+	}
+
+	@Test
 	void 관리자가_아니면_시험지_생성_불가능하다() {
 		Assertions.assertThrows(AssessmentRegisterException.class, () -> assessmentRegisterService.register(
 			new AssessmentRegisterCommand(
 				1L,
 				Role.USER,
 				"새로운 수학 문제집",
-				List.of(101L, 102L, 103L),
+				List.of(new AssessmentItemRegisterCommand(101L, 33), new AssessmentItemRegisterCommand(102L, 33),
+					new AssessmentItemRegisterCommand(103L, 34)),
 				Duration.ofMinutes(100)
 			))
 		);
@@ -53,7 +114,7 @@ class AssessmentRegisterServiceTest {
 			1L,
 			Role.ADMIN,
 			"새로운 수학 문제집",
-			List.of(101L, 102L, 103L),
+			List.of(new AssessmentItemRegisterCommand(101L, 33),new AssessmentItemRegisterCommand(102L, 33), new AssessmentItemRegisterCommand(103L, 34)),
 			Duration.ofMinutes(100)
 		);
 
@@ -72,15 +133,15 @@ class AssessmentRegisterServiceTest {
 
 	private static Stream<Arguments> invalidAssessmentRegisterCommands() {
 		return Stream.of(
-			Arguments.of(new AssessmentRegisterCommand(null, Role.ADMIN, "유효한 이름", List.of(1L), Duration.ofMinutes(100))),
+			Arguments.of(new AssessmentRegisterCommand(null, Role.ADMIN, "유효한 이름", List.of(new AssessmentItemRegisterCommand(103L, 34)), Duration.ofMinutes(100))),
 			// registerMemberId is null
-			Arguments.of(new AssessmentRegisterCommand(1L, null, "유효한 이름", List.of(1L), Duration.ofMinutes(100))), // role is null
-			Arguments.of(new AssessmentRegisterCommand(1L, Role.ADMIN, null, List.of(1L), Duration.ofMinutes(100))), // assessmentName is null
-			Arguments.of(new AssessmentRegisterCommand(1L, Role.ADMIN, "", List.of(1L), Duration.ofMinutes(100))), // assessmentName is blank
-			Arguments.of(new AssessmentRegisterCommand(1L, Role.ADMIN, "  ", List.of(1L), Duration.ofMinutes(100))), // assessmentName is blank
+			Arguments.of(new AssessmentRegisterCommand(1L, null, "유효한 이름", List.of(new AssessmentItemRegisterCommand(103L, 34)), Duration.ofMinutes(100))), // role is null
+			Arguments.of(new AssessmentRegisterCommand(1L, Role.ADMIN, null, List.of(new AssessmentItemRegisterCommand(103L, 34)), Duration.ofMinutes(100))), // assessmentName is null
+			Arguments.of(new AssessmentRegisterCommand(1L, Role.ADMIN, "", List.of(new AssessmentItemRegisterCommand(103L, 34)), Duration.ofMinutes(100))), // assessmentName is blank
+			Arguments.of(new AssessmentRegisterCommand(1L, Role.ADMIN, "  ", List.of(new AssessmentItemRegisterCommand(103L, 34)), Duration.ofMinutes(100))), // assessmentName is blank
 			Arguments.of(new AssessmentRegisterCommand(1L, Role.ADMIN, "유효한 이름", null, Duration.ofMinutes(100))), // problemIds is null
 			Arguments.of(new AssessmentRegisterCommand(1L, Role.ADMIN, "유효한 이름", Collections.emptyList(), Duration.ofMinutes(100))),
-			Arguments.of(new AssessmentRegisterCommand(1L, Role.ADMIN, "유효한 이름", List.of(1L), null))
+			Arguments.of(new AssessmentRegisterCommand(1L, Role.ADMIN, "유효한 이름", List.of(new AssessmentItemRegisterCommand(103L, 34)), null))
 			// problemIds is empty
 		);
 	}

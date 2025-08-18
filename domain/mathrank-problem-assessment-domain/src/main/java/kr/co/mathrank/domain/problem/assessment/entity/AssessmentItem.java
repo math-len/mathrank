@@ -13,8 +13,8 @@ import lombok.Setter;
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
-@Setter
-class AssessmentItem {
+@Setter(AccessLevel.PACKAGE)
+public class AssessmentItem {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Setter(AccessLevel.NONE)
@@ -24,14 +24,15 @@ class AssessmentItem {
 
 	private Long problemId;
 
+	private Integer score;
+
 	@ManyToOne
 	private Assessment assessment;
 
-	public static AssessmentItem of(final Integer sequence, final Long problemId, final Assessment assessment) {
+	public static AssessmentItem of(final Long problemId, final Integer score) {
 		final AssessmentItem item = new AssessmentItem();
-		item.sequence = sequence;
 		item.problemId = problemId;
-		item.assessment = assessment;
+		item.score = score;
 
 		return item;
 	}

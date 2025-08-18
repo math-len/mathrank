@@ -27,7 +27,13 @@ class AssessmentTest {
 	void 시험지_생성시_문항들은_1번부터_순서대로_등록된다() {
 		final Assessment assessment = Assessment.of(1L, "test", Duration.ofMinutes(100L));
 		// 시험 문제 번호
-		assessment.setAssessmentItems(List.of(345L, 212L, 120232L, 1221323L));
+		assessment.replaceItems(
+			List.of(
+				AssessmentItem.of(1L, 25),
+				AssessmentItem.of(1L, 25),
+				AssessmentItem.of(1L, 25),
+				AssessmentItem.of(1L, 25))
+		);
 
 		Assertions.assertAll(
 			// 시험문제 갯수 확인
@@ -45,10 +51,18 @@ class AssessmentTest {
 	void 시험지내_문제_수정은_전체를_바꿔야한다() {
 		final Assessment assessment = Assessment.of(1L, "test", Duration.ofMinutes(100L));
 		// 바꾸기 전 시험 문제 번호
-		assessment.setAssessmentItems(List.of(345L, 212L, 120232L, 1221323L));
+		assessment.replaceItems(List.of(
+			AssessmentItem.of(1L, 25),
+			AssessmentItem.of(1L, 25),
+			AssessmentItem.of(1L, 25),
+			AssessmentItem.of(1L, 25)));
 
 		// 새로운 문제들로 변경
-		assessment.setAssessmentItems(List.of(1212L, 2222L, 3333L));
+		assessment.replaceItems(List.of(
+			AssessmentItem.of(1L, 25),
+			AssessmentItem.of(1L, 25),
+			AssessmentItem.of(1L, 25)
+		));
 
 		Assertions.assertAll(
 			// 시험문제 갯수 확인
@@ -66,7 +80,13 @@ class AssessmentTest {
 	void 트랜잭션_안에서_문항_변경시_DB_정상반영() {
 		final Assessment assessment = Assessment.of(1L, "test", Duration.ofMinutes(100L));
 		// 시험 문제 번호
-		assessment.setAssessmentItems(List.of(345L, 212L, 120232L, 1221323L));
+		assessment.replaceItems(
+			List.of(
+				AssessmentItem.of(1L, 25),
+				AssessmentItem.of(1L, 25),
+				AssessmentItem.of(1L, 25),
+				AssessmentItem.of(1L, 25))
+		);
 
 		// 새로운 엔티티DB 저장
 		assessmentRepository.save(assessment);
@@ -76,7 +96,13 @@ class AssessmentTest {
 		// 저장된 엔티티 가져와서 업데이트
 		final Long id = assessment.getId();
 		final Assessment reloadedAssessment = assessmentRepository.findById(id).orElseThrow();
-		reloadedAssessment.setAssessmentItems(List.of(1L, 2L, 3L));
+		reloadedAssessment.replaceItems(
+			List.of(
+				AssessmentItem.of(1L, 25),
+				AssessmentItem.of(2L, 25),
+				AssessmentItem.of(3L, 50)
+			)
+		);
 		entityManager.flush();
 		entityManager.clear();
 
