@@ -14,11 +14,14 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
+import kr.co.mathrank.domain.problem.assessment.exception.AssessmentSubmissionRegisterException;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 @Entity
 @Getter
 @Setter
@@ -65,7 +68,15 @@ public class Assessment {
 	 * @param answers 각 문항에 대한 답안 목록. {@code assessmentItems}의 순서와 일치해야 합니다.
 	 */
 	public void registerSubmission(final Long memberId, final List<List<String>> answers) {
+		if (this.assessmentItems.size() != answers.size()) {
+			log.info(
+				"[Assessment.registerSubmission] item count and answers count is not match - assessmentItem count: {}, answers Count: {}",
+				assessmentItems.size(), answers.size());
+			throw new AssessmentSubmissionRegisterException();
+		}
+
 		final AssessmentSubmission assessmentSubmission = AssessmentSubmission.of(this, memberId);
+
 		// sequence를 기준으로 정렬한다.
 		this.assessmentItems.sort((a, b) -> a.getSequence() - b.getSequence());
 
