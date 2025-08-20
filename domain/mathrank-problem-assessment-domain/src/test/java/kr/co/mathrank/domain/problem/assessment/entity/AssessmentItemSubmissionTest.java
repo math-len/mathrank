@@ -58,4 +58,19 @@ class AssessmentItemSubmissionTest {
 			assessment.registerSubmission(1L, answersWithWrongCount);
 		});
 	}
+
+	@Test
+	void 새로운_제출물_저장시_해당_엔티티를_반환하여_ID_조회_가능하다() {
+		// given
+		final Assessment assessment = Assessment.of(1L, "test", Duration.ofMinutes(10));
+		assessment.replaceItems(List.of(AssessmentItem.of(1L, 10)));
+		final List<List<String>> answersWithWrongCount = List.of(List.of("1"));
+
+		// 제출물
+		final AssessmentSubmission assessmentSubmission = assessment.registerSubmission(1L, answersWithWrongCount);
+
+		assessmentRepository.save(assessment);
+
+		Assertions.assertNotNull(assessmentSubmission.getId());
+	}
 }
