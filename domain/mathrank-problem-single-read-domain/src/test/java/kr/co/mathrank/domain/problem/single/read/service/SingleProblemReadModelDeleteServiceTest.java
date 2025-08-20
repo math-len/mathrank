@@ -52,7 +52,7 @@ class SingleProblemReadModelDeleteServiceTest {
 		final Long problemId = 1L;
 		final Long singleProblemId = 2L;
 		final LocalDateTime baseTime = LocalDateTime.of(2018, 1, 1, 1, 1);
-		final SingleProblemReadModel model = SingleProblemReadModel.of(singleProblemId, problemId, "img", "initialPath",
+		final SingleProblemReadModel model = SingleProblemReadModel.of(singleProblemId, problemId, "singleProblemName", "img", "initialPath",
 			null, Difficulty.MID,
 			300L, 2000L, 1000L, baseTime);
 
@@ -75,7 +75,7 @@ class SingleProblemReadModelDeleteServiceTest {
 		final Long notExistProblemId = 100L;
 
 		final LocalDateTime baseTime = LocalDateTime.of(2018, 1, 1, 1, 1);
-		final SingleProblemReadModel model = SingleProblemReadModel.of(singleProblemId, problemId, "img", "initialPath",
+		final SingleProblemReadModel model = SingleProblemReadModel.of(singleProblemId, problemId, "singleProblemName", "img", "initialPath",
 			null, Difficulty.MID,
 			300L, 2000L, 1000L, baseTime);
 
@@ -95,7 +95,7 @@ class SingleProblemReadModelDeleteServiceTest {
 		final Long problemId = 1L;
 		final Long singleProblemId = 2L;
 		final LocalDateTime baseTime = LocalDateTime.of(2018, 1, 1, 1, 1);
-		final SingleProblemReadModel model = SingleProblemReadModel.of(singleProblemId, problemId, "img", "initialPath",
+		final SingleProblemReadModel model = SingleProblemReadModel.of(singleProblemId, problemId, "singleProblemName", "img", "initialPath",
 			null, Difficulty.MID,
 			300L, 2000L, 1000L, baseTime);
 
@@ -115,7 +115,7 @@ class SingleProblemReadModelDeleteServiceTest {
 		final Long singleProblemId = 2L;
 		final Long notExistSingleProblemId = 100L;
 		final LocalDateTime baseTime = LocalDateTime.of(2018, 1, 1, 1, 1);
-		final SingleProblemReadModel model = SingleProblemReadModel.of(singleProblemId, problemId, "img", "initialPath",
+		final SingleProblemReadModel model = SingleProblemReadModel.of(singleProblemId, problemId, "singleProblemName", "img", "initialPath",
 			null, Difficulty.MID,
 			300L, 2000L, 1000L, baseTime);
 

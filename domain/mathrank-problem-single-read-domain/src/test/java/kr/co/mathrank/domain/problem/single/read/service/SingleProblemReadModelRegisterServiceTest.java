@@ -51,12 +51,12 @@ class SingleProblemReadModelRegisterServiceTest {
 		final LocalDateTime baseTime = LocalDateTime.of(2018, 1, 1, 1, 1);
 
 		singleProblemReadModelRegisterService.save(new SingleProblemReadModelRegisterCommand(
-			problemId, problemId, "img", AnswerType.SHORT_ANSWER, Difficulty.LOW, "initialPath", baseTime
+			problemId, problemId, "singleProblemName", "img", AnswerType.SHORT_ANSWER, Difficulty.LOW, "initialPath", baseTime
 		));
 
 		Assertions.assertThrows(SingleProblemReadModelAlreadyExistException.class,
 			() -> singleProblemReadModelRegisterService.save(new SingleProblemReadModelRegisterCommand(
-				problemId, problemId, "img", AnswerType.SHORT_ANSWER, Difficulty.LOW, "initialPath", baseTime
+				problemId, problemId, "singleProblemName", "img", AnswerType.SHORT_ANSWER, Difficulty.LOW, "initialPath", baseTime
 			)));
 	}
 }

@@ -22,7 +22,8 @@ public class SingleProblemReadModelRegisterService {
 
 	public void save(@NotNull @Valid final SingleProblemReadModelRegisterCommand command) {
 		final SingleProblemReadModel model = SingleProblemReadModel.of(command.singleProblemId(), command.problemId(),
-			command.problemImage(), command.coursePath(), command.answerType(), command.difficulty(), 0L, 0L, 0L,
+			command.singleProblemName(), command.problemImage(), command.coursePath(), command.answerType(),
+			command.difficulty(), 0L, 0L, 0L,
 			command.createdAt());
 
 		try {
