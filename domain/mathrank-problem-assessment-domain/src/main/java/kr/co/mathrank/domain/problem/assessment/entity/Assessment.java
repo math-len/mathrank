@@ -14,6 +14,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
+import jakarta.persistence.OrderBy;
 import kr.co.mathrank.domain.problem.assessment.exception.AssessmentSubmissionRegisterException;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -40,6 +41,7 @@ public class Assessment {
 	private Duration assessmentDuration;
 
 	@OneToMany(mappedBy = "assessment", orphanRemoval = true, cascade = CascadeType.PERSIST)
+	@OrderBy("sequence")
 	private final List<AssessmentItem> assessmentItems = new ArrayList<>();
 
 	@OneToMany(mappedBy = "assessment", orphanRemoval = true, cascade = CascadeType.PERSIST)
@@ -74,11 +76,7 @@ public class Assessment {
 				assessmentItems.size(), answers.size());
 			throw new AssessmentSubmissionRegisterException();
 		}
-
 		final AssessmentSubmission assessmentSubmission = AssessmentSubmission.of(this, memberId);
-
-		// sequence를 기준으로 정렬한다.
-		this.assessmentItems.sort((a, b) -> a.getSequence() - b.getSequence());
 
 		for (int i = 0; i < assessmentItems.size(); i ++) {
 			assessmentSubmission.addItemSubmission(assessmentItems.get(i), answers.get(i));
