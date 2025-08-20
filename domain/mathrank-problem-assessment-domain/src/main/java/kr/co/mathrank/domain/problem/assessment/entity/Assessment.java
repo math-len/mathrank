@@ -39,6 +39,9 @@ public class Assessment {
 	@OneToMany(mappedBy = "assessment", orphanRemoval = true, cascade = CascadeType.PERSIST)
 	private final List<AssessmentItem> assessmentItems = new ArrayList<>();
 
+	@OneToMany(mappedBy = "assessment", orphanRemoval = true, cascade = CascadeType.PERSIST)
+	private final List<AssessmentSubmission> assessmentSubmissions = new ArrayList<>();
+
 	@CreationTimestamp
 	@Setter(AccessLevel.NONE)
 	private LocalDateTime createdAt;
@@ -50,6 +53,27 @@ public class Assessment {
 		assessment.assessmentDuration = assessmentDuration;
 
 		return assessment;
+	}
+
+	/**
+	 * 현재 시험에 대해 사용자의 응시 기록을 생성합니다.
+	 *
+	 * <p>시험에 속한 문항들을 시퀀스 오름차순으로 정렬한 뒤,
+	 * 사용자가 제출한 답안을 매칭하여 {@link AssessmentSubmission}에 추가합니다.</p>
+	 *
+	 * @param memberId 응시자 ID
+	 * @param answers 각 문항에 대한 답안 목록. {@code assessmentItems}의 순서와 일치해야 합니다.
+	 */
+	public void registerSubmission(final Long memberId, final List<List<String>> answers) {
+		final AssessmentSubmission assessmentSubmission = AssessmentSubmission.of(this, memberId);
+		// sequence를 기준으로 정렬한다.
+		this.assessmentItems.sort((a, b) -> a.getSequence() - b.getSequence());
+
+		for (int i = 0; i < assessmentItems.size(); i ++) {
+			assessmentSubmission.addItemSubmission(assessmentItems.get(i), answers.get(i));
+		}
+
+		assessmentSubmissions.add(assessmentSubmission);
 	}
 
 	/**
