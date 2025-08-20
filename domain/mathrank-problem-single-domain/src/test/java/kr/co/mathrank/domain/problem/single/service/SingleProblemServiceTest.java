@@ -58,12 +58,12 @@ class SingleProblemServiceTest {
 			getEmptyResult()
 		);
 
-		Assertions.assertDoesNotThrow(() -> singleProblemService.register(new SingleProblemRegisterCommand(1L, 2L, Role.ADMIN)));
+		Assertions.assertDoesNotThrow(() -> singleProblemService.register(new SingleProblemRegisterCommand(1L, "test", 2L, Role.ADMIN)));
 	}
 
 	@Test
 	void 일반사용자는_개별문제_등록을_할_수_없다() {
-		Assertions.assertThrows(CannotRegisterWithThisRoleException.class, () -> singleProblemService.register(new SingleProblemRegisterCommand(1L, 2L, Role.USER)));
+		Assertions.assertThrows(CannotRegisterWithThisRoleException.class, () -> singleProblemService.register(new SingleProblemRegisterCommand(1L, "test", 2L, Role.USER)));
 	}
 
 	@Test
@@ -73,8 +73,8 @@ class SingleProblemServiceTest {
 
 		Mockito.when(problemClient.fetchProblemInfo(Mockito.any())).thenReturn(getEmptyResult());
 
-		singleProblemService.register(new SingleProblemRegisterCommand(problemId, 2L, Role.ADMIN));
-		Assertions.assertThrows(AlreadyRegisteredProblemException.class, () -> singleProblemService.register(new SingleProblemRegisterCommand(problemId, 2L, Role.ADMIN)));
+		singleProblemService.register(new SingleProblemRegisterCommand(problemId, "test", 2L, Role.ADMIN));
+		Assertions.assertThrows(AlreadyRegisteredProblemException.class, () -> singleProblemService.register(new SingleProblemRegisterCommand(problemId, "test", 2L, Role.ADMIN)));
 	}
 
 	@Test
@@ -82,9 +82,9 @@ class SingleProblemServiceTest {
 
 		Assertions.assertAll(
 			() -> Assertions.assertThrows(ConstraintViolationException.class, () -> singleProblemService.register(null)),
-			() -> Assertions.assertThrows(ConstraintViolationException.class, () -> singleProblemService.register(new SingleProblemRegisterCommand(null, 2L, Role.ADMIN))),
-			() -> Assertions.assertThrows(ConstraintViolationException.class, () -> singleProblemService.register(new SingleProblemRegisterCommand(1L, null, Role.ADMIN))),
-			() -> Assertions.assertThrows(ConstraintViolationException.class, () -> singleProblemService.register(new SingleProblemRegisterCommand(1L, 2L, null)))
+			() -> Assertions.assertThrows(ConstraintViolationException.class, () -> singleProblemService.register(new SingleProblemRegisterCommand(null, "test", 2L, Role.ADMIN))),
+			() -> Assertions.assertThrows(ConstraintViolationException.class, () -> singleProblemService.register(new SingleProblemRegisterCommand(1L, "test", null, Role.ADMIN))),
+			() -> Assertions.assertThrows(ConstraintViolationException.class, () -> singleProblemService.register(new SingleProblemRegisterCommand(1L, "test", 2L, null)))
 		);
 	}
 
