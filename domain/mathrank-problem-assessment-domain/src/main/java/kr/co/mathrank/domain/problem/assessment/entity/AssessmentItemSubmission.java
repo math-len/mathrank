@@ -43,6 +43,11 @@ public class AssessmentItemSubmission {
 	@JdbcTypeCode(SqlTypes.JSON)
 	private List<String> submittedAnswer;
 
+	@JdbcTypeCode(SqlTypes.JSON)
+	private List<String> realAnswer; // 실제 정답 기록
+
+	private Boolean correct;
+
 	static AssessmentItemSubmission of(final AssessmentSubmission submission, final AssessmentItem assessmentItem, final List<String> submittedAnswer) {
 		final AssessmentItemSubmission assessmentItemSubmission = new AssessmentItemSubmission();
 		assessmentItemSubmission.submission = submission;
@@ -50,6 +55,16 @@ public class AssessmentItemSubmission {
 		assessmentItemSubmission.submittedAnswer = submittedAnswer;
 
 		return assessmentItemSubmission;
+	}
+
+	public void grade(final boolean isMatch, final List<String> realAnswer) {
+		correct = isMatch;
+		this.realAnswer = realAnswer;
+
+		if (correct) {
+			// 문제가 정답일 때, 점수 추가
+			this.submission.addScore(assessmentItem.getScore());
+		}
 	}
 
 	/**
