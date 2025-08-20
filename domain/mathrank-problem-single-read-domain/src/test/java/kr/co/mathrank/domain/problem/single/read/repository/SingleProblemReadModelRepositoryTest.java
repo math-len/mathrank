@@ -398,4 +398,23 @@ class SingleProblemReadModelRepositoryTest {
 		);
 	}
 
+	@Test
+	void 문제이름을_조건으로_검색한다() {
+		// given
+		singleProblemReadModelRepository.saveAll(List.of(
+			SingleProblemReadModel.of(1L, 1L, "problem-A", "image", "path", null, null, 100L, 200L, 100L, LocalDateTime.now()),
+			SingleProblemReadModel.of(2L, 2L, "problem-B", "image", "path", null, null, 100L, 200L, 100L, LocalDateTime.now()),
+			SingleProblemReadModel.of(3L, 3L, "another-problem", "image", "path", null, null, 100L, 200L, 100L, LocalDateTime.now()),
+			SingleProblemReadModel.of(4L, 4L, "no", "image", "path", null, null, 100L, 200L, 100L, LocalDateTime.now())
+		));
+
+		// when
+		final SingleProblemReadModelQuery query = new SingleProblemReadModelQuery(
+			null,"problem", null, null, null, null, null, null, null, null
+		);
+		final List<SingleProblemReadModel> result = singleProblemReadModelRepository.queryPage(query, 10, 1);
+
+		// then
+		Assertions.assertEquals(3, result.size());
+	}
 }
