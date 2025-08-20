@@ -14,11 +14,15 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
+import jakarta.persistence.OrderBy;
+import kr.co.mathrank.domain.problem.assessment.exception.AssessmentSubmissionRegisterException;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 @Entity
 @Getter
 @Setter
@@ -37,7 +41,11 @@ public class Assessment {
 	private Duration assessmentDuration;
 
 	@OneToMany(mappedBy = "assessment", orphanRemoval = true, cascade = CascadeType.PERSIST)
+	@OrderBy("sequence")
 	private final List<AssessmentItem> assessmentItems = new ArrayList<>();
+
+	@OneToMany(mappedBy = "assessment", orphanRemoval = true, cascade = CascadeType.PERSIST)
+	private final List<AssessmentSubmission> assessmentSubmissions = new ArrayList<>();
 
 	@CreationTimestamp
 	@Setter(AccessLevel.NONE)
@@ -50,6 +58,31 @@ public class Assessment {
 		assessment.assessmentDuration = assessmentDuration;
 
 		return assessment;
+	}
+
+	/**
+	 * 현재 시험에 대해 사용자의 응시 기록을 생성합니다.
+	 *
+	 * <p>시험에 속한 문항들을 시퀀스 오름차순으로 정렬한 뒤,
+	 * 사용자가 제출한 답안을 매칭하여 {@link AssessmentSubmission}에 추가합니다.</p>
+	 *
+	 * @param memberId 응시자 ID
+	 * @param answers 각 문항에 대한 답안 목록. {@code assessmentItems}의 순서와 일치해야 합니다.
+	 */
+	public void registerSubmission(final Long memberId, final List<List<String>> answers) {
+		if (this.assessmentItems.size() != answers.size()) {
+			log.info(
+				"[Assessment.registerSubmission] item count and answers count is not match - assessmentItem count: {}, answers Count: {}",
+				assessmentItems.size(), answers.size());
+			throw new AssessmentSubmissionRegisterException();
+		}
+		final AssessmentSubmission assessmentSubmission = AssessmentSubmission.of(this, memberId);
+
+		for (int i = 0; i < assessmentItems.size(); i ++) {
+			assessmentSubmission.addItemSubmission(assessmentItems.get(i), answers.get(i));
+		}
+
+		assessmentSubmissions.add(assessmentSubmission);
 	}
 
 	/**
