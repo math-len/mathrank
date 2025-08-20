@@ -28,6 +28,8 @@ public class SingleProblem {
 	@Column(unique = true)
 	private Long problemId;
 
+	private String singleProblemName;
+
 	private Long memberId;
 
 	@OneToMany(mappedBy = "singleProblem", cascade = CascadeType.PERSIST, orphanRemoval = true)
@@ -57,9 +59,10 @@ public class SingleProblem {
 		totalAttemptedCount++;
 	}
 
-	public static SingleProblem of(final Long problemId, final Long memberId) {
+	public static SingleProblem of(final Long problemId, final String singleProblemName, final Long memberId) {
 		final SingleProblem problem = new SingleProblem();
 		problem.problemId = problemId;
+		problem.singleProblemName = singleProblemName;
 		problem.memberId = memberId;
 
 		return problem;

@@ -7,6 +7,7 @@ import kr.co.mathrank.domain.problem.single.read.entity.SingleProblemReadModel;
 public record SingleProblemReadModelResult(
 	Long id, // single problem id
 	Long problemId, // problem id
+	String singleProblemName,
 	String problemImage,
 	String coursePath,
 	AnswerType answerType,
@@ -20,6 +21,7 @@ public record SingleProblemReadModelResult(
 		return new SingleProblemReadModelResult(
 			model.getId(),
 			model.getProblemId(),
+			model.getSingleProblemName(),
 			model.getProblemImage(),
 			model.getCoursePath(),
 			model.getAnswerType(),

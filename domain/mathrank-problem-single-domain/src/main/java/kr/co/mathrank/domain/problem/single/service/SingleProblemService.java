@@ -44,7 +44,7 @@ public class SingleProblemService {
 
 		// 존재하는 problem인지 확인한다.
 		final ProblemQueryResult result = problemInfoManager.fetch(command.problemId());
-		final SingleProblem singleProblem = SingleProblem.of(command.problemId(), command.memberId());
+		final SingleProblem singleProblem = SingleProblem.of(command.problemId(), command.singleProblemName(), command.memberId());
 
 		try {
 			singleProblemRegisterManager.register(singleProblem, result);

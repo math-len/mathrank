@@ -64,7 +64,7 @@ class SingleProblemUpdateServiceTest {
 		final LocalDateTime beforeTime = LocalDateTime.now();
 		final LocalDateTime updatedTime = beforeTime.plusDays(1L);
 
-		final SingleProblemReadModel model = SingleProblemReadModel.of(problemId, problemId, "img", beforePath, null, Difficulty.MID,
+		final SingleProblemReadModel model = SingleProblemReadModel.of(problemId, problemId, "singleProblemName", "img", beforePath, null, Difficulty.MID,
 			300L, 2000L, 1000L, beforeTime);
 
 		singleProblemReadModelRepository.save(model);
@@ -97,7 +97,7 @@ class SingleProblemUpdateServiceTest {
 		final LocalDateTime outdatedTime = latestTime.minusDays(1L);
 
 		final SingleProblemReadModel model = SingleProblemReadModel.of(
-			problemId, problemId, "img", initialPath, AnswerType.SHORT_ANSWER, Difficulty.LOW,
+			problemId, problemId, "singleProblemName", "img", initialPath, AnswerType.SHORT_ANSWER, Difficulty.LOW,
 			300L, 2000L, 1000L, latestTime
 		);
 		singleProblemReadModelRepository.save(model);
@@ -130,7 +130,7 @@ class SingleProblemUpdateServiceTest {
 		final LocalDateTime time = LocalDateTime.of(2020, 1, 1, 0, 0);
 
 		final SingleProblemReadModel model = SingleProblemReadModel.of(
-			problemId, problemId, "img", beforePath, AnswerType.MULTIPLE_CHOICE, Difficulty.MID,
+			problemId, problemId, "singleProblemName", "img", beforePath, AnswerType.MULTIPLE_CHOICE, Difficulty.MID,
 			300L, 2000L, 1000L, time
 		);
 		singleProblemReadModelRepository.save(model);
@@ -160,7 +160,7 @@ class SingleProblemUpdateServiceTest {
 		final long problemId = 10L;
 		final LocalDateTime time = LocalDateTime.of(2020, 1, 1, 0, 0);
 		final SingleProblemReadModel model = SingleProblemReadModel.of(
-			problemId, problemId, "img", "coursePath", AnswerType.SHORT_ANSWER, Difficulty.LOW,
+			problemId, problemId, "singleProblemName", "img", "coursePath", AnswerType.SHORT_ANSWER, Difficulty.LOW,
 			1L, 5L, 10L, time
 		);
 		singleProblemReadModelRepository.save(model);
@@ -190,7 +190,7 @@ class SingleProblemUpdateServiceTest {
 		final long problemId = 11L;
 		final LocalDateTime time = LocalDateTime.of(2020, 1, 1, 0, 0);
 		final SingleProblemReadModel model = SingleProblemReadModel.of(
-			problemId, problemId, "img", "coursePath", AnswerType.SHORT_ANSWER, Difficulty.LOW,
+			problemId, problemId, "singleProblemName", "img", "coursePath", AnswerType.SHORT_ANSWER, Difficulty.LOW,
 			3L, 6L, 10L, time
 		);
 		singleProblemReadModelRepository.save(model);
@@ -234,7 +234,7 @@ class SingleProblemUpdateServiceTest {
 		final LocalDateTime baseTime = LocalDateTime.of(2020, 1, 1, 0, 0);
 
 		final SingleProblemReadModel model = SingleProblemReadModel.of(
-			problemId, problemId, "img", "initialPath", AnswerType.SHORT_ANSWER, Difficulty.LOW,
+			problemId, problemId, "singleProblemName", "img", "initialPath", AnswerType.SHORT_ANSWER, Difficulty.LOW,
 			0L, 0L, 0L, baseTime
 		);
 		singleProblemReadModelRepository.save(model);

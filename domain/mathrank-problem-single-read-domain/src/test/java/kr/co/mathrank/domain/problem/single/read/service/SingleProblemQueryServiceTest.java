@@ -54,7 +54,7 @@ class SingleProblemQueryServiceTest {
 
 	@Test
 	void 오프셋이_20_000초과로_조회할_수_없다() {
-		final SingleProblemReadModelQuery query = new SingleProblemReadModelQuery(null, "math", null, Difficulty.MID, Difficulty.MID, 10, 30, null, null);
+		final SingleProblemReadModelQuery query = new SingleProblemReadModelQuery(null, "singleProblemName", "math", null, Difficulty.MID, Difficulty.MID, 10, 30, null, null);
 
 		Assertions.assertThrows(ConstraintViolationException.class, () -> queryService.queryPage(query, 20, 1001));
 		Assertions.assertThrows(ConstraintViolationException.class, () -> queryService.queryPage(query, 21, 1000));
@@ -65,15 +65,16 @@ class SingleProblemQueryServiceTest {
 		// Given
 		repository.saveAll(List.of(
 			// 정답률 30
-			SingleProblemReadModel.of(1L, 1L, "img", "math", null, Difficulty.MID, 300L, 2000L, 1000L, LocalDateTime.now()),
+			SingleProblemReadModel.of(1L, 1L, "singleProblemName","img", "math", null, Difficulty.MID, 300L, 2000L, 1000L, LocalDateTime.now()),
 			// 정답률 10
-			SingleProblemReadModel.of(2L, 2L, "img", "math", null, Difficulty.MID, 100L, 2000L, 1000L, LocalDateTime.now()),
+			SingleProblemReadModel.of(2L, 2L, "singleProblemName","img", "math", null, Difficulty.MID, 100L, 2000L, 1000L, LocalDateTime.now()),
 			// 정답률 20
-			SingleProblemReadModel.of(3L, 3L, "img", "math", null, Difficulty.MID, 200L, 2000L, 1000L, LocalDateTime.now())
+			SingleProblemReadModel.of(3L, 3L, "singleProblemName","img", "math", null, Difficulty.MID, 200L, 2000L, 1000L, LocalDateTime.now())
 		));
 
 		final SingleProblemReadModelQuery query = new SingleProblemReadModelQuery(
 			null,
+			"singleProblemName",
 			"math",
 			null,
 			Difficulty.MID,

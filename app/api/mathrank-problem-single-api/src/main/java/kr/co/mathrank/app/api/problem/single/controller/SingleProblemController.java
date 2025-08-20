@@ -4,7 +4,6 @@ import org.springdoc.core.annotations.ParameterObject;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import io.swagger.v3.oas.annotations.Operation;
@@ -42,11 +41,12 @@ public class SingleProblemController {
 	@PostMapping("/api/v1/problem/single")
 	@Authorization(values = Role.ADMIN)
 	public ResponseEntity<Void> registerProblem(
-		@RequestParam final Long problemId,
+		@ModelAttribute @ParameterObject @Valid final SingleProblemRegisterRequest request,
 		@LoginInfo final MemberPrincipal memberPrincipal
 	) {
-		singleProblemService.register(
-			new SingleProblemRegisterCommand(problemId, memberPrincipal.memberId(), memberPrincipal.role()));
+		final SingleProblemRegisterCommand command = request.toCommand(memberPrincipal.memberId(),
+			memberPrincipal.role());
+		singleProblemService.register(command);
 		return ResponseEntity.ok().build();
 	}
 }

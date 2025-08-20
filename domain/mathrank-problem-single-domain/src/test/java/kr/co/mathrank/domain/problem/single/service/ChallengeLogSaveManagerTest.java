@@ -51,7 +51,7 @@ class ChallengeLogSaveManagerTest {
 
 	@Test
 	void 문제풀이_시도_기록은_모두_저장된다() throws InterruptedException {
-		final Long singleProblemId = singleProblemRepository.save(SingleProblem.of(1L, 2L)).getId();
+		final Long singleProblemId = singleProblemRepository.save(SingleProblem.of(1L, "test", 2L)).getId();
 
 		final int tryCount = 100;
 
@@ -80,7 +80,7 @@ class ChallengeLogSaveManagerTest {
 
 	@Test
 	void 사용자별로_문제풀이_시도횟수를_증가시킨다() throws InterruptedException {
-		final Long singleProblemId = singleProblemRepository.save(SingleProblem.of(1L, 2L)).getId();
+		final Long singleProblemId = singleProblemRepository.save(SingleProblem.of(1L, "test", 2L)).getId();
 
 		final int tryCount = 10;
 
@@ -115,7 +115,7 @@ class ChallengeLogSaveManagerTest {
 
 	@Test
 	void 같은_사용자의_시도에도_총_시도횟수는_증가한다() throws InterruptedException {
-		final Long singleProblemId = singleProblemRepository.save(SingleProblem.of(1L, 2L)).getId();
+		final Long singleProblemId = singleProblemRepository.save(SingleProblem.of(1L, "test", 2L)).getId();
 
 		// 로그는 총 1000개 쌓여야한다.
 		final int tryCount = 10;
@@ -148,7 +148,7 @@ class ChallengeLogSaveManagerTest {
 
 	@Test
 	void 첫_시도에_실패하면_이후의_시도에도_카운트되지_않는다() throws InterruptedException {
-		final Long singleProblemId = singleProblemRepository.save(SingleProblem.of(1L, 2L)).getId();
+		final Long singleProblemId = singleProblemRepository.save(SingleProblem.of(1L, "test", 2L)).getId();
 
 		// 로그는 총 1000개 쌓여야한다.
 		final int tryCount = 10;
@@ -186,7 +186,7 @@ class ChallengeLogSaveManagerTest {
 
 	@Test
 	void 같은_사용자의_첫시도_문제_풀이_성공_기록은_한번만_적용되야한다() throws InterruptedException {
-		final Long singleProblemId = singleProblemRepository.save(SingleProblem.of(1L, 2L)).getId();
+		final Long singleProblemId = singleProblemRepository.save(SingleProblem.of(1L, "test", 2L)).getId();
 		final Long userId = 1L;
 
 		final int tryCount = 10;
@@ -216,7 +216,7 @@ class ChallengeLogSaveManagerTest {
 
 	@Test
 	void 외부_트랜잭션을_사용할때_mvcc_스냅샷_문제로_중복성공이_기록되지_않아야한다() throws InterruptedException {
-		final Long singleProblemId = singleProblemRepository.save(SingleProblem.of(1L, 2L)).getId();
+		final Long singleProblemId = singleProblemRepository.save(SingleProblem.of(1L, "test", 2L)).getId();
 
 		final Long userId = 1L;
 

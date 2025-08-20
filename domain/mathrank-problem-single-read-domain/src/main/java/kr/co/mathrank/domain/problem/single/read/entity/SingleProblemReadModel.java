@@ -47,6 +47,8 @@ public class SingleProblemReadModel implements Persistable<Long> {
 	@Setter(AccessLevel.PRIVATE)
 	private Long problemId; // problem id
 
+	private String singleProblemName;
+
 	private String problemImage;
 
 	private String coursePath;
@@ -78,6 +80,7 @@ public class SingleProblemReadModel implements Persistable<Long> {
 	public static SingleProblemReadModel of(
 		final Long singleProblemId,
 		final Long problemId,
+		final String singleProblemName,
 		final String problemImage,
 		final String coursePath,
 		final AnswerType answerType,
@@ -90,6 +93,7 @@ public class SingleProblemReadModel implements Persistable<Long> {
 		final SingleProblemReadModel model = new SingleProblemReadModel();
 		model.setId(singleProblemId);
 		model.setProblemImage(problemImage);
+		model.setSingleProblemName(singleProblemName);
 		model.setProblemId(problemId);
 		model.setCoursePath(coursePath);
 		model.setAnswerType(answerType);
