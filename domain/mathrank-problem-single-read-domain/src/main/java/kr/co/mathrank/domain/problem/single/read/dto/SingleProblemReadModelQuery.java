@@ -6,6 +6,8 @@ import kr.co.mathrank.domain.problem.core.Difficulty;
 public record SingleProblemReadModelQuery(
 	Long singleProblemId,
 
+	String singleProblemName,
+
 	String coursePath,
 
 	AnswerType answerType,
