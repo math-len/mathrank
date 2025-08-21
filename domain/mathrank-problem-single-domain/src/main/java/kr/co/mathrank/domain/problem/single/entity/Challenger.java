@@ -18,8 +18,8 @@ import lombok.Getter;
 @Entity
 @Table(
 	uniqueConstraints = @UniqueConstraint(
-		name = "idx_memberId_singleProblemId",
-		columnNames = {"member_id", "single_problem_id"}
+		name = "idx_memberId_successAtFirstTry_singleProblemId",
+		columnNames = {"member_id", "success_at_first_try", "single_problem_id"}
 	)
 )
 @Getter
