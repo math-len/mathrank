@@ -16,7 +16,7 @@ import lombok.NoArgsConstructor;
 @Table(
 	uniqueConstraints = @UniqueConstraint(
 		name = "unique_memberId_singleProblemId",
-		columnNames = {"member_id", "id"}
+		columnNames = {"member_id", "single_problem_read_model_id"}
 	)
 )
 @Getter
