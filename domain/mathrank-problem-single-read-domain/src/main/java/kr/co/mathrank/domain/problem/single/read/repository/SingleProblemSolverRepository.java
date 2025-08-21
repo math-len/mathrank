@@ -12,7 +12,7 @@ import kr.co.mathrank.domain.problem.single.read.entity.SingleProblemSolver;
 
 public interface SingleProblemSolverRepository extends JpaRepository<SingleProblemSolver, Long> {
 	@Lock(LockModeType.PESSIMISTIC_READ)
-	@Query("SELECT sps FROM SingleProblemSolver sps WHERE sps.id = :singleProblemId AND sps.memberId = :memberId")
+	@Query("SELECT sps FROM SingleProblemSolver sps WHERE sps.singleProblemReadModel.id = :singleProblemId AND sps.memberId = :memberId")
 	Optional<SingleProblemSolver> findSolverForShare(@Param("memberId") Long memberId,
 		@Param("singleProblemId") Long singleProblemId);
 }
