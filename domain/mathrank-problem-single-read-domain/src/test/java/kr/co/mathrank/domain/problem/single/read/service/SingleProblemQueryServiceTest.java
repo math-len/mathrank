@@ -3,6 +3,7 @@ package kr.co.mathrank.domain.problem.single.read.service;
 import static org.junit.jupiter.api.Assertions.*;
 
 import java.time.LocalDateTime;
+import java.util.Comparator;
 import java.util.List;
 
 import org.junit.jupiter.api.AfterEach;
@@ -94,14 +95,15 @@ class SingleProblemQueryServiceTest {
 		final List<SingleProblemReadModelResult> results = result.queryResults();
 
 		// 1번 문제부터 정렬
-		results.stream()
-			.sorted((a, b) -> a.problemId().compareTo(b.problemId()));
+		final List<SingleProblemReadModelResult> sorted = results.stream()
+			.sorted(Comparator.comparing(SingleProblemReadModelResult::problemId))
+			.toList();
 
 		Assertions.assertAll(
-			() -> Assertions.assertEquals(3, results.size()),
-			() -> Assertions.assertTrue(results.get(0).successAtFirstTry()),
-			() -> Assertions.assertFalse(results.get(1).successAtFirstTry()),
-			() -> Assertions.assertNull(results.get(2).successAtFirstTry())
+			() -> Assertions.assertEquals(3, sorted.size()),
+			() -> Assertions.assertTrue(sorted.get(0).successAtFirstTry()),
+			() -> Assertions.assertFalse(sorted.get(1).successAtFirstTry()),
+			() -> Assertions.assertNull(sorted.get(2).successAtFirstTry())
 		);
 	}
 
