@@ -57,8 +57,8 @@ class SingleProblemReadModelQueryRepositoryImpl implements SingleProblemReadMode
 
 	private OrderSpecifier<?> orderSpecifier(OrderDirection direction, OrderColumn orderColumn) {
 		final Order order = switch (direction) {
-			case OrderDirection.ASC -> Order.ASC;
-			case OrderDirection.DESC -> Order.DESC;
+			case ASC -> Order.ASC;
+			case DESC -> Order.DESC;
 			case null -> Order.DESC;
 		};
 
