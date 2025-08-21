@@ -1,6 +1,7 @@
 package kr.co.mathrank.domain.problem.single.service;
 
 import java.util.Collections;
+import java.util.List;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -18,8 +19,10 @@ import org.testcontainers.containers.MySQLContainer;
 import org.testcontainers.junit.jupiter.Container;
 
 import kr.co.mathrank.client.internal.problem.SolveResult;
+import kr.co.mathrank.domain.problem.single.entity.ChallengeLog;
+import kr.co.mathrank.domain.problem.single.entity.Challenger;
 import kr.co.mathrank.domain.problem.single.entity.SingleProblem;
-import kr.co.mathrank.domain.problem.single.repository.ChallengeLogRepository;
+import kr.co.mathrank.domain.problem.single.repository.ChallengerRepository;
 import kr.co.mathrank.domain.problem.single.repository.SingleProblemRepository;
 import lombok.RequiredArgsConstructor;
 
@@ -30,8 +33,6 @@ class ChallengeLogSaveManagerTest {
 	@Autowired
 	private SingleProblemRepository singleProblemRepository;
 	@Autowired
-	private ChallengeLogRepository challengeLogRepository;
-	@Autowired
 	private SaveLogBulkService saveLogBulkService;
 
 	@Container
@@ -39,7 +40,8 @@ class ChallengeLogSaveManagerTest {
 		.withDatabaseName("testdb")
 		.withUsername("user")
 		.withPassword("password");
-
+	@Autowired
+	private ChallengerRepository challengerRepository;
 
 	@DynamicPropertySource
 	static void setProperties(DynamicPropertyRegistry registry) {
@@ -74,8 +76,11 @@ class ChallengeLogSaveManagerTest {
 		countDownLatch.await();
 		executorService.shutdown();
 
+		final SingleProblem target = singleProblemRepository.findById(singleProblemId)
+			.orElseThrow();
+
 		// 문제풀이 기록은 모두 기록되야 한다.
-		Assertions.assertEquals(tryCount, challengeLogRepository.findAllBySingleProblemId(singleProblemId).size());
+		Assertions.assertEquals(tryCount, target.getTotalAttemptedCount());
 	}
 
 	@Test
@@ -249,7 +254,7 @@ class ChallengeLogSaveManagerTest {
 
 	@AfterEach
 	void clear() {
-		challengeLogRepository.deleteAll();
+		challengerRepository.deleteAll();
 		singleProblemRepository.deleteAll();
 	}
 }
@@ -261,12 +266,12 @@ class ChallengeLogSaveManagerTest {
 @RequiredArgsConstructor
 class SaveLogBulkService {
 	private final ChallengeLogSaveManager challengeLogSaveManager;
-	private final ChallengeLogRepository challengeLogRepository;
+	private final ChallengerRepository challengerRepository;
 
 	@Transactional
 	public void runSave(Long singleProblemId, Long userId) {
 		// mvcc 스냅샷 생성
-		challengeLogRepository.findAll();
+		challengerRepository.findAll();
 
 		challengeLogSaveManager.saveLog(singleProblemId, userId,
 			new SolveResult(true, Collections.emptySet(), Collections.emptyList()));

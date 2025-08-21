@@ -1,12 +1,19 @@
 package kr.co.mathrank.domain.problem.single.entity;
 
+import java.sql.JDBCType;
 import java.time.LocalDateTime;
+import java.util.List;
 
 import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.JdbcType;
+import org.hibernate.annotations.JdbcTypeCode;
+import org.hibernate.type.SqlTypes;
 import org.springframework.data.domain.Persistable;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Index;
 import jakarta.persistence.ManyToOne;
@@ -23,12 +30,11 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class ChallengeLog implements Persistable<Long> {
 	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	private SingleProblem singleProblem;
-
-	private Long memberId;
+	private Challenger challenger;
 
 	private Boolean success;
 
@@ -36,28 +42,21 @@ public class ChallengeLog implements Persistable<Long> {
 
 	private String correctAnswer;
 
-	private LocalDateTime challengeAt;
-
 	@CreationTimestamp
-	private LocalDateTime createdAt;
+	private LocalDateTime challengedAt;
 
-	public static ChallengeLog of(final Long id, final SingleProblem singleProblem, final Long memberId,
-		final Boolean success, final String submittedAnswer, final String correctAnswer,
-		final LocalDateTime challengeAt) {
+	static ChallengeLog of(final Challenger challenger, final boolean success, final String submittedAnswer, final String correctAnswer) {
 		final ChallengeLog challengeLog = new ChallengeLog();
-		challengeLog.id = id;
-		challengeLog.singleProblem = singleProblem;
-		challengeLog.memberId = memberId;
-		challengeLog.success = success;
+		challengeLog.challenger = challenger;
 		challengeLog.submittedAnswer = submittedAnswer;
 		challengeLog.correctAnswer = correctAnswer;
-		challengeLog.challengeAt = challengeAt;
+		challengeLog.success = success;
 
 		return challengeLog;
 	}
 
 	@Override
 	public boolean isNew() {
-		return createdAt == null;
+		return challengedAt == null;
 	}
 }

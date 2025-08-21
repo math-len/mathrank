@@ -33,7 +33,7 @@ public class SingleProblem {
 	private Long memberId;
 
 	@OneToMany(mappedBy = "singleProblem", cascade = CascadeType.PERSIST, orphanRemoval = true)
-	private final List<ChallengeLog> challengeLogs = new ArrayList<>();
+	private final List<Challenger> challengers = new ArrayList<>();
 
 	private Long firstTrySuccessCount = 0L; // 첫번째 시도에서 성공한 횟수
 

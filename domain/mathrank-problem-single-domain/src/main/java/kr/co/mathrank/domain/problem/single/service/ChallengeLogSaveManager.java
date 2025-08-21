@@ -1,7 +1,5 @@
 package kr.co.mathrank.domain.problem.single.service;
 
-import java.time.LocalDateTime;
-
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -9,11 +7,11 @@ import kr.co.mathrank.client.internal.problem.SolveResult;
 import kr.co.mathrank.common.dataserializer.DataSerializer;
 import kr.co.mathrank.common.event.EventPayload;
 import kr.co.mathrank.common.outbox.TransactionalOutboxPublisher;
-import kr.co.mathrank.common.snowflake.Snowflake;
 import kr.co.mathrank.domain.problem.single.entity.ChallengeLog;
+import kr.co.mathrank.domain.problem.single.entity.Challenger;
 import kr.co.mathrank.domain.problem.single.entity.SingleProblem;
 import kr.co.mathrank.domain.problem.single.exception.CannotFindSingleProblemException;
-import kr.co.mathrank.domain.problem.single.repository.ChallengeLogRepository;
+import kr.co.mathrank.domain.problem.single.repository.ChallengerRepository;
 import kr.co.mathrank.domain.problem.single.repository.SingleProblemRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -22,51 +20,48 @@ import lombok.extern.slf4j.Slf4j;
 @Component
 @RequiredArgsConstructor
 class ChallengeLogSaveManager {
-	private final Snowflake snowflake;
 	private final SingleProblemRepository singleProblemRepository;
-	private final ChallengeLogRepository challengeLogRepository;
+	private final ChallengerRepository challengerRepository;
 	private final TransactionalOutboxPublisher outboxPublisher;
 
 	@Transactional
 	public void saveLog(final Long singleProblemId, final Long memberId, final SolveResult solveResult) {
-		// 사용자 풀이 횟수 락걸기
+		// 락걸기
 		final SingleProblem singleProblem = singleProblemRepository.findByIdForUpdate(singleProblemId)
 			.orElseThrow(CannotFindSingleProblemException::new);
 
-		// s-lock으로 조회
-		// single Problem의 challenge log가 수만개까지 쌓일 수 있음으로, DB 인덱스를 통해 조회하도록 한다.
-		// memberId, singleProblemId 를 통한 쿼리 결과는 max 100개 정도로 예상됨
-		final Boolean alreadyTried = !challengeLogRepository.findAllBySingleProblemIdAndChallengerMemberIdForShare(singleProblemId, memberId).isEmpty();
+		// 최신 커밋 읽기
+		challengerRepository.findByMemberIdAndSingleProblemIdForShare(memberId, singleProblemId)
+			.ifPresentOrElse(
+				challenger -> {
+					// 이미 해당 사용자가 푼 적 있음
+					singleProblem.increaseAttemptCount();
 
-		// 해당 사용자의 풀이 기록이 없을떄 성공 카운트를 증가한다.
-		if (alreadyTried) {
-			singleProblem.increaseAttemptCount();
-		} else {
-			singleProblem.firstTry(solveResult.success());
-		}
+					final ChallengeLog challengeLog = challenger.addChallengeLog(solveResult.success(), DataSerializer.serialize(solveResult.submittedAnswer()).orElse("null"), DataSerializer.serialize(solveResult.realAnswer().stream()
+						.toList()).orElse("null"));
+					publishChallengeLog(challengeLog, singleProblem, challenger); // 이벤트 발행
+				},
+				() -> {
+					// 사용자가 처음 품
+					singleProblem.firstTry(solveResult.success());
+					final Challenger challenger = Challenger.of(memberId, singleProblem);
 
-		final ChallengeLog challengeLog = ChallengeLog.of(
-			snowflake.nextId(),
-			singleProblem,
-			memberId,
-			solveResult.success(),
-			DataSerializer.serialize(solveResult.submittedAnswer()).orElse("null"),
-			DataSerializer.serialize(solveResult.realAnswer()).orElse("null"),
-			LocalDateTime.now());
-		challengeLogRepository.save(challengeLog);
+					final ChallengeLog challengeLog = challenger.addChallengeLog(solveResult.success(), DataSerializer.serialize(solveResult.submittedAnswer()).orElse("null"), DataSerializer.serialize(solveResult.realAnswer().stream()
+						.toList()).orElse("null"));
+					publishChallengeLog(challengeLog, singleProblem, challenger); // 이벤트 발행
 
-		// 이벤트 발행
-		publishChallengeLog(challengeLog, singleProblem);
+					challengerRepository.save(challenger);
+				});
 
 		log.info("[SingleProblemService.solve] solve log registered - singleProblemId: {}, memberId: {}, success: {}",
 			singleProblem.getId(), memberId, solveResult.success());
 	}
 
-	private void publishChallengeLog(final ChallengeLog challengeLog, final SingleProblem singleProblem) {
+	private void publishChallengeLog(final ChallengeLog challengeLog, final SingleProblem singleProblem, final Challenger challenger) {
 		outboxPublisher.publish("single-problem-solved", new SingleProblemSolvedEventPayload(
 			singleProblem.getId(),
 			singleProblem.getProblemId(),
-			challengeLog.getMemberId(),
+			challenger.getMemberId(),
 			challengeLog.getSuccess(),
 			singleProblem.getFirstTrySuccessCount(),
 			singleProblem.getTotalAttemptedCount(),
