@@ -6,6 +6,7 @@ import kr.co.mathrank.domain.problem.single.read.entity.SingleProblemReadModel;
 
 public record SingleProblemReadModelResult(
 	Long id, // single problem id
+	Boolean successAtFirstTry, // null: 푼적 없음, true: 성공해썽, false: 실패해썽
 	Long problemId, // problem id
 	String singleProblemName,
 	String problemImage,
@@ -17,9 +18,10 @@ public record SingleProblemReadModelResult(
 	Long attemptedUserDistinctCount, // 해당 문제를 풀려고 한 사용자 수
 	Double accuracy // 정답률
 ) {
-	public static SingleProblemReadModelResult from(final SingleProblemReadModel model) {
+	public static SingleProblemReadModelResult from(final SingleProblemReadModel model, final Long requestMemberId) {
 		return new SingleProblemReadModelResult(
 			model.getId(),
+			model.getSolvedStatus(requestMemberId),
 			model.getProblemId(),
 			model.getSingleProblemName(),
 			model.getProblemImage(),

@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.hibernate.validator.constraints.Range;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.annotation.Validated;
 
 import jakarta.validation.Valid;
@@ -22,8 +23,10 @@ import lombok.RequiredArgsConstructor;
 public class SingleProblemQueryService {
 	private final SingleProblemReadModelRepository singleProblemRepository;
 
+	@Transactional
 	public SingleProblemReadModelPageResult queryPage(
 		@NotNull @Valid final SingleProblemReadModelQuery query,
+		@NotNull final Long memberId,
 		@NotNull @Range(min = 1, max = 20) final Integer pageSize,
 		@NotNull @Range(max = 1000) final Integer pageNumber // 페이지 번호 (1부터 시작). 내부 offset 계산 시 사용됨: offset = (pageNumber - 1) * pageSize
 	) {
@@ -32,7 +35,7 @@ public class SingleProblemQueryService {
 
 		return new SingleProblemReadModelPageResult(
 			readModels.stream()
-				.map(SingleProblemReadModelResult::from)
+				.map(model -> SingleProblemReadModelResult.from(model, memberId))
 				.toList(),
 			pageNumber,
 			pageSize,

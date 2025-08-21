@@ -3,11 +3,13 @@ package kr.co.mathrank.domain.problem.single.read.entity;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.time.LocalDateTime;
+import java.util.HashSet;
 import java.util.Set;
 
 import org.hibernate.annotations.BatchSize;
 import org.springframework.data.domain.Persistable;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Convert;
 import jakarta.persistence.Entity;
@@ -81,8 +83,8 @@ public class SingleProblemReadModel implements Persistable<Long> {
 	private LocalDateTime createdAt; // singleProblem이 등록된 시점
 
 	@BatchSize(size = 100)
-	@OneToMany(mappedBy = "singleProblemReadModel")
-	private Set<SingleProblemSolver> solvers;
+	@OneToMany(mappedBy = "singleProblemReadModel", cascade = CascadeType.REMOVE)
+	private Set<SingleProblemSolver> solvers = new HashSet<>();
 
 	public static SingleProblemReadModel of(
 		final Long singleProblemId,
@@ -113,6 +115,14 @@ public class SingleProblemReadModel implements Persistable<Long> {
 		model.isNew = true;
 
 		return model;
+	}
+
+	public Boolean getSolvedStatus(final Long memberId) {
+		return this.getSolvers().stream()
+			.filter(singleProblemSolver -> singleProblemSolver.getMemberId().equals(memberId))
+			.map(SingleProblemSolver::isSuccess)
+			.findAny()
+			.orElse(null); // 푼 적이 없어용!
 	}
 
 	@PrePersist
