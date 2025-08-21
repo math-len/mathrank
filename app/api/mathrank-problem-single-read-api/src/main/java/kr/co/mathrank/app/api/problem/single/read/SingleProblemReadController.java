@@ -32,8 +32,8 @@ public class SingleProblemReadController {
 	public ResponseEntity<SingleProblemReadModelPageResult> getSingleProblems(
 		@LoginInfo final MemberPrincipal memberPrincipal,
 		@ModelAttribute @ParameterObject final SingleProblemQueryRequest query,
-		@RequestParam final OrderColumn orderColumn,
-		@RequestParam final OrderDirection direction,
+		@RequestParam(required = false) final OrderColumn orderColumn,
+		@RequestParam(required = false) final OrderDirection direction,
 		@Range(min = 1, max = 1000) @RequestParam(defaultValue = "1") final Integer pageNumber,
 		@Range(min = 1, max = 20) @RequestParam(defaultValue = "1") final Integer pageSize
 	) {
