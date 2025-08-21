@@ -3,7 +3,9 @@ package kr.co.mathrank.domain.problem.single.read.entity;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import org.hibernate.annotations.BatchSize;
@@ -84,7 +86,7 @@ public class SingleProblemReadModel implements Persistable<Long> {
 
 	@BatchSize(size = 100)
 	@OneToMany(mappedBy = "singleProblemReadModel", cascade = CascadeType.REMOVE)
-	private Set<SingleProblemSolver> solvers = new HashSet<>();
+	private final List<SingleProblemSolver> solvers = new ArrayList<>();
 
 	public static SingleProblemReadModel of(
 		final Long singleProblemId,
