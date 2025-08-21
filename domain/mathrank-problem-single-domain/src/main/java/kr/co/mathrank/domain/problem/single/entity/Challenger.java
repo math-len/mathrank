@@ -9,6 +9,7 @@ import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.Index;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
@@ -18,8 +19,12 @@ import lombok.Getter;
 @Entity
 @Table(
 	uniqueConstraints = @UniqueConstraint(
-		name = "idx_memberId_singleProblemId",
+		name = "unique_memberId_singleProblemId",
 		columnNames = {"member_id", "single_problem_id"}
+	),
+	indexes = @Index(
+		name = "idx_memberId_singleProblemId_successAtFirstTry",
+		columnList = "member_id, single_problem_id, success_at_first_try"
 	)
 )
 @Getter
