@@ -43,25 +43,25 @@ class ChallengeLogSaveManager {
 				challenger -> {
 					// 이미 해당 사용자가 푼 적 있음
 					singleProblem.increaseAttemptCount();
-
-					final ChallengeLog challengeLog = challenger.addChallengeLog(solveResult.success(), solveResult.submittedAnswer(), solveResult.realAnswer().stream()
-						.toList());
-					publishChallengeLog(challengeLog, singleProblem, challenger); // 이벤트 발행
+					addChallengeLog(solveResult, challenger, singleProblem);
 				},
 				() -> {
 					// 사용자가 처음 품
 					singleProblem.firstTry(solveResult.success());
 					final Challenger challenger = Challenger.of(memberId, singleProblem);
-
-					final ChallengeLog challengeLog = challenger.addChallengeLog(solveResult.success(), solveResult.submittedAnswer(), solveResult.realAnswer().stream()
-						.toList());
-					publishChallengeLog(challengeLog, singleProblem, challenger); // 이벤트 발행
+					addChallengeLog(solveResult, challenger, singleProblem);
 
 					challengerRepository.save(challenger);
 				});
 
 		log.info("[SingleProblemService.solve] solve log registered - singleProblemId: {}, memberId: {}, success: {}",
 			singleProblem.getId(), memberId, solveResult.success());
+	}
+
+	private void addChallengeLog(SingleProblemSolveResult solveResult, Challenger challenger, SingleProblem singleProblem) {
+		final ChallengeLog challengeLog = challenger.addChallengeLog(solveResult.success(), solveResult.submittedAnswer(), solveResult.realAnswer().stream()
+			.toList());
+		publishChallengeLog(challengeLog, singleProblem, challenger); // 이벤트 발행
 	}
 
 	private void publishChallengeLog(final ChallengeLog challengeLog, final SingleProblem singleProblem, final Challenger challenger) {
