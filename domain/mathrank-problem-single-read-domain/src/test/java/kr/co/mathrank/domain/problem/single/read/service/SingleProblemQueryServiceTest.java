@@ -1,7 +1,5 @@
 package kr.co.mathrank.domain.problem.single.read.service;
 
-import static org.junit.jupiter.api.Assertions.*;
-
 import java.time.LocalDateTime;
 import java.util.Comparator;
 import java.util.List;

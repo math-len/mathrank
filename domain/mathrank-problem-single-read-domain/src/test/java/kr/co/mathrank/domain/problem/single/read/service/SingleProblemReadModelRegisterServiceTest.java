@@ -16,7 +16,6 @@ import org.testcontainers.junit.jupiter.Testcontainers;
 import kr.co.mathrank.domain.problem.core.AnswerType;
 import kr.co.mathrank.domain.problem.core.Difficulty;
 import kr.co.mathrank.domain.problem.single.read.dto.SingleProblemReadModelRegisterCommand;
-import kr.co.mathrank.domain.problem.single.read.entity.SingleProblemReadModel;
 import kr.co.mathrank.domain.problem.single.read.exception.SingleProblemReadModelAlreadyExistException;
 
 @SpringBootTest(
