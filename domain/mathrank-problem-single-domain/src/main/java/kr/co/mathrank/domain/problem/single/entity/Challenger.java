@@ -46,7 +46,7 @@ public class Challenger {
 		return challenger;
 	}
 
-	public ChallengeLog addChallengeLog(final Boolean success, final String submittedAnswer, final String correctAnswer) {
+	public ChallengeLog addChallengeLog(final Boolean success, final List<String> submittedAnswer, final List<String> correctAnswer) {
 		final ChallengeLog challengeLog = ChallengeLog.of(this, success, submittedAnswer, correctAnswer);
 
 		// 첫 제출

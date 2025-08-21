@@ -1,11 +1,9 @@
 package kr.co.mathrank.domain.problem.single.entity;
 
-import java.sql.JDBCType;
 import java.time.LocalDateTime;
 import java.util.List;
 
 import org.hibernate.annotations.CreationTimestamp;
-import org.hibernate.annotations.JdbcType;
 import org.hibernate.annotations.JdbcTypeCode;
 import org.hibernate.type.SqlTypes;
 import org.springframework.data.domain.Persistable;
@@ -38,14 +36,16 @@ public class ChallengeLog implements Persistable<Long> {
 
 	private Boolean success;
 
-	private String submittedAnswer;
+	@JdbcTypeCode(SqlTypes.JSON)
+	private List<String> submittedAnswer;
 
-	private String correctAnswer;
+	@JdbcTypeCode(SqlTypes.JSON)
+	private List<String> correctAnswer;
 
 	@CreationTimestamp
 	private LocalDateTime challengedAt;
 
-	static ChallengeLog of(final Challenger challenger, final boolean success, final String submittedAnswer, final String correctAnswer) {
+	static ChallengeLog of(final Challenger challenger, final boolean success, final List<String> submittedAnswer, final List<String> correctAnswer) {
 		final ChallengeLog challengeLog = new ChallengeLog();
 		challengeLog.challenger = challenger;
 		challengeLog.submittedAnswer = submittedAnswer;

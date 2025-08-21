@@ -4,7 +4,6 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 import kr.co.mathrank.client.internal.problem.SolveResult;
-import kr.co.mathrank.common.dataserializer.DataSerializer;
 import kr.co.mathrank.common.event.EventPayload;
 import kr.co.mathrank.common.outbox.TransactionalOutboxPublisher;
 import kr.co.mathrank.domain.problem.single.entity.ChallengeLog;
@@ -37,8 +36,8 @@ class ChallengeLogSaveManager {
 					// 이미 해당 사용자가 푼 적 있음
 					singleProblem.increaseAttemptCount();
 
-					final ChallengeLog challengeLog = challenger.addChallengeLog(solveResult.success(), DataSerializer.serialize(solveResult.submittedAnswer()).orElse("null"), DataSerializer.serialize(solveResult.realAnswer().stream()
-						.toList()).orElse("null"));
+					final ChallengeLog challengeLog = challenger.addChallengeLog(solveResult.success(), solveResult.submittedAnswer(), solveResult.realAnswer().stream()
+						.toList());
 					publishChallengeLog(challengeLog, singleProblem, challenger); // 이벤트 발행
 				},
 				() -> {
@@ -46,8 +45,8 @@ class ChallengeLogSaveManager {
 					singleProblem.firstTry(solveResult.success());
 					final Challenger challenger = Challenger.of(memberId, singleProblem);
 
-					final ChallengeLog challengeLog = challenger.addChallengeLog(solveResult.success(), DataSerializer.serialize(solveResult.submittedAnswer()).orElse("null"), DataSerializer.serialize(solveResult.realAnswer().stream()
-						.toList()).orElse("null"));
+					final ChallengeLog challengeLog = challenger.addChallengeLog(solveResult.success(), solveResult.submittedAnswer(), solveResult.realAnswer().stream()
+						.toList());
 					publishChallengeLog(challengeLog, singleProblem, challenger); // 이벤트 발행
 
 					challengerRepository.save(challenger);
