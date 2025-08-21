@@ -18,10 +18,10 @@ public record SingleProblemReadModelResult(
 	Long attemptedUserDistinctCount, // 해당 문제를 풀려고 한 사용자 수
 	Double accuracy // 정답률
 ) {
-	public static SingleProblemReadModelResult from(final SingleProblemReadModel model, final Long requestMemberId) {
+	public static SingleProblemReadModelResult from(final SingleProblemReadModel model, final Boolean successAtFirstTry) {
 		return new SingleProblemReadModelResult(
 			model.getId(),
-			model.getSolvedStatus(requestMemberId),
+			successAtFirstTry,
 			model.getProblemId(),
 			model.getSingleProblemName(),
 			model.getProblemImage(),

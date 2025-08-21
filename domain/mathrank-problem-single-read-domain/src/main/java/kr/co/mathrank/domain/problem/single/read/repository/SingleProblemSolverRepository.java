@@ -15,4 +15,6 @@ public interface SingleProblemSolverRepository extends JpaRepository<SingleProbl
 	@Query("SELECT sps FROM SingleProblemSolver sps WHERE sps.singleProblemReadModel.id = :singleProblemId AND sps.memberId = :memberId")
 	Optional<SingleProblemSolver> findSolverForShare(@Param("memberId") Long memberId,
 		@Param("singleProblemId") Long singleProblemId);
+
+	Optional<SingleProblemSolver> findByMemberIdAndSingleProblemReadModelId(Long memberId, Long singleProblemId);
 }

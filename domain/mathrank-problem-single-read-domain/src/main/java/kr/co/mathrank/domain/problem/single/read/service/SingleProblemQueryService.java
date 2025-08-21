@@ -14,7 +14,9 @@ import kr.co.mathrank.domain.problem.single.read.dto.SingleProblemReadModelPageR
 import kr.co.mathrank.domain.problem.single.read.dto.SingleProblemReadModelQuery;
 import kr.co.mathrank.domain.problem.single.read.dto.SingleProblemReadModelResult;
 import kr.co.mathrank.domain.problem.single.read.entity.SingleProblemReadModel;
+import kr.co.mathrank.domain.problem.single.read.entity.SingleProblemSolver;
 import kr.co.mathrank.domain.problem.single.read.repository.SingleProblemReadModelRepository;
+import kr.co.mathrank.domain.problem.single.read.repository.SingleProblemSolverRepository;
 import lombok.RequiredArgsConstructor;
 
 @Service
@@ -22,8 +24,8 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class SingleProblemQueryService {
 	private final SingleProblemReadModelRepository singleProblemRepository;
+	private final SingleProblemSolverRepository singleProblemSolverRepository;
 
-	@Transactional
 	public SingleProblemReadModelPageResult queryPage(
 		@NotNull @Valid final SingleProblemReadModelQuery query,
 		@NotNull final Long memberId,
@@ -35,11 +37,19 @@ public class SingleProblemQueryService {
 
 		return new SingleProblemReadModelPageResult(
 			readModels.stream()
-				.map(model -> SingleProblemReadModelResult.from(model, memberId))
+				.map(model -> SingleProblemReadModelResult.from(
+					model,
+					getTryStatus(model.getId(), memberId)))
 				.toList(),
 			pageNumber,
 			pageSize,
 			PageUtil.getNextPages(pageSize, pageNumber, count, readModels.size()
 			));
+	}
+
+	private Boolean getTryStatus(final Long singleProblemId, final Long requestMemberId) {
+		return singleProblemSolverRepository.findByMemberIdAndSingleProblemReadModelId(requestMemberId, singleProblemId)
+			.map(SingleProblemSolver::isSuccess) // 존재하면 풀이 성공 여부
+			.orElse(null); // 존재하지 않으면 null
 	}
 }
