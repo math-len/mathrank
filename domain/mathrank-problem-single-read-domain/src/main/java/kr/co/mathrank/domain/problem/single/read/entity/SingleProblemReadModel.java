@@ -38,6 +38,7 @@ import lombok.ToString;
 	@Index(name = "idx_coursePath", columnList = "course_path"),
 	@Index(name = "idx_answerType", columnList = "answer_type"),
 	@Index(name = "idx_difficulty", columnList = "difficulty"),
+	@Index(name = "idx_totalAttemptedCount", columnList = "total_attempted_count"),
 	@Index(name = "idx_firstTrySuccessCount", columnList = "first_try_success_count desc"),
 	@Index(name = "idx_attemptedUserDistinctCount", columnList = "attempted_user_distinct_count desc"),
 	@Index(name = "idx_accuracy", columnList = "accuracy desc"),

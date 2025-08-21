@@ -91,7 +91,7 @@ class SingleProblemQueryServiceTest {
 			null,
 			null
 		);
-		final SingleProblemReadModelPageResult result = queryService.queryPage(query, memberId, 10, 1);
+		final SingleProblemReadModelPageResult result = queryService.queryPage(query, null, null, memberId, 10, 1);
 		final List<SingleProblemReadModelResult> results = result.queryResults();
 
 		// 1번 문제부터 정렬
@@ -113,8 +113,8 @@ class SingleProblemQueryServiceTest {
 		final SingleProblemReadModelQuery query = new SingleProblemReadModelQuery(null, "singleProblemName", "math", null, Difficulty.MID, Difficulty.MID, 10, 30, null, null);
 		final Long memberId = 10L;
 
-		Assertions.assertThrows(ConstraintViolationException.class, () -> queryService.queryPage(query, memberId, 20, 1001));
-		Assertions.assertThrows(ConstraintViolationException.class, () -> queryService.queryPage(query, memberId, 21, 1000));
+		Assertions.assertThrows(ConstraintViolationException.class, () -> queryService.queryPage(query, null, null, memberId, 20, 1001));
+		Assertions.assertThrows(ConstraintViolationException.class, () -> queryService.queryPage(query, null, null, memberId, 21, 1000));
 	}
 
 	@Test
@@ -144,7 +144,7 @@ class SingleProblemQueryServiceTest {
 		);
 
 		// When
-		final SingleProblemReadModelPageResult result = queryService.queryPage(query, 1000L, 2, 1);
+		final SingleProblemReadModelPageResult result = queryService.queryPage(query,null, null,  1000L, 2, 1);
 
 		// Then
 		// 두개가 나와야 한다
@@ -154,7 +154,7 @@ class SingleProblemQueryServiceTest {
 		Assertions.assertEquals(1, result.possibleNextPageNumbers().size()); // 다음 페이지가 1개 존재한다
 
 		// 다음 페이지도 테스트
-		final SingleProblemReadModelPageResult nextResult = queryService.queryPage(query, 1000L, 2, 2);
+		final SingleProblemReadModelPageResult nextResult = queryService.queryPage(query, null, null, 1000L, 2, 2);
 
 		// 다음 페이지에 1개가존재해야한다
 		Assertions.assertEquals(1, nextResult.queryResults().size());
