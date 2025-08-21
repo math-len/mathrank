@@ -2,10 +2,13 @@ package kr.co.mathrank.domain.problem.single.service;
 
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.validation.annotation.Validated;
 
-import kr.co.mathrank.client.internal.problem.SolveResult;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotNull;
 import kr.co.mathrank.common.event.EventPayload;
 import kr.co.mathrank.common.outbox.TransactionalOutboxPublisher;
+import kr.co.mathrank.domain.problem.single.dto.SingleProblemSolveResult;
 import kr.co.mathrank.domain.problem.single.entity.ChallengeLog;
 import kr.co.mathrank.domain.problem.single.entity.Challenger;
 import kr.co.mathrank.domain.problem.single.entity.SingleProblem;
@@ -17,6 +20,7 @@ import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @Component
+@Validated
 @RequiredArgsConstructor
 class ChallengeLogSaveManager {
 	private final SingleProblemRepository singleProblemRepository;
@@ -24,7 +28,11 @@ class ChallengeLogSaveManager {
 	private final TransactionalOutboxPublisher outboxPublisher;
 
 	@Transactional
-	public void saveLog(final Long singleProblemId, final Long memberId, final SolveResult solveResult) {
+	public void saveLog(
+		@NotNull final Long singleProblemId,
+		@NotNull final Long memberId,
+		@NotNull @Valid final SingleProblemSolveResult solveResult
+	) {
 		// 락걸기
 		final SingleProblem singleProblem = singleProblemRepository.findByIdForUpdate(singleProblemId)
 			.orElseThrow(CannotFindSingleProblemException::new);
