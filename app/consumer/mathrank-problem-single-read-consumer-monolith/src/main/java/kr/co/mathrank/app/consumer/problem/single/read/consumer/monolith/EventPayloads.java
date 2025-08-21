@@ -46,6 +46,8 @@ public class EventPayloads {
 		SingleProblemAttemptStatsUpdateCommand toCommand() {
 			return new SingleProblemAttemptStatsUpdateCommand(
 				singleProblemId,
+				memberId,
+				success,
 				firstTrySuccessCount,
 				totalAttemptedCount,
 				attemptedUserDistinctCount
