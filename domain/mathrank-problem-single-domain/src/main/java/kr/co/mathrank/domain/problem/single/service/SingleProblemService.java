@@ -63,7 +63,7 @@ public class SingleProblemService {
 	 * 개별문제의 채점 기록을 저장하는 API입니다.
 	 * @param command
 	 */
-	public void solve(@NotNull @Valid final SingleProblemSolveCommand command) {
+	public SingleProblemSolveResult solve(@NotNull @Valid final SingleProblemSolveCommand command) {
 		final SingleProblem singleProblem = singleProblemRepository.findById(command.singleProblemId())
 			.orElseThrow(() -> {
 				log.warn("[SingleProblemService.solve] cannot find single problem with id: {}",
@@ -76,5 +76,6 @@ public class SingleProblemService {
 			problemInfoManager.solve(singleProblem.getProblemId(), command.answers()));
 
 		challengeLogSaveManager.saveLog(singleProblem.getId(), command.memberId(), solveResult);
+		return solveResult;
 	}
 }
