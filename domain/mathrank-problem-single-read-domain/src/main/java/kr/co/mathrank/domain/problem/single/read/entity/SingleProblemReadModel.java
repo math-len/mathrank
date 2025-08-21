@@ -3,7 +3,9 @@ package kr.co.mathrank.domain.problem.single.read.entity;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.time.LocalDateTime;
+import java.util.Set;
 
+import org.hibernate.annotations.BatchSize;
 import org.springframework.data.domain.Persistable;
 
 import jakarta.persistence.Column;
@@ -13,6 +15,7 @@ import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
 import jakarta.persistence.Id;
 import jakarta.persistence.Index;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.PrePersist;
 import jakarta.persistence.PreUpdate;
 import jakarta.persistence.Table;
@@ -76,6 +79,10 @@ public class SingleProblemReadModel implements Persistable<Long> {
 
 	@Setter(AccessLevel.PRIVATE)
 	private LocalDateTime createdAt; // singleProblem이 등록된 시점
+
+	@BatchSize(size = 100)
+	@OneToMany(mappedBy = "singleProblemReadModel")
+	private Set<SingleProblemSolver> solvers;
 
 	public static SingleProblemReadModel of(
 		final Long singleProblemId,
