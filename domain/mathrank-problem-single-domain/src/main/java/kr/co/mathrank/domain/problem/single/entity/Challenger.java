@@ -31,7 +31,7 @@ public class Challenger {
 	private Long memberId;
 
 	@OneToMany(mappedBy = "challenger", orphanRemoval = true, cascade = CascadeType.PERSIST)
-	private List<ChallengeLog> challengeLogs = new ArrayList<>();
+	private final List<ChallengeLog> challengeLogs = new ArrayList<>();
 
 	@ManyToOne(fetch = FetchType.LAZY)
 	private SingleProblem singleProblem;
