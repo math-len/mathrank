@@ -9,8 +9,10 @@ import jakarta.validation.constraints.NotNull;
 import kr.co.mathrank.domain.problem.single.read.dto.SingleProblemAttemptStatsUpdateCommand;
 import kr.co.mathrank.domain.problem.single.read.dto.SingleProblemReadModelUpdateCommand;
 import kr.co.mathrank.domain.problem.single.read.entity.SingleProblemReadModel;
+import kr.co.mathrank.domain.problem.single.read.entity.SingleProblemSolver;
 import kr.co.mathrank.domain.problem.single.read.exception.CannotFoundProblemException;
 import kr.co.mathrank.domain.problem.single.read.repository.SingleProblemReadModelRepository;
+import kr.co.mathrank.domain.problem.single.read.repository.SingleProblemSolverRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -27,6 +29,7 @@ import lombok.extern.slf4j.Slf4j;
 @RequiredArgsConstructor
 public class SingleProblemUpdateService {
 	private final SingleProblemReadModelRepository singleProblemReadModelRepository;
+	private final SingleProblemSolverRepository singleProblemSolverRepository;
 
 	/**
 	 * 단일 문제 읽기 모델 정보를 업데이트합니다.
@@ -64,6 +67,7 @@ public class SingleProblemUpdateService {
 	 *   <li>최초 시도 성공 횟수 (firstTrySuccessCount)</li>
 	 *   <li>고유 사용자 시도 수 (attemptedUserDistinctCount)</li>
 	 *   <li>전체 시도 횟수 (totalAttemptedCount)</li>
+	 *   <li>첫 시도한 사용자 (solvers)</li>
 	 * </ul>
 	 *
 	 * <p> 업데이트는 idempotency 를 보장하기 위해,
@@ -85,6 +89,12 @@ log.warn("[SingleProblemUpdateService.updateAttemptStatistics] cannot find singl
 			model.setFirstTrySuccessCount(command.firstTrySuccessCount());
 			model.setAttemptedUserDistinctCount(command.attemptedUserDistinctCount());
 			model.setTotalAttemptedCount(command.totalAttemptedCount());
+
+			// 없으면 새로 삽입한다.
+			final SingleProblemSolver solver = singleProblemSolverRepository.findSolverForShare(command.memberId(),
+					command.singleProblemId())
+				.orElseGet(() -> SingleProblemSolver.of(model, command.memberId(), command.success()));
+			singleProblemSolverRepository.save(solver);
 
 			log.info("[SingleProblemUpdateService.updateAttemptStatistics] read model updated: {}", command);
 			return;

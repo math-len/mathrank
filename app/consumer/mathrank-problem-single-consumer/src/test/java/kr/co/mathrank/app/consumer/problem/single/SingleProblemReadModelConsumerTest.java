@@ -15,7 +15,6 @@ import org.springframework.boot.autoconfigure.kafka.KafkaAutoConfiguration;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.kafka.test.context.EmbeddedKafka;
-import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 
@@ -106,7 +105,7 @@ class SingleProblemReadModelConsumerTest {
 		final long firstTrySuccessCount = 1L;
 		final long attemptedUserDistinctCount = 2L;
 		final long totalAttemptedCount = 3L;
-		final var payload = new SingleProblemStatisticsUpdatedPayload(singleProblemId, firstTrySuccessCount,
+		final var payload = new SingleProblemStatisticsUpdatedPayload(singleProblemId, 2L, 3L, true, firstTrySuccessCount,
 			totalAttemptedCount, attemptedUserDistinctCount);
 		final Event<SingleProblemStatisticsUpdatedPayload> event = Event.of(1L, payload);
 		final String message = event.serialize();

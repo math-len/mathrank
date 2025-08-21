@@ -170,7 +170,7 @@ class SingleProblemUpdateServiceTest {
 
 		// when
 		singleProblemUpdateService.updateAttemptStatistics(new SingleProblemAttemptStatsUpdateCommand(
-			problemId, 2L, 6L, 11L
+			problemId, 10L, true, 2L, 6L, 11L
 		));
 
 		entityManager.flush();
@@ -200,7 +200,7 @@ class SingleProblemUpdateServiceTest {
 
 		// when
 		singleProblemUpdateService.updateAttemptStatistics(new SingleProblemAttemptStatsUpdateCommand(
-			problemId, 999L, 6L, 10L
+			problemId, 10L, true, 999L, 6L, 10L
 		));
 
 		entityManager.flush();
@@ -222,7 +222,7 @@ class SingleProblemUpdateServiceTest {
 		// expect
 		Assertions.assertThrows(CannotFoundProblemException.class, () -> {
 			singleProblemUpdateService.updateAttemptStatistics(new SingleProblemAttemptStatsUpdateCommand(
-				nonexistentId, 1L, 2L, 3L
+				nonexistentId, 10L, true, 1L, 2L, 3L
 			));
 		});
 	}
@@ -255,6 +255,8 @@ class SingleProblemUpdateServiceTest {
 						singleProblemUpdateService.updateAttemptStatistics(
 							new SingleProblemAttemptStatsUpdateCommand(
 								problemId,
+								10L,
+								true,
 								attemptCount / 10,        // firstTrySuccessCount
 								attemptCount,         // totalCount
 								attemptCount / 5              // attemptedDistinctCount
