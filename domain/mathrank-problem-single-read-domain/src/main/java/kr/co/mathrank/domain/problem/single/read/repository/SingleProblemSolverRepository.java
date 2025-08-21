@@ -1,5 +1,7 @@
 package kr.co.mathrank.domain.problem.single.read.repository;
 
+import java.util.Collection;
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -8,6 +10,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import jakarta.persistence.LockModeType;
+import kr.co.mathrank.domain.problem.single.read.entity.SingleProblemReadModel;
 import kr.co.mathrank.domain.problem.single.read.entity.SingleProblemSolver;
 
 public interface SingleProblemSolverRepository extends JpaRepository<SingleProblemSolver, Long> {
@@ -16,5 +19,5 @@ public interface SingleProblemSolverRepository extends JpaRepository<SingleProbl
 	Optional<SingleProblemSolver> findSolverForShare(@Param("memberId") Long memberId,
 		@Param("singleProblemId") Long singleProblemId);
 
-	Optional<SingleProblemSolver> findByMemberIdAndSingleProblemReadModelId(Long memberId, Long singleProblemId);
+	List<SingleProblemSolver> findByMemberIdAndSingleProblemReadModelIn(Long memberId, Collection<SingleProblemReadModel> singleProblemReadModels);
 }
