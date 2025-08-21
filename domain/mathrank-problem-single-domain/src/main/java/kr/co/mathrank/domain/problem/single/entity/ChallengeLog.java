@@ -21,9 +21,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Entity
-@Table(indexes = {
-	@Index(name = "idx_singleProblemId_memberId", columnList = "single_problem_id, member_id")
-})
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class ChallengeLog implements Persistable<Long> {
