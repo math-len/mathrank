@@ -21,6 +21,7 @@ import kr.co.mathrank.domain.problem.single.entity.SingleProblem;
 import kr.co.mathrank.domain.problem.single.repository.SingleProblemRepository;
 
 @SpringBootTest
+@Transactional
 class ChallengerQueryServiceTest {
 	@Autowired
 	private SingleProblemRepository singleProblemRepository;
@@ -47,7 +48,6 @@ class ChallengerQueryServiceTest {
 	}
 
 	@Test
-	@Transactional
 	void 사용자가_푼_모든_문제_조회() {
 		Mockito.when(problemInfoManager.solve(Mockito.anyLong(), Mockito.anyList()))
 			.thenReturn(new SolveResult(true, Collections.emptySet(), Collections.emptyList()));
