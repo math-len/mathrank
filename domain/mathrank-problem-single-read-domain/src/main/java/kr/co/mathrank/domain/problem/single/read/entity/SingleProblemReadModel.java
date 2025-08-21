@@ -117,14 +117,6 @@ public class SingleProblemReadModel implements Persistable<Long> {
 		return model;
 	}
 
-	public Boolean getSolvedStatus(final Long memberId) {
-		return this.getSolvers().stream()
-			.filter(singleProblemSolver -> singleProblemSolver.getMemberId().equals(memberId))
-			.map(SingleProblemSolver::isSuccess)
-			.findAny()
-			.orElse(null); // 푼 적이 없어용!
-	}
-
 	@PrePersist
 	@PreUpdate
 	void updateAccuracy() {
