@@ -3,11 +3,9 @@ package kr.co.mathrank.domain.problem.single.read.service;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.TreeMap;
 
 import org.hibernate.validator.constraints.Range;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.annotation.Validated;
 
 import jakarta.validation.Valid;
@@ -16,6 +14,8 @@ import kr.co.mathrank.common.page.PageUtil;
 import kr.co.mathrank.domain.problem.single.read.dto.SingleProblemReadModelPageResult;
 import kr.co.mathrank.domain.problem.single.read.dto.SingleProblemReadModelQuery;
 import kr.co.mathrank.domain.problem.single.read.dto.SingleProblemReadModelResult;
+import kr.co.mathrank.domain.problem.single.read.entity.OrderColumn;
+import kr.co.mathrank.domain.problem.single.read.entity.OrderDirection;
 import kr.co.mathrank.domain.problem.single.read.entity.SingleProblemReadModel;
 import kr.co.mathrank.domain.problem.single.read.entity.SingleProblemSolver;
 import kr.co.mathrank.domain.problem.single.read.repository.SingleProblemReadModelRepository;
@@ -35,6 +35,8 @@ public class SingleProblemQueryService {
 	 * 각 문제에 대해 현재 사용자의 풀이 성공 여부(성공, 실패, 시도 안 함)를 함께 반환합니다.
 	 *
 	 * @param query        검색 필터 조건(문제 이름, 카테고리, 난이도 등)
+	 * @param orderColumn  정렬할 컬럼. 지정하지 않으면 {@link OrderColumn#DATE}가 기본값으로 사용됩니다.
+	 * @param direction    정렬 방향. 지정하지 않으면 {@link OrderDirection#DESC}가 기본값으로 사용됩니다.
 	 * @param memberId     조회하는 사용자의 ID
 	 * @param pageSize     한 페이지에 표시할 문제의 수 (1~20)
 	 * @param pageNumber   조회할 페이지 번호 (1부터 시작)
@@ -42,12 +44,18 @@ public class SingleProblemQueryService {
 	 */
 	public SingleProblemReadModelPageResult queryPage(
 		@NotNull @Valid final SingleProblemReadModelQuery query,
+		OrderColumn orderColumn,
+		OrderDirection direction,
 		@NotNull final Long memberId,
 		@NotNull @Range(min = 1, max = 20) final Integer pageSize,
 		@NotNull @Range(max = 1000) final Integer pageNumber // 페이지 번호 (1부터 시작). 내부 offset 계산 시 사용됨: offset = (pageNumber - 1) * pageSize
 	) {
+		// 정렬기준 default 초기화
+		orderColumn = orderColumn == null ? OrderColumn.DATE : orderColumn;
+		direction = direction == null ? OrderDirection.DESC : direction;
+
 		// 1. 조건에 맞는 문제 목록을 페이지네이션하여 조회
-		final List<SingleProblemReadModel> readModels = singleProblemRepository.queryPage(query, pageSize, pageNumber);
+		final List<SingleProblemReadModel> readModels = singleProblemRepository.queryPage(query, pageSize, pageNumber, orderColumn, direction);
 		// 2. 조건에 맞는 전체 문제 개수 조회 (페이지네이션 계산용)
 		final Long count = singleProblemRepository.count(query);
 

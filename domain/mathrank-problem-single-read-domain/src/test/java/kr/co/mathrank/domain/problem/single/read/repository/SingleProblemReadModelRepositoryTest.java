@@ -1,6 +1,7 @@
 package kr.co.mathrank.domain.problem.single.read.repository;
 
 import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 import java.util.List;
 
 import org.junit.jupiter.api.Assertions;
@@ -17,6 +18,8 @@ import org.testcontainers.junit.jupiter.Testcontainers;
 import kr.co.mathrank.domain.problem.core.AnswerType;
 import kr.co.mathrank.domain.problem.core.Difficulty;
 import kr.co.mathrank.domain.problem.single.read.dto.SingleProblemReadModelQuery;
+import kr.co.mathrank.domain.problem.single.read.entity.OrderColumn;
+import kr.co.mathrank.domain.problem.single.read.entity.OrderDirection;
 import kr.co.mathrank.domain.problem.single.read.entity.SingleProblemReadModel;
 
 @Transactional
@@ -43,6 +46,152 @@ class SingleProblemReadModelRepositoryTest {
 		registry.add("spring.datasource.url", mysql::getJdbcUrl);
 		registry.add("spring.datasource.username", mysql::getUsername);
 		registry.add("spring.datasource.password", mysql::getPassword);
+	}
+
+	@Test
+	void 최신순으로_조회한다() {
+		final LocalDateTime dateTime = LocalDateTime.of(2000, 11, 21, 10, 20);
+		// 1, 2, 3 에 각각 100시간씩 더함
+
+		singleProblemReadModelRepository.saveAll(List.of(
+			SingleProblemReadModel.of(
+				1L,
+				1L,
+				"singleProblemName",
+				"testImage",
+				"path",
+				AnswerType.MULTIPLE_CHOICE,
+				Difficulty.MID, // 가중치 30
+				100L,
+				2000L,
+				1000L,
+				dateTime
+			),
+			SingleProblemReadModel.of(
+				2L,
+				2L,
+				"singleProblemName",
+				"testImage",
+				"path",
+				AnswerType.MULTIPLE_CHOICE,
+				Difficulty.MID, // 가중치 30
+				100L,
+				2000L,
+				1000L,
+				dateTime.plus(100, ChronoUnit.HOURS)
+			),
+			SingleProblemReadModel.of(
+				3L,
+				3L,
+				"singleProblemName",
+				"testImage",
+				"path",
+				AnswerType.MULTIPLE_CHOICE,
+				Difficulty.MID, // 가중치 30
+				100L,
+				2000L,
+				1000L,
+				dateTime.plus(200, ChronoUnit.HOURS)
+			)
+		));
+		// 내림차순 조회의 결과는 3, 2, 1로 나와야 함
+		final List<SingleProblemReadModel> models = singleProblemReadModelRepository.queryPage(
+			new SingleProblemReadModelQuery(
+				null,
+				"singleProblemName",
+				null,
+				null,
+				null,
+				null,
+				null,
+				null,
+				null,
+				null
+			),
+			10,
+			1,
+			OrderColumn.DATE,
+			OrderDirection.DESC
+		);
+
+		Assertions.assertAll(
+			() -> Assertions.assertEquals(3, models.get(0).getId()),
+			() -> Assertions.assertEquals(2, models.get(1).getId()),
+			() -> Assertions.assertEquals(1, models.get(2).getId())
+		);
+	}
+
+	@Test
+	void 풀이횟수_내림차순_으로_조회한다() {
+		final LocalDateTime dateTime = LocalDateTime.of(2000, 11, 21, 10, 20);
+
+		singleProblemReadModelRepository.saveAll(List.of(
+			SingleProblemReadModel.of(
+				1L,
+				1L,
+				"singleProblemName",
+				"testImage",
+				"path",
+				AnswerType.MULTIPLE_CHOICE,
+				Difficulty.MID,
+				100L,
+				1L, // 정렬기준
+				1000L,
+				dateTime
+			),
+			SingleProblemReadModel.of(
+				2L,
+				2L,
+				"singleProblemName",
+				"testImage",
+				"path",
+				AnswerType.MULTIPLE_CHOICE,
+				Difficulty.MID,
+				100L,
+				2L, // 정력 기준
+				1000L,
+				dateTime
+			),
+			SingleProblemReadModel.of(
+				3L,
+				3L,
+				"singleProblemName",
+				"testImage",
+				"path",
+				AnswerType.MULTIPLE_CHOICE,
+				Difficulty.MID,
+				100L,
+				3L, // 정렬기준
+				1000L,
+				dateTime
+			)
+		));
+
+		// 내림차순 조회의 결과는 3, 2, 1로 나와야 함
+		final List<SingleProblemReadModel> models = singleProblemReadModelRepository.queryPage(
+			new SingleProblemReadModelQuery(
+				null,
+				"singleProblemName",
+				null,
+				null,
+				null,
+				null,
+				null,
+				null,
+				null,
+				null
+			),
+			10,
+			1,
+			OrderColumn.TOTAL_TRY_COUNT,
+			OrderDirection.DESC
+		);
+
+		Assertions.assertAll(
+			() -> Assertions.assertEquals(3, models.get(0).getId()),
+			() -> Assertions.assertEquals(2, models.get(1).getId()),
+			() -> Assertions.assertEquals(1, models.get(2).getId())
+		);
 	}
 
 	@Test
@@ -105,7 +254,9 @@ class SingleProblemReadModelRepositoryTest {
 					null
 				),
 				10,
-				1
+				1,
+				null,
+				null
 			).size()),
 			// 한쪽 조건이 null 일시, 모두 포함한다
 			() -> Assertions.assertEquals(2, singleProblemReadModelRepository.queryPage(
@@ -122,7 +273,9 @@ class SingleProblemReadModelRepositoryTest {
 					null
 				),
 				10,
-				1
+				1,
+				null,
+				null
 			).size()),
 			// max, min 이 같을땐 하나가 리턴되야 한다
 			() -> Assertions.assertEquals(1, singleProblemReadModelRepository.queryPage(
@@ -140,6 +293,9 @@ class SingleProblemReadModelRepositoryTest {
 				),
 				10,
 				1
+				,
+				null,
+				null
 			).size())
 		);
 	}
@@ -210,7 +366,9 @@ class SingleProblemReadModelRepositoryTest {
 					null
 				),
 				10,
-				1
+				1,
+				null,
+				null
 			).size()),
 			// 10 ~ 20은 두개
 			() -> Assertions.assertEquals(2, singleProblemReadModelRepository.queryPage(
@@ -227,7 +385,9 @@ class SingleProblemReadModelRepositoryTest {
 					null
 				),
 				10,
-				1
+				1,
+				null,
+				null
 			).size())
 		);
 	}
@@ -250,7 +410,7 @@ class SingleProblemReadModelRepositoryTest {
 					null, "singleProblemName","math", null, null, null,
 					null, null, null, null
 				),
-				10, 1
+				10, 1, null, null
 			).size()),
 
 			// science로 시작하는 것만
@@ -259,7 +419,9 @@ class SingleProblemReadModelRepositoryTest {
 					null, "singleProblemName", "science", null, null, null,
 					null, null, null, null
 				),
-				10, 1
+				10, 1,
+				null,
+				null
 			).size()),
 
 			// 존재하지 않는 경로
@@ -268,7 +430,9 @@ class SingleProblemReadModelRepositoryTest {
 					null, "singleProblemName","english", null, null, null,
 					null, null, null, null
 				),
-				10, 1
+				10, 1,
+				null,
+				null
 			).size())
 		);
 	}
@@ -292,7 +456,7 @@ class SingleProblemReadModelRepositoryTest {
 					null, null,
 					200L, 300L
 				),
-				10, 1
+				10, 1, null, null
 			).size()),
 
 			// 최대값만 지정 시 500 이하 전부
@@ -302,7 +466,9 @@ class SingleProblemReadModelRepositoryTest {
 					null, null,
 					null, 500L
 				),
-				10, 1
+				10, 1,
+				null,
+				null
 			).size()),
 
 			// 400 이상은 하나만
@@ -312,7 +478,9 @@ class SingleProblemReadModelRepositoryTest {
 					null, null,
 					400L, null
 				),
-				10, 1
+				10, 1,
+				null,
+				null
 			).size())
 		);
 	}
@@ -350,7 +518,7 @@ class SingleProblemReadModelRepositoryTest {
 			500L
 		);
 
-		Assertions.assertEquals(1, singleProblemReadModelRepository.queryPage(query, 10, 1).size());
+		Assertions.assertEquals(1, singleProblemReadModelRepository.queryPage(query, 10, 1, null, null).size());
 	}
 
 	@Test
@@ -367,7 +535,7 @@ class SingleProblemReadModelRepositoryTest {
 				new SingleProblemReadModelQuery(
 					null, "singleProblemName",null, AnswerType.MULTIPLE_CHOICE, null, null,
 					null, null, null, null
-				), 10, 1
+				), 10, 1, null, null
 			).size()),
 
 			// SHORT_ANSWER만 검색하면 1개
@@ -376,7 +544,9 @@ class SingleProblemReadModelRepositoryTest {
 					null, "singleProblemName",null, AnswerType.SHORT_ANSWER, null, null,
 					null, null, null, null
 				),
-				10, 1
+				10, 1,
+				null,
+				null
 			).size()),
 
 			// null로하면 모두 조회 ( 3개 )
@@ -393,7 +563,9 @@ class SingleProblemReadModelRepositoryTest {
 					null,
 					null
 					),
-				10, 1
+				10, 1,
+				null,
+				null
 			).size())
 		);
 	}
@@ -412,7 +584,7 @@ class SingleProblemReadModelRepositoryTest {
 		final SingleProblemReadModelQuery query = new SingleProblemReadModelQuery(
 			null,"problem", null, null, null, null, null, null, null, null
 		);
-		final List<SingleProblemReadModel> result = singleProblemReadModelRepository.queryPage(query, 10, 1);
+		final List<SingleProblemReadModel> result = singleProblemReadModelRepository.queryPage(query, 10, 1, null, null);
 
 		// then
 		Assertions.assertEquals(3, result.size());

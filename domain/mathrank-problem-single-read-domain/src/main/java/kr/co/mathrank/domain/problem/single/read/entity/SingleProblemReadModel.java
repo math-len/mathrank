@@ -4,9 +4,7 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 import org.hibernate.annotations.BatchSize;
 import org.springframework.data.domain.Persistable;
@@ -38,6 +36,7 @@ import lombok.ToString;
 	@Index(name = "idx_coursePath", columnList = "course_path"),
 	@Index(name = "idx_answerType", columnList = "answer_type"),
 	@Index(name = "idx_difficulty", columnList = "difficulty"),
+	@Index(name = "idx_totalAttemptedCount", columnList = "total_attempted_count"),
 	@Index(name = "idx_firstTrySuccessCount", columnList = "first_try_success_count desc"),
 	@Index(name = "idx_attemptedUserDistinctCount", columnList = "attempted_user_distinct_count desc"),
 	@Index(name = "idx_accuracy", columnList = "accuracy desc"),
