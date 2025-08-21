@@ -21,7 +21,7 @@ import kr.co.mathrank.common.role.Role;
 import kr.co.mathrank.domain.problem.single.dto.SingleProblemRegisterCommand;
 import kr.co.mathrank.domain.problem.single.exception.AlreadyRegisteredProblemException;
 import kr.co.mathrank.domain.problem.single.exception.CannotRegisterWithThisRoleException;
-import kr.co.mathrank.domain.problem.single.repository.ChallengeLogRepository;
+import kr.co.mathrank.domain.problem.single.repository.ChallengerRepository;
 import kr.co.mathrank.domain.problem.single.repository.SingleProblemRepository;
 import lombok.extern.slf4j.Slf4j;
 
@@ -30,8 +30,6 @@ import lombok.extern.slf4j.Slf4j;
 class SingleProblemServiceTest {
 	@Autowired
 	private SingleProblemService singleProblemService;
-	@Autowired
-	private ChallengeLogRepository challengeLogRepository;
 	@Autowired
 	private SingleProblemRepository singleProblemRepository;
 	@MockitoBean
@@ -42,6 +40,8 @@ class SingleProblemServiceTest {
 		.withDatabaseName("testdb")
 		.withUsername("user")
 		.withPassword("password");
+	@Autowired
+	private ChallengerRepository challengerRepository;
 
 	@DynamicPropertySource
 	static void setProperties(DynamicPropertyRegistry registry) {
@@ -91,7 +91,7 @@ class SingleProblemServiceTest {
 	@BeforeEach
 	void clear() {
 		singleProblemRepository.deleteAll();
-		challengeLogRepository.deleteAll();
+		challengerRepository.deleteAll();
 	}
 
 	private static ProblemQueryResult getEmptyResult() {
