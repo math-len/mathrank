@@ -7,6 +7,7 @@ import org.springdoc.core.annotations.ParameterObject;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -17,6 +18,7 @@ import kr.co.mathrank.app.api.common.authentication.LoginInfo;
 import kr.co.mathrank.app.api.common.authentication.MemberPrincipal;
 import kr.co.mathrank.client.internal.course.CourseClient;
 import kr.co.mathrank.domain.problem.single.read.dto.SingleProblemReadModelPageResult;
+import kr.co.mathrank.domain.problem.single.read.dto.SingleProblemReadModelResult;
 import kr.co.mathrank.domain.problem.single.read.entity.OrderColumn;
 import kr.co.mathrank.domain.problem.single.read.entity.OrderDirection;
 import kr.co.mathrank.domain.problem.single.read.service.SingleProblemQueryService;
@@ -28,6 +30,23 @@ import lombok.RequiredArgsConstructor;
 public class SingleProblemReadController {
 	private final SingleProblemQueryService singleProblemQueryService;
 	private final CourseClient courseClient;
+
+	@Authorization(openedForAll = true)
+	@Operation(summary = "단일 개별문제 조회 API")
+	@GetMapping("/api/v1/problem/single/{singleProblemId}")
+	public ResponseEntity<SingleProblemReadModelResponse> getDetail(
+		@LoginInfo final MemberPrincipal memberPrincipal,
+		@PathVariable final Long singleProblemId
+	) {
+		final SingleProblemReadModelResult result = singleProblemQueryService.getProblemWithSolverStatus(
+			singleProblemId, memberPrincipal.memberId());
+		final SingleProblemReadModelResponse response = SingleProblemReadModelResponse.of(
+			result,
+			courseClient.getParentCourses(result.coursePath())
+		);
+
+		return ResponseEntity.ok(response);
+	}
 
 	@GetMapping("/api/v1/problem/single")
 	@Operation(summary = "풀이 시도 가능한 개별문제 페이징 조회 API", description = "정렬 기준 설정하지 않으면, 날짜 최신순 조회가 기본으로 사용됩니다.")
