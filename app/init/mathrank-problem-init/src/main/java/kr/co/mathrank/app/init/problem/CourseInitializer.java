@@ -13,11 +13,11 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
 
-import kr.co.mathrank.domain.problem.dto.CourseRegisterCommand;
-import kr.co.mathrank.domain.problem.entity.Course;
-import kr.co.mathrank.domain.problem.entity.Path;
-import kr.co.mathrank.domain.problem.repository.CourseRepository;
-import kr.co.mathrank.domain.problem.service.CourseService;
+import kr.co.mathrank.domain.course.dto.CourseRegisterCommand;
+import kr.co.mathrank.domain.course.entity.Course;
+import kr.co.mathrank.domain.course.entity.Path;
+import kr.co.mathrank.domain.course.repository.CourseRepository;
+import kr.co.mathrank.domain.course.service.CourseService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 

@@ -3,5 +3,5 @@ dependencies {
 
     implementation 'org.apache.poi:poi-ooxml:5.2.3'
 
-    implementation project(':domain:mathrank-problem-domain')
+    implementation project(':domain:mathrank-course-domain')
 }
