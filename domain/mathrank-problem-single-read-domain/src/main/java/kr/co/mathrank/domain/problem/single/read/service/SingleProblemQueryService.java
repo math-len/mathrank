@@ -93,17 +93,17 @@ public class SingleProblemQueryService {
 		@NotNull final Long singleProblemId,
 		@NotNull final Long requestMemberId
 	) {
-		final SingleProblemReadModel model = singleProblemRepository.findById(singleProblemId)
+		return singleProblemRepository.findByIdWithSolvedInfo(singleProblemId, requestMemberId)
 			.orElseThrow(() -> {
 				log.info("[SingleProblemQueryService.getProblemWithSolverStatus] Problem not found. singleProblemId={}", singleProblemId);
 				return new CannotFoundProblemException();
 			});
-
-		// 단일 조회
-		final List<SingleProblemSolver> solvers = singleProblemSolverRepository.findByMemberIdAndSingleProblemReadModelIn(
-			requestMemberId, List.of(model));
-
-		return SingleProblemReadModelResult.from(model, solvers.isEmpty() ? null : solvers.getFirst().isSuccess());
+		// final SingleProblemSolver solver = model.getSolvers().stream()
+		// 	.filter(singleProblemSolver -> singleProblemSolver.getMemberId().equals(requestMemberId))
+		// 	.findAny()
+		// 	.orElse(null);
+		//
+		// return SingleProblemReadModelResult.from(model, solver == null ? null : solver.isSuccess());
 	}
 
 	/**
