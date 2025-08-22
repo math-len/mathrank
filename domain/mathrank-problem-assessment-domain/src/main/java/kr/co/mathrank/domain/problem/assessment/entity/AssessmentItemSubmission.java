@@ -64,6 +64,8 @@ public class AssessmentItemSubmission {
 		if (correct) {
 			// 문제가 정답일 때, 점수 추가
 			this.submission.addScore(assessmentItem.getScore());
+		} else {
+			this.submission.addScore(0);
 		}
 	}
 
