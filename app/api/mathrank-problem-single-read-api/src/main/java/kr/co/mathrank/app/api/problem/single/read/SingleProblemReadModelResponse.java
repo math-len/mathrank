@@ -12,7 +12,7 @@ public record SingleProblemReadModelResponse(
 	String singleProblemName,
 	String problemImage,
 
-	CourseQueryContainsParentsResult result,
+	CourseQueryContainsParentsResult courseInfo,
 
 	AnswerType answerType,
 	Difficulty difficulty,
@@ -21,14 +21,14 @@ public record SingleProblemReadModelResponse(
 	Long attemptedUserDistinctCount, // 해당 문제를 풀려고 한 사용자 수
 	Double accuracy // 정답률
 ) {
-	public static SingleProblemReadModelResponse of(SingleProblemReadModelResult result, CourseQueryContainsParentsResult courseQueryContainsParentsResult) {
+	public static SingleProblemReadModelResponse of(SingleProblemReadModelResult result, CourseQueryContainsParentsResult courseInfo) {
 		return new SingleProblemReadModelResponse(
 			result.id(),
 			result.successAtFirstTry(),
 			result.problemId(),
 			result.singleProblemName(),
 			result.problemImage(),
-			courseQueryContainsParentsResult,
+			courseInfo,
 			result.answerType(),
 			result.difficulty(),
 			result.firstTrySuccessCount(),
