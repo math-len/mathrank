@@ -40,10 +40,6 @@ public class CourseClient {
 			.body(CourseQueryContainsParentsResult.class);
 	}
 
-	private String getUrlFormat(final String host, final Integer port) {
-		return URL_FORMAT.formatted(host, port);
-	};
-
 	@Getter
 	@Configuration
 	@ConfigurationProperties("client.course")
