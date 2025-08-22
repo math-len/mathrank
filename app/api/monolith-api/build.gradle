@@ -18,4 +18,6 @@ dependencies {
     implementation project(':app:init:mathrank-auth-init')
 
     implementation project(':app:consumer:mathrank-problem-single-read-consumer-monolith')
+
+    implementation project(':common:mathrank-cache-caffeine')
 }
