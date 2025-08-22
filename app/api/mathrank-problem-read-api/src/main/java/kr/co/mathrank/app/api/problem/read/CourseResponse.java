@@ -1,6 +1,6 @@
 package kr.co.mathrank.app.api.problem.read;
 
-import kr.co.mathrank.domain.problem.dto.CourseQueryResult;
+import kr.co.mathrank.client.internal.course.CourseQueryResult;
 
 public record CourseResponse(
 	String courseName,

@@ -2,7 +2,7 @@ package kr.co.mathrank.app.api.problem.read;
 
 import java.util.List;
 
-import kr.co.mathrank.domain.problem.dto.CourseQueryContainsParentsResult;
+import kr.co.mathrank.client.internal.course.CourseQueryContainsParentsResult;
 
 public record CourseTotalResponse(
 	CourseResponse target,
