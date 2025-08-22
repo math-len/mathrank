@@ -22,7 +22,6 @@ public class CourseClient {
 
 	CourseClient(final CourseClientProperties properties) {
 		final String baseURL = URL_FORMAT.formatted(properties.getHost(), properties.getPort());
-		log.info("[CourseClient.new] init : {}", properties);
 		log.info("[CourseClient.new] init : {}", baseURL);
 		this.restClient = RestClient.builder()
 			.baseUrl(baseURL)
