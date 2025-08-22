@@ -18,6 +18,7 @@ include(
         'app:api:mathrank-api-common',
         'app:api:mathrank-auth-api',
         'app:api:mathrank-school-read-api',
+        'app:api:mathrank-course-api',
         'app:batch',
         'app:consumer',
         'app:consumer:mathrank-problem-single-consumer',

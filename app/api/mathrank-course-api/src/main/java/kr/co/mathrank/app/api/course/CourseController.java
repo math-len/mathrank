@@ -1,4 +1,4 @@
-package kr.co.mathrank.app.api.problem;
+package kr.co.mathrank.app.api.course;
 
 import java.util.List;
 
@@ -10,8 +10,8 @@ import org.springframework.web.bind.annotation.RestController;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import kr.co.mathrank.app.api.common.authentication.Authorization;
-import kr.co.mathrank.domain.problem.dto.CourseQueryResult;
-import kr.co.mathrank.domain.problem.service.CourseQueryService;
+import kr.co.mathrank.domain.course.dto.CourseQueryResult;
+import kr.co.mathrank.domain.course.service.CourseQueryService;
 import lombok.RequiredArgsConstructor;
 
 @Tag(name = "문제 과정 API", description = "문제 등록에서 사용되는 과정( 초/중/고, 대단원, 중단원, 소단원 )을 조회하기 위한 API 입니다.")
