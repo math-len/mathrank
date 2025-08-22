@@ -45,6 +45,7 @@ include(
 
         'common',
         'common:mathrank-cache',
+        'common:mathrank-cache-caffeine',
         'common:mathrank-querydsl',
         'common:mathrank-page',
         'common:mathrank-exception',
