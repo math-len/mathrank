@@ -4,10 +4,10 @@ import java.time.LocalDateTime;
 import java.util.Set;
 
 import kr.co.mathrank.client.external.school.SchoolInfo;
+import kr.co.mathrank.client.internal.course.CourseQueryContainsParentsResult;
 import kr.co.mathrank.client.internal.member.MemberInfo;
 import kr.co.mathrank.domain.problem.core.AnswerType;
 import kr.co.mathrank.domain.problem.core.Difficulty;
-import kr.co.mathrank.domain.problem.dto.CourseQueryContainsParentsResult;
 import kr.co.mathrank.domain.problem.dto.ProblemQueryResult;
 
 public record ProblemResponse(

@@ -103,7 +103,7 @@ class ProblemQueryRepositoryImpl implements ProblemQueryRepository {
 		if (path == null) {
 			return null;
 		}
-		return QProblem.problem.course.path.path.startsWith(path);
+		return QProblem.problem.coursePath.startsWith(path);
 	}
 
 	private BooleanExpression solutionVideoLinkExist(final Boolean solutionVideoLinkExist) {

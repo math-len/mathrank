@@ -16,7 +16,7 @@ import lombok.ToString;
 @Entity
 @Table(
 	uniqueConstraints = @UniqueConstraint(
-		name = "unique_memberId_singleProblemId",
+		name = "unique_singleProblemSolver_memberId_singleProblemId",
 		columnNames = {"member_id", "single_problem_read_model_id"}
 	)
 )

@@ -14,13 +14,9 @@ import kr.co.mathrank.domain.problem.core.AnswerType;
 import kr.co.mathrank.domain.problem.core.Difficulty;
 import kr.co.mathrank.domain.problem.dto.ProblemUpdateCommand;
 import kr.co.mathrank.domain.problem.entity.Answer;
-import kr.co.mathrank.domain.problem.entity.Course;
-import kr.co.mathrank.domain.problem.entity.Path;
 import kr.co.mathrank.domain.problem.entity.Problem;
 import kr.co.mathrank.domain.problem.exception.CannotAccessProblemException;
-import kr.co.mathrank.domain.problem.exception.CannotFoundCourseException;
 import kr.co.mathrank.domain.problem.exception.CannotFoundProblemException;
-import kr.co.mathrank.domain.problem.repository.CourseRepository;
 import kr.co.mathrank.domain.problem.repository.ProblemRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -30,7 +26,6 @@ import lombok.extern.slf4j.Slf4j;
 @RequiredArgsConstructor
 class ProblemUpdateManager {
 	private final ProblemRepository problemRepository;
-	private final CourseRepository courseRepository;
 	private final Snowflake snowflake;
 	private final TransactionalOutboxPublisher outboxPublisher;
 
@@ -38,12 +33,11 @@ class ProblemUpdateManager {
 	public void update(final ProblemUpdateCommand command, final String schoolLocation) {
 		final Problem problem = problemRepository.findById(command.problemId())
 			.orElseThrow(() -> new CannotFoundProblemException(command.problemId()));
-		final Course course = getCourse(command.coursePath());
 
 		isOwner(command.requestMemberId(), problem);
 
 		problem.setDifficulty(command.difficulty());
-		problem.setCourse(course);
+		problem.setCoursePath(command.coursePath());
 		problem.setType(command.answerType());
 		problem.setAnswers(mapToAnswer(command.answers(), problem));
 		problem.setProblemImage(command.imageSource());
@@ -65,7 +59,7 @@ class ProblemUpdateManager {
 	private void publishUpdateMessage(final Problem problem) {
 		outboxPublisher.publish("problem-info-updated", new ProblemUpdatedEventPayload(
 			problem.getId(),
-			problem.getCourse().getPath().getPath(),
+			problem.getCoursePath(),
 			problem.getProblemImage(),
 			problem.getType(),
 			problem.getDifficulty(),
@@ -75,11 +69,6 @@ class ProblemUpdateManager {
 			problem.getLocation(),
 			problem.getMemo()
 		));
-	}
-
-	private Course getCourse(String command) {
-		return courseRepository.findById(new Path(command))
-			.orElseThrow(() -> new CannotFoundCourseException(command));
 	}
 
 	private void isOwner(final Long requestMemberId, final Problem problem) {

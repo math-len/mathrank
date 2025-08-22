@@ -18,6 +18,8 @@ include(
         'app:api:mathrank-api-common',
         'app:api:mathrank-auth-api',
         'app:api:mathrank-school-read-api',
+        'app:api:mathrank-course-api',
+        'app:api:mathrank-course-inner-api',
         'app:batch',
         'app:consumer',
         'app:consumer:mathrank-problem-single-consumer',
@@ -25,12 +27,14 @@ include(
 
         'client',
         'client:internal',
+        'client:internal:mathrank-course-client',
         'client:internal:mathrank-member-client',
         'client:internal:mathrank-problem-client',
         'client:external',
         'client:external:mathrank-school',
 
         'domain',
+        'domain:mathrank-course-domain',
         'domain:mathrank-problem-assessment-domain',
         'domain:mathrank-image-domain',
         'domain:mathrank-auth-domain',

@@ -12,10 +12,7 @@ import kr.co.mathrank.domain.problem.core.AnswerType;
 import kr.co.mathrank.domain.problem.core.Difficulty;
 import kr.co.mathrank.domain.problem.dto.ProblemQueryCommand;
 import kr.co.mathrank.domain.problem.dto.ProblemQueryPageResult;
-import kr.co.mathrank.domain.problem.entity.Course;
-import kr.co.mathrank.domain.problem.entity.Path;
 import kr.co.mathrank.domain.problem.entity.Problem;
-import kr.co.mathrank.domain.problem.repository.CourseRepository;
 import kr.co.mathrank.domain.problem.repository.ProblemRepository;
 
 @SpringBootTest
@@ -27,20 +24,15 @@ class ProblemQueryServiceTest {
 	private ProblemQueryService problemQueryService;
 	@Autowired
 	private ProblemRepository problemRepository;
-	@Autowired
-	private CourseRepository courseRepository;
 
 	@Test
 	void 문제_조회_테스트() {
-		final Path path = new Path();
-		final Course course = Course.of("test", path);
-		courseRepository.save(course);
 		entityManager.flush();
 		entityManager.clear();
 
 		// memberId가 1인 문제를 10개 등록한다.
 		for (int i = 0; i < 10; i++) {
-			final Problem problem = Problem.of((long) i, 1L, "문제.jpeg", Difficulty.KILLER, AnswerType.MULTIPLE_CHOICE, course, "testCode", null, null, 1001, null, null);
+			final Problem problem = Problem.of((long) i, 1L, "문제.jpeg", Difficulty.KILLER, AnswerType.MULTIPLE_CHOICE, "testPath", "testCode", null, null, 1001, null, null);
 			problemRepository.save(problem);
 		}
 
