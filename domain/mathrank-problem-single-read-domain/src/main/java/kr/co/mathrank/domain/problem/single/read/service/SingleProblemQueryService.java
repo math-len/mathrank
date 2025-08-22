@@ -98,12 +98,6 @@ public class SingleProblemQueryService {
 				log.info("[SingleProblemQueryService.getProblemWithSolverStatus] Problem not found. singleProblemId={}", singleProblemId);
 				return new CannotFoundProblemException();
 			});
-		// final SingleProblemSolver solver = model.getSolvers().stream()
-		// 	.filter(singleProblemSolver -> singleProblemSolver.getMemberId().equals(requestMemberId))
-		// 	.findAny()
-		// 	.orElse(null);
-		//
-		// return SingleProblemReadModelResult.from(model, solver == null ? null : solver.isSuccess());
 	}
 
 	/**
