@@ -11,17 +11,19 @@ import org.springframework.context.annotation.Configuration;
 import com.github.benmanes.caffeine.cache.Cache;
 import com.github.benmanes.caffeine.cache.Caffeine;
 
+import kr.co.mathrank.common.cache.CacheSpecAssembler;
 import kr.co.mathrank.common.cache.RequiredCacheSpec;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @EnableCaching
 @Configuration
-public class CaffeineCacheCustomizerConfiguration {
+public class CaffeineCacheCustomizerConfiguration implements CacheSpecAssembler {
+	@Override
 	@Bean
-	public CacheManager applyRequireCacheSpecs(final List<RequiredCacheSpec> requireCacheSpecs) {
+	public CacheManager assemble(List<RequiredCacheSpec> requiredCacheSpecs) {
 		final CaffeineCacheManager cacheManager = new CaffeineCacheManager();
-		for (final RequiredCacheSpec cacheSpec : requireCacheSpecs) {
+		for (final RequiredCacheSpec cacheSpec : requiredCacheSpecs) {
 			final Cache<Object, Object> cache = Caffeine.newBuilder()
 				.maximumSize(200L)  // 엔트리 최대 200개
 				.expireAfterWrite(cacheSpec.ttl()).build();
