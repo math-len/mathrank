@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -37,9 +38,9 @@ public class ProblemSolveController {
 	 * @return
 	 */
 	@Operation(hidden = true)
-	@GetMapping("/api/inner/v1/problem")
+	@GetMapping("/api/inner/v1/problem/{problemId}")
 	public ResponseEntity<ProblemQueryResult> find(
-		@RequestParam final Long problemId
+		@PathVariable final Long problemId
 	) {
 		final ProblemQueryResult queryResult = problemQueryService.getSingle(problemId);
 		return ResponseEntity.ok(queryResult);
