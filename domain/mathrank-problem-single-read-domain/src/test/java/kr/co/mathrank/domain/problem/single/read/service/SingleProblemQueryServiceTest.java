@@ -58,6 +58,36 @@ class SingleProblemQueryServiceTest {
 	}
 
 	@Test
+	void 단일_조회시_풀이성공여부가_필드예_포함된다() {
+		final Long memberId = 10L;
+
+		repository.saveAll(List.of(
+			SingleProblemReadModel.of(1L, 1L, "singleProblemName", "img", "math", null, Difficulty.MID, 0L, 0L, 0L,
+				LocalDateTime.now()),
+			SingleProblemReadModel.of(2L, 2L, "singleProblemName", "img", "math", null, Difficulty.MID, 0L, 0L, 0L,
+				LocalDateTime.now()),
+			SingleProblemReadModel.of(3L, 3L, "singleProblemName", "img", "math", null, Difficulty.MID, 0L, 0L, 0L,
+				LocalDateTime.now())
+		));
+
+		// 1번 문제는 첫시도에풀이 성공 표시
+		singleProblemUpdateService.updateAttemptStatistics(new SingleProblemAttemptStatsUpdateCommand(
+			1L, memberId, true, 1L, 1L, 1L
+		));
+		// 2번 문제는 첫시도에 풀이 실패 표시
+		singleProblemUpdateService.updateAttemptStatistics(new SingleProblemAttemptStatsUpdateCommand(
+			2L, memberId, false, 1L, 1L, 1L
+		));
+		// 3번은 풀이 시도 X
+
+		Assertions.assertAll(
+			() -> Assertions.assertTrue(queryService.getProblemWithSolverStatus(1L, memberId).successAtFirstTry()),
+			() -> Assertions.assertFalse(queryService.getProblemWithSolverStatus(2L, memberId).successAtFirstTry()),
+			() -> Assertions.assertNull(queryService.getProblemWithSolverStatus(3L, memberId).successAtFirstTry())
+		);
+	}
+
+	@Test
 	void 내가_푼_문제가_표시된다() {
 		final Long memberId = 10L;
 

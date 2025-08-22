@@ -18,10 +18,13 @@ import kr.co.mathrank.domain.problem.single.read.entity.OrderColumn;
 import kr.co.mathrank.domain.problem.single.read.entity.OrderDirection;
 import kr.co.mathrank.domain.problem.single.read.entity.SingleProblemReadModel;
 import kr.co.mathrank.domain.problem.single.read.entity.SingleProblemSolver;
+import kr.co.mathrank.domain.problem.single.read.exception.CannotFoundProblemException;
 import kr.co.mathrank.domain.problem.single.read.repository.SingleProblemReadModelRepository;
 import kr.co.mathrank.domain.problem.single.read.repository.SingleProblemSolverRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 @Service
 @Validated
 @RequiredArgsConstructor
@@ -73,6 +76,34 @@ public class SingleProblemQueryService {
 			pageSize,
 			PageUtil.getNextPages(pageSize, pageNumber, count, readModels.size()
 			));
+	}
+
+	/**
+	 * 단일 문제 상세 정보를 조회합니다.
+	 * <p>
+	 * 주어진 문제 ID에 해당하는 문제를 조회하고, 요청한 사용자의 풀이 기록이 존재하면
+	 * 풀이 성공 여부까지 함께 반환합니다.
+	 *
+	 * @param singleProblemId   조회할 문제의 ID
+	 * @param requestMemberId   요청한 사용자의 ID
+	 * @return                  문제 상세 정보 및 풀이 성공 여부 (풀이 기록이 없으면 null)
+	 * @throws CannotFoundProblemException  해당 문제를 찾을 수 없는 경우 발생
+	 */
+	public SingleProblemReadModelResult getProblemWithSolverStatus(
+		@NotNull final Long singleProblemId,
+		@NotNull final Long requestMemberId
+	) {
+		final SingleProblemReadModel model = singleProblemRepository.findById(singleProblemId)
+			.orElseThrow(() -> {
+				log.info("[SingleProblemQueryService.getProblemWithSolverStatus] Problem not found. singleProblemId={}", singleProblemId);
+				return new CannotFoundProblemException();
+			});
+
+		// 단일 조회
+		final List<SingleProblemSolver> solvers = singleProblemSolverRepository.findByMemberIdAndSingleProblemReadModelIn(
+			requestMemberId, List.of(model));
+
+		return SingleProblemReadModelResult.from(model, solvers.isEmpty() ? null : solvers.getFirst().isSuccess());
 	}
 
 	/**
