@@ -4,5 +4,4 @@ dependencies {
 
     implementation project(':domain:mathrank-course-domain')
     implementation project(':app:api:mathrank-api-common')
-
 }
