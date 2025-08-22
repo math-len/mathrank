@@ -1,4 +1,4 @@
-package kr.co.mathrank.domain.problem.dto;
+package kr.co.mathrank.domain.course.dto;
 
 import java.util.List;
 

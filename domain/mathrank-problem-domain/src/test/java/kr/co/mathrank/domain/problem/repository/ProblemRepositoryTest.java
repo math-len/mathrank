@@ -16,8 +16,6 @@ import jakarta.persistence.PersistenceContext;
 import kr.co.mathrank.domain.problem.core.AnswerType;
 import kr.co.mathrank.domain.problem.core.Difficulty;
 import kr.co.mathrank.domain.problem.entity.Answer;
-import kr.co.mathrank.domain.problem.entity.Course;
-import kr.co.mathrank.domain.problem.entity.Path;
 import kr.co.mathrank.domain.problem.entity.Problem;
 
 @SpringBootTest
@@ -25,24 +23,19 @@ import kr.co.mathrank.domain.problem.entity.Problem;
 class ProblemRepositoryTest {
 	@Autowired
 	private ProblemRepository problemRepository;
-	@Autowired
-	private CourseRepository courseRepository;
 	@PersistenceContext
 	private EntityManager entityManager;
 
 	@Test
 	void 본인_문제_조회_테스트() {
-		final Path path = new Path();
-		final Course course = Course.of("test", path);
-		courseRepository.save(course);
 		entityManager.flush();
 		entityManager.clear();
 
 		// 사용자 1의 문제
-		final Problem owner1 = Problem.of((long) 1, 2L, "문제.jpeg", Difficulty.KILLER, AnswerType.MULTIPLE_CHOICE, course, "testCode", null, null,
+		final Problem owner1 = Problem.of((long) 1, 2L, "문제.jpeg", Difficulty.KILLER, AnswerType.MULTIPLE_CHOICE, "testPath", "testCode", null, null,
 			1001, null, null);
 		// 사용자 2의 문제
-		final Problem owner2 = Problem.of((long) 2, 1L, "문제.jpeg", Difficulty.KILLER, AnswerType.MULTIPLE_CHOICE, course, "testCode", null, null, 1001, null, null);
+		final Problem owner2 = Problem.of((long) 2, 1L, "문제.jpeg", Difficulty.KILLER, AnswerType.MULTIPLE_CHOICE, "testPath", "testCode", null, null, 1001, null, null);
 
 		problemRepository.save(owner1);
 		problemRepository.save(owner2);
@@ -55,16 +48,13 @@ class ProblemRepositoryTest {
 
 	@Test
 	void 문제ID_로_조회된다() {
-		final Path path = new Path();
-		final Course course = Course.of("test", path);
-		courseRepository.save(course);
 		entityManager.flush();
 		entityManager.clear();
 
 		final Long problemId = 1021923L;
 
 		// 사용자 1의 문제
-		final Problem problem = Problem.of(problemId, 2L, "문제.jpeg", Difficulty.KILLER, AnswerType.MULTIPLE_CHOICE, course, "testCode", null, null,
+		final Problem problem = Problem.of(problemId, 2L, "문제.jpeg", Difficulty.KILLER, AnswerType.MULTIPLE_CHOICE, "testPath", "testCode", null, null,
 			1001, null, null);
 
 		problemRepository.save(problem);
@@ -77,14 +67,11 @@ class ProblemRepositoryTest {
 
 	@Test
 	void 조건_없을때_모두_조회한다() {
-		final Path path = new Path();
-		final Course course = Course.of("test", path);
-		courseRepository.save(course);
 		entityManager.flush();
 		entityManager.clear();
 
-		final Problem problem1 = Problem.of(1L, 2L, "문제.jpeg", Difficulty.KILLER, AnswerType.MULTIPLE_CHOICE, course, "testCode", null, null, 1001, null, null);
-		final Problem problem2 = Problem.of(2L, 2L, "문제.jpeg", Difficulty.KILLER, AnswerType.MULTIPLE_CHOICE, course, "testCode", null, null, 1001, null, null);
+		final Problem problem1 = Problem.of(1L, 2L, "문제.jpeg", Difficulty.KILLER, AnswerType.MULTIPLE_CHOICE, "testPath", "testCode", null, null, 1001, null, null);
+		final Problem problem2 = Problem.of(2L, 2L, "문제.jpeg", Difficulty.KILLER, AnswerType.MULTIPLE_CHOICE, "testPath", "testCode", null, null, 1001, null, null);
 
 		problemRepository.save(problem1);
 		problemRepository.save(problem2);
@@ -97,17 +84,14 @@ class ProblemRepositoryTest {
 
 	@Test
 	void 단일_조건_으로_조회된다() {
-		final Path path = new Path();
-		final Course course = Course.of("test", path);
-		courseRepository.save(course);
 		entityManager.flush();
 		entityManager.clear();
 
 		// level 4
-		final Problem problem1 = Problem.of(1L, 2L, "문제.jpeg", Difficulty.HIGH, AnswerType.MULTIPLE_CHOICE, course, "testCode", null, null, 1001, null, null);
+		final Problem problem1 = Problem.of(1L, 2L, "문제.jpeg", Difficulty.HIGH, AnswerType.MULTIPLE_CHOICE, "testPath", "testCode", null, null, 1001, null, null);
 
 		// level 5
-		final Problem problem2 = Problem.of(2L, 2L, "문제.jpeg", Difficulty.KILLER, AnswerType.MULTIPLE_CHOICE, course, "testCode", null, null, 1001, null, null);
+		final Problem problem2 = Problem.of(2L, 2L, "문제.jpeg", Difficulty.KILLER, AnswerType.MULTIPLE_CHOICE, "testPath", "testCode", null, null, 1001, null, null);
 
 		problemRepository.save(problem1);
 		problemRepository.save(problem2);
@@ -120,35 +104,29 @@ class ProblemRepositoryTest {
 
 	@Test
 	void 여러조건으로_조회된다() {
-		final Path path = new Path();
-		final Course course = Course.of("test", path);
-		courseRepository.save(course);
 		entityManager.flush();
 		entityManager.clear();
 
-		final Problem problem1 = Problem.of(1L, 1L, "문제.jpeg", Difficulty.KILLER, AnswerType.MULTIPLE_CHOICE, course, "testCode", null, null, 1001, null, null);
-		final Problem problem2 = Problem.of(2L, 3L, "문제.jpeg", Difficulty.KILLER, AnswerType.MULTIPLE_CHOICE, course, "testCode", null, null, 1001, null, null);
+		final Problem problem1 = Problem.of(1L, 1L, "문제.jpeg", Difficulty.KILLER, AnswerType.MULTIPLE_CHOICE, "testPath", "testCode", null, null, 1001, null, null);
+		final Problem problem2 = Problem.of(2L, 3L, "문제.jpeg", Difficulty.KILLER, AnswerType.MULTIPLE_CHOICE, "testPath", "testCode", null, null, 1001, null, null);
 
 		problemRepository.save(problem1);
 		problemRepository.save(problem2);
 
 		final List<Problem> problems = problemRepository.query(1L, null, Difficulty.KILLER, Difficulty.KILLER,
 			AnswerType.MULTIPLE_CHOICE,
-			"aa", null, 1001, null, 10, 1);
+			"testPath", null, 1001, null, 10, 1);
 
 		Assertions.assertEquals(1, problems.size());
 	}
 
 	@Test
 	void 일치하는게_없을땐_빈_리스트를_반환한다() {
-		final Path path = new Path();
-		final Course course = Course.of("test", path);
-		courseRepository.save(course);
 		entityManager.flush();
 		entityManager.clear();
 
-		final Problem problem1 = Problem.of(1L, 2L, "문제.jpeg", Difficulty.KILLER, AnswerType.MULTIPLE_CHOICE, course, "testCode", null, null, 1001, null, null);
-		final Problem problem2 = Problem.of(2L, 3L, "문제.jpeg", Difficulty.KILLER, AnswerType.MULTIPLE_CHOICE, course, "testCode", null, null, 1001, null, null);
+		final Problem problem1 = Problem.of(1L, 2L, "문제.jpeg", Difficulty.KILLER, AnswerType.MULTIPLE_CHOICE, "testPath", "testCode", null, null, 1001, null, null);
+		final Problem problem2 = Problem.of(2L, 3L, "문제.jpeg", Difficulty.KILLER, AnswerType.MULTIPLE_CHOICE, "testPath", "testCode", null, null, 1001, null, null);
 
 		problemRepository.save(problem1);
 		problemRepository.save(problem2);
@@ -161,14 +139,11 @@ class ProblemRepositoryTest {
 
 	@Test
 	void 조건_없을때_모든_문제를_조회한다() {
-		final Path path = new Path();
-		final Course course = Course.of("test", path);
-		courseRepository.save(course);
 		entityManager.flush();
 		entityManager.clear();
 
 		for (int i = 0; i < 10; i++) {
-			final Problem problem = Problem.of((long) i, 1L, "문제.jpeg", Difficulty.KILLER, AnswerType.MULTIPLE_CHOICE, course, "testCode", null, null, 1001, null, null);
+			final Problem problem = Problem.of((long) i, 1L, "문제.jpeg", Difficulty.KILLER, AnswerType.MULTIPLE_CHOICE, "testPath", "testCode", null, null, 1001, null, null);
 			problemRepository.save(problem);
 		}
 
@@ -177,20 +152,18 @@ class ProblemRepositoryTest {
 
 	@Test
 	void 특정_조건의_문제_총_갯수_조회() {
-		final Path path = new Path();
-		final Course course = Course.of("test", path);
-		courseRepository.save(course);
+
 		entityManager.flush();
 		entityManager.clear();
 
 		// level 5 문제들
 		for (int i = 0; i < 10; i++) {
-			final Problem problem = Problem.of((long) i, 1L, "문제.jpeg", Difficulty.HIGH, AnswerType.MULTIPLE_CHOICE, course, "testCode", null, null, 1001, null, null);
+			final Problem problem = Problem.of((long) i, 1L, "문제.jpeg", Difficulty.HIGH, AnswerType.MULTIPLE_CHOICE, "testPath", "testCode", null, null, 1001, null, null);
 			problemRepository.save(problem);
 		}
 		// level1 문제들
 		for (int i = 10; i < 20; i++) {
-			final Problem problem = Problem.of((long) i, 1L, "문제.jpeg", Difficulty.KILLER, AnswerType.MULTIPLE_CHOICE, course, "testCode", null, null, 1001, null, null);
+			final Problem problem = Problem.of((long) i, 1L, "문제.jpeg", Difficulty.KILLER, AnswerType.MULTIPLE_CHOICE, "testPath", "testCode", null, null, 1001, null, null);
 			problemRepository.save(problem);
 		}
 
@@ -200,20 +173,17 @@ class ProblemRepositoryTest {
 
 	@Test
 	void 조건_모두_널일때_모든_갯수_조회() {
-		final Path path = new Path();
-		final Course course = Course.of("test", path);
-		courseRepository.save(course);
 		entityManager.flush();
 		entityManager.clear();
 
 		// level 5 문제들
 		for (int i = 0; i < 10; i++) {
-			final Problem problem = Problem.of((long) i, 1L, "문제.jpeg", Difficulty.KILLER, AnswerType.MULTIPLE_CHOICE, course, "testCode", null, null, 1001, null, null);
+			final Problem problem = Problem.of((long) i, 1L, "문제.jpeg", Difficulty.KILLER, AnswerType.MULTIPLE_CHOICE, "testPath", "testCode", null, null, 1001, null, null);
 			problemRepository.save(problem);
 		}
 		// level1 문제들
 		for (int i = 10; i < 20; i++) {
-			final Problem problem = Problem.of((long) i, 1L, "문제.jpeg", Difficulty.KILLER, AnswerType.MULTIPLE_CHOICE, course, "testCode", null, null, 1001, null, null);
+			final Problem problem = Problem.of((long) i, 1L, "문제.jpeg", Difficulty.KILLER, AnswerType.MULTIPLE_CHOICE, "testPath", "testCode", null, null, 1001, null, null);
 			problemRepository.save(problem);
 		}
 
@@ -221,41 +191,13 @@ class ProblemRepositoryTest {
 	}
 
 	@Test
-	void 하위_단원까지_함께_조회된다() {
-		final Path path = new Path();
-		final Course parentCourse = Course.of("test", path);
-		courseRepository.save(parentCourse);
-		final Course childCourse = Course.of("test2", path.nextChild(path));
-		courseRepository.save(childCourse);
-
-		entityManager.flush();
-		entityManager.clear();
-
-		for (int i = 0; i < 10; i++) {
-			final Problem problem = Problem.of((long) i, 1L, "문제.jpeg", Difficulty.KILLER, AnswerType.MULTIPLE_CHOICE, parentCourse, "testCode", null, null, 1001, null, null);
-			problemRepository.save(problem);
-		}
-
-		for (int i = 10; i < 20; i++) {
-			final Problem problem = Problem.of((long) i, 1L, "문제.jpeg", Difficulty.KILLER, AnswerType.MULTIPLE_CHOICE, childCourse, "testCode", null, null, 1001, null, null);
-			problemRepository.save(problem);
-		}
-
-		Assertions.assertEquals(20,
-			problemRepository.query(null, null, null, null, null, path.getPath(), null, 1001, null, 100, 1).size());
-	}
-
-	@Test
 	void 질문_페이징시_limit을_활용하여_두번의_쿼리로_해결한다() {
-		final Course course = Course.of("test2", new Path());
-		courseRepository.save(course);
-
 		entityManager.flush();
 		entityManager.clear();
 
 		// 데이터 삽입 ( 문제당 답안 2개씩 )
 		for (int i = 0; i < 20; i++) {
-			final Problem problem = Problem.of((long) i, 1L, "문제.jpeg", Difficulty.KILLER, AnswerType.MULTIPLE_CHOICE, course, "testCode", null, null, 1001, null, null);
+			final Problem problem = Problem.of((long) i, 1L, "문제.jpeg", Difficulty.KILLER, AnswerType.MULTIPLE_CHOICE, "testPath", "testCode", null, null, 1001, null, null);
 			final Set<Answer> answers = Set.of(Answer.of((long) i, "1", problem), Answer.of((long) i + 20, "2", problem));
 			problem.setAnswers(answers);
 			problemRepository.save(problem);

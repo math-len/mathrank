@@ -1,4 +1,4 @@
-package kr.co.mathrank.domain.problem.service;
+package kr.co.mathrank.domain.course.service;
 
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
@@ -8,11 +8,11 @@ import org.springframework.validation.annotation.Validated;
 
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
-import kr.co.mathrank.domain.problem.dto.CourseRegisterCommand;
-import kr.co.mathrank.domain.problem.entity.Course;
-import kr.co.mathrank.domain.problem.entity.Path;
-import kr.co.mathrank.domain.problem.exception.CannotFoundCourseException;
-import kr.co.mathrank.domain.problem.repository.CourseRepository;
+import kr.co.mathrank.domain.course.dto.CourseRegisterCommand;
+import kr.co.mathrank.domain.course.entity.Course;
+import kr.co.mathrank.domain.course.entity.Path;
+import kr.co.mathrank.domain.course.exception.CannotFoundCourseException;
+import kr.co.mathrank.domain.course.repository.CourseRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 

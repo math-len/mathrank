@@ -16,9 +16,6 @@ import kr.co.mathrank.domain.problem.core.Difficulty;
 import kr.co.mathrank.domain.problem.dto.ProblemRegisterCommand;
 import kr.co.mathrank.domain.problem.dto.ProblemSolveCommand;
 import kr.co.mathrank.domain.problem.dto.ProblemSolveResult;
-import kr.co.mathrank.domain.problem.entity.Course;
-import kr.co.mathrank.domain.problem.entity.Path;
-import kr.co.mathrank.domain.problem.repository.CourseRepository;
 import lombok.RequiredArgsConstructor;
 
 @SpringBootTest
@@ -29,20 +26,14 @@ class ProblemSolveServiceTest {
 	private ProblemSolveService problemSolveService;
 	@Autowired
 	private ProblemService problemService;
-	@Autowired
-	private CourseRepository courseRepository;
 	@MockitoBean
 	private SchoolLocationManager schoolLocationManager;
 
 	@Test
 	void 제출된_정답이_실제_정답이랑_정확히_일치할때_성공한다() {
-		final Path path = new Path();
-		final Course course = Course.of("test", path);
-		courseRepository.save(course);
-
 		Mockito.when(schoolLocationManager.getSchoolLocation(Mockito.anyString())).thenReturn("test");
 
-		final ProblemRegisterCommand command = new ProblemRegisterCommand(1L, "image.jpeg", "image.jpeg", AnswerType.MULTIPLE_CHOICE, path.getPath(), Difficulty.KILLER, "testCode",
+		final ProblemRegisterCommand command = new ProblemRegisterCommand(1L, "image.jpeg", "image.jpeg", AnswerType.MULTIPLE_CHOICE, "testPath", Difficulty.KILLER, "testCode",
 			Set.of("1"), 1001, null, null);
 
 		final Long problemId = problemService.save(command);
@@ -56,13 +47,9 @@ class ProblemSolveServiceTest {
 
 	@Test
 	void 제출된_정답이_일치하지만_더많으면_실패한다() {
-		final Path path = new Path();
-		final Course course = Course.of("test", path);
-		courseRepository.save(course);
-
 		Mockito.when(schoolLocationManager.getSchoolLocation(Mockito.anyString())).thenReturn("test");
 
-		final ProblemRegisterCommand command = new ProblemRegisterCommand(1L, "image.jpeg", "image.jpeg", AnswerType.MULTIPLE_CHOICE, path.getPath(), Difficulty.KILLER, "testCode",
+		final ProblemRegisterCommand command = new ProblemRegisterCommand(1L, "image.jpeg", "image.jpeg", AnswerType.MULTIPLE_CHOICE, "testPath", Difficulty.KILLER, "testCode",
 			Set.of("1"), 1001, null, null);
 		final Long problemId = problemService.save(command);
 
@@ -76,13 +63,9 @@ class ProblemSolveServiceTest {
 
 	@Test
 	void 제출된_정답에_정답이_포함되지_않으면_실패한다() {
-		final Path path = new Path();
-		final Course course = Course.of("test", path);
-		courseRepository.save(course);
-
 		Mockito.when(schoolLocationManager.getSchoolLocation(Mockito.anyString())).thenReturn("test");
 
-		final ProblemRegisterCommand command = new ProblemRegisterCommand(1L, "image.jpeg", "image.jpeg", AnswerType.MULTIPLE_CHOICE, path.getPath(), Difficulty.KILLER, "testCode",
+		final ProblemRegisterCommand command = new ProblemRegisterCommand(1L, "image.jpeg", "image.jpeg", AnswerType.MULTIPLE_CHOICE, "testPath", Difficulty.KILLER, "testCode",
 			Set.of("1"), 1001, null, null);
 		final Long problemId = problemService.save(command);
 

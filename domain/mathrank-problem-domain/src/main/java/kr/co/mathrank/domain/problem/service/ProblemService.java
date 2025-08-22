@@ -15,13 +15,9 @@ import kr.co.mathrank.domain.problem.dto.ProblemDeleteCommand;
 import kr.co.mathrank.domain.problem.dto.ProblemRegisterCommand;
 import kr.co.mathrank.domain.problem.dto.ProblemUpdateCommand;
 import kr.co.mathrank.domain.problem.entity.Answer;
-import kr.co.mathrank.domain.problem.entity.Course;
-import kr.co.mathrank.domain.problem.entity.Path;
 import kr.co.mathrank.domain.problem.entity.Problem;
 import kr.co.mathrank.domain.problem.exception.CannotAccessProblemException;
-import kr.co.mathrank.domain.problem.exception.CannotFoundCourseException;
 import kr.co.mathrank.domain.problem.exception.CannotFoundProblemException;
-import kr.co.mathrank.domain.problem.repository.CourseRepository;
 import kr.co.mathrank.domain.problem.repository.ProblemRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -32,14 +28,12 @@ import lombok.extern.slf4j.Slf4j;
 @RequiredArgsConstructor
 public class ProblemService {
 	private final ProblemRepository problemRepository;
-	private final CourseRepository courseRepository;
 	private final Snowflake snowflake;
 	private final SchoolLocationManager schoolLocationManager;
 	private final TransactionalOutboxPublisher transactionalOutboxPublisher;
 	private final ProblemUpdateManager problemUpdateManager;
 
 	public Long save(@NotNull @Valid final ProblemRegisterCommand command) {
-		final Course course = getCourse(command.coursePath());
 
 		final Long id = snowflake.nextId();
 		final Problem problem = Problem.of(
@@ -48,7 +42,7 @@ public class ProblemService {
 			command.imageSource(),
 			command.difficulty(),
 			command.answerType(),
-			course,
+			command.coursePath(),
 command.schoolCode(),
 			command.solutionVideoLink(),
 			command.solutionImage(),
@@ -61,18 +55,13 @@ command.schoolCode(),
 
 		problemRepository.save(problem);
 		log.info("[ProblemService.save] problem created - id: {}, memberId: {}, course: {}",
-			id, command.requestMemberId(), course.getCourseName());
+			id, command.requestMemberId(), command.coursePath());
 		return id;
 	}
 
 	public void update(@NotNull @Valid final ProblemUpdateCommand command) {
 		final String schoolLocation = schoolLocationManager.getSchoolLocation(command.schoolCode());
 		problemUpdateManager.update(command, schoolLocation);
-	}
-
-	private Course getCourse(String command) {
-		return courseRepository.findById(new Path(command))
-			.orElseThrow(() -> new CannotFoundCourseException(command));
 	}
 
 	@Transactional

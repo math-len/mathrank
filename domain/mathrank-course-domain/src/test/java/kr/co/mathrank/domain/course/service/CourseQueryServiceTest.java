@@ -1,4 +1,4 @@
-package kr.co.mathrank.domain.problem.service;
+package kr.co.mathrank.domain.course.service;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -6,10 +6,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
 
-import kr.co.mathrank.domain.problem.dto.CourseQueryContainsParentsResult;
-import kr.co.mathrank.domain.problem.entity.Course;
-import kr.co.mathrank.domain.problem.entity.Path;
-import kr.co.mathrank.domain.problem.repository.CourseRepository;
+import kr.co.mathrank.domain.course.dto.CourseQueryContainsParentsResult;
+import kr.co.mathrank.domain.course.entity.Course;
+import kr.co.mathrank.domain.course.entity.Path;
+import kr.co.mathrank.domain.course.repository.CourseRepository;
 
 @SpringBootTest
 @Transactional

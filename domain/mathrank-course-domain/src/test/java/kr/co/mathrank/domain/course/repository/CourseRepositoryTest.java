@@ -1,4 +1,4 @@
-package kr.co.mathrank.domain.problem.repository;
+package kr.co.mathrank.domain.course.repository;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -8,8 +8,8 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.transaction.annotation.Transactional;
 
-import kr.co.mathrank.domain.problem.entity.Course;
-import kr.co.mathrank.domain.problem.entity.Path;
+import kr.co.mathrank.domain.course.entity.Course;
+import kr.co.mathrank.domain.course.entity.Path;
 
 @SpringBootTest
 @Transactional

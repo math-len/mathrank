@@ -1,6 +1,6 @@
-package kr.co.mathrank.domain.problem.dto;
+package kr.co.mathrank.domain.course.dto;
 
-import kr.co.mathrank.domain.problem.entity.Course;
+import kr.co.mathrank.domain.course.entity.Course;
 
 public record CourseQueryResult(
 	String coursePath,

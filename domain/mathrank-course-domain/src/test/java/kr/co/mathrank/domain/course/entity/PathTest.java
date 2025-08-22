@@ -1,4 +1,4 @@
-package kr.co.mathrank.domain.problem.entity;
+package kr.co.mathrank.domain.course.entity;
 
 import java.util.List;
 

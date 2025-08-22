@@ -1,4 +1,4 @@
-package kr.co.mathrank.domain.problem.service;
+package kr.co.mathrank.domain.course.service;
 
 import java.util.List;
 
@@ -6,11 +6,11 @@ import org.springframework.stereotype.Service;
 import org.springframework.validation.annotation.Validated;
 
 import jakarta.validation.constraints.NotNull;
-import kr.co.mathrank.domain.problem.dto.CourseQueryContainsParentsResult;
-import kr.co.mathrank.domain.problem.dto.CourseQueryResult;
-import kr.co.mathrank.domain.problem.dto.CourseQueryResults;
-import kr.co.mathrank.domain.problem.entity.Path;
-import kr.co.mathrank.domain.problem.repository.CourseRepository;
+import kr.co.mathrank.domain.course.dto.CourseQueryContainsParentsResult;
+import kr.co.mathrank.domain.course.dto.CourseQueryResult;
+import kr.co.mathrank.domain.course.dto.CourseQueryResults;
+import kr.co.mathrank.domain.course.entity.Path;
+import kr.co.mathrank.domain.course.repository.CourseRepository;
 import lombok.RequiredArgsConstructor;
 
 @Service

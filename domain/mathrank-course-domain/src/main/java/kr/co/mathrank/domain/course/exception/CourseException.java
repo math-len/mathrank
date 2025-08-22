@@ -1,4 +1,4 @@
-package kr.co.mathrank.domain.problem.exception;
+package kr.co.mathrank.domain.course.exception;
 
 import kr.co.mathrank.common.exception.MathRankException;
 

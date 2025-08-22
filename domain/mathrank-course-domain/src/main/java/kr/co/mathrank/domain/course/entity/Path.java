@@ -1,4 +1,4 @@
-package kr.co.mathrank.domain.problem.entity;
+package kr.co.mathrank.domain.course.entity;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -124,3 +124,4 @@ public class Path {
 		return SEQUENCE.indexOf(target);
 	}
 }
+
