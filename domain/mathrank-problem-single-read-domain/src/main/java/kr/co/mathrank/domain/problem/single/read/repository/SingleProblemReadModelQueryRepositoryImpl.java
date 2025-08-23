@@ -4,12 +4,16 @@ import java.util.List;
 
 import org.springframework.stereotype.Repository;
 
+import com.querydsl.core.types.Order;
+import com.querydsl.core.types.OrderSpecifier;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 
 import kr.co.mathrank.domain.problem.core.AnswerType;
 import kr.co.mathrank.domain.problem.core.Difficulty;
 import kr.co.mathrank.domain.problem.single.read.dto.SingleProblemReadModelQuery;
+import kr.co.mathrank.domain.problem.single.read.entity.OrderColumn;
+import kr.co.mathrank.domain.problem.single.read.entity.OrderDirection;
 import kr.co.mathrank.domain.problem.single.read.entity.QSingleProblemReadModel;
 import kr.co.mathrank.domain.problem.single.read.entity.SingleProblemReadModel;
 import lombok.RequiredArgsConstructor;
@@ -21,7 +25,7 @@ class SingleProblemReadModelQueryRepositoryImpl implements SingleProblemReadMode
 
 	@Override
 	public List<SingleProblemReadModel> queryPage(SingleProblemReadModelQuery query, int pageSize,
-		int pageNumber) {
+		int pageNumber, OrderColumn orderColumn, OrderDirection order) {
 		final QSingleProblemReadModel model = QSingleProblemReadModel.singleProblemReadModel;
 
 		return queryFactory.select(model)
@@ -29,6 +33,7 @@ class SingleProblemReadModelQueryRepositoryImpl implements SingleProblemReadMode
 			.where(
 				createWherePredicates(query)
 			)
+			.orderBy(orderSpecifier(order, orderColumn))
 			.offset((pageNumber - 1) * pageSize)
 			.limit(pageSize)
 			.fetch();
@@ -45,6 +50,22 @@ class SingleProblemReadModelQueryRepositoryImpl implements SingleProblemReadMode
 			.fetchOne();
 	}
 
+	private OrderSpecifier<?> orderSpecifier(OrderDirection direction, OrderColumn orderColumn) {
+		final Order order = switch (direction) {
+			case ASC -> Order.ASC;
+			case DESC -> Order.DESC;
+			case null -> Order.DESC;
+		};
+
+		final QSingleProblemReadModel model = QSingleProblemReadModel.singleProblemReadModel;
+
+		return switch (orderColumn) {
+			case DATE -> new OrderSpecifier<>(order, model.createdAt);
+			case TOTAL_TRY_COUNT -> new OrderSpecifier<>(order, model.totalAttemptedCount);
+			case null -> new OrderSpecifier<>(order, model.createdAt);
+		};
+	}
+
 	private BooleanExpression[] createWherePredicates(SingleProblemReadModelQuery query) {
 		return new BooleanExpression[] {
 			singleProblemIdMatch(query.singleProblemId()),
@@ -53,7 +74,16 @@ class SingleProblemReadModelQueryRepositoryImpl implements SingleProblemReadMode
 			accuracyIn(query.accuracyMinInclude(), query.accuracyMaxInclude()),
 			totalAttemptCountIn(query.totalAttemptCountMinInclude(), query.totalAttemptCountMaxInclude()),
 			answerTypeEqual(query.answerType()),
+			containsSingleProblemName(query.singleProblemName())
 		};
+	}
+
+	private BooleanExpression containsSingleProblemName(final String singleProblemName) {
+		if (singleProblemName == null) {
+			return null;
+		}
+
+		return QSingleProblemReadModel.singleProblemReadModel.singleProblemName.contains(singleProblemName);
 	}
 
 	private BooleanExpression singleProblemIdMatch(final Long singleProblemId) {

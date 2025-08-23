@@ -9,6 +9,8 @@ public record SingleProblemQueryRequest(
 
 	String coursePath,
 
+	String singleProblemName,
+
 	AnswerType answerType,
 
 	Difficulty difficultyMinInclude,
@@ -23,6 +25,7 @@ public record SingleProblemQueryRequest(
 	public SingleProblemReadModelQuery toQuery() {
 		return new SingleProblemReadModelQuery(
 			singleProblemId,
+			singleProblemName,
 			coursePath,
 			answerType,
 			difficultyMinInclude,

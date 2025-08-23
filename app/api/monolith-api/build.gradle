@@ -2,6 +2,8 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter'
 
     implementation project(':app:api:mathrank-auth-api')
+    implementation project(':app:api:mathrank-course-api')
+    implementation project(':app:api:mathrank-course-inner-api')
     implementation project(':app:api:mathrank-problem-assessment-api')
     implementation project(':app:api:mathrank-healthcheck-api')
     implementation project(':app:api:mathrank-image-api')

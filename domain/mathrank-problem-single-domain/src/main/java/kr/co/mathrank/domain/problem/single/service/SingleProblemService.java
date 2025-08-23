@@ -11,6 +11,7 @@ import kr.co.mathrank.client.internal.problem.SolveResult;
 import kr.co.mathrank.common.role.Role;
 import kr.co.mathrank.domain.problem.single.dto.SingleProblemRegisterCommand;
 import kr.co.mathrank.domain.problem.single.dto.SingleProblemSolveCommand;
+import kr.co.mathrank.domain.problem.single.dto.SingleProblemSolveResult;
 import kr.co.mathrank.domain.problem.single.entity.SingleProblem;
 import kr.co.mathrank.domain.problem.single.exception.AlreadyRegisteredProblemException;
 import kr.co.mathrank.domain.problem.single.exception.CannotFindSingleProblemException;
@@ -44,7 +45,7 @@ public class SingleProblemService {
 
 		// 존재하는 problem인지 확인한다.
 		final ProblemQueryResult result = problemInfoManager.fetch(command.problemId());
-		final SingleProblem singleProblem = SingleProblem.of(command.problemId(), command.memberId());
+		final SingleProblem singleProblem = SingleProblem.of(command.problemId(), command.singleProblemName(), command.memberId());
 
 		try {
 			singleProblemRegisterManager.register(singleProblem, result);
@@ -62,7 +63,7 @@ public class SingleProblemService {
 	 * 개별문제의 채점 기록을 저장하는 API입니다.
 	 * @param command
 	 */
-	public void solve(@NotNull @Valid final SingleProblemSolveCommand command) {
+	public SingleProblemSolveResult solve(@NotNull @Valid final SingleProblemSolveCommand command) {
 		final SingleProblem singleProblem = singleProblemRepository.findById(command.singleProblemId())
 			.orElseThrow(() -> {
 				log.warn("[SingleProblemService.solve] cannot find single problem with id: {}",
@@ -71,8 +72,10 @@ public class SingleProblemService {
 			});
 		// 채점 서비스 호출.
 		// 외부 호출임에 따라, 트랜잭션 제거
-		final SolveResult solveResult = problemInfoManager.solve(singleProblem.getProblemId(), command.answers());
+		final SingleProblemSolveResult solveResult = SingleProblemSolveResult.from(
+			problemInfoManager.solve(singleProblem.getProblemId(), command.answers()));
 
 		challengeLogSaveManager.saveLog(singleProblem.getId(), command.memberId(), solveResult);
+		return solveResult;
 	}
 }

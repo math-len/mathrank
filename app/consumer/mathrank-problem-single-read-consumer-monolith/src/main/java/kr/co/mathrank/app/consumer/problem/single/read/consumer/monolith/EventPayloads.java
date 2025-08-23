@@ -46,6 +46,8 @@ public class EventPayloads {
 		SingleProblemAttemptStatsUpdateCommand toCommand() {
 			return new SingleProblemAttemptStatsUpdateCommand(
 				singleProblemId,
+				memberId,
+				success,
 				firstTrySuccessCount,
 				totalAttemptedCount,
 				attemptedUserDistinctCount
@@ -56,6 +58,7 @@ public class EventPayloads {
 	record SingleProblemRegisteredEventPayload(
 		Long singleProblemId,
 		Long problemId,
+		String singleProblemName,
 		String coursePath,
 		String problemImage,
 		AnswerType answerType,
@@ -69,6 +72,7 @@ public class EventPayloads {
 			return new SingleProblemReadModelRegisterCommand(
 				singleProblemId,
 				problemId,
+				singleProblemName,
 				problemImage,
 				answerType,
 				difficulty,

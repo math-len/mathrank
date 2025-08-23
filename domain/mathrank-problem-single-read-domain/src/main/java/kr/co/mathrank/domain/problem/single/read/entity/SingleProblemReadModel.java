@@ -3,9 +3,13 @@ package kr.co.mathrank.domain.problem.single.read.entity;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
+import org.hibernate.annotations.BatchSize;
 import org.springframework.data.domain.Persistable;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Convert;
 import jakarta.persistence.Entity;
@@ -13,6 +17,7 @@ import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
 import jakarta.persistence.Id;
 import jakarta.persistence.Index;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.PrePersist;
 import jakarta.persistence.PreUpdate;
 import jakarta.persistence.Table;
@@ -31,6 +36,7 @@ import lombok.ToString;
 	@Index(name = "idx_coursePath", columnList = "course_path"),
 	@Index(name = "idx_answerType", columnList = "answer_type"),
 	@Index(name = "idx_difficulty", columnList = "difficulty"),
+	@Index(name = "idx_totalAttemptedCount", columnList = "total_attempted_count"),
 	@Index(name = "idx_firstTrySuccessCount", columnList = "first_try_success_count desc"),
 	@Index(name = "idx_attemptedUserDistinctCount", columnList = "attempted_user_distinct_count desc"),
 	@Index(name = "idx_accuracy", columnList = "accuracy desc"),
@@ -46,6 +52,8 @@ public class SingleProblemReadModel implements Persistable<Long> {
 	@Column(unique = true, nullable = false)
 	@Setter(AccessLevel.PRIVATE)
 	private Long problemId; // problem id
+
+	private String singleProblemName;
 
 	private String problemImage;
 
@@ -75,9 +83,14 @@ public class SingleProblemReadModel implements Persistable<Long> {
 	@Setter(AccessLevel.PRIVATE)
 	private LocalDateTime createdAt; // singleProblem이 등록된 시점
 
+	@BatchSize(size = 100)
+	@OneToMany(mappedBy = "singleProblemReadModel", cascade = CascadeType.REMOVE)
+	private final List<SingleProblemSolver> solvers = new ArrayList<>();
+
 	public static SingleProblemReadModel of(
 		final Long singleProblemId,
 		final Long problemId,
+		final String singleProblemName,
 		final String problemImage,
 		final String coursePath,
 		final AnswerType answerType,
@@ -90,6 +103,7 @@ public class SingleProblemReadModel implements Persistable<Long> {
 		final SingleProblemReadModel model = new SingleProblemReadModel();
 		model.setId(singleProblemId);
 		model.setProblemImage(problemImage);
+		model.setSingleProblemName(singleProblemName);
 		model.setProblemId(problemId);
 		model.setCoursePath(coursePath);
 		model.setAnswerType(answerType);

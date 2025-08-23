@@ -33,6 +33,7 @@ class SingleProblemRegisterManager {
 		outboxPublisher.publish("single-problem-registered", new SingleProblemRegisteredEventPayload(
 			singleProblemId,
 			result.id(),
+			problem.getSingleProblemName(),
 			result.path(),
 			result.imageSource(),
 			result.type(),
@@ -47,6 +48,7 @@ class SingleProblemRegisterManager {
 	private record SingleProblemRegisteredEventPayload(
 		Long singleProblemId,
 		Long problemId,
+		String singleProblemName,
 		String coursePath,
 		String problemImage,
 		AnswerType answerType,

@@ -52,6 +52,7 @@ class SingleProblemReadModelTest {
 		final SingleProblemReadModel readModel = SingleProblemReadModel.of(
 			1L,
 			2L,
+			"singleProblemName",
 			"testImage",
 			"path",
 			AnswerType.MULTIPLE_CHOICE,
@@ -76,6 +77,7 @@ class SingleProblemReadModelTest {
 		final SingleProblemReadModel readModel = SingleProblemReadModel.of(
 			1L,
 			2L,
+			"singleProblemName",
 			"testImage",
 			"path",
 			AnswerType.MULTIPLE_CHOICE,

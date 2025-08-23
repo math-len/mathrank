@@ -7,7 +7,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import io.swagger.v3.oas.annotations.Operation;
@@ -19,13 +18,13 @@ import kr.co.mathrank.app.api.common.authentication.MemberPrincipal;
 import kr.co.mathrank.client.external.school.RequestType;
 import kr.co.mathrank.client.external.school.SchoolClient;
 import kr.co.mathrank.client.external.school.SchoolInfo;
+import kr.co.mathrank.client.internal.course.CourseClient;
+import kr.co.mathrank.client.internal.course.CourseQueryContainsParentsResult;
 import kr.co.mathrank.client.internal.member.MemberClient;
 import kr.co.mathrank.client.internal.member.MemberInfo;
-import kr.co.mathrank.domain.problem.dto.CourseQueryContainsParentsResult;
 import kr.co.mathrank.domain.problem.dto.ProblemQueryCommand;
 import kr.co.mathrank.domain.problem.dto.ProblemQueryPageResult;
 import kr.co.mathrank.domain.problem.dto.ProblemQueryResult;
-import kr.co.mathrank.domain.problem.service.CourseQueryService;
 import kr.co.mathrank.domain.problem.service.ProblemQueryService;
 import lombok.RequiredArgsConstructor;
 
@@ -34,7 +33,7 @@ import lombok.RequiredArgsConstructor;
 @Tag(name = "문제 API")
 public class ProblemReadController {
 	private final ProblemQueryService problemQueryService;
-	private final CourseQueryService courseQueryService;
+	private final CourseClient courseClient;
 	private final MemberClient memberClient;
 	private final SchoolClient schoolClient;
 
@@ -75,7 +74,7 @@ public class ProblemReadController {
 		final MemberInfo info = memberClient.getMemberInfo(problem.memberId());
 		final SchoolInfo schoolInfo = schoolClient.getSchool(RequestType.JSON.getType(), problem.schoolCode())
 			.orElse(SchoolInfo.none());
-		final CourseQueryContainsParentsResult result = courseQueryService.queryParents(problem.path());
+		final CourseQueryContainsParentsResult result = courseClient.getParentCourses(problem.path());
 		return ProblemResponse.from(problem, info, schoolInfo, result);
 	}
 }

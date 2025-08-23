@@ -23,11 +23,8 @@ import kr.co.mathrank.domain.problem.core.Difficulty;
 import kr.co.mathrank.domain.problem.dto.ProblemDeleteCommand;
 import kr.co.mathrank.domain.problem.dto.ProblemRegisterCommand;
 import kr.co.mathrank.domain.problem.dto.ProblemUpdateCommand;
-import kr.co.mathrank.domain.problem.entity.Course;
-import kr.co.mathrank.domain.problem.entity.Path;
 import kr.co.mathrank.domain.problem.entity.Problem;
 import kr.co.mathrank.domain.problem.exception.CannotAccessProblemException;
-import kr.co.mathrank.domain.problem.repository.CourseRepository;
 import kr.co.mathrank.domain.problem.repository.ProblemRepository;
 
 @SpringBootTest(properties = """
@@ -40,8 +37,6 @@ class ProblemServiceTest {
 	private ProblemRepository problemRepository;
 	@PersistenceContext
 	private EntityManager entityManager;
-	@Autowired
-	private CourseRepository courseRepository;
 	@MockitoBean
 	private SchoolLocationManager schoolLocationManager;
 
@@ -53,17 +48,14 @@ class ProblemServiceTest {
 
 	@Test
 	void 업데이트_성공() {
-		final Path path = new Path();
-		final Course course = Course.of("test", path);
-		courseRepository.save(course);
 		entityManager.flush();
 		entityManager.clear();
 
-		final ProblemRegisterCommand command = new ProblemRegisterCommand(1L, "image.jpeg", "image.jpeg", AnswerType.MULTIPLE_CHOICE, path.getPath(), Difficulty.KILLER, "testCode",
+		final ProblemRegisterCommand command = new ProblemRegisterCommand(1L, "image.jpeg", "image.jpeg", AnswerType.MULTIPLE_CHOICE, "testPath", Difficulty.KILLER, "testCode",
 			Set.of("1"), 1001, null, null);
 		final Long problemId = problemService.save(command);
 
-		final ProblemUpdateCommand updateCommand = new ProblemUpdateCommand(problemId, 1L, "newImage.jpeg", "newImage.jpeg", AnswerType.SHORT_ANSWER, Difficulty.KILLER, path.getPath(), "newTestCode", Set.of("newAnswer"), 1212, "solutionVideoLink", null);
+		final ProblemUpdateCommand updateCommand = new ProblemUpdateCommand(problemId, 1L, "newImage.jpeg", "newImage.jpeg", AnswerType.SHORT_ANSWER, Difficulty.KILLER, "testPath", "newTestCode", Set.of("newAnswer"), 1212, "solutionVideoLink", null);
 		problemService.update(updateCommand);
 
 		final Problem updatedProblem = problemRepository.findById(problemId)
@@ -77,29 +69,23 @@ class ProblemServiceTest {
 
 	@Test
 	void 소유자가_아니면_업데이트_불가() {
-		final Path path = new Path();
-		final Course course = Course.of("test", path);
-		courseRepository.save(course);
 		entityManager.flush();
 		entityManager.clear();
 
-		final ProblemRegisterCommand command = new ProblemRegisterCommand(1L, "image.jpeg", "image.jpeg", AnswerType.MULTIPLE_CHOICE, path.getPath(), Difficulty.KILLER, "testCode", Set.of("test"), 1001, null, null);
+		final ProblemRegisterCommand command = new ProblemRegisterCommand(1L, "image.jpeg", "image.jpeg", AnswerType.MULTIPLE_CHOICE, "testPath", Difficulty.KILLER, "testCode", Set.of("test"), 1001, null, null);
 		final Long problemId = problemService.save(command);
 
-		final ProblemUpdateCommand updateCommand = new ProblemUpdateCommand(problemId, 2L, "newImage.jpeg", "newImage.jpeg", AnswerType.SHORT_ANSWER, Difficulty.KILLER, path.getPath(), "newTestCode", Set.of("newAnswer"), 1212, "solutionVideoLink", null);
+		final ProblemUpdateCommand updateCommand = new ProblemUpdateCommand(problemId, 2L, "newImage.jpeg", "newImage.jpeg", AnswerType.SHORT_ANSWER, Difficulty.KILLER, "testPath", "newTestCode", Set.of("newAnswer"), 1212, "solutionVideoLink", null);
 
 		Assertions.assertThrows(CannotAccessProblemException.class, () -> problemService.update(updateCommand));
 	}
 
 	@Test
 	void 삭제_성공() {
-		final Path path = new Path();
-		final Course course = Course.of("test", path);
-		courseRepository.save(course);
 		entityManager.flush();
 		entityManager.clear();
 
-		final ProblemRegisterCommand command = new ProblemRegisterCommand(1L, "image.jpeg", "image.jpeg", AnswerType.MULTIPLE_CHOICE, path.getPath(), Difficulty.KILLER, "testCode", Set.of("answer"), 1001, null, null);
+		final ProblemRegisterCommand command = new ProblemRegisterCommand(1L, "image.jpeg", "image.jpeg", AnswerType.MULTIPLE_CHOICE, "testPath", Difficulty.KILLER, "testCode", Set.of("answer"), 1001, null, null);
 		final Long problemId = problemService.save(command);
 
 		entityManager.flush();
@@ -116,14 +102,11 @@ class ProblemServiceTest {
 
 	@Test
 	void 본인_문제만_삭제가능() {
-		final Path path = new Path();
-		final Course course = Course.of("test", path);
-		courseRepository.save(course);
 		entityManager.flush();
 		entityManager.clear();
 
 		final ProblemRegisterCommand command = new ProblemRegisterCommand(1L, "image.jpeg", "image.jpeg", AnswerType.MULTIPLE_CHOICE,
-			path.getPath(), Difficulty.KILLER, "testCode", Set.of("answer"), 1001, null, null);
+			"testPath", Difficulty.KILLER, "testCode", Set.of("answer"), 1001, null, null);
 		final Long problemId = problemService.save(command);
 
 		final ProblemDeleteCommand deleteCommand = new ProblemDeleteCommand(problemId, 2L);

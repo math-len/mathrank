@@ -28,7 +28,7 @@ public record ProblemQueryResult(
 			problem.getMemberId(),
 			problem.getProblemImage(),
 			// null 대비
-			problem.getCourse() == null ? "" : problem.getCourse().getPath().getPath(),
+			String.valueOf(problem.getCoursePath()),
 			problem.getDifficulty(),
 			problem.getType(),
 			problem.getSchoolCode(),

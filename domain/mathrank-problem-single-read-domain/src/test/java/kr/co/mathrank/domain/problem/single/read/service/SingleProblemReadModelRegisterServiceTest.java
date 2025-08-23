@@ -16,7 +16,6 @@ import org.testcontainers.junit.jupiter.Testcontainers;
 import kr.co.mathrank.domain.problem.core.AnswerType;
 import kr.co.mathrank.domain.problem.core.Difficulty;
 import kr.co.mathrank.domain.problem.single.read.dto.SingleProblemReadModelRegisterCommand;
-import kr.co.mathrank.domain.problem.single.read.entity.SingleProblemReadModel;
 import kr.co.mathrank.domain.problem.single.read.exception.SingleProblemReadModelAlreadyExistException;
 
 @SpringBootTest(
@@ -51,12 +50,12 @@ class SingleProblemReadModelRegisterServiceTest {
 		final LocalDateTime baseTime = LocalDateTime.of(2018, 1, 1, 1, 1);
 
 		singleProblemReadModelRegisterService.save(new SingleProblemReadModelRegisterCommand(
-			problemId, problemId, "img", AnswerType.SHORT_ANSWER, Difficulty.LOW, "initialPath", baseTime
+			problemId, problemId, "singleProblemName", "img", AnswerType.SHORT_ANSWER, Difficulty.LOW, "initialPath", baseTime
 		));
 
 		Assertions.assertThrows(SingleProblemReadModelAlreadyExistException.class,
 			() -> singleProblemReadModelRegisterService.save(new SingleProblemReadModelRegisterCommand(
-				problemId, problemId, "img", AnswerType.SHORT_ANSWER, Difficulty.LOW, "initialPath", baseTime
+				problemId, problemId, "singleProblemName", "img", AnswerType.SHORT_ANSWER, Difficulty.LOW, "initialPath", baseTime
 			)));
 	}
 }

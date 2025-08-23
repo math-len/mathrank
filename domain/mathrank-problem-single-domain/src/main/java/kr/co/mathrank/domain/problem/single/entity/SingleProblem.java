@@ -28,10 +28,12 @@ public class SingleProblem {
 	@Column(unique = true)
 	private Long problemId;
 
+	private String singleProblemName;
+
 	private Long memberId;
 
 	@OneToMany(mappedBy = "singleProblem", cascade = CascadeType.PERSIST, orphanRemoval = true)
-	private final List<ChallengeLog> challengeLogs = new ArrayList<>();
+	private final List<Challenger> challengers = new ArrayList<>();
 
 	private Long firstTrySuccessCount = 0L; // 첫번째 시도에서 성공한 횟수
 
@@ -57,9 +59,10 @@ public class SingleProblem {
 		totalAttemptedCount++;
 	}
 
-	public static SingleProblem of(final Long problemId, final Long memberId) {
+	public static SingleProblem of(final Long problemId, final String singleProblemName, final Long memberId) {
 		final SingleProblem problem = new SingleProblem();
 		problem.problemId = problemId;
+		problem.singleProblemName = singleProblemName;
 		problem.memberId = memberId;
 
 		return problem;

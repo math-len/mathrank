@@ -60,8 +60,7 @@ public class Problem implements Persistable<Long> {
 	@Enumerated(EnumType.STRING)
 	private AnswerType type;
 
-	@ManyToOne(fetch = FetchType.LAZY)
-	private Course course;
+	private String coursePath;
 
 	private String schoolCode;
 
@@ -84,7 +83,7 @@ public class Problem implements Persistable<Long> {
 	private String memo;
 
 	public static Problem of(final Long id, final Long memberId, final String problemImage, final Difficulty difficulty,
-		final AnswerType type, final Course course, final String schoolCode,
+		final AnswerType type, final String coursePath, final String schoolCode,
 		final String solutionVideoLink, final String solutionImage, final Integer year, final String location, final String memo) {
 
 		final Problem problem = new Problem();
@@ -93,7 +92,7 @@ public class Problem implements Persistable<Long> {
 		problem.problemImage = problemImage;
 		problem.difficulty = difficulty;
 		problem.type = type;
-		problem.course = course;
+		problem.coursePath = coursePath;
 		problem.schoolCode = schoolCode;
 		problem.solutionVideoLink = solutionVideoLink;
 		problem.solutionImage = solutionImage;
