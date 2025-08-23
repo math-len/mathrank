@@ -32,11 +32,18 @@ public class CaffeineCacheCustomizerConfiguration implements CacheSpecAssembler 
 				.maximumSize(cacheEntryCount)
 				.expireAfterWrite(cacheSpec.ttl()).build();
 			cacheManager.registerCustomCache(cacheSpec.cacheName(), cache);
-
-			log.info(
-				"[CaffeineCacheCustomizerConfiguration.assemble]: registered cache spec - request module: {}, cache name: {}, cache TTL: {}",
-				cacheSpec.moduleName(), cacheSpec.cacheName(), cacheSpec.ttl());
 		}
+
+		// 한 줄 로그로 요약
+		log.info("[CaffeineCacheCustomizerConfiguration.assemble]: registered cache specs -> {}",
+			requiredCacheSpecs.stream()
+				.map(spec ->
+					String.format("{module=%s, name=%s, ttl=%s}",
+						spec.moduleName(),
+						spec.cacheName(),
+						spec.ttl()))
+				.toList()
+		);
 
 		return cacheManager;
 	}
