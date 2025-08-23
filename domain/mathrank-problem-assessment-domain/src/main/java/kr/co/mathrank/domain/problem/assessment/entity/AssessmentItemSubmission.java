@@ -16,7 +16,9 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -43,6 +45,11 @@ public class AssessmentItemSubmission {
 	@JdbcTypeCode(SqlTypes.JSON)
 	private List<String> submittedAnswer;
 
+	@JdbcTypeCode(SqlTypes.JSON)
+	private List<String> realAnswer; // 실제 정답 기록
+
+	private Boolean correct;
+
 	static AssessmentItemSubmission of(final AssessmentSubmission submission, final AssessmentItem assessmentItem, final List<String> submittedAnswer) {
 		final AssessmentItemSubmission assessmentItemSubmission = new AssessmentItemSubmission();
 		assessmentItemSubmission.submission = submission;
@@ -50,6 +57,19 @@ public class AssessmentItemSubmission {
 		assessmentItemSubmission.submittedAnswer = submittedAnswer;
 
 		return assessmentItemSubmission;
+	}
+
+	int grade(final GradeResult gradeResult) {
+		if (!this.assessmentItem.getProblemId().equals(gradeResult.problemId())) {
+			log.error(
+				"[AssessmentItemSubmission.grade] grade result's problemId is not matched - current submission problemId: {}, grade result problemId: {}",
+				this.assessmentItem.getProblemId(), gradeResult.problemId());
+			throw new IllegalArgumentException("ID가 일치하지 않습니다.");
+		}
+		correct = gradeResult.success();
+		this.realAnswer = gradeResult.correctAnswer();
+
+		return correct ? assessmentItem.getScore() : 0;
 	}
 
 	/**

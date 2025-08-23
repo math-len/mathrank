@@ -68,8 +68,10 @@ public class Assessment {
 	 *
 	 * @param memberId 응시자 ID
 	 * @param answers 각 문항에 대한 답안 목록. {@code assessmentItems}의 순서와 일치해야 합니다.
+	 *
+	 * @return {@link AssessmentSubmission} 엔티티
 	 */
-	public void registerSubmission(final Long memberId, final List<List<String>> answers) {
+	public AssessmentSubmission registerSubmission(final Long memberId, final List<List<String>> answers) {
 		if (this.assessmentItems.size() != answers.size()) {
 			log.info(
 				"[Assessment.registerSubmission] item count and answers count is not match - assessmentItem count: {}, answers Count: {}",
@@ -83,6 +85,8 @@ public class Assessment {
 		}
 
 		assessmentSubmissions.add(assessmentSubmission);
+
+		return assessmentSubmission;
 	}
 
 	/**

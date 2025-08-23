@@ -20,7 +20,10 @@ import kr.co.mathrank.domain.problem.assessment.dto.AssessmentItemRegisterComman
 import kr.co.mathrank.domain.problem.assessment.dto.AssessmentRegisterCommand;
 import kr.co.mathrank.domain.problem.assessment.exception.AssessmentRegisterException;
 
-@SpringBootTest
+@SpringBootTest(properties = """
+client.problem.port=20102
+client.problem.host=http://localhost
+""")
 class AssessmentRegisterServiceTest {
 	@Autowired
 	private AssessmentRegisterService assessmentRegisterService;
