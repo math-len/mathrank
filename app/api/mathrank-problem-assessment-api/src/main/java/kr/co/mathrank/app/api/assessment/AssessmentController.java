@@ -2,6 +2,7 @@ package kr.co.mathrank.app.api.assessment;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
@@ -14,7 +15,9 @@ import kr.co.mathrank.app.api.common.authentication.LoginInfo;
 import kr.co.mathrank.app.api.common.authentication.MemberPrincipal;
 import kr.co.mathrank.common.role.Role;
 import kr.co.mathrank.domain.problem.assessment.dto.AssessmentRegisterCommand;
+import kr.co.mathrank.domain.problem.assessment.dto.SubmissionRegisterCommand;
 import kr.co.mathrank.domain.problem.assessment.service.AssessmentRegisterService;
+import kr.co.mathrank.domain.problem.assessment.service.SubmissionRegisterService;
 import lombok.RequiredArgsConstructor;
 
 @RestController
@@ -22,6 +25,7 @@ import lombok.RequiredArgsConstructor;
 @Tag(name = "문제집 API")
 public class AssessmentController {
 	private final AssessmentRegisterService assessmentRegisterService;
+	private final SubmissionRegisterService submissionRegisterService;
 
 	@Operation(summary = "문제집 등록", description = "문제집 등록은 관리자만 가능합니다.")
 	@PostMapping("/api/v1/problem/assessment")
@@ -34,5 +38,16 @@ public class AssessmentController {
 		assessmentRegisterService.register(command);
 
 		return ResponseEntity.status(HttpStatus.CREATED).build();
+	}
+
+	@Operation(summary = "문제집 답안지 등록 API")
+	@PostMapping("/api/v1/problem/assessment/submission")
+	@Authorization(openedForAll = true)
+	public ResponseEntity<Long> registerSubmission(
+		@RequestBody @Valid final Requests.AssessmentSubmissionRegisterRequest request,
+		@LoginInfo final MemberPrincipal memberPrincipal
+	) {
+		final SubmissionRegisterCommand command = request.toCommand(memberPrincipal.memberId());
+		return ResponseEntity.ok(submissionRegisterService.submit(command));
 	}
 }
