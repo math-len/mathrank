@@ -6,10 +6,8 @@ import org.springframework.stereotype.Component;
 import org.springframework.validation.annotation.Validated;
 
 import jakarta.validation.constraints.NotNull;
-import kr.co.mathrank.client.internal.problem.ProblemClient;
-import kr.co.mathrank.client.internal.problem.SolveResult;
-import kr.co.mathrank.domain.problem.assessment.entity.AssessmentItemSubmission;
 import kr.co.mathrank.domain.problem.assessment.entity.AssessmentSubmission;
+import kr.co.mathrank.domain.problem.assessment.entity.GradeResult;
 import kr.co.mathrank.domain.problem.assessment.exception.NoSuchAssessmentSubmissionException;
 import kr.co.mathrank.domain.problem.assessment.repository.AssessmentSubmissionRepository;
 import lombok.RequiredArgsConstructor;
@@ -24,17 +22,13 @@ import lombok.extern.slf4j.Slf4j;
 @RequiredArgsConstructor
 class SubmissionGradeManager {
 	private final AssessmentSubmissionRepository assessmentSubmissionRepository;
-	private final ProblemClient problemClient;
+	private final ItemGradeManager gradeManager;
 
 	/**
-	 * 특정 시험 제출을 채점합니다.
+	 * 지정된 제출(assessmentSubmissionId)을 채점합니다.
 	 *
-	 * <p>제출 ID에 해당하는 {@link AssessmentSubmission}을 조회하고,
-	 * 내부의 모든 {@link AssessmentItemSubmission}에 대해 {@link #checkAnswer(AssessmentItemSubmission)}를 호출하여
-	 * 정답 여부를 평가합니다. 채점된 제출은 저장소에 다시 반영됩니다.</p>
-	 *
-	 * @param assessmentSubmissionId 채점할 시험 제출의 ID (null일 수 없음)
-	 * @throws kr.co.mathrank.domain.problem.assessment.exception.NoSuchAssessmentSubmissionException 제출 ID에 해당하는 응시 기록이 없을 경우
+	 * @param assessmentSubmissionId 채점 대상 제출 ID (null 불가)
+	 * @throws NoSuchAssessmentSubmissionException 제출이 존재하지 않는 경우
 	 */
 	public void evaluateSubmission(@NotNull final Long assessmentSubmissionId) {
 		final AssessmentSubmission submission = assessmentSubmissionRepository.findByAssessmentSubmissionId(assessmentSubmissionId)
@@ -44,20 +38,23 @@ class SubmissionGradeManager {
 			});
 
 		// 채점하기
-		final List<AssessmentItemSubmission> itemSubmissions = submission.getSubmittedItemAnswers();
-		itemSubmissions.forEach(this::checkAnswer);
+		this.gradeAll(submission);
 
 		assessmentSubmissionRepository.save(submission);
 	}
 
 	/**
 	 * 제출된 정답을 확인하고, 오답 여부를 기록한다.
-	 * @param itemSubmission
+	 * @param assessmentSubmission
 	 */
-	private void checkAnswer(final AssessmentItemSubmission itemSubmission) {
-		final Long problemId = itemSubmission.getAssessmentItem().getProblemId();
-		final SolveResult solveResult = problemClient.matchAnswer(problemId, itemSubmission.getSubmittedAnswer());
+	private void gradeAll(final AssessmentSubmission assessmentSubmission) {
+		final List<GradeResult> gradeResult = assessmentSubmission.getSubmittedItemAnswers().stream()
+			.map(itemSubmission -> gradeManager.gradeItemSubmission(
+				itemSubmission.getAssessmentItem().getProblemId(),
+				itemSubmission.getSubmittedAnswer())
+			)
+			.toList();
 
-		itemSubmission.grade(solveResult.success(), solveResult.realAnswer().stream().toList());
+		assessmentSubmission.grade(gradeResult);
 	}
 }
