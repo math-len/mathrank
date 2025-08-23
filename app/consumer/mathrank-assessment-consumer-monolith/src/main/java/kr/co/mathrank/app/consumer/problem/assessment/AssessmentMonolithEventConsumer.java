@@ -28,7 +28,7 @@ public class AssessmentMonolithEventConsumer {
 		if (!monolithEvent.isExpectedTopic(ASSESSMENT_REGISTERED_TOPIC)) {
 			return;
 		}
-		log.debug("[SingleProblemReadMonolithEventListener.listenInfoUpdatedEvent] Monolith event received: {}", monolithEvent);
+		log.debug("[AssessmentMonolithEventConsumer.consume] Monolith event received: {}", monolithEvent);
 
 		final Event<SubmissionRegisteredEventPayload> event = Event.fromJson(
 			monolithEvent.payload(),
