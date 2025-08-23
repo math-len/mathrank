@@ -8,7 +8,7 @@ import org.springframework.validation.annotation.Validated;
 import jakarta.validation.constraints.NotNull;
 import kr.co.mathrank.domain.problem.assessment.entity.AssessmentSubmission;
 import kr.co.mathrank.domain.problem.assessment.entity.GradeResult;
-import kr.co.mathrank.domain.problem.assessment.exception.NoSuchAssessmentSubmissionException;
+import kr.co.mathrank.domain.problem.assessment.exception.NoSuchSubmissionException;
 import kr.co.mathrank.domain.problem.assessment.repository.AssessmentSubmissionRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -28,13 +28,13 @@ class SubmissionGradeManager {
 	 * 지정된 제출(assessmentSubmissionId)을 채점합니다.
 	 *
 	 * @param assessmentSubmissionId 채점 대상 제출 ID (null 불가)
-	 * @throws NoSuchAssessmentSubmissionException 제출이 존재하지 않는 경우
+	 * @throws NoSuchSubmissionException 제출이 존재하지 않는 경우
 	 */
 	public void evaluateSubmission(@NotNull final Long assessmentSubmissionId) {
 		final AssessmentSubmission submission = assessmentSubmissionRepository.findByAssessmentSubmissionId(assessmentSubmissionId)
 			.orElseThrow(() -> {
 				log.warn("[SubmissionGradeManager.evaluateSubmission] cannot found assessmentSubmission - assessmentSubmissionId: {}", assessmentSubmissionId);
-				return new NoSuchAssessmentSubmissionException();
+				return new NoSuchSubmissionException();
 			});
 
 		// 채점하기

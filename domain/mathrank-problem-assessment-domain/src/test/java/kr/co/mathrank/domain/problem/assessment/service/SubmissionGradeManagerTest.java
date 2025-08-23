@@ -12,14 +12,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 
-import jakarta.persistence.EntityManager;
 import kr.co.mathrank.client.internal.problem.ProblemClient;
 import kr.co.mathrank.client.internal.problem.SolveResult;
 import kr.co.mathrank.domain.problem.assessment.entity.Assessment;
 import kr.co.mathrank.domain.problem.assessment.entity.AssessmentItem;
 import kr.co.mathrank.domain.problem.assessment.entity.AssessmentSubmission;
 import kr.co.mathrank.domain.problem.assessment.entity.EvaluationStatus;
-import kr.co.mathrank.domain.problem.assessment.exception.NoSuchAssessmentSubmissionException;
+import kr.co.mathrank.domain.problem.assessment.exception.NoSuchSubmissionException;
 import kr.co.mathrank.domain.problem.assessment.repository.AssessmentRepository;
 import kr.co.mathrank.domain.problem.assessment.repository.AssessmentSubmissionRepository;
 
@@ -40,7 +39,7 @@ class SubmissionGradeManagerTest {
 
 	@Test
 	void 존재하지_않는_답안지_채점_시도시_에러() {
-		Assertions.assertThrows(NoSuchAssessmentSubmissionException.class,
+		Assertions.assertThrows(NoSuchSubmissionException.class,
 			() -> submissionGradeManager.evaluateSubmission(2139123812L));
 	}
 
