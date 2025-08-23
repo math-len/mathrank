@@ -23,7 +23,9 @@ import jakarta.persistence.PreUpdate;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -56,20 +58,35 @@ public class AssessmentSubmission {
 		return assessmentSubmission;
 	}
 
+	public int grade(final List<GradeResult> gradeResults) {
+		if (evaluationStatus == EvaluationStatus.FINISHED) {
+			log.info("[AssessmentSubmission.grade] already graded - submissionId: {}", id);
+			throw new IllegalStateException("이미 채점된 시험지입니다.");
+		}
+
+		if (gradeResults.size() != submittedItemAnswers.size()) {
+			log.warn(
+				"[AssessmentSubmission.grade] gradeResults size is not matched with current item submissions size - submissionId: {}, submissions size: {}, gradeResults size: {}",
+				id, submittedItemAnswers.size(), gradeResults.size());
+			throw new IllegalArgumentException("채점 결과 갯수와 제출 답안의 갯수가 일치하지 않습니다.");
+		}
+
+		int totalScore = 0;
+		for (int i = 0; i < gradeResults.size(); i++) {
+			final AssessmentItemSubmission itemSubmission = submittedItemAnswers.get(i);
+			final GradeResult gradeResult = gradeResults.get(i);
+
+			totalScore += itemSubmission.grade(gradeResult);
+		}
+
+		this.totalScore = totalScore;
+		this.evaluationStatus = EvaluationStatus.FINISHED;
+		return totalScore;
+	}
+
 	void addItemSubmission(final AssessmentItem assessmentItem, final List<String> submittedAnswer) {
 		final AssessmentItemSubmission assessmentItemSubmission = AssessmentItemSubmission.of(this, assessmentItem, submittedAnswer);
 		this.submittedItemAnswers.add(assessmentItemSubmission);
-	}
-
-	void addScore(final int score) {
-		if (this.totalScore == null) {
-			this.totalScore = 0;
-		}
-
-		this.totalScore += score;
-		if (this.totalScore > 100 ) {
-			throw new IllegalStateException("100점 이상은 불가");
-		}
 	}
 
 	/**

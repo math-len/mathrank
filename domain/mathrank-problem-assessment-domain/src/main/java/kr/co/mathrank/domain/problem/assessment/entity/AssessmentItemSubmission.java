@@ -16,7 +16,9 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -57,16 +59,17 @@ public class AssessmentItemSubmission {
 		return assessmentItemSubmission;
 	}
 
-	public void grade(final boolean isMatch, final List<String> realAnswer) {
-		correct = isMatch;
-		this.realAnswer = realAnswer;
-
-		if (correct) {
-			// 문제가 정답일 때, 점수 추가
-			this.submission.addScore(assessmentItem.getScore());
-		} else {
-			this.submission.addScore(0);
+	int grade(final GradeResult gradeResult) {
+		if (!this.assessmentItem.getProblemId().equals(gradeResult.problemId())) {
+			log.error(
+				"[AssessmentItemSubmission.grade] grade result's problemId is not matched - current submission problemId: {}, grade result problemId: {}",
+				this.assessmentItem.getProblemId(), gradeResult.problemId());
+			throw new IllegalArgumentException("ID가 일치하지 않습니다.");
 		}
+		correct = gradeResult.success();
+		this.realAnswer = gradeResult.correctAnswer();
+
+		return correct ? assessmentItem.getScore() : 0;
 	}
 
 	/**

@@ -21,6 +21,80 @@ class AssessmentItemSubmissionTest {
 	private AssessmentRepository assessmentRepository;
 
 	@Test
+	void 채점결과의_갯수가_다르면_예외발생() {
+		final Assessment assessment = Assessment.of(1L, "test", Duration.ofMinutes(10));
+		// 한 문제 등록
+		assessment.replaceItems(List.of(AssessmentItem.of(1L, 10)));
+		// 문항에 대한 답안 내용 (정답이 여러 개일 수 있음을 가정)
+		final List<String> submittedAnswer = List.of("1", "2", "3");
+		final AssessmentSubmission submission = assessment.registerSubmission(1L, List.of(submittedAnswer));
+
+		// 채점 결과 두개 넣기
+		Assertions.assertThrows(IllegalArgumentException.class, () -> {
+			submission.grade(List.of(new GradeResult(1L, List.of("1"), true), new GradeResult(1L, List.of("1"), true)));
+		});
+	}
+
+	@Test
+	void 문제의_problemId와_채점결과의_problemId가_다르면_예외발생() {
+		final Assessment assessment = Assessment.of(1L, "test", Duration.ofMinutes(10));
+		// 한 문제 등록
+		assessment.replaceItems(List.of(AssessmentItem.of(1L, 10)));
+		// 문항에 대한 답안 내용 (정답이 여러 개일 수 있음을 가정)
+		final List<String> submittedAnswer = List.of("1", "2", "3");
+		final AssessmentSubmission submission = assessment.registerSubmission(1L, List.of(submittedAnswer));
+
+		Assertions.assertThrows(IllegalArgumentException.class, () -> {
+			submission.grade(List.of(new GradeResult(110L, List.of("1"), true)));
+		});
+	}
+
+	@Test
+	void 채점을_확인하여_점수를_반환한다() {
+		final Assessment assessment = Assessment.of(1L, "test", Duration.ofMinutes(10));
+		// 한 문제 등록
+		assessment.replaceItems(List.of(AssessmentItem.of(1L, 10)));
+		// 문항에 대한 답안 내용 (정답이 여러 개일 수 있음을 가정)
+		final List<String> submittedAnswer = List.of("1", "2", "3");
+		final AssessmentSubmission submission = assessment.registerSubmission(1L, List.of(submittedAnswer));
+
+
+		submission.grade(List.of(new GradeResult(1L, List.of("1"), true)));
+		Assertions.assertEquals(10, submission.getTotalScore());
+	}
+
+	@Test
+	void 채점이_완료되면_체점상태_변경() {
+		final Assessment assessment = Assessment.of(1L, "test", Duration.ofMinutes(10));
+		// 한 문제 등록
+		assessment.replaceItems(List.of(AssessmentItem.of(1L, 10)));
+		// 문항에 대한 답안 내용 (정답이 여러 개일 수 있음을 가정)
+		final List<String> submittedAnswer = List.of("1", "2", "3");
+		final AssessmentSubmission submission = assessment.registerSubmission(1L, List.of(submittedAnswer));
+
+
+		submission.grade(List.of(new GradeResult(1L, List.of("1"), true)));
+		Assertions.assertEquals(EvaluationStatus.FINISHED, submission.getEvaluationStatus());
+	}
+
+	@Test
+	void 채점은_다시_시도될_수_없다() {
+		final Assessment assessment = Assessment.of(1L, "test", Duration.ofMinutes(10));
+		// 한 문제 등록
+		assessment.replaceItems(List.of(AssessmentItem.of(1L, 10)));
+		// 문항에 대한 답안 내용 (정답이 여러 개일 수 있음을 가정)
+		final List<String> submittedAnswer = List.of("1", "2", "3");
+		final AssessmentSubmission submission = assessment.registerSubmission(1L, List.of(submittedAnswer));
+
+
+		submission.grade(List.of(new GradeResult(1L, List.of("1"), true)));
+
+		Assertions.assertThrows(IllegalStateException.class, () -> {
+			submission.grade(List.of(new GradeResult(1L, List.of("1"), true)));
+		});
+	}
+
+	@Test
 	void 시험지에_제출된_정답은_DB에_json_형식으로_저장된다() {
 		// given
 		final Assessment assessment = Assessment.of(1L, "test", Duration.ofMinutes(10));
