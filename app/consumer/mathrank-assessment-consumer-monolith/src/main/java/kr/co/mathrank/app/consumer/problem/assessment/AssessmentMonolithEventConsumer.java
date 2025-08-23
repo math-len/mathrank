@@ -30,11 +30,15 @@ public class AssessmentMonolithEventConsumer {
 		}
 		log.debug("[AssessmentMonolithEventConsumer.consume] Monolith event received: {}", monolithEvent);
 
-		final Event<SubmissionRegisteredEventPayload> event = Event.fromJson(
-			monolithEvent.payload(),
-			SubmissionRegisteredEventPayload.class
-		);
-		submissionGradeService.evaluateSubmission(event.getPayload().submissionId());
+		try {
+			final Event<SubmissionRegisteredEventPayload> event = Event.fromJson(
+				monolithEvent.payload(),
+				SubmissionRegisteredEventPayload.class
+			);
+			submissionGradeService.evaluateSubmission(event.getPayload().submissionId());
+		} catch (Exception e) {
+			log.error("[AssessmentMonolithEventConsumer.consume] Failed to process event. payload: {}", monolithEvent.payload(), e);
+		}
 	}
 
 	record SubmissionRegisteredEventPayload(
