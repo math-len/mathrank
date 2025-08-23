@@ -27,7 +27,7 @@ class AssessmentItemSubmissionTest {
 		assessment.replaceItems(List.of(AssessmentItem.of(1L, 10)));
 		// 문항에 대한 답안 내용 (정답이 여러 개일 수 있음을 가정)
 		final List<String> submittedAnswer = List.of("1", "2", "3");
-		final AssessmentSubmission submission = assessment.registerSubmission(1L, List.of(submittedAnswer));
+		final AssessmentSubmission submission = assessment.registerSubmission(1L, List.of(submittedAnswer), Duration.ofMinutes(5));
 
 		// 채점 결과 두개 넣기
 		Assertions.assertThrows(IllegalArgumentException.class, () -> {
@@ -42,7 +42,7 @@ class AssessmentItemSubmissionTest {
 		assessment.replaceItems(List.of(AssessmentItem.of(1L, 10)));
 		// 문항에 대한 답안 내용 (정답이 여러 개일 수 있음을 가정)
 		final List<String> submittedAnswer = List.of("1", "2", "3");
-		final AssessmentSubmission submission = assessment.registerSubmission(1L, List.of(submittedAnswer));
+		final AssessmentSubmission submission = assessment.registerSubmission(1L, List.of(submittedAnswer), Duration.ofMinutes(5));
 
 		Assertions.assertThrows(IllegalArgumentException.class, () -> {
 			submission.grade(List.of(new GradeResult(110L, List.of("1"), true)));
@@ -56,7 +56,7 @@ class AssessmentItemSubmissionTest {
 		assessment.replaceItems(List.of(AssessmentItem.of(1L, 10)));
 		// 문항에 대한 답안 내용 (정답이 여러 개일 수 있음을 가정)
 		final List<String> submittedAnswer = List.of("1", "2", "3");
-		final AssessmentSubmission submission = assessment.registerSubmission(1L, List.of(submittedAnswer));
+		final AssessmentSubmission submission = assessment.registerSubmission(1L, List.of(submittedAnswer), Duration.ofMinutes(5));
 
 
 		submission.grade(List.of(new GradeResult(1L, List.of("1"), true)));
@@ -70,7 +70,7 @@ class AssessmentItemSubmissionTest {
 		assessment.replaceItems(List.of(AssessmentItem.of(1L, 10)));
 		// 문항에 대한 답안 내용 (정답이 여러 개일 수 있음을 가정)
 		final List<String> submittedAnswer = List.of("1", "2", "3");
-		final AssessmentSubmission submission = assessment.registerSubmission(1L, List.of(submittedAnswer));
+		final AssessmentSubmission submission = assessment.registerSubmission(1L, List.of(submittedAnswer), Duration.ofMinutes(5));
 
 
 		submission.grade(List.of(new GradeResult(1L, List.of("1"), true)));
@@ -84,7 +84,7 @@ class AssessmentItemSubmissionTest {
 		assessment.replaceItems(List.of(AssessmentItem.of(1L, 10)));
 		// 문항에 대한 답안 내용 (정답이 여러 개일 수 있음을 가정)
 		final List<String> submittedAnswer = List.of("1", "2", "3");
-		final AssessmentSubmission submission = assessment.registerSubmission(1L, List.of(submittedAnswer));
+		final AssessmentSubmission submission = assessment.registerSubmission(1L, List.of(submittedAnswer), Duration.ofMinutes(5));
 
 
 		submission.grade(List.of(new GradeResult(1L, List.of("1"), true)));
@@ -102,7 +102,7 @@ class AssessmentItemSubmissionTest {
 		assessment.replaceItems(List.of(AssessmentItem.of(1L, 10)));
 		// 문항에 대한 답안 내용 (정답이 여러 개일 수 있음을 가정)
 		final List<String> submittedAnswer = List.of("1", "2", "3");
-		assessment.registerSubmission(1L, List.of(submittedAnswer));
+		assessment.registerSubmission(1L, List.of(submittedAnswer), Duration.ofMinutes(5));
 
 		// when
 		final Long assessmentId = assessmentRepository.save(assessment).getId();
@@ -129,7 +129,7 @@ class AssessmentItemSubmissionTest {
 
 		// when & then
 		Assertions.assertThrows(AssessmentSubmissionRegisterException.class, () -> {
-			assessment.registerSubmission(1L, answersWithWrongCount);
+			assessment.registerSubmission(1L, answersWithWrongCount, Duration.ofMinutes(5));
 		});
 	}
 
@@ -141,7 +141,7 @@ class AssessmentItemSubmissionTest {
 		final List<List<String>> answersWithWrongCount = List.of(List.of("1"));
 
 		// 제출물
-		final AssessmentSubmission assessmentSubmission = assessment.registerSubmission(1L, answersWithWrongCount);
+		final AssessmentSubmission assessmentSubmission = assessment.registerSubmission(1L, answersWithWrongCount, Duration.ofMinutes(5));
 
 		assessmentRepository.save(assessment);
 

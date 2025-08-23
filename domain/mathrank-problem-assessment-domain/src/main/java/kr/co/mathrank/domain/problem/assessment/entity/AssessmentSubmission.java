@@ -1,5 +1,6 @@
 package kr.co.mathrank.domain.problem.assessment.entity;
 
+import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -9,6 +10,7 @@ import java.util.Objects;
 import org.hibernate.annotations.CreationTimestamp;
 
 import jakarta.persistence.CascadeType;
+import jakarta.persistence.Convert;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
@@ -50,10 +52,14 @@ public class AssessmentSubmission {
 	@CreationTimestamp
 	private LocalDateTime submittedAt;
 
-	static AssessmentSubmission of(final Assessment assessment, final Long memberId) {
+	@Convert(converter = AssessmentDurationConverter.class)
+	private Duration elapsedTime;
+
+	static AssessmentSubmission of(final Assessment assessment, final Long memberId, final Duration elapsedTime) {
 		final AssessmentSubmission assessmentSubmission = new AssessmentSubmission();
 		assessmentSubmission.assessment = assessment;
 		assessmentSubmission.memberId = memberId;
+		assessmentSubmission.elapsedTime = elapsedTime;
 
 		return assessmentSubmission;
 	}
