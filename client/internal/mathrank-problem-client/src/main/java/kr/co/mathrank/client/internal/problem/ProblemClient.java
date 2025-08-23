@@ -44,9 +44,8 @@ public class ProblemClient {
 	public ProblemQueryResult fetchProblemInfo(final Long problemId) {
 		return problemClient.get()
 			.uri(uriBuilder -> uriBuilder
-				.path("/api/inner/v1/problem")
-				.queryParam("problemId", problemId)
-				.build())
+				.path("/api/inner/v1/problem/{problemId}")
+				.build(problemId))
 			.retrieve()
 			.body(ProblemQueryResult.class);
 	}

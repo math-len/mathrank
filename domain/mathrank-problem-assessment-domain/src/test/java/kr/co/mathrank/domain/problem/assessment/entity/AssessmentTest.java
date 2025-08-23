@@ -6,6 +6,7 @@ import java.util.List;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -13,10 +14,7 @@ import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import kr.co.mathrank.domain.problem.assessment.repository.AssessmentRepository;
 
-@SpringBootTest(properties = """
-	spring.jpa.show-sql=true
-	spring.jpa.properties.hibernate.format_sql=true
-	""")
+@DataJpaTest
 class AssessmentTest {
 	@Autowired
 	private AssessmentRepository assessmentRepository;

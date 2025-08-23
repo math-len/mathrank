@@ -7,4 +7,5 @@ dependencies {
     implementation project(':common:mathrank-role')
     implementation project(':common:mathrank-dataserializer')
     implementation project(':common:mathrank-exception')
+    implementation project(':client:internal:mathrank-problem-client')
 }
