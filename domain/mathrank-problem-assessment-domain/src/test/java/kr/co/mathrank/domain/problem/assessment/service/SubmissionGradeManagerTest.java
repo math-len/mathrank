@@ -50,7 +50,7 @@ class SubmissionGradeManagerTest {
 		assessment.replaceItems(List.of(AssessmentItem.of(1L, 10), AssessmentItem.of(2L, 90))); // 문항 2개
 
 		final List<List<String>> answersWithWrongCount = List.of(List.of("1"), List.of("2")); // 답안 2개
-		assessment.registerSubmission(1L, answersWithWrongCount);
+		assessment.registerSubmission(1L, answersWithWrongCount, Duration.ofMinutes(5));
 
 		assessmentRepository.save(assessment);
 		final Long submissionId = assessment.getAssessmentSubmissions().getFirst().getId();
@@ -74,7 +74,7 @@ class SubmissionGradeManagerTest {
 		assessment.replaceItems(List.of(AssessmentItem.of(1L, 10), AssessmentItem.of(2L, 90))); // 문항 2개
 
 		final List<List<String>> answersWithWrongCount = List.of(List.of("1"), List.of("2")); // 답안 2개
-		assessment.registerSubmission(1L, answersWithWrongCount);
+		assessment.registerSubmission(1L, answersWithWrongCount, Duration.ofMinutes(5));
 
 		assessmentRepository.save(assessment);
 		final Long submissionId = assessment.getAssessmentSubmissions().getFirst().getId();

@@ -1,6 +1,7 @@
 package kr.co.mathrank.domain.problem.assessment.entity;
 
 import java.time.Duration;
+import java.util.Collections;
 import java.util.List;
 
 import org.junit.jupiter.api.Assertions;
@@ -12,6 +13,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
+import kr.co.mathrank.domain.problem.assessment.exception.AssessmentSubmissionRegisterException;
+import kr.co.mathrank.domain.problem.assessment.exception.SubmissionTimeExceedException;
 import kr.co.mathrank.domain.problem.assessment.repository.AssessmentRepository;
 
 @DataJpaTest
@@ -20,6 +23,14 @@ class AssessmentTest {
 	private AssessmentRepository assessmentRepository;
 	@PersistenceContext
 	private EntityManager entityManager;
+
+	@Test
+	void 답안지_제출시간이_초과되면_제출할_수_없다() {
+		final Assessment assessment = Assessment.of(1L, "test", Duration.ofMinutes(100L));
+
+		Assertions.assertThrows(SubmissionTimeExceedException.class,
+			() -> assessment.registerSubmission(1L, Collections.emptyList(), Duration.ofMinutes(101L)));
+	}
 
 	@Test
 	void 시험지_생성시_문항들은_1번부터_순서대로_등록된다() {

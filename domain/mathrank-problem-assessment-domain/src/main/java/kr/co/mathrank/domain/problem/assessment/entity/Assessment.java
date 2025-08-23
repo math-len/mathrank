@@ -16,6 +16,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.OrderBy;
 import kr.co.mathrank.domain.problem.assessment.exception.AssessmentSubmissionRegisterException;
+import kr.co.mathrank.domain.problem.assessment.exception.SubmissionTimeExceedException;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -68,17 +69,27 @@ public class Assessment {
 	 *
 	 * @param memberId 응시자 ID
 	 * @param answers 각 문항에 대한 답안 목록. {@code assessmentItems}의 순서와 일치해야 합니다.
+	 * @param elapsedTime 걸린 시간. {@code assessmentDuration} 보다 작거나 같아야한다.
 	 *
 	 * @return {@link AssessmentSubmission} 엔티티
 	 */
-	public AssessmentSubmission registerSubmission(final Long memberId, final List<List<String>> answers) {
+	public AssessmentSubmission registerSubmission(final Long memberId, final List<List<String>> answers,
+		final Duration elapsedTime) {
 		if (this.assessmentItems.size() != answers.size()) {
 			log.info(
 				"[Assessment.registerSubmission] item count and answers count is not match - assessmentItem count: {}, answers Count: {}",
 				assessmentItems.size(), answers.size());
 			throw new AssessmentSubmissionRegisterException();
 		}
-		final AssessmentSubmission assessmentSubmission = AssessmentSubmission.of(this, memberId);
+
+		if (elapsedTime.compareTo(assessmentDuration) > 0) { // elapsedTime이 시험시간보다 큰 경우
+			log.info(
+				"[Assessment.registerSubmission] elapsed time overed assessment time limit - elapsedTime: {}, assessmentTime: {}",
+				elapsedTime, this.assessmentDuration);
+			throw new SubmissionTimeExceedException();
+		}
+
+		final AssessmentSubmission assessmentSubmission = AssessmentSubmission.of(this, memberId, elapsedTime);
 
 		for (int i = 0; i < assessmentItems.size(); i ++) {
 			assessmentSubmission.addItemSubmission(assessmentItems.get(i), answers.get(i));
