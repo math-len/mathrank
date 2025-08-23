@@ -30,7 +30,7 @@ public class CaffeineCacheCustomizerConfiguration implements CacheSpecAssembler 
 			cacheManager.registerCustomCache(cacheSpec.cacheName(), cache);
 
 			log.info(
-				"[CaffeineCacheCustomizerConfiguration.applyRequireCacheSpecs]: registered cache spec - request module: {}, cache name: {}, cache TTL: {}",
+				"[CaffeineCacheCustomizerConfiguration.assemble]: registered cache spec - request module: {}, cache name: {}, cache TTL: {}",
 				cacheSpec.moduleName(), cacheSpec.cacheName(), cacheSpec.ttl());
 		}
 

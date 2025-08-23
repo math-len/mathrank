@@ -27,9 +27,9 @@ class CacheSpecAssemblerVerifier {
 	@EventListener(ApplicationReadyEvent.class)
 	private void verifyAssemblers() {
 		if (cacheSpecAssemblers.isEmpty()) {
-			log.warn("[RequiredCacheSpecAssemblerIdentifier.verifyAssemblers] cannot find any cache assemblers");
+			log.warn("[CacheSpecAssemblerVerifier.verifyAssemblers] cannot find any cache assemblers");
 			return;
 		}
-		log.info("[RequiredCacheSpecAssemblerIdentifier.verifyAssemblers] cache assemblers detected - count: {}", cacheSpecAssemblers.size());
+		log.info("[CacheSpecAssemblerVerifier.verifyAssemblers] cache assemblers detected - count: {}", cacheSpecAssemblers.size());
 	}
 }
