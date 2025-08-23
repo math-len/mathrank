@@ -16,4 +16,12 @@ public interface AssessmentSubmissionRepository extends JpaRepository<Assessment
 								WHERE assessmentSubmission.id = :assessmentSubmissionId
 		""")
 	Optional<AssessmentSubmission> findByAssessmentSubmissionId(@Param("assessmentSubmissionId") Long assessmentSubmissionId);
+
+	@Query("""
+		SELECT ASS FROM AssessmentSubmission ASS
+		LEFT JOIN FETCH ASS.submittedItemAnswers assItems
+		LEFT JOIN FETCH assItems.assessmentItem
+		WHERE ASS.id = :assessmentSubmissionId
+		""")
+	Optional<AssessmentSubmission> find(@Param("assessmentSubmissionId") Long assessmentSubmissionId);
 }
