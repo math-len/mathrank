@@ -8,12 +8,10 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
 
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
-import kr.co.mathrank.domain.problem.assessment.exception.AssessmentSubmissionRegisterException;
 import kr.co.mathrank.domain.problem.assessment.exception.SubmissionTimeExceedException;
 import kr.co.mathrank.domain.problem.assessment.repository.AssessmentRepository;
 
