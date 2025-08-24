@@ -23,7 +23,7 @@ public class AssessmentMonolithEventConsumer {
 	private static final String ASSESSMENT_REGISTERED_TOPIC = "assessment-submission-registered";
 
 	@EventListener(MonolithEvent.class)
-	@Async("assessmentMonolithEventConsumer")
+	@Async("assessmentMonolithEventConsumerExecutor")
 	public void consume(final MonolithEvent monolithEvent) {
 		if (!monolithEvent.isExpectedTopic(ASSESSMENT_REGISTERED_TOPIC)) {
 			return;

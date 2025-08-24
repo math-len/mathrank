@@ -12,7 +12,7 @@ import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 @EnableAsync
 class AssessmentMonolithEventConsumerConfig {
 	@Bean
-	TaskExecutor assessmentMonolithEventConsumer() {
+	TaskExecutor assessmentMonolithEventConsumerExecutor() {
 		final ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();
 		executor.setCorePoolSize(1);
 		executor.setMaxPoolSize(3);
