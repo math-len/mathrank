@@ -2,7 +2,7 @@ package kr.co.mathrank.domain.problem.assessment.service;
 
 import java.util.List;
 
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 import org.springframework.validation.annotation.Validated;
 
 import jakarta.validation.constraints.NotNull;
@@ -17,10 +17,10 @@ import lombok.extern.slf4j.Slf4j;
  * 사용자의 시험 제출을 채점하는 매니저 컴포넌트입니다.
  */
 @Slf4j
-@Component
+@Service
 @Validated
 @RequiredArgsConstructor
-class SubmissionGradeManager {
+public class SubmissionGradeService {
 	private final AssessmentSubmissionRepository assessmentSubmissionRepository;
 	private final ItemGradeManager gradeManager;
 
