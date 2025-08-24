@@ -1,6 +1,5 @@
 package kr.co.mathrank.domain.problem.assessment.service;
 
-import java.util.Collections;
 import java.util.List;
 
 import org.springframework.stereotype.Component;
