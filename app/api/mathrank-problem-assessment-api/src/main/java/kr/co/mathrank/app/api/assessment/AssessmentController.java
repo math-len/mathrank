@@ -48,6 +48,6 @@ public class AssessmentController {
 		@LoginInfo final MemberPrincipal memberPrincipal
 	) {
 		final SubmissionRegisterCommand command = request.toCommand(memberPrincipal.memberId());
-		return ResponseEntity.ok(submissionRegisterService.submit(command));
+		return ResponseEntity.status(HttpStatus.CREATED).body(submissionRegisterService.submit(command));
 	}
 }
