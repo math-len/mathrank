@@ -2,6 +2,7 @@ package kr.co.mathrank.domain.problem.assessment.dto;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
+import java.util.Comparator;
 import java.util.List;
 
 import kr.co.mathrank.domain.problem.assessment.entity.AssessmentSubmission;
@@ -24,10 +25,10 @@ public record AssessmentSubmissionQueryResult(
 			assessmentSubmission.getTotalScore(),
 			assessmentSubmission.getSubmittedItemAnswers().stream()
 				.map(ItemSubmissionResult::from)
+				.sorted(Comparator.comparingInt(ItemSubmissionResult::sequence))
 				.toList(),
 			assessmentSubmission.getSubmittedAt(),
 			assessmentSubmission.getElapsedTime()
 		);
-
 	}
 }
