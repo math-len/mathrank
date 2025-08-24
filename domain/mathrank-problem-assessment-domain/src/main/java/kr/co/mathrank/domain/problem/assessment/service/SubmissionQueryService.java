@@ -1,7 +1,6 @@
 package kr.co.mathrank.domain.problem.assessment.service;
 
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.annotation.Validated;
 
 import jakarta.validation.constraints.NotNull;
@@ -19,7 +18,6 @@ import lombok.extern.slf4j.Slf4j;
 public class SubmissionQueryService {
 	private final AssessmentSubmissionRepository assessmentSubmissionRepository;
 
-	@Transactional
 	public AssessmentSubmissionQueryResult getSubmissionResult(@NotNull final Long submissionId) {
 		final AssessmentSubmission submission = assessmentSubmissionRepository.findByIdWithSubmittedItemAnswers(submissionId)
 			.orElseThrow(() -> {

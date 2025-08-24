@@ -3,6 +3,7 @@ package kr.co.mathrank.domain.problem.assessment.service;
 import java.time.Duration;
 import java.util.List;
 
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -49,5 +50,33 @@ class SubmissionQueryServiceTest {
 			EvaluationStatus.PENDING,
 			submissionQueryService.getSubmissionResult(submission.getId()).evaluationStatus()
 		);
+	}
+
+	@Test
+	void 트랜잭션_없이_쿼리할떄_LAZY_INITIALIZE_예외가_발생하지_않는다() {
+		final Assessment assessment = Assessment.of(1L, "test", Duration.ofMinutes(100L));
+		// 시험 문제 번호
+		assessment.replaceItems(
+			List.of(
+				AssessmentItem.of(1L, 25),
+				AssessmentItem.of(1L, 25),
+				AssessmentItem.of(1L, 25),
+				AssessmentItem.of(1L, 25))
+		);
+
+		final List<String> submittedAnswer = List.of("1", "2", "3", "4");
+		final AssessmentSubmission submission = assessment.registerSubmission(
+			1L, List.of(submittedAnswer, submittedAnswer, submittedAnswer, submittedAnswer), Duration.ofMinutes(5));
+		assessmentRepository.save(assessment);
+
+		// 쿼리 한번으로 수행되는지도 확인
+		Assertions.assertDoesNotThrow(
+			() -> submissionQueryService.getSubmissionResult(submission.getId()).evaluationStatus()
+		);
+	}
+
+	@AfterEach
+	void clear() {
+		assessmentRepository.deleteAll();
 	}
 }
