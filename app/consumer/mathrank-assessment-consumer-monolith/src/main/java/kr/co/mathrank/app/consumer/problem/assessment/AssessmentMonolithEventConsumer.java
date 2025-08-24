@@ -46,7 +46,7 @@ public class AssessmentMonolithEventConsumer {
 		Long memberId,
 		Long submissionId,
 		LocalDateTime submittedTime,
-		Duration elapsedTime
+		Long elapsedTimeSeconds
 	) implements EventPayload {
 	}
 }

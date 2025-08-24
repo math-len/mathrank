@@ -50,7 +50,7 @@ public class SubmissionRegisterService {
 			command.memberId(),
 			assessmentSubmission.getId(),
 			assessmentSubmission.getSubmittedAt(),
-			assessmentSubmission.getElapsedTime()
+			assessmentSubmission.getElapsedTime().getSeconds()
 		));
 
 		return assessmentSubmission.getId();
@@ -61,7 +61,7 @@ public class SubmissionRegisterService {
 		Long memberId,
 		Long submissionId,
 		LocalDateTime submittedTime,
-		Duration elapsedTime
+		Long elapsedTimeSeconds
 	) implements EventPayload {
 	}
 }
