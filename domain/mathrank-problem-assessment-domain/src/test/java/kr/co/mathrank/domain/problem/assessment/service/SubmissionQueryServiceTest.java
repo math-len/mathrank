@@ -5,17 +5,14 @@ import java.util.List;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.transaction.annotation.Transactional;
 
 import kr.co.mathrank.domain.problem.assessment.entity.Assessment;
 import kr.co.mathrank.domain.problem.assessment.entity.AssessmentItem;
 import kr.co.mathrank.domain.problem.assessment.entity.AssessmentSubmission;
 import kr.co.mathrank.domain.problem.assessment.entity.EvaluationStatus;
-import kr.co.mathrank.domain.problem.assessment.entity.GradeResult;
 import kr.co.mathrank.domain.problem.assessment.repository.AssessmentRepository;
 
 @SpringBootTest(properties =
@@ -28,8 +25,6 @@ class SubmissionQueryServiceTest {
 	private SubmissionQueryService submissionQueryService;
 	@Autowired
 	private AssessmentRepository assessmentRepository;
-	@Autowired
-	private SubmissionGradeService submissionGradeService;
 
 	@Test
 	@Transactional
