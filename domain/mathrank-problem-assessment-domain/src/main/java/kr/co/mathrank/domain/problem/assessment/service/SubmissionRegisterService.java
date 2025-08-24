@@ -1,6 +1,5 @@
 package kr.co.mathrank.domain.problem.assessment.service;
 
-import java.time.Duration;
 import java.time.LocalDateTime;
 
 import org.springframework.stereotype.Service;
@@ -50,7 +49,7 @@ public class SubmissionRegisterService {
 			command.memberId(),
 			assessmentSubmission.getId(),
 			assessmentSubmission.getSubmittedAt(),
-			assessmentSubmission.getElapsedTime()
+			assessmentSubmission.getElapsedTime().getSeconds()
 		));
 
 		return assessmentSubmission.getId();
@@ -61,7 +60,7 @@ public class SubmissionRegisterService {
 		Long memberId,
 		Long submissionId,
 		LocalDateTime submittedTime,
-		Duration elapsedTime
+		Long elapsedTimeSeconds
 	) implements EventPayload {
 	}
 }

@@ -5,7 +5,7 @@ import java.util.Set;
 
 public record SolveResult(
 	Boolean success,
-	Set<String> realAnswer,
+	Set<String> correctAnswer,
 	List<String> submittedAnswer
 ) {
 }

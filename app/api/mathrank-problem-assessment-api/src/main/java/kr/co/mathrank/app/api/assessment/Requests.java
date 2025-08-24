@@ -59,10 +59,11 @@ public class Requests {
 		@NotNull
 		List<List<String>> submittedAnswers,
 		@NotNull
-		Duration elapsedTime
+		Long elapsedTimeSeconds
 	) {
 		public SubmissionRegisterCommand toCommand(final Long memberId) {
-			return new SubmissionRegisterCommand(memberId, assessmentId, submittedAnswers, elapsedTime);
+			return new SubmissionRegisterCommand(memberId, assessmentId, submittedAnswers,
+				Duration.ofSeconds(elapsedTimeSeconds));
 		}
 	}
 }

@@ -10,7 +10,9 @@ import kr.co.mathrank.client.internal.problem.ProblemClient;
 import kr.co.mathrank.client.internal.problem.SolveResult;
 import kr.co.mathrank.domain.problem.assessment.entity.GradeResult;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 @Component
 @Validated
 @RequiredArgsConstructor
@@ -25,7 +27,7 @@ class ItemGradeManager {
 	private GradeResult create(final SolveResult solveResult, final Long problemId) {
 		return new GradeResult(
 			problemId,
-			solveResult.realAnswer().stream().toList(),
+			solveResult.correctAnswer().stream().toList(),
 			solveResult.success());
 	}
 }

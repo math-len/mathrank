@@ -17,7 +17,7 @@ public record SingleProblemSolveResult(
 	public static SingleProblemSolveResult from(SolveResult solveResult) {
 		return new SingleProblemSolveResult(
 			solveResult.success(),
-			solveResult.realAnswer(),
+			solveResult.correctAnswer(),
 			solveResult.submittedAnswer()
 		);
 	}
