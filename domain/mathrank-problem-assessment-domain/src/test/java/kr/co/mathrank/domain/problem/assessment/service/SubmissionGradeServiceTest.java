@@ -26,12 +26,12 @@ import kr.co.mathrank.domain.problem.assessment.repository.AssessmentSubmissionR
 client.problem.host=tset
 client.problem.port=10202
 """)
-class SubmissionGradeManagerTest {
+class SubmissionGradeServiceTest {
 	@MockitoBean
 	private ProblemClient problemClient;
 
 	@Autowired
-	private SubmissionGradeManager submissionGradeManager;
+	private SubmissionGradeService submissionGradeService;
 	@Autowired
 	private AssessmentRepository assessmentRepository;
 	@Autowired
@@ -40,7 +40,7 @@ class SubmissionGradeManagerTest {
 	@Test
 	void 존재하지_않는_답안지_채점_시도시_에러() {
 		Assertions.assertThrows(NoSuchSubmissionException.class,
-			() -> submissionGradeManager.evaluateSubmission(2139123812L));
+			() -> submissionGradeService.evaluateSubmission(2139123812L));
 	}
 
 	@Test
@@ -58,7 +58,7 @@ class SubmissionGradeManagerTest {
 			.thenReturn(new SolveResult(true, Collections.emptySet(), Collections.emptyList()));
 
 		// 채점하기
-		submissionGradeManager.evaluateSubmission(submissionId);
+		submissionGradeService.evaluateSubmission(submissionId);
 
 		// 결과 확인하기
 		final int score = assessmentSubmissionRepository.findById(submissionId).orElseThrow()
@@ -82,7 +82,7 @@ class SubmissionGradeManagerTest {
 			.thenReturn(new SolveResult(true, Collections.emptySet(), Collections.emptyList()));
 
 		// 채점하기
-		submissionGradeManager.evaluateSubmission(submissionId);
+		submissionGradeService.evaluateSubmission(submissionId);
 
 		// 결과 확인하기
 		final AssessmentSubmission submission = assessmentSubmissionRepository.findById(submissionId).orElseThrow();
