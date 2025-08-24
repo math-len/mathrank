@@ -22,7 +22,6 @@ class ItemGradeManager {
 
 	public GradeResult gradeItemSubmission(@NotNull final Long problemId, @NotNull final List<String> submittedAnswer) {
 		final SolveResult solveResult = problemClient.matchAnswer(problemId, submittedAnswer);
-		log.info("[ItemGradeManager.gradeItemSubmission] matchedInfo: {}", solveResult);
 		return create(solveResult, problemId);
 	}
 
