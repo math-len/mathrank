@@ -26,7 +26,7 @@ import kr.co.mathrank.domain.problem.assessment.repository.AssessmentSubmissionR
 client.problem.host=tset
 client.problem.port=10202
 """)
-class SubmissionGradeManagerTest {
+class SubmissionGradeServiceTest {
 	@MockitoBean
 	private ProblemClient problemClient;
 
