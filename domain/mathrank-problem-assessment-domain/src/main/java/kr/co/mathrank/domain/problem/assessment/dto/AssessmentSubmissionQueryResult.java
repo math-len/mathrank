@@ -13,7 +13,7 @@ public record AssessmentSubmissionQueryResult(
 	EvaluationStatus evaluationStatus,
 	Integer totalScore,
 	List<ItemSubmissionResult> itemSubmissionResults,
-	LocalDateTime submitedAt,
+	LocalDateTime submittedAt,
 	Duration elapsedTime
 ) {
 	public static AssessmentSubmissionQueryResult from(final AssessmentSubmission assessmentSubmission) {
