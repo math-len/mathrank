@@ -18,7 +18,7 @@ public class SubmissionQueryService {
 
 	@Transactional
 	public AssessmentSubmissionQueryResult getSubmissionResult(@NotNull final Long submissionId) {
-		final AssessmentSubmission submission = assessmentSubmissionRepository.find(submissionId)
+		final AssessmentSubmission submission = assessmentSubmissionRepository.findByIdWithSubmittedItemAnswers(submissionId)
 			.orElseThrow();
 		return AssessmentSubmissionQueryResult.from(submission);
 	}
