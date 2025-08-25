@@ -34,7 +34,7 @@ public class AssessmentRegisterService {
 		final Assessment assessment = Assessment.of(command.registerMemberId(), command.assessmentName(), command.minutes());
 		final List<AssessmentItem> items = toItems(command.assessmentItems());
 		assessment.replaceItems(items);
-
+		assessment.setDifficulty(command.difficulty());
 		assessmentRepository.save(assessment);
 		log.info("[AssessmentRegisterService.register] successfully registered assessment - assessmentId: {}, command: {}", assessment.getId(), command);
 		return assessment.getId();
