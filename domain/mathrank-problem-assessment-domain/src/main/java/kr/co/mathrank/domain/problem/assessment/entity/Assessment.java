@@ -17,6 +17,7 @@ import jakarta.persistence.OneToMany;
 import jakarta.persistence.OrderBy;
 import kr.co.mathrank.domain.problem.assessment.exception.AssessmentSubmissionRegisterException;
 import kr.co.mathrank.domain.problem.assessment.exception.SubmissionTimeExceedException;
+import kr.co.mathrank.domain.problem.core.Difficulty;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -40,6 +41,9 @@ public class Assessment {
 
 	@Convert(converter = AssessmentDurationConverter.class)
 	private Duration assessmentDuration;
+
+	@Convert(converter = DifficultyConverter.class)
+	private Difficulty difficulty;
 
 	@OneToMany(mappedBy = "assessment", orphanRemoval = true, cascade = CascadeType.PERSIST)
 	@OrderBy("sequence")
