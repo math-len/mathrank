@@ -32,7 +32,10 @@ import lombok.extern.slf4j.Slf4j;
 @Getter
 @Setter
 @Table(
-	indexes = @Index(name = "idx_assessment_difficulty", columnList = "difficulty")
+	indexes = {
+		@Index(name = "idx_assessment_difficulty", columnList = "difficulty"),
+		@Index(name = "idx_assessment_distinctTriedMemberCount", columnList = "distinct_tried_member_count")
+	}
 )
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Assessment {

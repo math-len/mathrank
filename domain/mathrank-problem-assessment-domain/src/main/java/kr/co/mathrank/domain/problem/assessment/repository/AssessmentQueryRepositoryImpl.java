@@ -24,6 +24,7 @@ class AssessmentQueryRepositoryImpl implements AssessmentQueryRepository{
 		return jpaQueryFactory.select(qAssessment)
 			.from(qAssessment)
 			.where(conditions(query))
+			.orderBy(qAssessment.distinctTriedMemberCount.desc())
 			.offset((pageNumber - 1) * pageSize)
 			.limit(pageSize)
 			.fetch();
