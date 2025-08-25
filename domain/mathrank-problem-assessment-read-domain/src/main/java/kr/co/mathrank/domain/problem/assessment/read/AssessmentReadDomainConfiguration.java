@@ -10,6 +10,8 @@ import kr.co.mathrank.common.cache.RequiredCacheSpec;
 @Configuration
 public class AssessmentReadDomainConfiguration {
 	public static final String PROBLEM_CACHE_NAME = "mathrank::assessment-read-domain::problem";
+	public static final String COURSE_CACHE_NAME = "mathrank::assessment-read-domain::course";
+
 	@Bean
 	RequiredCacheSpec assessmentReadDomainProblemCacheSpec() { // problem cache 등록
 		return new RequiredCacheSpec() {
@@ -21,6 +23,26 @@ public class AssessmentReadDomainConfiguration {
 			@Override
 			public String cacheName() {
 				return PROBLEM_CACHE_NAME;
+			}
+
+			@Override
+			public Duration ttl() {
+				return Duration.ofSeconds(60);
+			}
+		};
+	}
+
+	@Bean
+	RequiredCacheSpec assessmentReadDomainCourseCacheSpec() { // problem cache 등록
+		return new RequiredCacheSpec() {
+			@Override
+			public String moduleName() {
+				return "assessment-read-domain";
+			}
+
+			@Override
+			public String cacheName() {
+				return COURSE_CACHE_NAME;
 			}
 
 			@Override

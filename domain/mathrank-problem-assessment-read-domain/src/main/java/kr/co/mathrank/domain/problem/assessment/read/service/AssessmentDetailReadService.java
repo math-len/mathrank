@@ -20,7 +20,7 @@ import lombok.RequiredArgsConstructor;
 public class AssessmentDetailReadService {
 	private final AssessmentQueryService assessmentQueryService;
 	private final ProblemQueryManager problemQueryManager;
-	private final CourseClient courseClient;
+	private final CourseQueryManager courseQueryManager;
 
 	public AssessmentDetailReadModelResult getDetail(@NotNull final Long assessmentId) {
 		final AssessmentDetailResult detailResult = assessmentQueryService.getAssessmentDetails(assessmentId);
@@ -33,8 +33,7 @@ public class AssessmentDetailReadService {
 
 	private AssessmentItemReadModelDetailResult mapToReadModel(final AssessmentItemDetail itemDetail) {
 		final ProblemQueryResult problemQueryResult = problemQueryManager.getProblemInfo(itemDetail.problemId());
-		final CourseQueryResult courseQueryResult = courseClient.getParentCourses(problemQueryResult.path())
-			.target();
+		final CourseQueryResult courseQueryResult = courseQueryManager.getCourseInfo(problemQueryResult.path());
 
 		return new AssessmentItemReadModelDetailResult(
 			itemDetail.problemId(),
