@@ -13,6 +13,8 @@ import kr.co.mathrank.common.role.Role;
 import kr.co.mathrank.domain.problem.assessment.dto.AssessmentItemRegisterCommand;
 import kr.co.mathrank.domain.problem.assessment.dto.AssessmentRegisterCommand;
 import kr.co.mathrank.domain.problem.assessment.dto.SubmissionRegisterCommand;
+import kr.co.mathrank.domain.problem.assessment.entity.DifficultyConverter;
+import kr.co.mathrank.domain.problem.core.Difficulty;
 
 public class Requests {
 	record AssessmentRegisterRequest (
@@ -23,6 +25,9 @@ public class Requests {
 		@Size(min = 1)
 		@Valid
 		List<AssessmentItemRegisterRequest> items,
+
+		@NotNull
+		Difficulty difficulty,
 
 		@NotNull
 		@Min(1)
@@ -37,6 +42,7 @@ public class Requests {
 				items.stream()
 					.map(AssessmentItemRegisterRequest::toCommand)
 					.toList(),
+				difficulty,
 				Duration.ofMinutes(minutes)
 			);
 		}
