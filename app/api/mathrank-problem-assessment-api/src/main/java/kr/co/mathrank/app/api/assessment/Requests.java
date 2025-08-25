@@ -13,7 +13,6 @@ import kr.co.mathrank.common.role.Role;
 import kr.co.mathrank.domain.problem.assessment.dto.AssessmentItemRegisterCommand;
 import kr.co.mathrank.domain.problem.assessment.dto.AssessmentRegisterCommand;
 import kr.co.mathrank.domain.problem.assessment.dto.SubmissionRegisterCommand;
-import kr.co.mathrank.domain.problem.assessment.entity.DifficultyConverter;
 import kr.co.mathrank.domain.problem.core.Difficulty;
 
 public class Requests {
