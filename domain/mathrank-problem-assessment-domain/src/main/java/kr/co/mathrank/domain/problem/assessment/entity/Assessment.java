@@ -52,7 +52,7 @@ public class Assessment {
 	@OneToMany(mappedBy = "assessment", orphanRemoval = true, cascade = CascadeType.PERSIST)
 	private final List<AssessmentSubmission> assessmentSubmissions = new ArrayList<>();
 
-	@Setter
+	@Setter(AccessLevel.NONE)
 	private Long distinctTriedMemberCount = 0L;
 
 	@CreationTimestamp
