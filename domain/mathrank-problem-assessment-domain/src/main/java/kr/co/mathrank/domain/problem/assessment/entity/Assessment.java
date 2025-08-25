@@ -52,6 +52,9 @@ public class Assessment {
 	@OneToMany(mappedBy = "assessment", orphanRemoval = true, cascade = CascadeType.PERSIST)
 	private final List<AssessmentSubmission> assessmentSubmissions = new ArrayList<>();
 
+	@Setter(AccessLevel.NONE)
+	private Long distinctTriedMemberCount = 0L;
+
 	@CreationTimestamp
 	@Setter(AccessLevel.NONE)
 	private LocalDateTime createdAt;
@@ -63,6 +66,10 @@ public class Assessment {
 		assessment.assessmentDuration = assessmentDuration;
 
 		return assessment;
+	}
+
+	public void increaseDistinctMemberCount() {
+		distinctTriedMemberCount++;
 	}
 
 	/**

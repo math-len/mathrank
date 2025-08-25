@@ -3,9 +3,11 @@ package kr.co.mathrank.domain.problem.assessment.repository;
 import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Lock;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
+import jakarta.persistence.LockModeType;
 import kr.co.mathrank.domain.problem.assessment.entity.Assessment;
 
 public interface AssessmentRepository extends JpaRepository<Assessment, Long> {
@@ -14,5 +16,6 @@ public interface AssessmentRepository extends JpaRepository<Assessment, Long> {
 				 LEFT JOIN FETCH ass.assessmentItems
 						  WHERE ass.id = :assessmentId
 		""")
-	Optional<Assessment> findWithItems(@Param("assessmentId") final Long assessmentId);
+	@Lock(LockModeType.PESSIMISTIC_WRITE)
+	Optional<Assessment> findWithItemsForUpdate(@Param("assessmentId") final Long assessmentId);
 }
