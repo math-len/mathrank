@@ -5,4 +5,6 @@ dependencies {
     implementation project(':domain:mathrank-problem-assessment-domain')
     implementation project(':client:internal:mathrank-problem-client')
     implementation project(':client:internal:mathrank-course-client')
+
+    implementation project(':common:mathrank-cache')
 }
