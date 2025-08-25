@@ -1,14 +1,20 @@
 package kr.co.mathrank.app.api.problem.assessment;
 
+import org.hibernate.validator.constraints.Range;
+import org.springdoc.core.annotations.ParameterObject;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import kr.co.mathrank.app.api.common.authentication.Authorization;
+import kr.co.mathrank.domain.problem.assessment.dto.AssessmentQuery;
+import kr.co.mathrank.domain.problem.assessment.dto.AssessmentQueryPageResult;
 import kr.co.mathrank.domain.problem.assessment.dto.AssessmentSubmissionQueryResult;
+import kr.co.mathrank.domain.problem.assessment.service.AssessmentQueryService;
 import kr.co.mathrank.domain.problem.assessment.service.SubmissionQueryService;
 import lombok.RequiredArgsConstructor;
 
@@ -16,6 +22,7 @@ import lombok.RequiredArgsConstructor;
 @RestController
 @RequiredArgsConstructor
 public class AssessmentReadController {
+	private final AssessmentQueryService assessmentQueryService;
 	private final SubmissionQueryService submissionQueryService;
 
 	@Operation(summary = "제출된 답안지 채점 상태 조회 API")
@@ -25,5 +32,16 @@ public class AssessmentReadController {
 		@RequestParam final Long submissionId
 	) {
 		return ResponseEntity.ok(submissionQueryService.getSubmissionResult(submissionId));
+	}
+
+	@Operation(summary = "문제집 페이지 조회 API")
+	@Authorization(openedForAll = true)
+	@GetMapping("/api/v1/problem/assessment")
+	public ResponseEntity<AssessmentQueryPageResult> queryPage(
+		@ModelAttribute @ParameterObject final AssessmentQuery assessmentQuery,
+		@RequestParam(defaultValue = "10") @Range(min = 1, max = 20) final Integer pageSize,
+		@RequestParam(defaultValue = "1") @Range(min = 1, max = 1000) final Integer pageNumber
+	) {
+		return ResponseEntity.ok(assessmentQueryService.pageQuery(assessmentQuery, pageSize, pageNumber));
 	}
 }
