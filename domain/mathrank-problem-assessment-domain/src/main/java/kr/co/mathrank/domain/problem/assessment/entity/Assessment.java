@@ -5,6 +5,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.hibernate.annotations.BatchSize;
 import org.hibernate.annotations.CreationTimestamp;
 
 import jakarta.persistence.CascadeType;
@@ -13,8 +14,10 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.Index;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.OrderBy;
+import jakarta.persistence.Table;
 import kr.co.mathrank.domain.problem.assessment.exception.AssessmentSubmissionRegisterException;
 import kr.co.mathrank.domain.problem.assessment.exception.SubmissionTimeExceedException;
 import kr.co.mathrank.domain.problem.core.Difficulty;
@@ -28,6 +31,9 @@ import lombok.extern.slf4j.Slf4j;
 @Entity
 @Getter
 @Setter
+@Table(
+	indexes = @Index(name = "idx_assessment_difficulty", columnList = "difficulty")
+)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Assessment {
 	@Id
@@ -47,6 +53,7 @@ public class Assessment {
 
 	@OneToMany(mappedBy = "assessment", orphanRemoval = true, cascade = CascadeType.PERSIST)
 	@OrderBy("sequence")
+	@BatchSize(size = 20)
 	private final List<AssessmentItem> assessmentItems = new ArrayList<>();
 
 	@OneToMany(mappedBy = "assessment", orphanRemoval = true, cascade = CascadeType.PERSIST)

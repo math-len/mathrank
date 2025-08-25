@@ -5,6 +5,7 @@ dependencies {
     runtimeOnly 'com.mysql:mysql-connector-j'
 
     implementation project(':common:mathrank-role')
+    implementation project(':common:mathrank-page')
     implementation project(':common:mathrank-outbox')
     implementation project(':common:mathrank-event')
     implementation project(':common:mathrank-dataserializer')
@@ -12,4 +13,28 @@ dependencies {
     implementation project(':client:internal:mathrank-problem-client')
 
     testImplementation project(':common:mathrank-event-publisher-test')
+
+    // query dsl
+    implementation 'com.querydsl:querydsl-jpa:5.0.0:jakarta'
+    annotationProcessor "com.querydsl:querydsl-apt:${dependencyManagement.importedProperties['querydsl.version']}:jakarta"
+    annotationProcessor "jakarta.annotation:jakarta.annotation-api"
+    annotationProcessor "jakarta.persistence:jakarta.persistence-api"
+}
+
+def querydslSrcDir = 'src/main/generated'
+
+clean {
+    delete file(querydslSrcDir)
+}
+
+tasks.withType(JavaCompile) {
+    options.generatedSourceOutputDirectory = file(querydslSrcDir)
+}
+
+sourceSets {
+    main {
+        java {
+            srcDirs += querydslSrcDir
+        }
+    }
 }

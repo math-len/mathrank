@@ -8,7 +8,7 @@ import org.springframework.data.repository.query.Param;
 
 import kr.co.mathrank.domain.problem.assessment.entity.Assessment;
 
-public interface AssessmentRepository extends JpaRepository<Assessment, Long> {
+public interface AssessmentRepository extends JpaRepository<Assessment, Long>, AssessmentQueryRepository{
 	@Query("""
 		SELECT ass FROM Assessment ass
 				 LEFT JOIN FETCH ass.assessmentItems
