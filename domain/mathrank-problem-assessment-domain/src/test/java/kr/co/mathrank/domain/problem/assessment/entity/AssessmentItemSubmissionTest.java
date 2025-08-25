@@ -7,13 +7,16 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.context.annotation.Import;
 
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
+import kr.co.mathrank.common.querydsl.MathrankQueryDslConfiguration;
 import kr.co.mathrank.domain.problem.assessment.exception.AssessmentSubmissionRegisterException;
 import kr.co.mathrank.domain.problem.assessment.repository.AssessmentRepository;
 
 @DataJpaTest(showSql = true)
+@Import(MathrankQueryDslConfiguration.class)
 class AssessmentItemSubmissionTest {
 	@PersistenceContext
 	private EntityManager entityManager;
