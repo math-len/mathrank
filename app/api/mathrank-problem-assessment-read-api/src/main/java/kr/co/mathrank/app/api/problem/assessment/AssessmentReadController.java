@@ -5,6 +5,7 @@ import org.springdoc.core.annotations.ParameterObject;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -14,6 +15,8 @@ import kr.co.mathrank.app.api.common.authentication.Authorization;
 import kr.co.mathrank.domain.problem.assessment.dto.AssessmentQuery;
 import kr.co.mathrank.domain.problem.assessment.dto.AssessmentQueryPageResult;
 import kr.co.mathrank.domain.problem.assessment.dto.AssessmentSubmissionQueryResult;
+import kr.co.mathrank.domain.problem.assessment.read.dto.AssessmentDetailReadModelResult;
+import kr.co.mathrank.domain.problem.assessment.read.service.AssessmentDetailReadService;
 import kr.co.mathrank.domain.problem.assessment.service.AssessmentQueryService;
 import kr.co.mathrank.domain.problem.assessment.service.SubmissionQueryService;
 import lombok.RequiredArgsConstructor;
@@ -24,6 +27,8 @@ import lombok.RequiredArgsConstructor;
 public class AssessmentReadController {
 	private final AssessmentQueryService assessmentQueryService;
 	private final SubmissionQueryService submissionQueryService;
+
+	private final AssessmentDetailReadService assessmentDetailReadService;
 
 	@Operation(summary = "제출된 답안지 채점 상태 조회 API")
 	@Authorization(openedForAll = true)
@@ -43,5 +48,12 @@ public class AssessmentReadController {
 		@RequestParam(defaultValue = "1") @Range(min = 1, max = 1000) final Integer pageNumber
 	) {
 		return ResponseEntity.ok(assessmentQueryService.pageQuery(assessmentQuery, pageSize, pageNumber));
+	}
+
+	@Operation(summary = "문제집 상세 조회 API")
+	@Authorization(openedForAll = true)
+	@GetMapping("/api/v1/problem/assessment/{assessmentId}")
+	public ResponseEntity<AssessmentDetailReadModelResult> getDetail(@PathVariable final Long assessmentId) {
+		return ResponseEntity.ok(assessmentDetailReadService.getDetail(assessmentId));
 	}
 }
