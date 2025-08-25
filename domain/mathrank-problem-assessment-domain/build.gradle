@@ -5,15 +5,42 @@ dependencies {
     runtimeOnly 'com.mysql:mysql-connector-j'
 
     implementation project(':common:mathrank-role')
+    implementation project(':common:mathrank-page')
     implementation project(':common:mathrank-outbox')
     implementation project(':common:mathrank-event')
     implementation project(':common:mathrank-dataserializer')
     implementation project(':common:mathrank-exception')
+    implementation project(':common:mathrank-querydsl')
     implementation project(':client:internal:mathrank-problem-client')
 
     testImplementation project(':common:mathrank-event-publisher-test')
 
+
     testImplementation 'org.testcontainers:junit-jupiter'
     testImplementation 'org.springframework.boot:spring-boot-testcontainers'
     testImplementation 'org.testcontainers:mysql'
+
+    // query dsl
+    implementation "com.querydsl:querydsl-jpa:${dependencyManagement.importedProperties['querydsl.version']}:jakarta"
+    annotationProcessor "com.querydsl:querydsl-apt:${dependencyManagement.importedProperties['querydsl.version']}:jakarta"
+    annotationProcessor "jakarta.annotation:jakarta.annotation-api"
+    annotationProcessor "jakarta.persistence:jakarta.persistence-api"
+}
+
+def querydslSrcDir = 'src/main/generated'
+
+clean {
+    delete file(querydslSrcDir)
+}
+
+tasks.withType(JavaCompile) {
+    options.generatedSourceOutputDirectory = file(querydslSrcDir)
+}
+
+sourceSets {
+    main {
+        java {
+            srcDirs += querydslSrcDir
+        }
+    }
 }
