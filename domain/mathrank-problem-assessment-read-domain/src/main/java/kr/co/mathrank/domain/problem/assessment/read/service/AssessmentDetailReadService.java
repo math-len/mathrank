@@ -1,0 +1,52 @@
+package kr.co.mathrank.domain.problem.assessment.read.service;
+
+import org.springframework.stereotype.Service;
+
+import jakarta.validation.constraints.NotNull;
+import kr.co.mathrank.client.internal.course.CourseClient;
+import kr.co.mathrank.client.internal.course.CourseQueryResult;
+import kr.co.mathrank.client.internal.problem.ProblemClient;
+import kr.co.mathrank.client.internal.problem.ProblemQueryResult;
+import kr.co.mathrank.domain.problem.assessment.dto.AssessmentDetailResult;
+import kr.co.mathrank.domain.problem.assessment.dto.AssessmentItemDetail;
+import kr.co.mathrank.domain.problem.assessment.read.dto.AssessmentDetailReadModelResult;
+import kr.co.mathrank.domain.problem.assessment.read.dto.AssessmentItemReadModelDetailResult;
+import kr.co.mathrank.domain.problem.assessment.read.dto.CourseDetailResult;
+import kr.co.mathrank.domain.problem.assessment.service.AssessmentQueryService;
+import lombok.RequiredArgsConstructor;
+
+@Service
+@RequiredArgsConstructor
+public class AssessmentDetailReadService {
+	private final AssessmentQueryService assessmentQueryService;
+	private final ProblemClient problemClient;
+	private final CourseClient courseClient;
+
+	public AssessmentDetailReadModelResult getDetail(@NotNull final Long assessmentId) {
+		final AssessmentDetailResult detailResult = assessmentQueryService.getAssessmentDetails(assessmentId);
+		return AssessmentDetailReadModelResult.from(
+			detailResult,
+			detailResult.itemDetails().stream()
+				.map(this::mapToReadModel)
+				.toList());
+	}
+
+	private AssessmentItemReadModelDetailResult mapToReadModel(final AssessmentItemDetail itemDetail) {
+		final ProblemQueryResult problemQueryResult = problemClient.fetchProblemInfo(itemDetail.problemId());
+		final CourseQueryResult courseQueryResult = courseClient.getParentCourses(problemQueryResult.path())
+			.target();
+
+		return new AssessmentItemReadModelDetailResult(
+			itemDetail.problemId(),
+			problemQueryResult.imageSource(),
+			problemQueryResult.memberId(),
+			problemQueryResult.path(),
+			CourseDetailResult.from(courseQueryResult),
+			problemQueryResult.difficulty(),
+			problemQueryResult.type(),
+			problemQueryResult.schoolCode(),
+			problemQueryResult.createdAt(),
+			problemQueryResult.year()
+		);
+	}
+}
