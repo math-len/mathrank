@@ -8,17 +8,32 @@ import org.springframework.validation.annotation.Validated;
 
 import jakarta.validation.constraints.NotNull;
 import kr.co.mathrank.common.page.PageUtil;
+import kr.co.mathrank.domain.problem.assessment.dto.AssessmentDetailResult;
 import kr.co.mathrank.domain.problem.assessment.dto.AssessmentQuery;
 import kr.co.mathrank.domain.problem.assessment.dto.AssessmentQueryPageResult;
 import kr.co.mathrank.domain.problem.assessment.entity.Assessment;
+import kr.co.mathrank.domain.problem.assessment.exception.NoSuchAssessmentException;
 import kr.co.mathrank.domain.problem.assessment.repository.AssessmentRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 @Service
 @Validated
 @RequiredArgsConstructor
 public class AssessmentQueryService {
 	private final AssessmentRepository assessmentRepository;
+
+	public AssessmentDetailResult getAssessmentDetails(@NotNull final Long assessmentId) {
+		final Assessment assessment = assessmentRepository.findWithItems(assessmentId)
+			.orElseThrow(() -> {
+				log.info("[AssessmentQueryService.getAssessmentDetails] cannot found assessment - assessmentId: {}",
+					assessmentId);
+				return new NoSuchAssessmentException();
+			});
+		return AssessmentDetailResult.from(assessment);
+
+	}
 
 	public AssessmentQueryPageResult pageQuery(
 		@NotNull final AssessmentQuery assessmentQuery,
