@@ -11,10 +11,11 @@ dependencies {
     implementation project(':common:mathrank-dataserializer')
     implementation project(':common:mathrank-exception')
     implementation project(':common:mathrank-querydsl')
+    implementation project(':common:mathrank-cache')
     implementation project(':client:internal:mathrank-problem-client')
+    implementation project(':client:internal:mathrank-course-client')
 
     testImplementation project(':common:mathrank-event-publisher-test')
-
 
     testImplementation 'org.testcontainers:junit-jupiter'
     testImplementation 'org.springframework.boot:spring-boot-testcontainers'

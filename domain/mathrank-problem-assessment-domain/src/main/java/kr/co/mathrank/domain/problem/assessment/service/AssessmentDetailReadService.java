@@ -1,4 +1,4 @@
-package kr.co.mathrank.domain.problem.assessment.read.service;
+package kr.co.mathrank.domain.problem.assessment.service;
 
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.annotation.Cacheable;
@@ -7,13 +7,12 @@ import org.springframework.stereotype.Service;
 import jakarta.validation.constraints.NotNull;
 import kr.co.mathrank.client.internal.course.CourseQueryResult;
 import kr.co.mathrank.client.internal.problem.ProblemQueryResult;
+import kr.co.mathrank.domain.problem.assessment.AssessmentReadDomainConfiguration;
+import kr.co.mathrank.domain.problem.assessment.dto.AssessmentDetailReadModelResult;
 import kr.co.mathrank.domain.problem.assessment.dto.AssessmentDetailResult;
 import kr.co.mathrank.domain.problem.assessment.dto.AssessmentItemDetail;
-import kr.co.mathrank.domain.problem.assessment.read.AssessmentReadDomainConfiguration;
-import kr.co.mathrank.domain.problem.assessment.read.dto.AssessmentDetailReadModelResult;
-import kr.co.mathrank.domain.problem.assessment.read.dto.AssessmentItemReadModelDetailResult;
-import kr.co.mathrank.domain.problem.assessment.read.dto.CourseDetailResult;
-import kr.co.mathrank.domain.problem.assessment.service.AssessmentQueryService;
+import kr.co.mathrank.domain.problem.assessment.dto.AssessmentItemReadModelDetailResult;
+import kr.co.mathrank.domain.problem.assessment.dto.CourseDetailResult;
 import lombok.RequiredArgsConstructor;
 
 @Service

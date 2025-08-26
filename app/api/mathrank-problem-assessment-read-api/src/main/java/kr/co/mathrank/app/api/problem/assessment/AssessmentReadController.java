@@ -13,11 +13,11 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import kr.co.mathrank.app.api.common.authentication.Authorization;
 import kr.co.mathrank.common.page.PageResult;
+import kr.co.mathrank.domain.problem.assessment.dto.AssessmentDetailReadModelResult;
 import kr.co.mathrank.domain.problem.assessment.dto.AssessmentQuery;
 import kr.co.mathrank.domain.problem.assessment.dto.AssessmentQueryResult;
 import kr.co.mathrank.domain.problem.assessment.dto.AssessmentSubmissionQueryResult;
-import kr.co.mathrank.domain.problem.assessment.read.dto.AssessmentDetailReadModelResult;
-import kr.co.mathrank.domain.problem.assessment.read.service.AssessmentDetailReadService;
+import kr.co.mathrank.domain.problem.assessment.service.AssessmentDetailReadService;
 import kr.co.mathrank.domain.problem.assessment.service.AssessmentQueryService;
 import kr.co.mathrank.domain.problem.assessment.service.SubmissionQueryService;
 import lombok.RequiredArgsConstructor;
@@ -28,7 +28,6 @@ import lombok.RequiredArgsConstructor;
 public class AssessmentReadController {
 	private final AssessmentQueryService assessmentQueryService;
 	private final SubmissionQueryService submissionQueryService;
-
 	private final AssessmentDetailReadService assessmentDetailReadService;
 
 	@Operation(summary = "제출된 답안지 채점 상태 조회 API")

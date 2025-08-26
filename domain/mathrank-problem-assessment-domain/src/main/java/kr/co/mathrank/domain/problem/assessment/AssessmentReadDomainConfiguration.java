@@ -1,4 +1,4 @@
-package kr.co.mathrank.domain.problem.assessment.read;
+package kr.co.mathrank.domain.problem.assessment;
 
 import java.time.Duration;
 

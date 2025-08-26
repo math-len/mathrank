@@ -1,4 +1,4 @@
-package kr.co.mathrank.domain.problem.assessment.read.service;
+package kr.co.mathrank.domain.problem.assessment.service;
 
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.annotation.Cacheable;
@@ -8,7 +8,7 @@ import org.springframework.validation.annotation.Validated;
 import jakarta.validation.constraints.NotNull;
 import kr.co.mathrank.client.internal.course.CourseClient;
 import kr.co.mathrank.client.internal.course.CourseQueryResult;
-import kr.co.mathrank.domain.problem.assessment.read.AssessmentReadDomainConfiguration;
+import kr.co.mathrank.domain.problem.assessment.AssessmentReadDomainConfiguration;
 import lombok.RequiredArgsConstructor;
 
 @Component
