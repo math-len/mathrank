@@ -1,4 +1,4 @@
-package kr.co.mathrank.domain.problem.assessment.read;
+package kr.co.mathrank.domain.problem.assessment;
 
 import java.time.Duration;
 
@@ -9,9 +9,9 @@ import kr.co.mathrank.common.cache.RequiredCacheSpec;
 
 @Configuration
 public class AssessmentReadDomainConfiguration {
-	public static final String PROBLEM_CACHE_NAME = "mathrank::assessment-read-domain::problem";
-	public static final String COURSE_CACHE_NAME = "mathrank::assessment-read-domain::course";
-	public static final String ASSESSMENT_READ_MODEL_CACHE_NAME = "mathrank::assessment-read-domain::assessment";
+	public static final String PROBLEM_CACHE_NAME = "mathrank::assessment-domain::problem";
+	public static final String COURSE_CACHE_NAME = "mathrank::assessment-domain::course";
+	public static final String ASSESSMENT_READ_MODEL_CACHE_NAME = "mathrank::assessment-domain::assessment";
 
 	@Bean
 	RequiredCacheSpec assessmentReadDomainProblemCacheSpec() {

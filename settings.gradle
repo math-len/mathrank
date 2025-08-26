@@ -38,7 +38,6 @@ include(
         'domain',
         'domain:mathrank-course-domain',
         'domain:mathrank-problem-assessment-domain',
-        'domain:mathrank-problem-assessment-read-domain',
         'domain:mathrank-image-domain',
         'domain:mathrank-auth-domain',
         'domain:mathrank-problem-core-domain',

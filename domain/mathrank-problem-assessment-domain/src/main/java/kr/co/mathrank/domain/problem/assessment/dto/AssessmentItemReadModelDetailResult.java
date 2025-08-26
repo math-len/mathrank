@@ -1,4 +1,4 @@
-package kr.co.mathrank.domain.problem.assessment.read.dto;
+package kr.co.mathrank.domain.problem.assessment.dto;
 
 import java.time.LocalDateTime;
 

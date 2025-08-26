@@ -1,9 +1,8 @@
-package kr.co.mathrank.domain.problem.assessment.read.dto;
+package kr.co.mathrank.domain.problem.assessment.dto;
 
 import java.time.LocalDateTime;
 import java.util.List;
 
-import kr.co.mathrank.domain.problem.assessment.dto.AssessmentDetailResult;
 import kr.co.mathrank.domain.problem.core.Difficulty;
 
 public record AssessmentDetailReadModelResult(
