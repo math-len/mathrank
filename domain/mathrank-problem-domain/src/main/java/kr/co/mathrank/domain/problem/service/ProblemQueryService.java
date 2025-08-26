@@ -8,9 +8,9 @@ import org.springframework.validation.annotation.Validated;
 
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
+import kr.co.mathrank.common.page.PageResult;
 import kr.co.mathrank.common.page.PageUtil;
 import kr.co.mathrank.domain.problem.dto.ProblemQueryCommand;
-import kr.co.mathrank.domain.problem.dto.ProblemQueryPageResult;
 import kr.co.mathrank.domain.problem.dto.ProblemQueryResult;
 import kr.co.mathrank.domain.problem.entity.Problem;
 import kr.co.mathrank.domain.problem.exception.CannotFoundProblemException;
@@ -35,7 +35,7 @@ public class ProblemQueryService {
 	}
 
 	@Transactional
-	public ProblemQueryPageResult query(@NotNull @Valid final ProblemQueryCommand command) {
+	public PageResult<ProblemQueryResult> query(@NotNull @Valid final ProblemQueryCommand command) {
 		final List<Problem> problems = problemRepository.query(command.memberId(),
 			command.problemId(),
 			command.difficultyMinInclude(),
@@ -57,8 +57,10 @@ public class ProblemQueryService {
 			command.year(),
 			command.location());
 
-		return ProblemQueryPageResult.of(
-			problems,
+		return PageResult.of(
+			problems.stream()
+				.map(ProblemQueryResult::from)
+				.toList(),
 			command.pageNumber(),
 			command.pageSize(),
 			PageUtil.getNextPages(command.pageSize(), command.pageNumber(), totalCount, problems.size())

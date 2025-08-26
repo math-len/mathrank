@@ -9,4 +9,6 @@ dependencies {
     implementation project(':client:internal:mathrank-member-client')
     implementation project(':client:internal:mathrank-course-client')
     implementation project(':client:external:mathrank-school')
+
+    implementation project(':common:mathrank-page')
 }
