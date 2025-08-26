@@ -76,6 +76,7 @@ public class SubmissionRegisterService {
 			command.submittedAnswers(),
 			command.elapsedTime()
 		);
+		assessmentSubmissionRepository.save(assessmentSubmission);
 
 		transactionalOutboxPublisher.publish("assessment-submission-registered", new SubmissionRegisteredEvent(
 			assessment.getId(),
