@@ -12,8 +12,9 @@ import org.springframework.web.bind.annotation.RestController;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import kr.co.mathrank.app.api.common.authentication.Authorization;
+import kr.co.mathrank.common.page.PageResult;
 import kr.co.mathrank.domain.problem.assessment.dto.AssessmentQuery;
-import kr.co.mathrank.domain.problem.assessment.dto.AssessmentQueryPageResult;
+import kr.co.mathrank.domain.problem.assessment.dto.AssessmentQueryResult;
 import kr.co.mathrank.domain.problem.assessment.dto.AssessmentSubmissionQueryResult;
 import kr.co.mathrank.domain.problem.assessment.read.dto.AssessmentDetailReadModelResult;
 import kr.co.mathrank.domain.problem.assessment.read.service.AssessmentDetailReadService;
@@ -42,7 +43,7 @@ public class AssessmentReadController {
 	@Operation(summary = "문제집 페이지 조회 API")
 	@Authorization(openedForAll = true)
 	@GetMapping("/api/v1/problem/assessment")
-	public ResponseEntity<AssessmentQueryPageResult> queryPage(
+	public ResponseEntity<PageResult<AssessmentQueryResult>> queryPage(
 		@ModelAttribute @ParameterObject final AssessmentQuery assessmentQuery,
 		@RequestParam(defaultValue = "10") @Range(min = 1, max = 20) final Integer pageSize,
 		@RequestParam(defaultValue = "1") @Range(min = 1, max = 1000) final Integer pageNumber
