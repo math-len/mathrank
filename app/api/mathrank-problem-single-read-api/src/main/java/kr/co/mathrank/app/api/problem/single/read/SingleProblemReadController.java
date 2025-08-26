@@ -67,20 +67,10 @@ public class SingleProblemReadController {
 			pageSize,
 			pageNumber
 		);
-
-		// course 정보 덧붙이기!
-		final List<SingleProblemReadModelResponse> singleProblemResponse = mergeCourseInfos(result.queryResults());
-		return ResponseEntity.ok(PageResult.of(
-			singleProblemResponse,
-			result.currentPageNumber(),
-			result.currentPageSize(),
-			result.possibleNextPageNumbers())
-		);
+		return ResponseEntity.ok(result.map(this::mapToResponse));
 	}
 
-	private List<SingleProblemReadModelResponse> mergeCourseInfos(List<SingleProblemReadModelResult> results) {
-		return results.stream()
-			.map(modelResult -> SingleProblemReadModelResponse.of(modelResult, courseClient.getParentCourses(modelResult.coursePath())))
-			.toList();
+	private SingleProblemReadModelResponse mapToResponse(final SingleProblemReadModelResult modelResult) {
+		return SingleProblemReadModelResponse.of(modelResult, courseClient.getParentCourses(modelResult.coursePath()));
 	}
 }
