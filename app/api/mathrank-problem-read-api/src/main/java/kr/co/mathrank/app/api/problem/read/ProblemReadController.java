@@ -45,14 +45,7 @@ public class ProblemReadController {
 		final ProblemQueryCommand command = request.toCommand(loginInfo.memberId());
 		final PageResult<ProblemQueryResult> pageQueryResult = problemQueryService.query(command);
 
-		return ResponseEntity.ok(PageResult.of(
-			pageQueryResult.queryResults().stream()
-				.map(this::toResponse)
-				.toList(),
-			pageQueryResult.currentPageNumber(),
-			pageQueryResult.currentPageSize(),
-			pageQueryResult.possibleNextPageNumbers()
-		));
+		return ResponseEntity.ok(pageQueryResult.map(this::toResponse));
 	}
 
 	@Operation(summary = "문제 단일 조회 API")
