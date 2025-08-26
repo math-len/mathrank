@@ -17,9 +17,9 @@ import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
 
 import jakarta.validation.ConstraintViolationException;
+import kr.co.mathrank.common.page.PageResult;
 import kr.co.mathrank.domain.problem.core.Difficulty;
 import kr.co.mathrank.domain.problem.single.read.dto.SingleProblemAttemptStatsUpdateCommand;
-import kr.co.mathrank.domain.problem.single.read.dto.SingleProblemReadModelPageResult;
 import kr.co.mathrank.domain.problem.single.read.dto.SingleProblemReadModelQuery;
 import kr.co.mathrank.domain.problem.single.read.dto.SingleProblemReadModelResult;
 import kr.co.mathrank.domain.problem.single.read.entity.SingleProblemReadModel;
@@ -119,7 +119,7 @@ class SingleProblemQueryServiceTest {
 			null,
 			null
 		);
-		final SingleProblemReadModelPageResult result = queryService.queryPage(query, null, null, memberId, 10, 1);
+		final PageResult<SingleProblemReadModelResult> result = queryService.queryPage(query, null, null, memberId, 10, 1);
 		final List<SingleProblemReadModelResult> results = result.queryResults();
 
 		// 1번 문제부터 정렬
@@ -172,7 +172,7 @@ class SingleProblemQueryServiceTest {
 		);
 
 		// When
-		final SingleProblemReadModelPageResult result = queryService.queryPage(query,null, null,  1000L, 2, 1);
+		final PageResult<SingleProblemReadModelResult> result = queryService.queryPage(query,null, null,  1000L, 2, 1);
 
 		// Then
 		// 두개가 나와야 한다
@@ -182,7 +182,7 @@ class SingleProblemQueryServiceTest {
 		Assertions.assertEquals(1, result.possibleNextPageNumbers().size()); // 다음 페이지가 1개 존재한다
 
 		// 다음 페이지도 테스트
-		final SingleProblemReadModelPageResult nextResult = queryService.queryPage(query, null, null, 1000L, 2, 2);
+		final PageResult<SingleProblemReadModelResult> nextResult = queryService.queryPage(query, null, null, 1000L, 2, 2);
 
 		// 다음 페이지에 1개가존재해야한다
 		Assertions.assertEquals(1, nextResult.queryResults().size());

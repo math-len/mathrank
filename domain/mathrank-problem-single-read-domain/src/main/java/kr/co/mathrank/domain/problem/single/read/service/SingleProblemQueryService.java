@@ -10,8 +10,8 @@ import org.springframework.validation.annotation.Validated;
 
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
+import kr.co.mathrank.common.page.PageResult;
 import kr.co.mathrank.common.page.PageUtil;
-import kr.co.mathrank.domain.problem.single.read.dto.SingleProblemReadModelPageResult;
 import kr.co.mathrank.domain.problem.single.read.dto.SingleProblemReadModelQuery;
 import kr.co.mathrank.domain.problem.single.read.dto.SingleProblemReadModelResult;
 import kr.co.mathrank.domain.problem.single.read.entity.OrderColumn;
@@ -45,7 +45,7 @@ public class SingleProblemQueryService {
 	 * @param pageNumber   조회할 페이지 번호 (1부터 시작)
 	 * @return 페이지네이션된 문제 목록 및 관련 정보
 	 */
-	public SingleProblemReadModelPageResult queryPage(
+	public PageResult<SingleProblemReadModelResult> queryPage(
 		@NotNull @Valid final SingleProblemReadModelQuery query,
 		OrderColumn orderColumn,
 		OrderDirection direction,
@@ -66,7 +66,7 @@ public class SingleProblemQueryService {
 		final Map<Long, SingleProblemSolver> solverMap = getMap(readModels, memberId);
 
 		// 4. 최종 결과 형태로 변환하여 반환
-		return new SingleProblemReadModelPageResult(
+		return PageResult.of(
 			readModels.stream()
 				.map(model -> SingleProblemReadModelResult.from(
 					model,

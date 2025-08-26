@@ -8,4 +8,6 @@ dependencies {
 
     implementation project(':app:api:mathrank-api-common')
     implementation project(':client:internal:mathrank-course-client')
+
+    implementation project(':common:mathrank-page')
 }
