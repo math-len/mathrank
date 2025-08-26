@@ -7,4 +7,5 @@ dependencies {
     implementation project(':app:api:mathrank-api-common')
     implementation project(':domain:mathrank-problem-assessment-domain')
     implementation project(':domain:mathrank-problem-assessment-read-domain')
+    implementation project(':common:mathrank-page')
 }

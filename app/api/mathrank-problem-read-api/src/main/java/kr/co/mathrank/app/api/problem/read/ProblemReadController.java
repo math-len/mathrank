@@ -1,7 +1,5 @@
 package kr.co.mathrank.app.api.problem.read;
 
-import java.util.List;
-
 import org.springdoc.core.annotations.ParameterObject;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -22,8 +20,8 @@ import kr.co.mathrank.client.internal.course.CourseClient;
 import kr.co.mathrank.client.internal.course.CourseQueryContainsParentsResult;
 import kr.co.mathrank.client.internal.member.MemberClient;
 import kr.co.mathrank.client.internal.member.MemberInfo;
+import kr.co.mathrank.common.page.PageResult;
 import kr.co.mathrank.domain.problem.dto.ProblemQueryCommand;
-import kr.co.mathrank.domain.problem.dto.ProblemQueryPageResult;
 import kr.co.mathrank.domain.problem.dto.ProblemQueryResult;
 import kr.co.mathrank.domain.problem.service.ProblemQueryService;
 import lombok.RequiredArgsConstructor;
@@ -40,17 +38,14 @@ public class ProblemReadController {
 	@Operation(summary = "문제 페이지 조회 API", description = "각 필드를 null 로 설정할 시, 해당 필드는 조건에 포함하지 않습니다. +) coursePath 를 통해 조회시, 하위의 과정의 문제들까지 모두 조회됩니다.")
 	@Authorization(openedForAll = true)
 	@GetMapping(value = "/api/v1/problem")
-	public ResponseEntity<ProblemPageResponse> problems(
+	public ResponseEntity<PageResult<ProblemResponse>> problems(
 		@ParameterObject @ModelAttribute @Valid final ProblemQueryRequest request,
 		@LoginInfo final MemberPrincipal loginInfo
 	) {
 		final ProblemQueryCommand command = request.toCommand(loginInfo.memberId());
-		final ProblemQueryPageResult pageQueryResult = problemQueryService.query(command);
+		final PageResult<ProblemQueryResult> pageQueryResult = problemQueryService.query(command);
 
-		final ProblemPageResponse containsUserName = ProblemPageResponse.from(
-			withOtherDatas(pageQueryResult.queryResults()), pageQueryResult);
-
-		return ResponseEntity.ok(containsUserName);
+		return ResponseEntity.ok(pageQueryResult.map(this::toResponse));
 	}
 
 	@Operation(summary = "문제 단일 조회 API")
@@ -62,12 +57,6 @@ public class ProblemReadController {
 		final ProblemResponse response = toResponse(result);
 
 		return ResponseEntity.ok(response);
-	}
-
-	private List<ProblemResponse> withOtherDatas(final List<ProblemQueryResult> queryResults) {
-		return queryResults.stream()
-			.map(this::toResponse)
-			.toList();
 	}
 
 	private ProblemResponse toResponse(final ProblemQueryResult problem) {
