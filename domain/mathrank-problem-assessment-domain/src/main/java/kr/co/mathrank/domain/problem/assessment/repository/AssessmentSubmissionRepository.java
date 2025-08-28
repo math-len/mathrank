@@ -23,6 +23,7 @@ public interface AssessmentSubmissionRepository extends JpaRepository<Assessment
 
 	@Query("""
 		SELECT s FROM AssessmentSubmission s
+		LEFT JOIN FETCH s.assessment
 		LEFT JOIN FETCH s.submittedItemAnswers sItems
 		LEFT JOIN FETCH sItems.assessmentItem
 		WHERE s.id = :assessmentSubmissionId
