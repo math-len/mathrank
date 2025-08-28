@@ -13,6 +13,8 @@ import kr.co.mathrank.domain.problem.assessment.dto.AssessmentDetailResult;
 import kr.co.mathrank.domain.problem.assessment.dto.AssessmentQuery;
 import kr.co.mathrank.domain.problem.assessment.dto.AssessmentQueryResult;
 import kr.co.mathrank.domain.problem.assessment.entity.Assessment;
+import kr.co.mathrank.domain.problem.assessment.entity.AssessmentOrderDirection;
+import kr.co.mathrank.domain.problem.assessment.entity.AssessmentOrder;
 import kr.co.mathrank.domain.problem.assessment.exception.NoSuchAssessmentException;
 import kr.co.mathrank.domain.problem.assessment.repository.AssessmentRepository;
 import lombok.RequiredArgsConstructor;
@@ -38,10 +40,12 @@ public class AssessmentQueryService {
 
 	public PageResult<AssessmentQueryResult> pageQuery(
 		@NotNull final AssessmentQuery assessmentQuery,
+		@NotNull final AssessmentOrder assessmentOrder,
+		@NotNull final AssessmentOrderDirection direction,
 		@NotNull @Range(min = 1, max = 20) final Integer pageSize,
 		@NotNull @Range(min = 1, max = 1000)final Integer pageNumber
 	) {
-		final List<Assessment> queryResults = assessmentRepository.query(assessmentQuery, pageSize, pageNumber);
+		final List<Assessment> queryResults = assessmentRepository.query(assessmentQuery, pageSize, pageNumber, assessmentOrder, direction);
 		final Long totalCount = assessmentRepository.count(assessmentQuery);
 		final List<Integer> nextPages = PageUtil.getNextPages(pageSize, pageNumber, totalCount, queryResults.size());
 
