@@ -65,6 +65,12 @@ public class Assessment {
 	@Setter(AccessLevel.NONE)
 	private Long distinctTriedMemberCount = 0L;
 
+	@Setter(AccessLevel.NONE)
+	private Long totalScore = 0L;
+
+	@Setter(AccessLevel.NONE)
+	private Long averageScore = 0L;
+
 	@CreationTimestamp
 	@Setter(AccessLevel.NONE)
 	private LocalDateTime createdAt;
@@ -78,8 +84,10 @@ public class Assessment {
 		return assessment;
 	}
 
-	public void increaseDistinctMemberCount() {
+	public void addNewSubmittedScore(int score) {
 		distinctTriedMemberCount++;
+		this.totalScore += score;
+		this.averageScore = this.totalScore / this.distinctTriedMemberCount;
 	}
 
 	/**

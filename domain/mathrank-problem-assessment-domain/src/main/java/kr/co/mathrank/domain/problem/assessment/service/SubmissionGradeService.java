@@ -9,6 +9,7 @@ import jakarta.validation.constraints.NotNull;
 import kr.co.mathrank.domain.problem.assessment.entity.AssessmentSubmission;
 import kr.co.mathrank.domain.problem.assessment.entity.GradeResult;
 import kr.co.mathrank.domain.problem.assessment.exception.NoSuchSubmissionException;
+import kr.co.mathrank.domain.problem.assessment.repository.AssessmentRepository;
 import kr.co.mathrank.domain.problem.assessment.repository.AssessmentSubmissionRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -22,6 +23,7 @@ import lombok.extern.slf4j.Slf4j;
 @RequiredArgsConstructor
 public class SubmissionGradeService {
 	private final AssessmentSubmissionRepository assessmentSubmissionRepository;
+	private final AssessmentRepository assessmentRepository;
 	private final ItemGradeManager gradeManager;
 
 	/**
@@ -40,7 +42,7 @@ public class SubmissionGradeService {
 		// 채점하기
 		this.gradeAll(submission);
 
-		assessmentSubmissionRepository.save(submission);
+		assessmentRepository.save(submission.getAssessment());
 	}
 
 	/**

@@ -91,6 +91,90 @@ class SubmissionGradeServiceTest {
 		Assertions.assertEquals(EvaluationStatus.FINISHED, submission.getEvaluationStatus());
 	}
 
+	@Test
+	void 사용자의_첫_제출_점수만_assessment_평균점수에_반영된다() {
+		final Assessment assessment = Assessment.of(1L, "test", Duration.ofMinutes(10));
+		final Long problemId1 = 1L;
+		final Long problemId2 = 2L;
+		assessment.replaceItems(List.of(
+			AssessmentItem.of(problemId1, 10), // 10 점 문제
+			AssessmentItem.of(problemId2, 90)) // 90 점 문제
+		);
+
+		final List<List<String>> submittedAnswers = List.of(List.of("1"), List.of("2"));
+		// 첫 제출
+		assessment.registerSubmission(1L, submittedAnswers, Duration.ofMinutes(5), true);
+		// 같은 사용자의 두번째 제출
+		assessment.registerSubmission(1L, submittedAnswers, Duration.ofMinutes(5), false);
+		assessmentRepository.save(assessment);
+
+
+		final Long submissionId = assessment.getAssessmentSubmissions().getFirst().getId();
+
+		// 채점 시, 항상 정답으로 응답
+		Mockito.when(problemClient.matchAnswer(Mockito.anyLong(), Mockito.anyList()))
+			.thenReturn(new SolveResult(true, Collections.emptySet(), Collections.emptyList()));
+
+		// 채점하기
+		submissionGradeService.evaluateSubmission(submissionId);
+
+		// 첫번째 제출 채점점수 100점
+		// 두번째 제출 채점점수 100점
+
+		// 첫번째 제출점수만 반영되야 함으로,
+		// 따라서 총 점수는 100점
+		final Assessment targetAssessment = assessmentRepository.findById(assessment.getId())
+			.orElseThrow();
+		Assertions.assertEquals(100, targetAssessment.getTotalScore());
+		// 한명이 두번 제출했음으로 distinctCount = 1
+		Assertions.assertEquals(1, targetAssessment.getDistinctTriedMemberCount());
+	}
+
+	@Test
+	void 여러_사용자의_첫_제출_점수들은_모두_assessment_평균점수에_반영된다() {
+		final Assessment assessment = Assessment.of(1L, "test", Duration.ofMinutes(10));
+		final Long problemId1 = 1L;
+		final Long problemId2 = 2L;
+		assessment.replaceItems(List.of(
+			AssessmentItem.of(problemId1, 10), // 10 점 문제
+			AssessmentItem.of(problemId2, 90)) // 90 점 문제
+		);
+
+		final List<List<String>> submittedAnswers = List.of(List.of("1"), List.of("2"));
+		// 첫 제출
+		assessment.registerSubmission(1L, submittedAnswers, Duration.ofMinutes(5), true);
+		// 다른 사용자의 첫 제출
+		assessment.registerSubmission(2L, submittedAnswers, Duration.ofMinutes(5), true);
+		// 다른 사용자의 첫 제출
+		assessment.registerSubmission(3L, submittedAnswers, Duration.ofMinutes(5), true);
+		assessmentRepository.save(assessment);
+
+
+		final Long submissionId1 = assessment.getAssessmentSubmissions().get(0).getId();
+		final Long submissionId2 = assessment.getAssessmentSubmissions().get(1).getId();
+		final Long submissionId3 = assessment.getAssessmentSubmissions().get(2).getId();
+
+		// 채점 시, 항상 정답으로 응답
+		Mockito.when(problemClient.matchAnswer(Mockito.anyLong(), Mockito.anyList()))
+			.thenReturn(new SolveResult(true, Collections.emptySet(), Collections.emptyList()));
+
+		// 모두 채점하기
+		submissionGradeService.evaluateSubmission(submissionId1);
+		submissionGradeService.evaluateSubmission(submissionId2);
+		submissionGradeService.evaluateSubmission(submissionId3);
+
+		// 첫번째 제출 채점점수 100점
+		// 두번째 제출 채점점수 100점
+		// 세번째 제출 채점점수 100점
+
+		// 첫번째 제출점수만 반영되야 함으로,
+		// 따라서 총 점수는 300점
+		final Assessment targetAssessment = assessmentRepository.findById(assessment.getId())
+			.orElseThrow();
+		Assertions.assertEquals(300, targetAssessment.getTotalScore());
+		Assertions.assertEquals(3, targetAssessment.getDistinctTriedMemberCount());
+	}
+
 	@AfterEach
 	void clear() {
 		assessmentRepository.deleteAll();

@@ -67,9 +67,6 @@ public class SubmissionRegisterService {
 
 		// 처음으로 제출한 사용자일때
 		final boolean isFirstSubmission = isFirstTry(command.assessmentId(), command.memberId());
-		if (isFirstSubmission) {
-			assessment.increaseDistinctMemberCount();
-		}
 
 		// 새로운 답안지 등록
 		final AssessmentSubmission assessmentSubmission = assessment.registerSubmission(

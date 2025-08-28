@@ -93,6 +93,10 @@ public class AssessmentSubmission {
 			totalScore += itemSubmission.grade(gradeResult);
 		}
 
+		if (isFirstSubmission) { // 첫 제출일때만 시험지 정보 업데이트
+			this.assessment.addNewSubmittedScore(totalScore);
+		}
+
 		this.totalScore = totalScore;
 		this.evaluationStatus = EvaluationStatus.FINISHED;
 		return totalScore;

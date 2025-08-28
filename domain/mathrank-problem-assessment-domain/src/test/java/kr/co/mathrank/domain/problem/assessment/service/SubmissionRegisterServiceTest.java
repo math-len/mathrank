@@ -123,51 +123,8 @@ class SubmissionRegisterServiceTest {
 
 		latch.await();
 
-		// 제출된 답안지는 trCount와 같아야한다
+		// 제출된 답안지 수는 tryCount와 같아야한다
 		Assertions.assertEquals(tryCount, assessmentSubmissionRepository.count());
-	}
-
-	@Test
-	void 동일한_사용자가_답안지_여러번_제출시_한번만_카운트() throws InterruptedException {
-		final Long assessmentId = assessmentRegisterService.register(new AssessmentRegisterCommand(
-			1L, Role.ADMIN,
-			"testName",
-			List.of(new AssessmentItemRegisterCommand(1L, 100)),
-			Difficulty.KILLER,
-			Duration.ofMinutes(100L)
-		));
-
-		final int tryCount = 10;
-
-		// 두명의 사용자
-		final Long memberId1 = 10L;
-		final Long memberId2 = 11L;
-
-		final ExecutorService executorService = Executors.newFixedThreadPool(10);
-		final CountDownLatch latch = new CountDownLatch(tryCount);
-
-		for (int i = 0; i < tryCount; i++) {
-			final int value = i % 2;
-			executorService.submit(() -> {
-				try {
-					if (value == 0)  {
-						submissionRegisterService.submit(
-							new SubmissionRegisterCommand(memberId1, assessmentId, List.of(List.of("test")),
-								Duration.ofMinutes(1L)));
-					} else {
-						submissionRegisterService.submit(
-							new SubmissionRegisterCommand(memberId2, assessmentId, List.of(List.of("test")),
-								Duration.ofMinutes(1L)));
-					}
-				} finally {
-					latch.countDown();
-				}
-			});
-		}
-
-		latch.await();
-
-		Assertions.assertEquals(2, assessmentRepository.findById(assessmentId).get().getDistinctTriedMemberCount());
 	}
 
 	@Test
@@ -200,7 +157,7 @@ class SubmissionRegisterServiceTest {
 
 		latch.await();
 
-		Assertions.assertEquals(tryCount, assessmentRepository.findById(assessmentId).get().getDistinctTriedMemberCount());
+		Assertions.assertEquals(tryCount, assessmentSubmissionRepository.count());
 	}
 
 	@Test
