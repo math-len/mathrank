@@ -17,6 +17,8 @@ import kr.co.mathrank.domain.problem.assessment.dto.AssessmentDetailReadModelRes
 import kr.co.mathrank.domain.problem.assessment.dto.AssessmentQuery;
 import kr.co.mathrank.domain.problem.assessment.dto.AssessmentQueryResult;
 import kr.co.mathrank.domain.problem.assessment.dto.AssessmentSubmissionQueryResult;
+import kr.co.mathrank.domain.problem.assessment.entity.AssessmentOrderDirection;
+import kr.co.mathrank.domain.problem.assessment.entity.AssessmentOrder;
 import kr.co.mathrank.domain.problem.assessment.service.AssessmentDetailReadService;
 import kr.co.mathrank.domain.problem.assessment.service.AssessmentQueryService;
 import kr.co.mathrank.domain.problem.assessment.service.SubmissionQueryService;
@@ -44,10 +46,12 @@ public class AssessmentReadController {
 	@GetMapping("/api/v1/problem/assessment")
 	public ResponseEntity<PageResult<AssessmentQueryResult>> queryPage(
 		@ModelAttribute @ParameterObject final AssessmentQuery assessmentQuery,
+		@RequestParam final AssessmentOrder order,
+		@RequestParam final AssessmentOrderDirection direction,
 		@RequestParam(defaultValue = "10") @Range(min = 1, max = 20) final Integer pageSize,
 		@RequestParam(defaultValue = "1") @Range(min = 1, max = 1000) final Integer pageNumber
 	) {
-		return ResponseEntity.ok(assessmentQueryService.pageQuery(assessmentQuery, pageSize, pageNumber));
+		return ResponseEntity.ok(assessmentQueryService.pageQuery(assessmentQuery, order, direction, pageSize, pageNumber));
 	}
 
 	@Operation(summary = "문제집 상세 조회 API")
