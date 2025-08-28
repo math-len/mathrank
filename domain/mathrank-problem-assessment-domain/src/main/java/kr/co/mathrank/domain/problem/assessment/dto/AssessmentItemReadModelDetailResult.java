@@ -9,7 +9,6 @@ public record AssessmentItemReadModelDetailResult(
 	Long problemId,
 	String problemImage,
 	Long memberId,
-	String path,
 	CourseDetailResult courseDetailResult,
 	Difficulty difficulty,
 	AnswerType type,
