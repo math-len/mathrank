@@ -25,6 +25,9 @@ import kr.co.mathrank.domain.problem.assessment.repository.AssessmentSubmissionR
 @SpringBootTest(properties = """
 client.problem.host=tset
 client.problem.port=10202
+spring.jpa.show-sql=true
+spring.jpa.properties.hibernate.use_sql_comments=true
+spring.jpa.properties.hibernate.format_sql=true
 """)
 class SubmissionGradeServiceTest {
 	@MockitoBean

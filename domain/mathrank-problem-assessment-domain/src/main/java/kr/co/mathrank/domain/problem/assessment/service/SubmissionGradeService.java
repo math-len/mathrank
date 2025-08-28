@@ -23,7 +23,7 @@ import lombok.extern.slf4j.Slf4j;
 @RequiredArgsConstructor
 public class SubmissionGradeService {
 	private final AssessmentSubmissionRepository assessmentSubmissionRepository;
-	private final AssessmentRepository assessmentRepository;
+	private final SubmissionGradeApplyManager submissionGradeApplyManager;
 	private final ItemGradeManager gradeManager;
 
 	/**
@@ -40,24 +40,20 @@ public class SubmissionGradeService {
 			});
 
 		// 채점하기
-		this.gradeAll(submission);
-
-		assessmentRepository.save(submission.getAssessment());
-		assessmentSubmissionRepository.save(submission);
+		final List<GradeResult> gradeResults = this.getGrades(submission);
+		submissionGradeApplyManager.applyGrade(gradeResults, assessmentSubmissionId);
 	}
 
 	/**
 	 * 제출된 정답을 확인하고, 오답 여부를 기록한다.
 	 * @param assessmentSubmission
 	 */
-	private void gradeAll(final AssessmentSubmission assessmentSubmission) {
-		final List<GradeResult> gradeResult = assessmentSubmission.getSubmittedItemAnswers().stream()
+	private List<GradeResult> getGrades(final AssessmentSubmission assessmentSubmission) {
+		return assessmentSubmission.getSubmittedItemAnswers().stream()
 			.map(itemSubmission -> gradeManager.gradeItemSubmission(
 				itemSubmission.getAssessmentItem().getProblemId(),
 				itemSubmission.getSubmittedAnswer())
 			)
 			.toList();
-
-		assessmentSubmission.grade(gradeResult);
 	}
 }
