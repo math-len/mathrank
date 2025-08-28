@@ -26,7 +26,7 @@ public class AssessmentDifficultyService {
 	public void updateToAverageDifficulty(@NotNull final Long assessmentId) {
 		final Assessment assessment = assessmentRepository.findWithItems(assessmentId)
 			.orElseThrow(() -> {
-				log.info("[AssessmentDifficultyService.applyDifficulty] assessment with id not found - assessmentId: {}", assessmentId);
+				log.info("[AssessmentDifficultyService.updateToAverageDifficulty] assessment with id not found - assessmentId: {}", assessmentId);
 				return new NoSuchAssessmentException();
 			});
 
@@ -35,7 +35,7 @@ public class AssessmentDifficultyService {
 
 		assessment.setDifficulty(averageDifficulty);
 		assessmentRepository.save(assessment);
-		log.info("[AssessmentDifficultyService.applyDifficulty] assessment saved - assessmentId: {}, difficulty: {}", assessmentId, averageDifficulty);
+		log.info("[AssessmentDifficultyService.updateToAverageDifficulty] assessment saved - assessmentId: {}, difficulty: {}", assessmentId, averageDifficulty);
 	}
 
 	private List<Difficulty> getProblemInfos(final List<AssessmentItem> assessmentItems) {
