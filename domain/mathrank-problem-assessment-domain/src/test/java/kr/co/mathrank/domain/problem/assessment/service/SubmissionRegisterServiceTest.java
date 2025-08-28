@@ -65,7 +65,6 @@ class SubmissionRegisterServiceTest {
 			1L, Role.ADMIN,
 			"testName",
 			List.of(new AssessmentItemRegisterCommand(1L, 100)),
-			Difficulty.KILLER,
 			Duration.ofMinutes(100L)
 		));
 
@@ -99,7 +98,6 @@ class SubmissionRegisterServiceTest {
 			1L, Role.ADMIN,
 			"testName",
 			List.of(new AssessmentItemRegisterCommand(1L, 100)),
-			Difficulty.KILLER,
 			Duration.ofMinutes(100L)
 		));
 
@@ -133,7 +131,6 @@ class SubmissionRegisterServiceTest {
 			1L, Role.ADMIN,
 			"testName",
 			List.of(new AssessmentItemRegisterCommand(1L, 100)),
-			Difficulty.KILLER,
 			Duration.ofMinutes(100L)
 		));
 
@@ -166,7 +163,6 @@ class SubmissionRegisterServiceTest {
 			1L, Role.ADMIN,
 			"testName",
 			List.of(new AssessmentItemRegisterCommand(1L, 100)),
-			Difficulty.KILLER,
 			Duration.ofMinutes(100L)
 		));
 

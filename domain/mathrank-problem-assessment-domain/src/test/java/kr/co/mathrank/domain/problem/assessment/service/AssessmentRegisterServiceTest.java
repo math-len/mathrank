@@ -19,7 +19,6 @@ import kr.co.mathrank.common.role.Role;
 import kr.co.mathrank.domain.problem.assessment.dto.AssessmentItemRegisterCommand;
 import kr.co.mathrank.domain.problem.assessment.dto.AssessmentRegisterCommand;
 import kr.co.mathrank.domain.problem.assessment.exception.AssessmentRegisterException;
-import kr.co.mathrank.domain.problem.core.Difficulty;
 
 @SpringBootTest(properties = """
 client.problem.port=20102
@@ -38,7 +37,6 @@ class AssessmentRegisterServiceTest {
 				Role.ADMIN,
 				"testName",
 				List.of(new AssessmentItemRegisterCommand(1L, -10)), // 점수가 음수
-				Difficulty.KILLER,
 				Duration.ofMinutes(10L)
 			))
 		);
@@ -53,7 +51,6 @@ class AssessmentRegisterServiceTest {
 				Role.ADMIN,
 				"testName",
 				List.of(new AssessmentItemRegisterCommand(1L, 10)), // 총합이 10점임
-				Difficulty.KILLER,
 				Duration.ofMinutes(10L)
 			))
 		);
@@ -71,7 +68,6 @@ class AssessmentRegisterServiceTest {
 					new AssessmentItemRegisterCommand(1L, 50),
 					new AssessmentItemRegisterCommand(1L, 50)
 				),
-				Difficulty.KILLER,
 				Duration.ofMinutes(10L)
 			))
 		);
@@ -86,7 +82,6 @@ class AssessmentRegisterServiceTest {
 				Role.ADMIN,
 				"testName",
 				Collections.emptyList(),
-				Difficulty.KILLER,
 				Duration.ofMinutes(10L)
 			))
 		);
@@ -101,7 +96,6 @@ class AssessmentRegisterServiceTest {
 				"새로운 수학 문제집",
 				List.of(new AssessmentItemRegisterCommand(101L, 33), new AssessmentItemRegisterCommand(102L, 33),
 					new AssessmentItemRegisterCommand(103L, 34)),
-				Difficulty.KILLER,
 				Duration.ofMinutes(100)
 			))
 		);
@@ -124,7 +118,6 @@ class AssessmentRegisterServiceTest {
 			Role.ADMIN,
 			"새로운 수학 문제집",
 			List.of(new AssessmentItemRegisterCommand(101L, 33),new AssessmentItemRegisterCommand(102L, 33), new AssessmentItemRegisterCommand(103L, 34)),
-			Difficulty.KILLER,
 			Duration.ofMinutes(100)
 		);
 
@@ -143,15 +136,15 @@ class AssessmentRegisterServiceTest {
 
 	private static Stream<Arguments> invalidAssessmentRegisterCommands() {
 		return Stream.of(
-			Arguments.of(new AssessmentRegisterCommand(null, Role.ADMIN, "유효한 이름", List.of(new AssessmentItemRegisterCommand(103L, 34)), Difficulty.KILLER, Duration.ofMinutes(100))),
+			Arguments.of(new AssessmentRegisterCommand(null, Role.ADMIN, "유효한 이름", List.of(new AssessmentItemRegisterCommand(103L, 34)), Duration.ofMinutes(100))),
 			// registerMemberId is null
-			Arguments.of(new AssessmentRegisterCommand(1L, null, "유효한 이름", List.of(new AssessmentItemRegisterCommand(103L, 34)), Difficulty.KILLER, Duration.ofMinutes(100))), // role is null
-			Arguments.of(new AssessmentRegisterCommand(1L, Role.ADMIN, null, List.of(new AssessmentItemRegisterCommand(103L, 34)), Difficulty.KILLER, Duration.ofMinutes(100))), // assessmentName is null
-			Arguments.of(new AssessmentRegisterCommand(1L, Role.ADMIN, "", List.of(new AssessmentItemRegisterCommand(103L, 34)), Difficulty.KILLER, Duration.ofMinutes(100))), // assessmentName is blank
-			Arguments.of(new AssessmentRegisterCommand(1L, Role.ADMIN, "  ", List.of(new AssessmentItemRegisterCommand(103L, 34)), Difficulty.KILLER, Duration.ofMinutes(100))), // assessmentName is blank
-			Arguments.of(new AssessmentRegisterCommand(1L, Role.ADMIN, "유효한 이름", null, Difficulty.KILLER, Duration.ofMinutes(100))), // problemIds is null
-			Arguments.of(new AssessmentRegisterCommand(1L, Role.ADMIN, "유효한 이름", Collections.emptyList(), Difficulty.KILLER, Duration.ofMinutes(100))),
-			Arguments.of(new AssessmentRegisterCommand(1L, Role.ADMIN, "유효한 이름", List.of(new AssessmentItemRegisterCommand(103L, 34)), Difficulty.KILLER, null))
+			Arguments.of(new AssessmentRegisterCommand(1L, null, "유효한 이름", List.of(new AssessmentItemRegisterCommand(103L, 34)), Duration.ofMinutes(100))), // role is null
+			Arguments.of(new AssessmentRegisterCommand(1L, Role.ADMIN, null, List.of(new AssessmentItemRegisterCommand(103L, 34)), Duration.ofMinutes(100))), // assessmentName is null
+			Arguments.of(new AssessmentRegisterCommand(1L, Role.ADMIN, "", List.of(new AssessmentItemRegisterCommand(103L, 34)), Duration.ofMinutes(100))), // assessmentName is blank
+			Arguments.of(new AssessmentRegisterCommand(1L, Role.ADMIN, "  ", List.of(new AssessmentItemRegisterCommand(103L, 34)), Duration.ofMinutes(100))), // assessmentName is blank
+			Arguments.of(new AssessmentRegisterCommand(1L, Role.ADMIN, "유효한 이름", null, Duration.ofMinutes(100))), // problemIds is null
+			Arguments.of(new AssessmentRegisterCommand(1L, Role.ADMIN, "유효한 이름", Collections.emptyList(), Duration.ofMinutes(100))),
+			Arguments.of(new AssessmentRegisterCommand(1L, Role.ADMIN, "유효한 이름", List.of(new AssessmentItemRegisterCommand(103L, 34)), null))
 			// problemIds is empty
 		);
 	}
