@@ -1,12 +1,16 @@
 package kr.co.mathrank.domain.problem.assessment.service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.annotation.Validated;
 
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
+import kr.co.mathrank.common.event.EventPayload;
+import kr.co.mathrank.common.outbox.TransactionalOutboxPublisher;
 import kr.co.mathrank.common.role.Role;
 import kr.co.mathrank.domain.problem.assessment.dto.AssessmentItemRegisterCommand;
 import kr.co.mathrank.domain.problem.assessment.dto.AssessmentRegisterCommand;
@@ -23,7 +27,9 @@ import lombok.extern.slf4j.Slf4j;
 @RequiredArgsConstructor
 public class AssessmentRegisterService {
 	private final AssessmentRepository assessmentRepository;
+	private final TransactionalOutboxPublisher transactionalOutboxPublisher;
 
+	@Transactional
 	public Long register(@NotNull @Valid final AssessmentRegisterCommand command) {
 		// 관리자가 아닐 경우 에러
 		if (!command.role().equals(Role.ADMIN)) {
@@ -34,9 +40,10 @@ public class AssessmentRegisterService {
 		final Assessment assessment = Assessment.of(command.registerMemberId(), command.assessmentName(), command.minutes());
 		final List<AssessmentItem> items = toItems(command.assessmentItems());
 		assessment.replaceItems(items);
-		assessment.setDifficulty(command.difficulty());
 		assessmentRepository.save(assessment);
 		log.info("[AssessmentRegisterService.register] successfully registered assessment - assessmentId: {}, command: {}", assessment.getId(), command);
+
+		transactionalOutboxPublisher.publish("assessment-registered", AssessmentRegisteredEvent.from(assessment));
 		return assessment.getId();
 	}
 
@@ -44,5 +51,27 @@ public class AssessmentRegisterService {
 		return commands.stream()
 			.map(item -> AssessmentItem.of(item.problemId(), item.score()))
 			.toList();
+	}
+
+	record AssessmentRegisteredEvent(
+		Long assessmentId,
+		Long registeredMemberId,
+		String assessmentName,
+		Long assessmentMinutes,
+		List<Long> assessmentItemProblemIds,
+		LocalDateTime createdAt
+	) implements EventPayload {
+		static AssessmentRegisteredEvent from(final Assessment assessment) {
+			return new AssessmentRegisteredEvent(
+				assessment.getId(),
+				assessment.getRegisterMemberId(),
+				assessment.getAssessmentName(),
+				assessment.getAssessmentDuration().toMinutes(),
+				assessment.getAssessmentItems().stream()
+					.map(AssessmentItem::getProblemId)
+					.toList(),
+				assessment.getCreatedAt()
+			);
+		}
 	}
 }
