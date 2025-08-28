@@ -60,11 +60,14 @@ public class AssessmentSubmission {
 	@Convert(converter = AssessmentDurationConverter.class)
 	private Duration elapsedTime;
 
-	static AssessmentSubmission of(final Assessment assessment, final Long memberId, final Duration elapsedTime) {
+	private Boolean isFirstSubmission;
+
+	static AssessmentSubmission of(final Assessment assessment, final Long memberId, final Duration elapsedTime, final boolean isFirstSubmission) {
 		final AssessmentSubmission assessmentSubmission = new AssessmentSubmission();
 		assessmentSubmission.assessment = assessment;
 		assessmentSubmission.memberId = memberId;
 		assessmentSubmission.elapsedTime = elapsedTime;
+		assessmentSubmission.isFirstSubmission = isFirstSubmission;
 
 		return assessmentSubmission;
 	}

@@ -42,7 +42,7 @@ class SubmissionQueryServiceTest {
 
 		final List<String> submittedAnswer = List.of("1", "2", "3", "4");
 		final AssessmentSubmission submission = assessment.registerSubmission(
-			1L, List.of(submittedAnswer, submittedAnswer, submittedAnswer, submittedAnswer), Duration.ofMinutes(5));
+			1L, List.of(submittedAnswer, submittedAnswer, submittedAnswer, submittedAnswer), Duration.ofMinutes(5), true);
 		assessmentRepository.save(assessment);
 
 		// 쿼리 한번으로 수행되는지도 확인
@@ -66,7 +66,7 @@ class SubmissionQueryServiceTest {
 
 		final List<String> submittedAnswer = List.of("1", "2", "3", "4");
 		final AssessmentSubmission submission = assessment.registerSubmission(
-			1L, List.of(submittedAnswer, submittedAnswer, submittedAnswer, submittedAnswer), Duration.ofMinutes(5));
+			1L, List.of(submittedAnswer, submittedAnswer, submittedAnswer, submittedAnswer), Duration.ofMinutes(5), true);
 		assessmentRepository.save(assessment);
 
 		// 쿼리 한번으로 수행되는지도 확인

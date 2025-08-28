@@ -23,6 +23,7 @@ import kr.co.mathrank.common.role.Role;
 import kr.co.mathrank.domain.problem.assessment.dto.AssessmentItemRegisterCommand;
 import kr.co.mathrank.domain.problem.assessment.dto.AssessmentRegisterCommand;
 import kr.co.mathrank.domain.problem.assessment.dto.SubmissionRegisterCommand;
+import kr.co.mathrank.domain.problem.assessment.entity.AssessmentSubmission;
 import kr.co.mathrank.domain.problem.assessment.repository.AssessmentRepository;
 import kr.co.mathrank.domain.problem.assessment.repository.AssessmentSubmissionRepository;
 import kr.co.mathrank.domain.problem.core.Difficulty;
@@ -200,6 +201,42 @@ class SubmissionRegisterServiceTest {
 		latch.await();
 
 		Assertions.assertEquals(tryCount, assessmentRepository.findById(assessmentId).get().getDistinctTriedMemberCount());
+	}
+
+	@Test
+	void 동시제출될때_하나만_첫등록으로_기록된다() throws InterruptedException {
+		final Long assessmentId = assessmentRegisterService.register(new AssessmentRegisterCommand(
+			1L, Role.ADMIN,
+			"testName",
+			List.of(new AssessmentItemRegisterCommand(1L, 100)),
+			Difficulty.KILLER,
+			Duration.ofMinutes(100L)
+		));
+
+		final int tryCount = 10;
+
+		final ExecutorService executorService = Executors.newFixedThreadPool(2);
+		final CountDownLatch latch = new CountDownLatch(tryCount);
+		final Long memberId = 10L; // 동일한 사용자 ID로 요청
+
+		for (int i = 0; i < tryCount; i++) {
+			executorService.submit(() -> {
+				try {
+					submissionRegisterService.submit(
+						new SubmissionRegisterCommand(memberId, assessmentId, List.of(List.of("test")),
+							Duration.ofMinutes(1L)));
+				} finally {
+					latch.countDown();
+				}
+			});
+		}
+
+		latch.await();
+
+		Assertions.assertEquals(1, assessmentSubmissionRepository.findAll().stream()
+			.map(AssessmentSubmission::getIsFirstSubmission)
+			.filter(a -> a)
+			.count());
 	}
 
 	@AfterEach

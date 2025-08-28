@@ -30,7 +30,7 @@ class AssessmentTest {
 		final Assessment assessment = Assessment.of(1L, "test", Duration.ofMinutes(100L));
 
 		Assertions.assertThrows(SubmissionTimeExceedException.class,
-			() -> assessment.registerSubmission(1L, Collections.emptyList(), Duration.ofMinutes(101L)));
+			() -> assessment.registerSubmission(1L, Collections.emptyList(), Duration.ofMinutes(101L), true));
 	}
 
 	@Test
