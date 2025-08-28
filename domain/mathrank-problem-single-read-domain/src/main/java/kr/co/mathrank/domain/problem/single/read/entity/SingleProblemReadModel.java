@@ -49,7 +49,7 @@ public class SingleProblemReadModel implements Persistable<Long> {
 	@Setter(AccessLevel.PRIVATE)
 	private Long id; // single problem id
 
-	@Column(unique = true, nullable = false)
+	@Column
 	@Setter(AccessLevel.PRIVATE)
 	private Long problemId; // problem id
 
