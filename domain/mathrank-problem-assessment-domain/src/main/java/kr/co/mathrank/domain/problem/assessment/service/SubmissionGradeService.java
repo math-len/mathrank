@@ -43,6 +43,7 @@ public class SubmissionGradeService {
 		this.gradeAll(submission);
 
 		assessmentRepository.save(submission.getAssessment());
+		assessmentSubmissionRepository.save(submission);
 	}
 
 	/**
