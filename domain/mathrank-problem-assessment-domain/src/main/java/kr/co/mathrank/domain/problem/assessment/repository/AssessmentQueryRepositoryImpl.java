@@ -34,7 +34,16 @@ class AssessmentQueryRepositoryImpl implements AssessmentQueryRepository{
 			.fetch();
 	}
 
-	public OrderSpecifier<?> getOrderSpecifier(final AssessmentOrder assessmentOrder, final AssessmentOrderDirection direction) {
+	@Override
+	public Long count(AssessmentQuery query) {
+		final QAssessment qAssessment = QAssessment.assessment;
+		return jpaQueryFactory.select(qAssessment.count())
+			.from(qAssessment)
+			.where(conditions(query))
+			.fetchOne();
+	}
+
+	private OrderSpecifier<?> getOrderSpecifier(final AssessmentOrder assessmentOrder, final AssessmentOrderDirection direction) {
 		final Order order = switch (direction) {
 			case ASC -> Order.ASC;
 			case DESC -> Order.DESC;
@@ -46,15 +55,6 @@ class AssessmentQueryRepositoryImpl implements AssessmentQueryRepository{
 			case LATEST -> new OrderSpecifier<>(order, qAssessment.createdAt);
 			case DISTINCT_USER_COUNT -> new OrderSpecifier<>(order, qAssessment.distinctTriedMemberCount);
 		};
-	}
-
-	@Override
-	public Long count(AssessmentQuery query) {
-		final QAssessment qAssessment = QAssessment.assessment;
-		return jpaQueryFactory.select(qAssessment.count())
-			.from(qAssessment)
-			.where(conditions(query))
-			.fetchOne();
 	}
 
 	private BooleanExpression[] conditions(final AssessmentQuery assessmentQuery) {
