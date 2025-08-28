@@ -68,13 +68,13 @@ class SingleProblemServiceTest {
 
 	@Test
 	@Transactional
-	void 이미_등록된_문제는_다시_등록할_수_없다() {
+	void 같은문제는_여러번_등록될_수_있다() {
 		final Long problemId = 1L;
 
 		Mockito.when(problemClient.fetchProblemInfo(Mockito.any())).thenReturn(getEmptyResult());
 
 		singleProblemService.register(new SingleProblemRegisterCommand(problemId, "test", 2L, Role.ADMIN));
-		Assertions.assertThrows(AlreadyRegisteredProblemException.class, () -> singleProblemService.register(new SingleProblemRegisterCommand(problemId, "test", 2L, Role.ADMIN)));
+		Assertions.assertDoesNotThrow(() -> singleProblemService.register(new SingleProblemRegisterCommand(problemId, "test", 2L, Role.ADMIN)));
 	}
 
 	@Test

@@ -47,14 +47,7 @@ public class SingleProblemService {
 		final ProblemQueryResult result = problemInfoManager.fetch(command.problemId());
 		final SingleProblem singleProblem = SingleProblem.of(command.problemId(), command.singleProblemName(), command.memberId());
 
-		try {
-			singleProblemRegisterManager.register(singleProblem, result);
-		} catch (DataIntegrityViolationException e) {
-			// 이미 등록된 문제는 다시 등록할 수 없다.
-			log.warn("[SingleProblemService.register] cannot register single problem duplicated: {}",
-				command.problemId(), e);
-			throw new AlreadyRegisteredProblemException();
-		}
+		singleProblemRegisterManager.register(singleProblem, result);
 		log.info("[SingleProblemService.register] single problem registered - singleProblemId: {}, problemId: {}", singleProblem.getId(), singleProblem.getProblemId());
 		return singleProblem.getId();
 	}

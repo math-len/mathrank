@@ -16,7 +16,6 @@ import org.testcontainers.junit.jupiter.Testcontainers;
 import kr.co.mathrank.domain.problem.core.AnswerType;
 import kr.co.mathrank.domain.problem.core.Difficulty;
 import kr.co.mathrank.domain.problem.single.read.dto.SingleProblemReadModelRegisterCommand;
-import kr.co.mathrank.domain.problem.single.read.exception.SingleProblemReadModelAlreadyExistException;
 
 @SpringBootTest(
 	properties = {
@@ -45,17 +44,20 @@ class SingleProblemReadModelRegisterServiceTest {
 
 	@Test
 	@Transactional
-	void 중복삽입시_에러발생() {
+	void 중복삽입이_가능하다() {
+		final Long singleProblemId1 = 1L;
+		final Long singleProblemId2 = 2L;
 		final Long problemId = 1L;
 		final LocalDateTime baseTime = LocalDateTime.of(2018, 1, 1, 1, 1);
 
 		singleProblemReadModelRegisterService.save(new SingleProblemReadModelRegisterCommand(
-			problemId, problemId, "singleProblemName", "img", AnswerType.SHORT_ANSWER, Difficulty.LOW, "initialPath", baseTime
+			singleProblemId1, problemId, "singleProblemName", "img", AnswerType.SHORT_ANSWER, Difficulty.LOW, "initialPath", baseTime
 		));
 
-		Assertions.assertThrows(SingleProblemReadModelAlreadyExistException.class,
+		Assertions.assertDoesNotThrow(
 			() -> singleProblemReadModelRegisterService.save(new SingleProblemReadModelRegisterCommand(
-				problemId, problemId, "singleProblemName", "img", AnswerType.SHORT_ANSWER, Difficulty.LOW, "initialPath", baseTime
+				// 다른 singleProblemId
+				singleProblemId2, problemId, "singleProblemName", "img", AnswerType.SHORT_ANSWER, Difficulty.LOW, "initialPath", baseTime
 			)));
 	}
 }

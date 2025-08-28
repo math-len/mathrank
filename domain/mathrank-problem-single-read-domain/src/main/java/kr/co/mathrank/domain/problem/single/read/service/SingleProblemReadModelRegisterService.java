@@ -26,11 +26,6 @@ public class SingleProblemReadModelRegisterService {
 			command.difficulty(), 0L, 0L, 0L,
 			command.createdAt());
 
-		try {
-			singleProblemReadModelRepository.save(model);
-		} catch (DataIntegrityViolationException e) {
-			log.warn("[SingleProblemReadModelRegisterService.save] read model already exists: {}", model);
-			throw new SingleProblemReadModelAlreadyExistException();
-		}
+		singleProblemReadModelRepository.save(model);
 	}
 }

@@ -34,6 +34,7 @@ import lombok.ToString;
 @Getter
 @Table(indexes = {
 	@Index(name = "idx_coursePath", columnList = "course_path"),
+	@Index(name = "idx_problemId", columnList = "problem_id"),
 	@Index(name = "idx_answerType", columnList = "answer_type"),
 	@Index(name = "idx_difficulty", columnList = "difficulty"),
 	@Index(name = "idx_totalAttemptedCount", columnList = "total_attempted_count"),
@@ -49,7 +50,7 @@ public class SingleProblemReadModel implements Persistable<Long> {
 	@Setter(AccessLevel.PRIVATE)
 	private Long id; // single problem id
 
-	@Column(unique = true, nullable = false)
+	@Column
 	@Setter(AccessLevel.PRIVATE)
 	private Long problemId; // problem id
 
