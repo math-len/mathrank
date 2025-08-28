@@ -25,7 +25,7 @@ public class SingleProblem {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 
-	@Column(unique = true)
+	@Column
 	private Long problemId;
 
 	private String singleProblemName;
