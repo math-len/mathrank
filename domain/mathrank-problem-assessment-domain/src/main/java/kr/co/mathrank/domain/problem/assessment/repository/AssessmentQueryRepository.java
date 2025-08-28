@@ -4,8 +4,10 @@ import java.util.List;
 
 import kr.co.mathrank.domain.problem.assessment.dto.AssessmentQuery;
 import kr.co.mathrank.domain.problem.assessment.entity.Assessment;
+import kr.co.mathrank.domain.problem.assessment.entity.AssessmentOrderDirection;
+import kr.co.mathrank.domain.problem.assessment.entity.AssessmentOrder;
 
 interface AssessmentQueryRepository {
-	List<Assessment> query(AssessmentQuery query, final int pageSize, final int pageNumber);
+	List<Assessment> query(AssessmentQuery query, final int pageSize, final int pageNumber, final AssessmentOrder assessmentOrder, final AssessmentOrderDirection direction);
 	Long count(AssessmentQuery query);
 }
