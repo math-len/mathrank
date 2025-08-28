@@ -1,5 +1,7 @@
 package kr.co.mathrank.domain.problem.assessment.service;
 
+import java.util.Arrays;
+import java.util.Comparator;
 import java.util.List;
 
 import org.springframework.stereotype.Service;
@@ -62,17 +64,8 @@ public class AssessmentDifficultyService {
 	 * @return
 	 */
 	private Difficulty fromPriority(final double averagePriority) {
-		Difficulty closestDifficulty = null;
-		double minDifference = Double.MAX_VALUE;
-
-		for (Difficulty difficulty : Difficulty.values()) {
-			double difference = Math.abs(difficulty.getPriority() - averagePriority);
-			if (difference < minDifference) {
-				minDifference = difference;
-				closestDifficulty = difficulty;
-			}
-		}
-
-		return closestDifficulty;
+		return Arrays.stream(Difficulty.values())
+			.min(Comparator.comparingDouble(d -> Math.abs(d.getPriority() - averagePriority)))
+			.orElseThrow(); // Difficulty enum은 비어있을 수 없으므로 안전합니다.
 	}
 }
