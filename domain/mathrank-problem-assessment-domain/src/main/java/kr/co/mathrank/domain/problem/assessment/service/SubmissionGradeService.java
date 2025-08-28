@@ -33,7 +33,7 @@ public class SubmissionGradeService {
 	 * @throws NoSuchSubmissionException 제출이 존재하지 않는 경우
 	 */
 	public void evaluateSubmission(@NotNull final Long assessmentSubmissionId) {
-		final AssessmentSubmission submission = assessmentSubmissionRepository.findByAssessmentSubmissionId(assessmentSubmissionId)
+		final AssessmentSubmission submission = assessmentSubmissionRepository.findByIdWithSubmittedItemAnswers(assessmentSubmissionId)
 			.orElseThrow(() -> {
 				log.warn("[SubmissionGradeManager.evaluateSubmission] cannot found assessmentSubmission - assessmentSubmissionId: {}", assessmentSubmissionId);
 				return new NoSuchSubmissionException();
