@@ -66,15 +66,14 @@ public class SubmissionRegisterService {
 			});
 
 		// 처음으로 제출한 사용자일때
-		if (isFirstTry(command.assessmentId(), command.memberId())) {
-			assessment.increaseDistinctMemberCount();
-		}
+		final boolean isFirstSubmission = isFirstTry(command.assessmentId(), command.memberId());
 
 		// 새로운 답안지 등록
 		final AssessmentSubmission assessmentSubmission = assessment.registerSubmission(
 			command.memberId(),
 			command.submittedAnswers(),
-			command.elapsedTime()
+			command.elapsedTime(),
+			isFirstSubmission
 		);
 		assessmentSubmissionRepository.save(assessmentSubmission);
 
@@ -84,7 +83,8 @@ public class SubmissionRegisterService {
 			assessmentSubmission.getId(),
 			assessmentSubmission.getSubmittedAt(),
 			assessment.getDistinctTriedMemberCount(),
-			assessmentSubmission.getElapsedTime().getSeconds()
+			assessmentSubmission.getElapsedTime().getSeconds(),
+			isFirstSubmission
 		));
 
 		return assessmentSubmission.getId();
@@ -107,7 +107,8 @@ public class SubmissionRegisterService {
 		Long submissionId,
 		LocalDateTime submittedTime,
 		Long distinctTriedMemberCount,
-		Long elapsedTimeSeconds
+		Long elapsedTimeSeconds,
+		Boolean isFirstTry
 	) implements EventPayload {
 	}
 }

@@ -10,6 +10,7 @@ import kr.co.mathrank.domain.problem.assessment.entity.EvaluationStatus;
 
 public record AssessmentSubmissionQueryResult(
 	Long assessmentId,
+	Long assessmentAverageScore,
 	Long memberId,
 	EvaluationStatus evaluationStatus,
 	Integer totalScore,
@@ -20,6 +21,7 @@ public record AssessmentSubmissionQueryResult(
 	public static AssessmentSubmissionQueryResult from(final AssessmentSubmission assessmentSubmission) {
 		return new AssessmentSubmissionQueryResult(
 			assessmentSubmission.getAssessment().getId(),
+			assessmentSubmission.getAssessment().getAverageScore(),
 			assessmentSubmission.getMemberId(),
 			assessmentSubmission.getEvaluationStatus(),
 			assessmentSubmission.getTotalScore(),

@@ -60,11 +60,14 @@ public class AssessmentSubmission {
 	@Convert(converter = AssessmentDurationConverter.class)
 	private Duration elapsedTime;
 
-	static AssessmentSubmission of(final Assessment assessment, final Long memberId, final Duration elapsedTime) {
+	private Boolean isFirstSubmission;
+
+	static AssessmentSubmission of(final Assessment assessment, final Long memberId, final Duration elapsedTime, final boolean isFirstSubmission) {
 		final AssessmentSubmission assessmentSubmission = new AssessmentSubmission();
 		assessmentSubmission.assessment = assessment;
 		assessmentSubmission.memberId = memberId;
 		assessmentSubmission.elapsedTime = elapsedTime;
+		assessmentSubmission.isFirstSubmission = isFirstSubmission;
 
 		return assessmentSubmission;
 	}
@@ -88,6 +91,10 @@ public class AssessmentSubmission {
 			final GradeResult gradeResult = gradeResults.get(i);
 
 			totalScore += itemSubmission.grade(gradeResult);
+		}
+
+		if (isFirstSubmission) { // 첫 제출일때만 시험지 정보 업데이트
+			this.assessment.addNewSubmittedScore(totalScore);
 		}
 
 		this.totalScore = totalScore;

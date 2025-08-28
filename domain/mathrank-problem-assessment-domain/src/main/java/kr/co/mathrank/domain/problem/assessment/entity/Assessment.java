@@ -65,6 +65,12 @@ public class Assessment {
 	@Setter(AccessLevel.NONE)
 	private Long distinctTriedMemberCount = 0L;
 
+	@Setter(AccessLevel.NONE)
+	private Long totalScore = 0L;
+
+	@Setter(AccessLevel.NONE)
+	private Long averageScore = 0L;
+
 	@CreationTimestamp
 	@Setter(AccessLevel.NONE)
 	private LocalDateTime createdAt;
@@ -78,8 +84,10 @@ public class Assessment {
 		return assessment;
 	}
 
-	public void increaseDistinctMemberCount() {
+	public void addNewSubmittedScore(int score) {
 		distinctTriedMemberCount++;
+		this.totalScore += score;
+		this.averageScore = this.totalScore / this.distinctTriedMemberCount;
 	}
 
 	/**
@@ -95,7 +103,7 @@ public class Assessment {
 	 * @return {@link AssessmentSubmission} 엔티티
 	 */
 	public AssessmentSubmission registerSubmission(final Long memberId, final List<List<String>> answers,
-		final Duration elapsedTime) {
+		final Duration elapsedTime, final boolean isFirstSubmission) {
 		if (this.assessmentItems.size() != answers.size()) {
 			log.info(
 				"[Assessment.registerSubmission] item count and answers count is not match - assessmentItem count: {}, answers Count: {}",
@@ -110,7 +118,7 @@ public class Assessment {
 			throw new SubmissionTimeExceedException();
 		}
 
-		final AssessmentSubmission assessmentSubmission = AssessmentSubmission.of(this, memberId, elapsedTime);
+		final AssessmentSubmission assessmentSubmission = AssessmentSubmission.of(this, memberId, elapsedTime, isFirstSubmission);
 
 		for (int i = 0; i < assessmentItems.size(); i ++) {
 			assessmentSubmission.addItemSubmission(assessmentItems.get(i), answers.get(i));
