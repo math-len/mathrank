@@ -38,4 +38,11 @@ public interface AssessmentSubmissionRepository extends JpaRepository<Assessment
 		""")
 	@Lock(LockModeType.PESSIMISTIC_READ)
 	List<AssessmentSubmission> findAllByAssessmentIdAndMemberIdForShare(@Param("assessmentId") Long assessmentId, @Param("memberId") Long memberId);
+
+	@Query("""
+		SELECT ass
+		FROM AssessmentSubmission ass
+		WHERE ass.assessment.id = :assessmentId AND ass.memberId = :memberId
+		""")
+	List<AssessmentSubmission> findAllByAssessmentIdAndMemberId(@Param("assessmentId") Long assessmentId, @Param("memberId") Long memberId);
 }
