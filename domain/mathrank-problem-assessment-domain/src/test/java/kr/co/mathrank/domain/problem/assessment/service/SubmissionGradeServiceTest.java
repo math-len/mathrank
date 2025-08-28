@@ -19,6 +19,7 @@ import kr.co.mathrank.domain.problem.assessment.entity.AssessmentItem;
 import kr.co.mathrank.domain.problem.assessment.entity.AssessmentSubmission;
 import kr.co.mathrank.domain.problem.assessment.entity.EvaluationStatus;
 import kr.co.mathrank.domain.problem.assessment.exception.NoSuchSubmissionException;
+import kr.co.mathrank.domain.problem.assessment.exception.SubmissionGradeException;
 import kr.co.mathrank.domain.problem.assessment.repository.AssessmentRepository;
 import kr.co.mathrank.domain.problem.assessment.repository.AssessmentSubmissionRepository;
 
@@ -198,6 +199,25 @@ class SubmissionGradeServiceTest {
 			.orElseThrow();
 		Assertions.assertEquals(300, targetAssessment.getTotalScore());
 		Assertions.assertEquals(3, targetAssessment.getDistinctTriedMemberCount());
+	}
+
+	@Test
+	void 제출은_재채점_불가능하다() {
+		final Assessment assessment = Assessment.of(1L, "test", Duration.ofMinutes(10));
+		assessment.replaceItems(List.of(AssessmentItem.of(1L, 10), AssessmentItem.of(2L, 90))); // 문항 2개
+
+		final List<List<String>> answersWithWrongCount = List.of(List.of("1"), List.of("2")); // 답안 2개
+		assessment.registerSubmission(1L, answersWithWrongCount, Duration.ofMinutes(5), true);
+
+		assessmentRepository.save(assessment);
+		final Long submissionId = assessment.getAssessmentSubmissions().getFirst().getId();
+
+		Mockito.when(problemClient.matchAnswer(Mockito.anyLong(), Mockito.anyList()))
+			.thenReturn(new SolveResult(true, Collections.emptySet(), Collections.emptyList()));
+
+		// 재채점하기
+		submissionGradeService.evaluateSubmission(submissionId);
+		Assertions.assertThrows(SubmissionGradeException.class, () -> submissionGradeService.evaluateSubmission(submissionId));
 	}
 
 	@AfterEach
