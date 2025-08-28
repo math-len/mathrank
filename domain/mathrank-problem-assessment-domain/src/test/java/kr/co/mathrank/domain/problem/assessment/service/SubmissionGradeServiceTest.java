@@ -133,18 +133,19 @@ class SubmissionGradeServiceTest {
 		assessmentRepository.save(assessment);
 
 
-		final Long submissionId = assessment.getAssessmentSubmissions().getFirst().getId();
+		final Long submissionId1 = assessment.getAssessmentSubmissions().getFirst().getId();
+		final Long submissionId2 = assessment.getAssessmentSubmissions().get(1).getId();
 
 		// 채점 시, 항상 정답으로 응답
 		Mockito.when(problemClient.matchAnswer(Mockito.anyLong(), Mockito.anyList()))
 			.thenReturn(new SolveResult(true, Collections.emptySet(), Collections.emptyList()));
 
 		// 채점하기
-		submissionGradeService.evaluateSubmission(submissionId);
+		submissionGradeService.evaluateSubmission(submissionId1);
+		submissionGradeService.evaluateSubmission(submissionId2);
 
 		// 첫번째 제출 채점점수 100점
 		// 두번째 제출 채점점수 100점
-
 		// 첫번째 제출점수만 반영되야 함으로,
 		// 따라서 총 점수는 100점
 		final Assessment targetAssessment = assessmentRepository.findById(assessment.getId())
