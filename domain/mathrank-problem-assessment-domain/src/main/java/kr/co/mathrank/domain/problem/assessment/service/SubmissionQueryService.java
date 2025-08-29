@@ -1,9 +1,12 @@
 package kr.co.mathrank.domain.problem.assessment.service;
 
+import java.util.Comparator;
+
 import org.springframework.stereotype.Service;
 import org.springframework.validation.annotation.Validated;
 
 import jakarta.validation.constraints.NotNull;
+import kr.co.mathrank.domain.problem.assessment.dto.AssessmentSubmissionQueryResults;
 import kr.co.mathrank.domain.problem.assessment.dto.SubmissionQueryResult;
 import kr.co.mathrank.domain.problem.assessment.entity.AssessmentSubmission;
 import kr.co.mathrank.domain.problem.assessment.exception.NoSuchSubmissionException;
@@ -25,5 +28,17 @@ public class SubmissionQueryService {
 				return new NoSuchSubmissionException();
 			});
 		return SubmissionQueryResult.from(submission);
+	}
+
+	public AssessmentSubmissionQueryResults getAssessmentSubmissionResults(
+		@NotNull final Long assessmentId,
+		@NotNull final Long memberId
+	) {
+		return new AssessmentSubmissionQueryResults(
+			assessmentSubmissionRepository.findAllByAssessmentIdAndMemberId(assessmentId, memberId)
+				.stream()
+				.map(SubmissionQueryResult::from)
+				.sorted(Comparator.comparing(SubmissionQueryResult::submittedAt).reversed())
+				.toList());
 	}
 }
