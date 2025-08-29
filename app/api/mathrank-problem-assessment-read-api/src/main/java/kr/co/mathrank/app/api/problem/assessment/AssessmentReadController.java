@@ -48,7 +48,7 @@ public class AssessmentReadController {
 	@Authorization(openedForAll = true)
 	@GetMapping("/api/v1/problem/assessment/{assessmentId}/submission")
 	public ResponseEntity<AssessmentSubmissionQueryResults> querySubmissionResults(
-		@RequestParam final Long assessmentId,
+		@PathVariable final Long assessmentId,
 		@LoginInfo final MemberPrincipal memberPrincipal
 	) {
 		return ResponseEntity.ok(submissionQueryService.getAssessmentSubmissionResults(assessmentId, memberPrincipal.memberId()));
