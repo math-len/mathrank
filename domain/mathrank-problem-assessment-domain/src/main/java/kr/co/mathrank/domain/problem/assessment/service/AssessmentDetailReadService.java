@@ -41,7 +41,7 @@ public class AssessmentDetailReadService {
 			itemDetail.problemId(),
 			problemQueryResult.imageSource(),
 			problemQueryResult.memberId(),
-			problemQueryResult.path(),
+			itemDetail.score(),
 			CourseDetailResult.from(courseQueryResult),
 			problemQueryResult.difficulty(),
 			problemQueryResult.type(),
