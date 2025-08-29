@@ -16,7 +16,7 @@ import kr.co.mathrank.common.page.PageResult;
 import kr.co.mathrank.domain.problem.assessment.dto.AssessmentDetailReadModelResult;
 import kr.co.mathrank.domain.problem.assessment.dto.AssessmentPageQuery;
 import kr.co.mathrank.domain.problem.assessment.dto.AssessmentPageQueryResult;
-import kr.co.mathrank.domain.problem.assessment.dto.AssessmentSubmissionQueryResult;
+import kr.co.mathrank.domain.problem.assessment.dto.SubmissionQueryResult;
 import kr.co.mathrank.domain.problem.assessment.entity.AssessmentOrderDirection;
 import kr.co.mathrank.domain.problem.assessment.entity.AssessmentOrder;
 import kr.co.mathrank.domain.problem.assessment.service.AssessmentDetailReadService;
@@ -35,7 +35,7 @@ public class AssessmentReadController {
 	@Operation(summary = "제출된 답안지 채점 상태 조회 API")
 	@Authorization(openedForAll = true)
 	@GetMapping("/api/v1/problem/assessment/submission")
-	public ResponseEntity<AssessmentSubmissionQueryResult> querySubmissionResult(
+	public ResponseEntity<SubmissionQueryResult> querySubmissionResult(
 		@RequestParam final Long submissionId
 	) {
 		return ResponseEntity.ok(submissionQueryService.getSubmissionResult(submissionId));
