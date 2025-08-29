@@ -6,6 +6,7 @@ import kr.co.mathrank.domain.problem.assessment.entity.AssessmentItemSubmission;
 
 public record ItemSubmissionResult(
 	Long problemId,
+	Integer score,
 	Boolean correct,
 	Integer sequence,
 	List<String> submittedAnswer,
@@ -14,6 +15,7 @@ public record ItemSubmissionResult(
 	public static ItemSubmissionResult from(final AssessmentItemSubmission itemSubmission) {
 		return new ItemSubmissionResult(
 			itemSubmission.getAssessmentItem().getProblemId(),
+			itemSubmission.getAssessmentItem().getScore(),
 			itemSubmission.getCorrect(),
 			itemSubmission.getAssessmentItem().getSequence(),
 			itemSubmission.getSubmittedAnswer(),
