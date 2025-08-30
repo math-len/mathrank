@@ -1,5 +1,7 @@
 package kr.co.mathrank.domain.problem.single.service;
 
+import java.time.Duration;
+
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.annotation.Validated;
@@ -31,7 +33,8 @@ class ChallengeLogSaveManager {
 	public void saveLog(
 		@NotNull final Long singleProblemId,
 		@NotNull final Long memberId,
-		@NotNull @Valid final SingleProblemSolveResult solveResult
+		@NotNull @Valid final SingleProblemSolveResult solveResult,
+		@NotNull final Duration elapsedTime
 	) {
 		// 락걸기
 		final SingleProblem singleProblem = singleProblemRepository.findByIdForUpdate(singleProblemId)
@@ -43,13 +46,14 @@ class ChallengeLogSaveManager {
 				challenger -> {
 					// 이미 해당 사용자가 푼 적 있음
 					singleProblem.increaseAttemptCount();
-					addChallengeLog(solveResult, challenger, singleProblem);
+					addChallengeLog(solveResult, challenger, singleProblem, elapsedTime);
 				},
 				() -> {
 					// 사용자가 처음 품
-					singleProblem.firstTry(solveResult.success());
+					// 총 풀이 시간에 소요시간 추가
+					singleProblem.firstTry(solveResult.success(), elapsedTime);
 					final Challenger challenger = Challenger.of(memberId, singleProblem);
-					addChallengeLog(solveResult, challenger, singleProblem);
+					addChallengeLog(solveResult, challenger, singleProblem, elapsedTime);
 
 					challengerRepository.save(challenger);
 				});
@@ -58,13 +62,13 @@ class ChallengeLogSaveManager {
 			singleProblem.getId(), memberId, solveResult.success());
 	}
 
-	private void addChallengeLog(SingleProblemSolveResult solveResult, Challenger challenger, SingleProblem singleProblem) {
+	private void addChallengeLog(SingleProblemSolveResult solveResult, Challenger challenger, SingleProblem singleProblem, Duration elapsedTime) {
 		final ChallengeLog challengeLog = challenger.addChallengeLog(solveResult.success(), solveResult.submittedAnswer(), solveResult.realAnswer().stream()
-			.toList());
-		publishChallengeLog(challengeLog, singleProblem, challenger); // 이벤트 발행
+			.toList(), elapsedTime);
+		publishChallengeLog(challengeLog, singleProblem, challenger, elapsedTime); // 이벤트 발행
 	}
 
-	private void publishChallengeLog(final ChallengeLog challengeLog, final SingleProblem singleProblem, final Challenger challenger) {
+	private void publishChallengeLog(final ChallengeLog challengeLog, final SingleProblem singleProblem, final Challenger challenger, final Duration elapsedTime) {
 		outboxPublisher.publish("single-problem-solved", new SingleProblemSolvedEventPayload(
 			singleProblem.getId(),
 			singleProblem.getProblemId(),
@@ -72,7 +76,8 @@ class ChallengeLogSaveManager {
 			challengeLog.getSuccess(),
 			singleProblem.getFirstTrySuccessCount(),
 			singleProblem.getTotalAttemptedCount(),
-			singleProblem.getAttemptedUserDistinctCount()
+			singleProblem.getAttemptedUserDistinctCount(),
+			elapsedTime.getSeconds()
 		));
 	}
 
@@ -83,7 +88,8 @@ class ChallengeLogSaveManager {
 		Boolean success,
 		Long firstTrySuccessCount,
 		Long totalAttemptedCount,
-		Long attemptedUserDistinctCount
+		Long attemptedUserDistinctCount,
+		Long elapsedSeconds
 	) implements EventPayload {
 	}
 }

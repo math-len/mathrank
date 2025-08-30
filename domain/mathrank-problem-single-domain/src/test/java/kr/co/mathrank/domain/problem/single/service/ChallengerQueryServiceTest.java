@@ -1,5 +1,6 @@
 package kr.co.mathrank.domain.problem.single.service;
 
+import java.time.Duration;
 import java.util.Collections;
 import java.util.List;
 
@@ -55,7 +56,7 @@ class ChallengerQueryServiceTest {
 		final Long memberId = 1L;
 		for (int i = 0; i < 10; i ++) {
 			final Long singleProblemId = singleProblemRepository.save(SingleProblem.of((long) i , "test", 2L)).getId();
-			singleProblemService.solve(new SingleProblemSolveCommand(singleProblemId, memberId, List.of("test")));
+			singleProblemService.solve(new SingleProblemSolveCommand(singleProblemId, memberId, List.of("test"), Duration.ofSeconds(1000)));
 		}
 
 		Assertions.assertEquals(10, challengerQueryService.findMemberChallenges(memberId).results().size());
@@ -69,7 +70,7 @@ class ChallengerQueryServiceTest {
 		// 0번 부터 10번까지 사용자로 문제 풀기
 		for (int i = 0; i < 10; i ++) {
 			final Long singleProblemId = singleProblemRepository.save(SingleProblem.of((long) i , "test", 2L)).getId();
-			singleProblemService.solve(new SingleProblemSolveCommand(singleProblemId, (long) i, List.of("test")));
+			singleProblemService.solve(new SingleProblemSolveCommand(singleProblemId, (long) i, List.of("test"), Duration.ofSeconds(1000)));
 		}
 
 		Assertions.assertEquals(1, challengerQueryService.findMemberChallenges(0L).results().size());

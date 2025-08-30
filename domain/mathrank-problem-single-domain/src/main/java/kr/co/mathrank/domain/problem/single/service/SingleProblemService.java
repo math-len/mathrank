@@ -68,7 +68,7 @@ public class SingleProblemService {
 		final SingleProblemSolveResult solveResult = SingleProblemSolveResult.from(
 			problemInfoManager.solve(singleProblem.getProblemId(), command.answers()));
 
-		challengeLogSaveManager.saveLog(singleProblem.getId(), command.memberId(), solveResult);
+		challengeLogSaveManager.saveLog(singleProblem.getId(), command.memberId(), solveResult, command.duration());
 		return solveResult;
 	}
 }

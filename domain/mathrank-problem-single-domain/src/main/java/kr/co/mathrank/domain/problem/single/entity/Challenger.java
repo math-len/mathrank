@@ -1,5 +1,6 @@
 package kr.co.mathrank.domain.problem.single.entity;
 
+import java.time.Duration;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -51,8 +52,9 @@ public class Challenger {
 		return challenger;
 	}
 
-	public ChallengeLog addChallengeLog(final boolean success, final List<String> submittedAnswer, final List<String> correctAnswer) {
-		final ChallengeLog challengeLog = ChallengeLog.of(this, success, submittedAnswer, correctAnswer);
+	public ChallengeLog addChallengeLog(final boolean success, final List<String> submittedAnswer, final List<String> correctAnswer, final
+		Duration elapsedTime) {
+		final ChallengeLog challengeLog = ChallengeLog.of(this, success, submittedAnswer, correctAnswer, elapsedTime);
 
 		// 첫 제출
 		if (challengeLogs.isEmpty()) {
