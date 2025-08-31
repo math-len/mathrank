@@ -66,6 +66,12 @@ public class SingleProblem {
 		totalAttemptedCount++;
 	}
 
+	public List<Challenger> getSucceededChallengers() {
+		return this.challengers.stream()
+			.filter(Challenger::isSuccessAtFirstTry)
+			.toList();
+	}
+
 	public static SingleProblem of(final Long problemId, final String singleProblemName, final Long memberId) {
 		final SingleProblem problem = new SingleProblem();
 		problem.problemId = problemId;

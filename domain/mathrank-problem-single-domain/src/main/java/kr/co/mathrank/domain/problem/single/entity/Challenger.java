@@ -4,6 +4,8 @@ import java.time.Duration;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.hibernate.annotations.BatchSize;
+
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -13,6 +15,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.Index;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
+import jakarta.persistence.OrderBy;
 import jakarta.persistence.Table;
 import jakarta.persistence.UniqueConstraint;
 import lombok.Getter;
@@ -37,6 +40,8 @@ public class Challenger {
 	private Long memberId;
 
 	@OneToMany(mappedBy = "challenger", orphanRemoval = true, cascade = CascadeType.PERSIST)
+	@OrderBy("challengedAt")
+	@BatchSize(size = 100)
 	private final List<ChallengeLog> challengeLogs = new ArrayList<>();
 
 	@ManyToOne(fetch = FetchType.LAZY)

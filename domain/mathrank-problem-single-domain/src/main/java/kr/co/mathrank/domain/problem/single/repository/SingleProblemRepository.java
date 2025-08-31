@@ -14,4 +14,11 @@ public interface SingleProblemRepository extends JpaRepository<SingleProblem, Lo
 	@Query("SELECT sp FROM SingleProblem sp WHERE sp.id = :singleProblemId")
 	@Lock(LockModeType.PESSIMISTIC_WRITE)
 	Optional<SingleProblem> findByIdForUpdate(@Param("singleProblemId") Long singleProblemId);
+
+	@Query("""
+SELECT sp FROM SingleProblem sp 
+LEFT JOIN FETCH sp.challengers c
+WHERE sp.id = :singleProblemId
+""")
+	Optional<SingleProblem> findWithChallengers(@Param("singleProblemId") Long singleProblemId);
 }
