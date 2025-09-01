@@ -4,6 +4,7 @@ import org.springdoc.core.annotations.ParameterObject;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -66,6 +67,17 @@ public class SingleProblemController {
 	) {
 		final SingleProblemRankResult result = singleProblemRankQueryService.queryRank(
 			new SingleProblemRankQuery(memberPrincipal.memberId(), singleProblemId));
+		final SingleProblemRankResponse response = SingleProblemRankResponse.from(result);
+		return ResponseEntity.ok(response);
+	}
+
+	@Operation(summary = "개별문제 풀이 로그 ID 기반 랭크 조회 API")
+	@GetMapping("/api/v1/problem/single/challenge-log/{challengeLogId}/rank")
+	@Authorization(openedForAll = true)
+	public ResponseEntity<SingleProblemRankResponse> getRank(
+		@PathVariable final Long challengeLogId
+	) {
+		final SingleProblemRankResult result = singleProblemRankQueryService.queryRank(challengeLogId);
 		final SingleProblemRankResponse response = SingleProblemRankResponse.from(result);
 		return ResponseEntity.ok(response);
 	}
