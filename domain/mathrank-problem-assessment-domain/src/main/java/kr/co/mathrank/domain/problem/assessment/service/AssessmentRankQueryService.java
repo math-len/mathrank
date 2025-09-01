@@ -40,12 +40,12 @@ public class AssessmentRankQueryService {
 		final AssessmentSubmissionStatisticQueryResult result = assessmentStatisticsService.query(assessmentSubmission.getAssessment().getId());
 		final int elapsedTimeRank = getElapsedTimeRank(result.ascendingElapsedTimes(),
 			assessmentSubmission.getElapsedTime());
-		final int scoreRAnk = getScoreRank(result.descendingScores(), assessmentSubmission.getTotalScore());
+		final int scoreRank = getScoreRank(result.descendingScores(), assessmentSubmission.getTotalScore());
 
 		return new AssessmentSubmissionRankResult(
 			result.descendingScores(),
 			assessmentSubmission.getTotalScore(),
-			scoreRAnk,
+			scoreRank,
 			result.ascendingElapsedTimes(),
 			assessmentSubmission.getElapsedTime(),
 			elapsedTimeRank
