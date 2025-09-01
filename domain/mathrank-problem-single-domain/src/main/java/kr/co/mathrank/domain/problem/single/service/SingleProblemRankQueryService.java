@@ -12,9 +12,12 @@ import kr.co.mathrank.domain.problem.single.dto.SingleProblemRankResult;
 import kr.co.mathrank.domain.problem.single.dto.SingleProblemStatisticsResult;
 import kr.co.mathrank.domain.problem.single.entity.ChallengeLog;
 import kr.co.mathrank.domain.problem.single.entity.Challenger;
+import kr.co.mathrank.domain.problem.single.exception.CannotFindChallengerException;
 import kr.co.mathrank.domain.problem.single.repository.ChallengerRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 @Service
 @Validated
 @RequiredArgsConstructor
@@ -22,12 +25,17 @@ public class SingleProblemRankQueryService {
 	private final SingleProblemStatisticsService singleProblemStatisticsService;
 	private final ChallengerRepository challengerRepository;
 
-	public SingleProblemRankResult queryMyRank(@NotNull @Valid final SingleProblemRankQuery query) {
+	public SingleProblemRankResult queryRank(@NotNull @Valid final SingleProblemRankQuery query) {
 		final SingleProblemStatisticsResult result = singleProblemStatisticsService.loadFirstTrySucceedStatistics(query.singleProblemId());
 
 		final Challenger challenger = challengerRepository.findByMemberIdAndSingleProblemId(
 				query.requestMemberId(), query.singleProblemId())
-			.orElseThrow();
+			.orElseThrow(() -> {
+				log.info(
+					"[SingleProblemRankQueryService.queryRank] cannot find challenger - singleProblemId: {}, requestMemberId: {}",
+					query.singleProblemId(), query.requestMemberId());
+				return new CannotFindChallengerException();
+			});
 		final ChallengeLog firstChallengeLog = challenger.getChallengeLogs().getFirst();
 
 		final Duration myElapsedTime = firstChallengeLog.getElapsedTime();

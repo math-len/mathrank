@@ -42,7 +42,7 @@ class SingleProblemRankQueryServiceTest {
 			new SingleProblemSolveResult(false, Collections.emptySet(), Collections.emptyList()),
 			Duration.ofMinutes(30L));
 
-		final SingleProblemRankResult result = singleProblemRankQueryService.queryMyRank(
+		final SingleProblemRankResult result = singleProblemRankQueryService.queryRank(
 			new SingleProblemRankQuery(1L, singleProblemId));
 
 		// 총 시도한 사용자 수는 4명이여야 한다.
@@ -68,7 +68,7 @@ class SingleProblemRankQueryServiceTest {
 			Duration.ofMinutes(30L));
 
 		// 4번 사용자 조회
-		final SingleProblemRankResult result = singleProblemRankQueryService.queryMyRank(
+		final SingleProblemRankResult result = singleProblemRankQueryService.queryRank(
 			new SingleProblemRankQuery(4L, singleProblemId));
 
 		Assertions.assertNull(result.myRank());
@@ -93,15 +93,15 @@ class SingleProblemRankQueryServiceTest {
 			Duration.ofMinutes(30L));
 
 		// 1번 사용자 등수 조회
-		final SingleProblemRankResult result1 = singleProblemRankQueryService.queryMyRank(
+		final SingleProblemRankResult result1 = singleProblemRankQueryService.queryRank(
 			new SingleProblemRankQuery(1L, singleProblemId));
 		// 2번 사용자 등수 조회
-		final SingleProblemRankResult result2 = singleProblemRankQueryService.queryMyRank(
+		final SingleProblemRankResult result2 = singleProblemRankQueryService.queryRank(
 			new SingleProblemRankQuery(2L, singleProblemId));
 		// 3번 사용자 등수 조회
-		final SingleProblemRankResult result3 = singleProblemRankQueryService.queryMyRank(
+		final SingleProblemRankResult result3 = singleProblemRankQueryService.queryRank(
 			new SingleProblemRankQuery(3L, singleProblemId));
-		final SingleProblemRankResult result4 = singleProblemRankQueryService.queryMyRank(
+		final SingleProblemRankResult result4 = singleProblemRankQueryService.queryRank(
 			new SingleProblemRankQuery(4L, singleProblemId));
 
 		// 총 시도한 사용자 수는 4명이여야 한다.
@@ -127,13 +127,13 @@ class SingleProblemRankQueryServiceTest {
 			Duration.ofMinutes(10L));
 
 		// 1번 사용자 등수 조회
-		final SingleProblemRankResult result1 = singleProblemRankQueryService.queryMyRank(
+		final SingleProblemRankResult result1 = singleProblemRankQueryService.queryRank(
 			new SingleProblemRankQuery(1L, singleProblemId));
 		// 2번 사용자 등수 조회
-		final SingleProblemRankResult result2 = singleProblemRankQueryService.queryMyRank(
+		final SingleProblemRankResult result2 = singleProblemRankQueryService.queryRank(
 			new SingleProblemRankQuery(2L, singleProblemId));
 		// 3번 사용자 등수 조회
-		final SingleProblemRankResult result3 = singleProblemRankQueryService.queryMyRank(
+		final SingleProblemRankResult result3 = singleProblemRankQueryService.queryRank(
 			new SingleProblemRankQuery(3L, singleProblemId));
 
 		Assertions.assertAll(
@@ -161,7 +161,7 @@ class SingleProblemRankQueryServiceTest {
 			new SingleProblemSolveResult(true, Collections.emptySet(), Collections.emptyList()),
 			Duration.ofMinutes(30L));
 
-		final SingleProblemRankResult result1 = singleProblemRankQueryService.queryMyRank(
+		final SingleProblemRankResult result1 = singleProblemRankQueryService.queryRank(
 			new SingleProblemRankQuery(4L, singleProblemId));
 
 		// 동점자 1, 2, 3 다음의 등수인 4등
@@ -187,7 +187,7 @@ class SingleProblemRankQueryServiceTest {
 			new SingleProblemSolveResult(true, Collections.emptySet(), Collections.emptyList()),
 			Duration.ofMinutes(0L));
 
-		final SingleProblemRankResult result1 = singleProblemRankQueryService.queryMyRank(
+		final SingleProblemRankResult result1 = singleProblemRankQueryService.queryRank(
 			new SingleProblemRankQuery(1L, singleProblemId));
 		System.out.println(result1);
 

@@ -13,12 +13,15 @@ import kr.co.mathrank.domain.problem.single.dto.SingleProblemStatisticsResult;
 import kr.co.mathrank.domain.problem.single.entity.ChallengeLog;
 import kr.co.mathrank.domain.problem.single.entity.Challenger;
 import kr.co.mathrank.domain.problem.single.entity.SingleProblem;
+import kr.co.mathrank.domain.problem.single.exception.CannotFindSingleProblemException;
 import kr.co.mathrank.domain.problem.single.repository.SingleProblemRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * 개별 문제의 통계를 가져오는 API
  */
+@Slf4j
 @Service
 @Validated
 @RequiredArgsConstructor
@@ -28,7 +31,10 @@ public class SingleProblemStatisticsService {
 	@Transactional(readOnly = true)
 	public SingleProblemStatisticsResult loadFirstTrySucceedStatistics(@NotNull final Long singleProblemId) {
 		final SingleProblem singleProblem = singleProblemRepository.findWithChallengers(singleProblemId)
-			.orElseThrow();
+			.orElseThrow(() -> {
+				log.info("[SingleProblemStatisticsService.loadFirstTrySucceedStatistics] cannot find single problem - singleProblemId: {}", singleProblemId);
+				return new CannotFindSingleProblemException();
+			});
 
 		final List<Challenger> succeedChallengers = singleProblem.getSucceededChallengers();
 		final List<Duration> succeededElapsedTimes = mapToElapsedTimesgetElapsedTimes(succeedChallengers);
