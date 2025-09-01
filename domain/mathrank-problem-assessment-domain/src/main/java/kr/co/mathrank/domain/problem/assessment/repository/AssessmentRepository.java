@@ -25,4 +25,11 @@ public interface AssessmentRepository extends JpaRepository<Assessment, Long>, A
 						  WHERE ass.id = :assessmentId
 		""")
 	Optional<Assessment> findWithItems(@Param("assessmentId") final Long assessmentId);
+
+	@Query("""
+SELECT ass FROM Assessment ass
+LEFT JOIN FETCH ass.assessmentSubmissions
+WHERE ass.id = :assessmentId
+""")
+	Optional<Assessment> findWithSubmissions(@Param("assessmentId") final Long assessmentId);
 }
