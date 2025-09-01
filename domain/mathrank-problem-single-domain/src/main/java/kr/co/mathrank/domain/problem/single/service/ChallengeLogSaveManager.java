@@ -15,6 +15,7 @@ import kr.co.mathrank.domain.problem.single.entity.ChallengeLog;
 import kr.co.mathrank.domain.problem.single.entity.Challenger;
 import kr.co.mathrank.domain.problem.single.entity.SingleProblem;
 import kr.co.mathrank.domain.problem.single.exception.CannotFindSingleProblemException;
+import kr.co.mathrank.domain.problem.single.repository.ChallengeLogRepository;
 import kr.co.mathrank.domain.problem.single.repository.ChallengerRepository;
 import kr.co.mathrank.domain.problem.single.repository.SingleProblemRepository;
 import lombok.RequiredArgsConstructor;
@@ -28,6 +29,7 @@ class ChallengeLogSaveManager {
 	private final SingleProblemRepository singleProblemRepository;
 	private final ChallengerRepository challengerRepository;
 	private final TransactionalOutboxPublisher outboxPublisher;
+	private final ChallengeLogRepository challengeLogRepository;
 
 	@Transactional
 	public Long saveLog(
@@ -53,13 +55,14 @@ class ChallengeLogSaveManager {
 					singleProblem.firstTry(solveResult.success(), elapsedTime);
 					final Challenger challenger = Challenger.of(memberId, singleProblem);
 					final ChallengeLog log = addChallengeLog(solveResult, challenger, singleProblem, elapsedTime);
-					publishChallengeLog(log, singleProblem, challenger, elapsedTime);
 					challengerRepository.save(challenger);
+					publishChallengeLog(log, singleProblem, challenger, elapsedTime);
 					return log;
 				});
 
 		log.info("[SingleProblemService.solve] solve log registered - singleProblemId: {}, memberId: {}, success: {}",
 			singleProblem.getId(), memberId, solveResult.success());
+		challengeLogRepository.save(savedLog);
 
 		return savedLog.getId();
 	}

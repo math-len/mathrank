@@ -194,6 +194,30 @@ class SingleProblemRankQueryServiceTest {
 		Assertions.assertEquals(3, result1.myRank());
 	}
 
+	@Test
+	void 특정_제출의_등수를_확인한다() {
+		final Long singleProblemId = singleProblemRepository.save(SingleProblem.of(1L, "test", 2L)).getId();
+
+		challengeLogSaveManager.saveLog(singleProblemId, 1L,
+			new SingleProblemSolveResult(1L, true, Collections.emptySet(), Collections.emptyList()),
+			Duration.ofMinutes(20L));
+		challengeLogSaveManager.saveLog(singleProblemId, 2L,
+			new SingleProblemSolveResult(1L, true, Collections.emptySet(), Collections.emptyList()),
+			Duration.ofMinutes(10L));
+		challengeLogSaveManager.saveLog(singleProblemId, 3L,
+			new SingleProblemSolveResult(1L, true, Collections.emptySet(), Collections.emptyList()),
+			Duration.ofMinutes(10L));
+
+		// 1번 사용자가 한번 더 시도함 ( 제일 빨리 성공! )
+		final Long challengeLogId = challengeLogSaveManager.saveLog(singleProblemId, 1L,
+			new SingleProblemSolveResult(1L, true, Collections.emptySet(), Collections.emptyList()),
+			Duration.ofMinutes(0L));
+
+		// 추가 제출된 풀이의 등수 확인
+		final SingleProblemRankResult result1 = singleProblemRankQueryService.queryRank(challengeLogId);
+		Assertions.assertEquals(1, result1.myRank());
+	}
+
 	@AfterEach
 	void clear() {
 		singleProblemRepository.deleteAll();

@@ -28,7 +28,7 @@ public class SingleProblemRankQueryService {
 	private final ChallengerRepository challengerRepository;
 	private final ChallengeLogRepository challengeLogRepository;
 
-	public SingleProblemRankResult queryChallengeLogRank(@NotNull final Long challengeLogId) {
+	public SingleProblemRankResult queryRank(@NotNull final Long challengeLogId) {
 		final ChallengeLog challengeLog = challengeLogRepository.findWithSingleProblem(challengeLogId)
 			.orElseThrow(() -> {
 				log.info("[SingleProblemRankQueryService.queryChallengeLogRank] cannot find challenge log - challengeLogId: {}", challengeLogId);
