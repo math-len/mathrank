@@ -1,6 +1,7 @@
 package kr.co.mathrank.domain.problem.single.service;
 
 import java.time.Duration;
+import java.util.Comparator;
 import java.util.List;
 
 import org.springframework.stereotype.Service;
@@ -46,6 +47,7 @@ public class SingleProblemStatisticsService {
 		return succeedChallengers.stream()
 			.map(challenger -> challenger.getChallengeLogs().getFirst())
 			.map(ChallengeLog::getElapsedTime)
+			.sorted()
 			.toList();
 	}
 
