@@ -189,7 +189,6 @@ class SingleProblemRankQueryServiceTest {
 
 		final SingleProblemRankResult result1 = singleProblemRankQueryService.queryRank(
 			new SingleProblemRankQuery(1L, singleProblemId));
-		System.out.println(result1);
 
 		// 첫번째 시도만 랭크에 적용된다
 		Assertions.assertEquals(3, result1.myRank());
