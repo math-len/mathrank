@@ -2,8 +2,10 @@ package kr.co.mathrank.app.api.problem.single.controller;
 
 import org.springdoc.core.annotations.ParameterObject;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import io.swagger.v3.oas.annotations.Operation;
@@ -13,9 +15,12 @@ import kr.co.mathrank.app.api.common.authentication.Authorization;
 import kr.co.mathrank.app.api.common.authentication.LoginInfo;
 import kr.co.mathrank.app.api.common.authentication.MemberPrincipal;
 import kr.co.mathrank.common.role.Role;
+import kr.co.mathrank.domain.problem.single.dto.SingleProblemRankQuery;
+import kr.co.mathrank.domain.problem.single.dto.SingleProblemRankResult;
 import kr.co.mathrank.domain.problem.single.dto.SingleProblemRegisterCommand;
 import kr.co.mathrank.domain.problem.single.dto.SingleProblemSolveCommand;
 import kr.co.mathrank.domain.problem.single.dto.SingleProblemSolveResult;
+import kr.co.mathrank.domain.problem.single.service.SingleProblemRankQueryService;
 import kr.co.mathrank.domain.problem.single.service.SingleProblemService;
 import lombok.RequiredArgsConstructor;
 
@@ -24,6 +29,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class SingleProblemController {
 	private final SingleProblemService singleProblemService;
+	private final SingleProblemRankQueryService singleProblemRankQueryService;
 
 	@Operation(summary = "개별 문제 풀이 API", description = "해당 사용자의 문제풀이를 채점하고, 결과를 저장합니다. 풀이 결과는 모두 저장됩니다")
 	@PostMapping("/api/v1/problem/single/solve")
@@ -49,5 +55,16 @@ public class SingleProblemController {
 			memberPrincipal.role());
 		singleProblemService.register(command);
 		return ResponseEntity.ok().build();
+	}
+
+	@Operation(summary = "개별문제 랭크 조회 API")
+	@GetMapping("/api/v1/problem/single/rank")
+	@Authorization(openedForAll = true)
+	public ResponseEntity<SingleProblemRankResult> getRank(
+		@RequestParam final Long singleProblemId,
+		@LoginInfo final MemberPrincipal memberPrincipal
+	) {
+		return ResponseEntity.ok(singleProblemRankQueryService.queryRank(
+			new SingleProblemRankQuery(memberPrincipal.memberId(), singleProblemId)));
 	}
 }
