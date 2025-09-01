@@ -10,8 +10,8 @@ import jakarta.validation.constraints.NotNull;
 import kr.co.mathrank.common.page.PageResult;
 import kr.co.mathrank.common.page.PageUtil;
 import kr.co.mathrank.domain.problem.assessment.dto.AssessmentDetailResult;
-import kr.co.mathrank.domain.problem.assessment.dto.AssessmentQuery;
-import kr.co.mathrank.domain.problem.assessment.dto.AssessmentQueryResult;
+import kr.co.mathrank.domain.problem.assessment.dto.AssessmentPageQuery;
+import kr.co.mathrank.domain.problem.assessment.dto.AssessmentPageQueryResult;
 import kr.co.mathrank.domain.problem.assessment.entity.Assessment;
 import kr.co.mathrank.domain.problem.assessment.entity.AssessmentOrder;
 import kr.co.mathrank.domain.problem.assessment.entity.AssessmentOrderDirection;
@@ -38,8 +38,8 @@ public class AssessmentQueryService {
 
 	}
 
-	public PageResult<AssessmentQueryResult> pageQuery(
-		@NotNull final AssessmentQuery assessmentQuery,
+	public PageResult<AssessmentPageQueryResult> pageQuery(
+		@NotNull final AssessmentPageQuery assessmentQuery,
 		@NotNull final AssessmentOrder assessmentOrder,
 		@NotNull final AssessmentOrderDirection direction,
 		@NotNull @Range(min = 1, max = 20) final Integer pageSize,
@@ -51,7 +51,7 @@ public class AssessmentQueryService {
 
 		return PageResult.of(
 			queryResults.stream()
-				.map(AssessmentQueryResult::from)
+				.map(AssessmentPageQueryResult::from)
 				.toList(),
 			pageNumber,
 			pageSize,

@@ -9,7 +9,7 @@ import com.querydsl.core.types.OrderSpecifier;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 
-import kr.co.mathrank.domain.problem.assessment.dto.AssessmentQuery;
+import kr.co.mathrank.domain.problem.assessment.dto.AssessmentPageQuery;
 import kr.co.mathrank.domain.problem.assessment.entity.Assessment;
 import kr.co.mathrank.domain.problem.assessment.entity.AssessmentOrder;
 import kr.co.mathrank.domain.problem.assessment.entity.AssessmentOrderDirection;
@@ -23,7 +23,7 @@ class AssessmentQueryRepositoryImpl implements AssessmentQueryRepository{
 	private final JPAQueryFactory jpaQueryFactory;
 
 	@Override
-	public List<Assessment> query(AssessmentQuery query, int pageSize, int pageNumber, final AssessmentOrder assessmentOrder, final AssessmentOrderDirection direction) {
+	public List<Assessment> query(AssessmentPageQuery query, int pageSize, int pageNumber, final AssessmentOrder assessmentOrder, final AssessmentOrderDirection direction) {
 		final QAssessment qAssessment = QAssessment.assessment;
 		return jpaQueryFactory.select(qAssessment)
 			.from(qAssessment)
@@ -35,7 +35,7 @@ class AssessmentQueryRepositoryImpl implements AssessmentQueryRepository{
 	}
 
 	@Override
-	public Long count(AssessmentQuery query) {
+	public Long count(AssessmentPageQuery query) {
 		final QAssessment qAssessment = QAssessment.assessment;
 		return jpaQueryFactory.select(qAssessment.count())
 			.from(qAssessment)
@@ -57,7 +57,7 @@ class AssessmentQueryRepositoryImpl implements AssessmentQueryRepository{
 		};
 	}
 
-	private BooleanExpression[] conditions(final AssessmentQuery assessmentQuery) {
+	private BooleanExpression[] conditions(final AssessmentPageQuery assessmentQuery) {
 		return new BooleanExpression[] {
 			difficultyMatches(assessmentQuery.difficulty()),
 			nameContains(assessmentQuery.assessmentName())

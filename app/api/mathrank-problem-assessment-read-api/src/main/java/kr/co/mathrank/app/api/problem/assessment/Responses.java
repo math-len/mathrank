@@ -4,10 +4,10 @@ import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.List;
 
-import kr.co.mathrank.domain.problem.assessment.dto.AssessmentSubmissionQueryResult;
-import kr.co.mathrank.domain.problem.assessment.dto.AssessmentSubmissionQueryResults;
 import kr.co.mathrank.domain.problem.assessment.dto.AssessmentSubmissionRankResult;
-import kr.co.mathrank.domain.problem.assessment.dto.ItemSubmissionResult;
+import kr.co.mathrank.domain.problem.assessment.dto.SubmissionItemQueryResult;
+import kr.co.mathrank.domain.problem.assessment.dto.SubmissionQueryResult;
+import kr.co.mathrank.domain.problem.assessment.dto.SubmissionQueryResults;
 import kr.co.mathrank.domain.problem.assessment.entity.EvaluationStatus;
 
 class Responses {
@@ -36,7 +36,7 @@ class Responses {
 	public record AssessmentSubmissionQueryResponses(
 		List<AssessmentSubmissionQueryResponse> responses
 	) {
-		public static AssessmentSubmissionQueryResponses from(final AssessmentSubmissionQueryResults results) {
+		public static AssessmentSubmissionQueryResponses from(final SubmissionQueryResults results) {
 			return new AssessmentSubmissionQueryResponses(results.queryResults().stream()
 				.map(AssessmentSubmissionQueryResponse::from)
 				.toList());
@@ -49,18 +49,18 @@ class Responses {
 		Long memberId,
 		EvaluationStatus evaluationStatus,
 		Integer totalScore,
-		List<ItemSubmissionResult> itemSubmissionResults,
+		List<SubmissionItemQueryResult> itemSubmissionResults,
 		LocalDateTime submittedAt,
 		Long elapsedTimeSeconds
 	) {
-		public static AssessmentSubmissionQueryResponse from(final AssessmentSubmissionQueryResult result) {
+		public static AssessmentSubmissionQueryResponse from(final SubmissionQueryResult result) {
 			return new AssessmentSubmissionQueryResponse(
 				result.assessmentId(),
 				result.assessmentAverageScore(),
 				result.memberId(),
 				result.evaluationStatus(),
 				result.totalScore(),
-				result.itemSubmissionResults(),
+				result.submissionItemQueryResults(),
 				result.submittedAt(),
 				result.elapsedTime().toSeconds()
 			);

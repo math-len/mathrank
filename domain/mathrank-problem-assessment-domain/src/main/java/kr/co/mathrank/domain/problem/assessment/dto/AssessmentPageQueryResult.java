@@ -5,7 +5,7 @@ import java.time.LocalDateTime;
 import kr.co.mathrank.domain.problem.assessment.entity.Assessment;
 import kr.co.mathrank.domain.problem.core.Difficulty;
 
-public record AssessmentQueryResult(
+public record AssessmentPageQueryResult(
 	Long assessmentId,
 	Long memberId,
 	String assessmentName,
@@ -14,8 +14,8 @@ public record AssessmentQueryResult(
 	Difficulty difficulty,
 	Long minutes
 ) {
-	public static AssessmentQueryResult from(Assessment assessment) {
-		return new AssessmentQueryResult(
+	public static AssessmentPageQueryResult from(Assessment assessment) {
+		return new AssessmentPageQueryResult(
 			assessment.getId(),
 			assessment.getRegisterMemberId(),
 			assessment.getAssessmentName(),
