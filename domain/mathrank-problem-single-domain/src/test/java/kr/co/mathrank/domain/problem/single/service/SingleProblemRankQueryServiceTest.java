@@ -29,17 +29,17 @@ class SingleProblemRankQueryServiceTest {
 		final Long singleProblemId = singleProblemRepository.save(SingleProblem.of(1L, "test", 2L)).getId();
 
 		challengeLogSaveManager.saveLog(singleProblemId, 1L,
-			new SingleProblemSolveResult(true, Collections.emptySet(), Collections.emptyList()),
+			new SingleProblemSolveResult(1L, true, Collections.emptySet(), Collections.emptyList()),
 			Duration.ofMinutes(10L));
 		challengeLogSaveManager.saveLog(singleProblemId, 2L,
-			new SingleProblemSolveResult(true, Collections.emptySet(), Collections.emptyList()),
+			new SingleProblemSolveResult(1L, true, Collections.emptySet(), Collections.emptyList()),
 			Duration.ofMinutes(20L));
 		challengeLogSaveManager.saveLog(singleProblemId, 3L,
-			new SingleProblemSolveResult(true, Collections.emptySet(), Collections.emptyList()),
+			new SingleProblemSolveResult(1L, true, Collections.emptySet(), Collections.emptyList()),
 			Duration.ofMinutes(30L));
 		// 4번 사용자만 실패함
 		challengeLogSaveManager.saveLog(singleProblemId, 4L,
-			new SingleProblemSolveResult(false, Collections.emptySet(), Collections.emptyList()),
+			new SingleProblemSolveResult(1L, false, Collections.emptySet(), Collections.emptyList()),
 			Duration.ofMinutes(30L));
 
 		final SingleProblemRankResult result = singleProblemRankQueryService.queryRank(
@@ -54,17 +54,17 @@ class SingleProblemRankQueryServiceTest {
 		final Long singleProblemId = singleProblemRepository.save(SingleProblem.of(1L, "test", 2L)).getId();
 
 		challengeLogSaveManager.saveLog(singleProblemId, 1L,
-			new SingleProblemSolveResult(true, Collections.emptySet(), Collections.emptyList()),
+			new SingleProblemSolveResult(1L, true, Collections.emptySet(), Collections.emptyList()),
 			Duration.ofMinutes(10L));
 		challengeLogSaveManager.saveLog(singleProblemId, 2L,
-			new SingleProblemSolveResult(true, Collections.emptySet(), Collections.emptyList()),
+			new SingleProblemSolveResult(1L, true, Collections.emptySet(), Collections.emptyList()),
 			Duration.ofMinutes(20L));
 		challengeLogSaveManager.saveLog(singleProblemId, 3L,
-			new SingleProblemSolveResult(true, Collections.emptySet(), Collections.emptyList()),
+			new SingleProblemSolveResult(1L, true, Collections.emptySet(), Collections.emptyList()),
 			Duration.ofMinutes(30L));
 		// 4번 사용자만 실패함
 		challengeLogSaveManager.saveLog(singleProblemId, 4L,
-			new SingleProblemSolveResult(false, Collections.emptySet(), Collections.emptyList()),
+			new SingleProblemSolveResult(1L, false, Collections.emptySet(), Collections.emptyList()),
 			Duration.ofMinutes(30L));
 
 		// 4번 사용자 조회
@@ -79,17 +79,17 @@ class SingleProblemRankQueryServiceTest {
 		final Long singleProblemId = singleProblemRepository.save(SingleProblem.of(1L, "test", 2L)).getId();
 
 		challengeLogSaveManager.saveLog(singleProblemId, 1L,
-			new SingleProblemSolveResult(true, Collections.emptySet(), Collections.emptyList()),
+			new SingleProblemSolveResult(1L,true, Collections.emptySet(), Collections.emptyList()),
 			Duration.ofMinutes(10L));
 		challengeLogSaveManager.saveLog(singleProblemId, 2L,
-			new SingleProblemSolveResult(true, Collections.emptySet(), Collections.emptyList()),
+			new SingleProblemSolveResult(1L, true, Collections.emptySet(), Collections.emptyList()),
 			Duration.ofMinutes(20L));
 		challengeLogSaveManager.saveLog(singleProblemId, 3L,
-			new SingleProblemSolveResult(true, Collections.emptySet(), Collections.emptyList()),
+			new SingleProblemSolveResult(1L, true, Collections.emptySet(), Collections.emptyList()),
 			Duration.ofMinutes(30L));
 		// 4번 사용자만 실패함
 		challengeLogSaveManager.saveLog(singleProblemId, 4L,
-			new SingleProblemSolveResult(false, Collections.emptySet(), Collections.emptyList()),
+			new SingleProblemSolveResult(1L, false, Collections.emptySet(), Collections.emptyList()),
 			Duration.ofMinutes(30L));
 
 		// 1번 사용자 등수 조회
@@ -117,13 +117,13 @@ class SingleProblemRankQueryServiceTest {
 	void 동점자가_있을_경우_같은_등수() {
 		final Long singleProblemId = singleProblemRepository.save(SingleProblem.of(1L, "test", 2L)).getId();
 		challengeLogSaveManager.saveLog(singleProblemId, 1L,
-			new SingleProblemSolveResult(true, Collections.emptySet(), Collections.emptyList()),
+			new SingleProblemSolveResult(1L, true, Collections.emptySet(), Collections.emptyList()),
 			Duration.ofMinutes(10L));
 		challengeLogSaveManager.saveLog(singleProblemId, 2L,
-			new SingleProblemSolveResult(true, Collections.emptySet(), Collections.emptyList()),
+			new SingleProblemSolveResult(1L, true, Collections.emptySet(), Collections.emptyList()),
 			Duration.ofMinutes(10L));
 		challengeLogSaveManager.saveLog(singleProblemId, 3L,
-			new SingleProblemSolveResult(true, Collections.emptySet(), Collections.emptyList()),
+			new SingleProblemSolveResult(1L, true, Collections.emptySet(), Collections.emptyList()),
 			Duration.ofMinutes(10L));
 
 		// 1번 사용자 등수 조회
@@ -147,18 +147,18 @@ class SingleProblemRankQueryServiceTest {
 	void 동점자가_있을_경우_동점자_다음_등수는_동점자수를_합친것으로_결정된다() {
 		final Long singleProblemId = singleProblemRepository.save(SingleProblem.of(1L, "test", 2L)).getId();
 		challengeLogSaveManager.saveLog(singleProblemId, 1L,
-			new SingleProblemSolveResult(true, Collections.emptySet(), Collections.emptyList()),
+			new SingleProblemSolveResult(1L, true, Collections.emptySet(), Collections.emptyList()),
 			Duration.ofMinutes(10L));
 		challengeLogSaveManager.saveLog(singleProblemId, 2L,
-			new SingleProblemSolveResult(true, Collections.emptySet(), Collections.emptyList()),
+			new SingleProblemSolveResult(1L, true, Collections.emptySet(), Collections.emptyList()),
 			Duration.ofMinutes(10L));
 		challengeLogSaveManager.saveLog(singleProblemId, 3L,
-			new SingleProblemSolveResult(true, Collections.emptySet(), Collections.emptyList()),
+			new SingleProblemSolveResult(1L, true, Collections.emptySet(), Collections.emptyList()),
 			Duration.ofMinutes(10L));
 
 		// 동점자들보다 점수가 낮음
 		challengeLogSaveManager.saveLog(singleProblemId, 4L,
-			new SingleProblemSolveResult(true, Collections.emptySet(), Collections.emptyList()),
+			new SingleProblemSolveResult(1L, true, Collections.emptySet(), Collections.emptyList()),
 			Duration.ofMinutes(30L));
 
 		final SingleProblemRankResult result1 = singleProblemRankQueryService.queryRank(
@@ -173,18 +173,18 @@ class SingleProblemRankQueryServiceTest {
 		final Long singleProblemId = singleProblemRepository.save(SingleProblem.of(1L, "test", 2L)).getId();
 
 		challengeLogSaveManager.saveLog(singleProblemId, 1L,
-			new SingleProblemSolveResult(true, Collections.emptySet(), Collections.emptyList()),
+			new SingleProblemSolveResult(1L, true, Collections.emptySet(), Collections.emptyList()),
 			Duration.ofMinutes(20L));
 		challengeLogSaveManager.saveLog(singleProblemId, 2L,
-			new SingleProblemSolveResult(true, Collections.emptySet(), Collections.emptyList()),
+			new SingleProblemSolveResult(1L, true, Collections.emptySet(), Collections.emptyList()),
 			Duration.ofMinutes(10L));
 		challengeLogSaveManager.saveLog(singleProblemId, 3L,
-			new SingleProblemSolveResult(true, Collections.emptySet(), Collections.emptyList()),
+			new SingleProblemSolveResult(1L, true, Collections.emptySet(), Collections.emptyList()),
 			Duration.ofMinutes(10L));
 
 		// 1번 사용자가 한번 더 시도함 ( 제일 빨리 성공! )
 		challengeLogSaveManager.saveLog(singleProblemId, 1L,
-			new SingleProblemSolveResult(true, Collections.emptySet(), Collections.emptyList()),
+			new SingleProblemSolveResult(1L, true, Collections.emptySet(), Collections.emptyList()),
 			Duration.ofMinutes(0L));
 
 		final SingleProblemRankResult result1 = singleProblemRankQueryService.queryRank(

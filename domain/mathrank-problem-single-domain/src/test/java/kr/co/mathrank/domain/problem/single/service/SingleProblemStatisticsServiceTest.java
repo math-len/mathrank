@@ -58,13 +58,13 @@ class SingleProblemStatisticsServiceTest {
 
 		// 사용자 1번이 세번 품
 		challengeLogSaveManager.saveLog(singleProblemId, 1L,
-			new SingleProblemSolveResult(true, Collections.emptySet(), Collections.emptyList()),
+			new SingleProblemSolveResult(1L, true, Collections.emptySet(), Collections.emptyList()),
 			Duration.ofMinutes(10L));
 		challengeLogSaveManager.saveLog(singleProblemId, 1L,
-			new SingleProblemSolveResult(false, Collections.emptySet(), Collections.emptyList()),
+			new SingleProblemSolveResult(1L, false, Collections.emptySet(), Collections.emptyList()),
 			Duration.ofMinutes(20L));
 		challengeLogSaveManager.saveLog(singleProblemId, 1L,
-			new SingleProblemSolveResult(true, Collections.emptySet(), Collections.emptyList()),
+			new SingleProblemSolveResult(1L, true, Collections.emptySet(), Collections.emptyList()),
 			Duration.ofMinutes(30L));
 
 		final SingleProblemStatisticsResult result = singleProblemStatisticsService.loadFirstTrySucceedStatistics(singleProblemId);
@@ -81,7 +81,7 @@ class SingleProblemStatisticsServiceTest {
 
 		// 실패한 사용자
 		challengeLogSaveManager.saveLog(singleProblemId, 1L,
-			new SingleProblemSolveResult(false, Collections.emptySet(), Collections.emptyList()),
+			new SingleProblemSolveResult(1L, false, Collections.emptySet(), Collections.emptyList()),
 			Duration.ofMinutes(10L));
 
 		final SingleProblemStatisticsResult result = singleProblemStatisticsService.loadFirstTrySucceedStatistics(singleProblemId);
@@ -97,17 +97,17 @@ class SingleProblemStatisticsServiceTest {
 		final Long singleProblemId = singleProblemRepository.save(SingleProblem.of(1L, "test", 2L)).getId();
 
 		challengeLogSaveManager.saveLog(singleProblemId, 1L,
-			new SingleProblemSolveResult(true, Collections.emptySet(), Collections.emptyList()),
+			new SingleProblemSolveResult(1L, true, Collections.emptySet(), Collections.emptyList()),
 			Duration.ofMinutes(10L));
 		challengeLogSaveManager.saveLog(singleProblemId, 2L,
-			new SingleProblemSolveResult(true, Collections.emptySet(), Collections.emptyList()),
+			new SingleProblemSolveResult(1L, true, Collections.emptySet(), Collections.emptyList()),
 			Duration.ofMinutes(20L));
 		challengeLogSaveManager.saveLog(singleProblemId, 3L,
-			new SingleProblemSolveResult(true, Collections.emptySet(), Collections.emptyList()),
+			new SingleProblemSolveResult(1L, true, Collections.emptySet(), Collections.emptyList()),
 			Duration.ofMinutes(30L));
 		// 4번 사용자가 풀이 실패!
 		challengeLogSaveManager.saveLog(singleProblemId, 4L,
-			new SingleProblemSolveResult(false, Collections.emptySet(), Collections.emptyList()),
+			new SingleProblemSolveResult(1L, false, Collections.emptySet(), Collections.emptyList()),
 			Duration.ofMinutes(40L));
 
 		final SingleProblemStatisticsResult result = singleProblemStatisticsService.loadFirstTrySucceedStatistics(singleProblemId);
