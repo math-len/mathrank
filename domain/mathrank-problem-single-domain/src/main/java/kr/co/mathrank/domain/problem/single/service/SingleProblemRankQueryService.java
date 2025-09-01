@@ -12,7 +12,9 @@ import kr.co.mathrank.domain.problem.single.dto.SingleProblemRankResult;
 import kr.co.mathrank.domain.problem.single.dto.SingleProblemStatisticsResult;
 import kr.co.mathrank.domain.problem.single.entity.ChallengeLog;
 import kr.co.mathrank.domain.problem.single.entity.Challenger;
+import kr.co.mathrank.domain.problem.single.exception.CannotFindChallengeLogException;
 import kr.co.mathrank.domain.problem.single.exception.CannotFindChallengerException;
+import kr.co.mathrank.domain.problem.single.repository.ChallengeLogRepository;
 import kr.co.mathrank.domain.problem.single.repository.ChallengerRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -24,6 +26,26 @@ import lombok.extern.slf4j.Slf4j;
 public class SingleProblemRankQueryService {
 	private final SingleProblemStatisticsService singleProblemStatisticsService;
 	private final ChallengerRepository challengerRepository;
+	private final ChallengeLogRepository challengeLogRepository;
+
+	public SingleProblemRankResult queryChallengeLogRank(@NotNull final Long challengeLogId) {
+		final ChallengeLog challengeLog = challengeLogRepository.findWithSingleProblem(challengeLogId)
+			.orElseThrow(() -> {
+				log.info("[SingleProblemRankQueryService.queryChallengeLogRank] cannot find challenge log - challengeLogId: {}", challengeLogId);
+				return new CannotFindChallengeLogException();
+			});
+		final SingleProblemStatisticsResult result = singleProblemStatisticsService.loadFirstTrySucceedStatistics(challengeLog.getChallenger().getSingleProblem().getId());
+
+		final Duration myElapsedTime = challengeLog.getElapsedTime();
+
+		return new SingleProblemRankResult(
+			result.distinctUserCount(),
+			challengeLog.getSuccess() ? getMyRank(result, myElapsedTime) : null, // 실패했을땐 등수 계산 X
+			myElapsedTime,
+			result.elapsedTimes(),
+			result.averageElapsedTime()
+		);
+	}
 
 	public SingleProblemRankResult queryRank(@NotNull @Valid final SingleProblemRankQuery query) {
 		final SingleProblemStatisticsResult result = singleProblemStatisticsService.loadFirstTrySucceedStatistics(query.singleProblemId());
