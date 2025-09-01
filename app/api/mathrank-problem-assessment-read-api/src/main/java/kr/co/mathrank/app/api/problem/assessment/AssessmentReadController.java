@@ -20,10 +20,12 @@ import kr.co.mathrank.domain.problem.assessment.dto.AssessmentQuery;
 import kr.co.mathrank.domain.problem.assessment.dto.AssessmentQueryResult;
 import kr.co.mathrank.domain.problem.assessment.dto.AssessmentSubmissionQueryResult;
 import kr.co.mathrank.domain.problem.assessment.dto.AssessmentSubmissionQueryResults;
+import kr.co.mathrank.domain.problem.assessment.dto.AssessmentSubmissionRankResult;
 import kr.co.mathrank.domain.problem.assessment.entity.AssessmentOrderDirection;
 import kr.co.mathrank.domain.problem.assessment.entity.AssessmentOrder;
 import kr.co.mathrank.domain.problem.assessment.service.AssessmentDetailReadService;
 import kr.co.mathrank.domain.problem.assessment.service.AssessmentQueryService;
+import kr.co.mathrank.domain.problem.assessment.service.AssessmentRankQueryService;
 import kr.co.mathrank.domain.problem.assessment.service.SubmissionQueryService;
 import lombok.RequiredArgsConstructor;
 
@@ -34,6 +36,7 @@ public class AssessmentReadController {
 	private final AssessmentQueryService assessmentQueryService;
 	private final SubmissionQueryService submissionQueryService;
 	private final AssessmentDetailReadService assessmentDetailReadService;
+	private final AssessmentRankQueryService assessmentRankQueryService;
 
 	@Operation(summary = "제출된 답안지 채점 상태 조회 API")
 	@Authorization(openedForAll = true)
@@ -72,5 +75,15 @@ public class AssessmentReadController {
 	@GetMapping("/api/v1/problem/assessment/{assessmentId}")
 	public ResponseEntity<AssessmentDetailReadModelResult> getDetail(@PathVariable final Long assessmentId) {
 		return ResponseEntity.ok(assessmentDetailReadService.getDetail(assessmentId));
+	}
+
+
+	@Operation(summary = "문제집 랭크 조회 API")
+	@Authorization(openedForAll = true)
+	@GetMapping("/api/v1/problem/assessment/submission/{submissionId}/rank")
+	public ResponseEntity<AssessmentSubmissionRankResult> getSubmissionRank(
+		@PathVariable final Long submissionId
+	) {
+		return ResponseEntity.ok(assessmentRankQueryService.getRank(submissionId));
 	}
 }
