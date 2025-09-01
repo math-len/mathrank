@@ -1,5 +1,6 @@
 package kr.co.mathrank.app.api.problem.single.controller;
 
+import java.time.Duration;
 import java.util.List;
 
 import jakarta.validation.constraints.NotNull;
@@ -9,9 +10,11 @@ public record SingleProblemSolveRequest (
 	@NotNull
 	Long singleProblemId,
 	@NotNull
-	List<String> answers
+	List<String> answers,
+	@NotNull
+	Long elapsedTimeSeconds
 ) {
 	public SingleProblemSolveCommand toCommand(final Long memberId) {
-		return new SingleProblemSolveCommand(singleProblemId, memberId, answers);
+		return new SingleProblemSolveCommand(singleProblemId, memberId, answers, Duration.ofSeconds(elapsedTimeSeconds));
 	}
 }
