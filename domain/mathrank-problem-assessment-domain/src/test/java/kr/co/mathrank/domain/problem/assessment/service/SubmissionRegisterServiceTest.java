@@ -26,7 +26,6 @@ import kr.co.mathrank.domain.problem.assessment.dto.SubmissionRegisterCommand;
 import kr.co.mathrank.domain.problem.assessment.entity.AssessmentSubmission;
 import kr.co.mathrank.domain.problem.assessment.repository.AssessmentRepository;
 import kr.co.mathrank.domain.problem.assessment.repository.AssessmentSubmissionRepository;
-import kr.co.mathrank.domain.problem.core.Difficulty;
 
 @SpringBootTest(properties = """
 	spring.jpa.show-sql=true

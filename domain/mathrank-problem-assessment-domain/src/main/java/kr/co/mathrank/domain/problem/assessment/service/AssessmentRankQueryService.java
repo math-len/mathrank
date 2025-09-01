@@ -11,7 +11,6 @@ import kr.co.mathrank.domain.problem.assessment.dto.AssessmentSubmissionStatisti
 import kr.co.mathrank.domain.problem.assessment.entity.AssessmentSubmission;
 import kr.co.mathrank.domain.problem.assessment.entity.EvaluationStatus;
 import kr.co.mathrank.domain.problem.assessment.exception.NoSuchSubmissionException;
-import kr.co.mathrank.domain.problem.assessment.exception.SubmissionGradeException;
 import kr.co.mathrank.domain.problem.assessment.exception.SubmissionNotEvaluatedException;
 import kr.co.mathrank.domain.problem.assessment.repository.AssessmentSubmissionRepository;
 import lombok.RequiredArgsConstructor;
