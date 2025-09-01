@@ -10,10 +10,14 @@ import kr.co.mathrank.domain.problem.assessment.dto.AssessmentSubmissionRankResu
 import kr.co.mathrank.domain.problem.assessment.dto.AssessmentSubmissionStatisticQueryResult;
 import kr.co.mathrank.domain.problem.assessment.entity.AssessmentSubmission;
 import kr.co.mathrank.domain.problem.assessment.entity.EvaluationStatus;
+import kr.co.mathrank.domain.problem.assessment.exception.NoSuchSubmissionException;
 import kr.co.mathrank.domain.problem.assessment.exception.SubmissionGradeException;
+import kr.co.mathrank.domain.problem.assessment.exception.SubmissionNotEvaluatedException;
 import kr.co.mathrank.domain.problem.assessment.repository.AssessmentSubmissionRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 @Service
 @Validated
 @RequiredArgsConstructor
@@ -23,11 +27,15 @@ public class AssessmentRankQueryService {
 
 	public AssessmentSubmissionRankResult getRank(final Long submissionId) {
 		final AssessmentSubmission assessmentSubmission = assessmentSubmissionRepository.findById(submissionId)
-			.orElseThrow();
+			.orElseThrow(() -> {
+				log.info("[AssessmentRankQueryService.getRank] cannot found assessment submission - submissionId: {}", submissionId);
+				return new NoSuchSubmissionException();
+			});
 
 		// 채점 안됐으면 불가
 		if (assessmentSubmission.getEvaluationStatus() == EvaluationStatus.PENDING) {
-			throw new SubmissionGradeException();
+			log.info("[AssessmentRankQueryService.getRank] submission not evaluated - submissionId: {}", submissionId);
+			throw new SubmissionNotEvaluatedException();
 		}
 
 		final AssessmentSubmissionStatisticQueryResult result = assessmentStatisticsService.query(assessmentSubmission.getAssessment().getId());
