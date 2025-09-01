@@ -1,7 +1,7 @@
 package kr.co.mathrank.domain.problem.single.service;
 
+import java.time.Duration;
 import java.util.Collections;
-import java.util.List;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -64,7 +64,7 @@ class ChallengeLogSaveManagerTest {
 			executorService.execute(() -> {
 				try {
 					challengeLogSaveManager.saveLog(singleProblemId, userId,
-						new kr.co.mathrank.domain.problem.single.dto.SingleProblemSolveResult(true, Collections.emptySet(), Collections.emptyList()));
+						new SingleProblemSolveResult(1L, true, Collections.emptySet(), Collections.emptyList()), Duration.ofSeconds(1000));
 				} finally {
 					countDownLatch.countDown();
 				}
@@ -99,9 +99,9 @@ class ChallengeLogSaveManagerTest {
 			executorService.execute(() -> {
 				try {
 					challengeLogSaveManager.saveLog(singleProblemId, userId1,
-						new kr.co.mathrank.domain.problem.single.dto.SingleProblemSolveResult(true, Collections.emptySet(), Collections.emptyList()));
+						new SingleProblemSolveResult(1L, true, Collections.emptySet(), Collections.emptyList()), Duration.ofSeconds(1000));
 					challengeLogSaveManager.saveLog(singleProblemId, userId2,
-						new kr.co.mathrank.domain.problem.single.dto.SingleProblemSolveResult(true, Collections.emptySet(), Collections.emptyList()));
+						new SingleProblemSolveResult(1L, true, Collections.emptySet(), Collections.emptyList()), Duration.ofSeconds(1000));
 				} finally {
 					countDownLatch.countDown();
 				}
@@ -134,7 +134,7 @@ class ChallengeLogSaveManagerTest {
 			executorService.execute(() -> {
 				try {
 					challengeLogSaveManager.saveLog(singleProblemId, userId,
-						new kr.co.mathrank.domain.problem.single.dto.SingleProblemSolveResult(true, Collections.emptySet(), Collections.emptyList()));
+						new SingleProblemSolveResult(1L, true, Collections.emptySet(), Collections.emptyList()), Duration.ofSeconds(1000));
 				} finally {
 					countDownLatch.countDown();
 				}
@@ -164,7 +164,7 @@ class ChallengeLogSaveManagerTest {
 
 		// 첫시도에서 실패
 		challengeLogSaveManager.saveLog(singleProblemId, userId,
-			new kr.co.mathrank.domain.problem.single.dto.SingleProblemSolveResult(false, Collections.emptySet(), Collections.emptyList()));
+			new SingleProblemSolveResult(1L, false, Collections.emptySet(), Collections.emptyList()), Duration.ofSeconds(1000));
 
 		// 문제풀이 성공
 		for (int i = 0; i < tryCount; i++) {
@@ -172,7 +172,7 @@ class ChallengeLogSaveManagerTest {
 				try {
 					challengeLogSaveManager.saveLog(singleProblemId, userId,
 						// 문제풀이 실패
-						new kr.co.mathrank.domain.problem.single.dto.SingleProblemSolveResult(false, Collections.emptySet(), Collections.emptyList()));
+						new SingleProblemSolveResult(1L, false, Collections.emptySet(), Collections.emptyList()), Duration.ofSeconds(1000));
 				} finally {
 					countDownLatch.countDown();
 				}
@@ -203,7 +203,7 @@ class ChallengeLogSaveManagerTest {
 				try {
 					// 같은 사용자의 성공 결과 저장
 					challengeLogSaveManager.saveLog(singleProblemId, userId,
-						new kr.co.mathrank.domain.problem.single.dto.SingleProblemSolveResult(true, Collections.emptySet(), Collections.emptyList()));
+						new SingleProblemSolveResult(1L, true, Collections.emptySet(), Collections.emptyList()), Duration.ofSeconds(1000));
 				} finally {
 					countDownLatch.countDown();
 				}
@@ -272,7 +272,7 @@ class SaveLogBulkService {
 		challengerRepository.findAll();
 
 		challengeLogSaveManager.saveLog(singleProblemId, userId,
-			new SingleProblemSolveResult(true, Collections.emptySet(), Collections.emptyList()));
+			new SingleProblemSolveResult(1L, true, Collections.emptySet(), Collections.emptyList()), Duration.ofSeconds(1000));
 	}
 }
 

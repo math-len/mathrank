@@ -1,13 +1,16 @@
 package kr.co.mathrank.domain.problem.single.entity;
 
+import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
 import org.hibernate.annotations.CreationTimestamp;
+import org.springframework.data.jpa.convert.threeten.Jsr310JpaConverters;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
+import jakarta.persistence.Convert;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -41,10 +44,13 @@ public class SingleProblem {
 
 	private Long attemptedUserDistinctCount = 0L; // 해당 문제를 풀려고 한 사용자 수
 
+	@Convert(converter = DurationConverter.class)
+	private Duration totalElapsedSeconds = Duration.ZERO;
+
 	@CreationTimestamp
 	private LocalDateTime singleProblemRegisteredAt;
 
-	public void firstTry(final boolean success) {
+	public void firstTry(final boolean success, final Duration elapsedTime) {
 		// 첫 시도에 문제 풀이 성공 시
 		if (success) {
 			firstTrySuccessCount++;
@@ -53,10 +59,17 @@ public class SingleProblem {
 		// 성공여부와 상관없이 첫 시도라면 항상 증가
 		totalAttemptedCount++;
 		attemptedUserDistinctCount++;
+		this.totalElapsedSeconds = totalElapsedSeconds.plus(elapsedTime); // 첫시도에 추가
 	}
 
 	public void increaseAttemptCount() {
 		totalAttemptedCount++;
+	}
+
+	public List<Challenger> getSucceededChallengers() {
+		return this.challengers.stream()
+			.filter(Challenger::isSuccessAtFirstTry)
+			.toList();
 	}
 
 	public static SingleProblem of(final Long problemId, final String singleProblemName, final Long memberId) {

@@ -17,6 +17,9 @@ public interface ChallengerRepository extends JpaRepository<Challenger, Long> {
 	@Query("SELECT c FROM Challenger c LEFT JOIN FETCH c.challengeLogs WHERE c.singleProblem.id = :singleProblemId AND c.memberId = :memberId")
 	Optional<Challenger> findByMemberIdAndSingleProblemIdForShare(@Param("memberId") Long memberId, @Param("singleProblemId") Long singleProblemId);
 
+	@Query("SELECT c FROM Challenger c LEFT JOIN FETCH c.challengeLogs WHERE c.singleProblem.id = :singleProblemId AND c.memberId = :memberId")
+	Optional<Challenger> findByMemberIdAndSingleProblemId(@Param("memberId") Long memberId, @Param("singleProblemId") Long singleProblemId);
+
 	@Query("SELECT new kr.co.mathrank.domain.problem.single.dto.ChallengerQueryResult(c.singleProblem.id, c.successAtFirstTry) FROM Challenger c WHERE c.memberId = :memberId")
 	List<ChallengerQueryResult> findByMemberId(@Param("memberId") Long memberId);
 }
