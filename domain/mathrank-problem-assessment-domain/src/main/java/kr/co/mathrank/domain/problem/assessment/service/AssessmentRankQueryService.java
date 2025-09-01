@@ -32,7 +32,7 @@ public class AssessmentRankQueryService {
 			});
 
 		// 채점 안됐으면 불가
-		if (assessmentSubmission.getEvaluationStatus() == EvaluationStatus.PENDING) {
+		if (assessmentSubmission.getEvaluationStatus() != EvaluationStatus.FINISHED) {
 			log.info("[AssessmentRankQueryService.getRank] submission not evaluated - submissionId: {}", submissionId);
 			throw new SubmissionNotEvaluatedException();
 		}
