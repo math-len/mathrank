@@ -60,11 +60,13 @@ public class SingleProblemController {
 	@Operation(summary = "개별문제 랭크 조회 API")
 	@GetMapping("/api/v1/problem/single/rank")
 	@Authorization(openedForAll = true)
-	public ResponseEntity<SingleProblemRankResult> getRank(
+	public ResponseEntity<SingleProblemRankResponse> getRank(
 		@RequestParam final Long singleProblemId,
 		@LoginInfo final MemberPrincipal memberPrincipal
 	) {
-		return ResponseEntity.ok(singleProblemRankQueryService.queryRank(
-			new SingleProblemRankQuery(memberPrincipal.memberId(), singleProblemId)));
+		final SingleProblemRankResult result = singleProblemRankQueryService.queryRank(
+			new SingleProblemRankQuery(memberPrincipal.memberId(), singleProblemId));
+		final SingleProblemRankResponse response = SingleProblemRankResponse.from(result);
+		return ResponseEntity.ok(response);
 	}
 }
