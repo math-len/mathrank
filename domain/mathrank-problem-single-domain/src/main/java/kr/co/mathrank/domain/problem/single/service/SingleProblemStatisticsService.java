@@ -1,7 +1,6 @@
 package kr.co.mathrank.domain.problem.single.service;
 
 import java.time.Duration;
-import java.util.Comparator;
 import java.util.List;
 
 import org.springframework.stereotype.Service;
@@ -37,7 +36,7 @@ public class SingleProblemStatisticsService {
 			});
 
 		final List<Challenger> succeedChallengers = singleProblem.getSucceededChallengers();
-		final List<Duration> succeededElapsedTimes = mapToElapsedTimesgetElapsedTimes(succeedChallengers);
+		final List<Duration> succeededElapsedTimes = mapToElapsedTimes(succeedChallengers);
 		final Duration averageElapsedTime = getAverage(succeededElapsedTimes);
 
 		return new SingleProblemStatisticsResult(
@@ -49,7 +48,7 @@ public class SingleProblemStatisticsService {
 		);
 	}
 
-	private List<Duration> mapToElapsedTimesgetElapsedTimes(final List<Challenger> succeedChallengers) {
+	private List<Duration> mapToElapsedTimes(final List<Challenger> succeedChallengers) {
 		return succeedChallengers.stream()
 			.map(challenger -> challenger.getChallengeLogs().getFirst())
 			.map(ChallengeLog::getElapsedTime)
