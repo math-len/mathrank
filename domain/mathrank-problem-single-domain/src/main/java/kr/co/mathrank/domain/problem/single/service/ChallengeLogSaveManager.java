@@ -30,7 +30,7 @@ class ChallengeLogSaveManager {
 	private final TransactionalOutboxPublisher outboxPublisher;
 
 	@Transactional
-	public void saveLog(
+	public Long saveLog(
 		@NotNull final Long singleProblemId,
 		@NotNull final Long memberId,
 		@NotNull @Valid final SingleProblemSolveResult solveResult,
@@ -39,33 +39,34 @@ class ChallengeLogSaveManager {
 		// 락걸기
 		final SingleProblem singleProblem = singleProblemRepository.findByIdForUpdate(singleProblemId)
 			.orElseThrow(CannotFindSingleProblemException::new);
-
-		// 최신 커밋 읽기
-		challengerRepository.findByMemberIdAndSingleProblemIdForShare(memberId, singleProblemId)
-			.ifPresentOrElse(
-				challenger -> {
+		final ChallengeLog savedLog =
+			challengerRepository.findByMemberIdAndSingleProblemIdForShare(memberId, singleProblemId)
+				.map(challenger -> {
 					// 이미 해당 사용자가 푼 적 있음
 					singleProblem.increaseAttemptCount();
-					addChallengeLog(solveResult, challenger, singleProblem, elapsedTime);
-				},
-				() -> {
+					final ChallengeLog log = addChallengeLog(solveResult, challenger, singleProblem, elapsedTime);
+					publishChallengeLog(log, singleProblem, challenger, elapsedTime);
+					return log;
+				})
+				.orElseGet(() -> {
 					// 사용자가 처음 품
-					// 총 풀이 시간에 소요시간 추가
 					singleProblem.firstTry(solveResult.success(), elapsedTime);
 					final Challenger challenger = Challenger.of(memberId, singleProblem);
-					addChallengeLog(solveResult, challenger, singleProblem, elapsedTime);
-
+					final ChallengeLog log = addChallengeLog(solveResult, challenger, singleProblem, elapsedTime);
+					publishChallengeLog(log, singleProblem, challenger, elapsedTime);
 					challengerRepository.save(challenger);
+					return log;
 				});
 
 		log.info("[SingleProblemService.solve] solve log registered - singleProblemId: {}, memberId: {}, success: {}",
 			singleProblem.getId(), memberId, solveResult.success());
+
+		return savedLog.getId();
 	}
 
-	private void addChallengeLog(SingleProblemSolveResult solveResult, Challenger challenger, SingleProblem singleProblem, Duration elapsedTime) {
-		final ChallengeLog challengeLog = challenger.addChallengeLog(solveResult.success(), solveResult.submittedAnswer(), solveResult.realAnswer().stream()
+	private ChallengeLog addChallengeLog(SingleProblemSolveResult solveResult, Challenger challenger, SingleProblem singleProblem, Duration elapsedTime) {
+		return challenger.addChallengeLog(solveResult.success(), solveResult.submittedAnswer(), solveResult.realAnswer().stream()
 			.toList(), elapsedTime);
-		publishChallengeLog(challengeLog, singleProblem, challenger, elapsedTime); // 이벤트 발행
 	}
 
 	private void publishChallengeLog(final ChallengeLog challengeLog, final SingleProblem singleProblem, final Challenger challenger, final Duration elapsedTime) {

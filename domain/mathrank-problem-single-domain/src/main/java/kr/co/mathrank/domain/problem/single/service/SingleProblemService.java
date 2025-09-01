@@ -12,6 +12,7 @@ import kr.co.mathrank.common.role.Role;
 import kr.co.mathrank.domain.problem.single.dto.SingleProblemRegisterCommand;
 import kr.co.mathrank.domain.problem.single.dto.SingleProblemSolveCommand;
 import kr.co.mathrank.domain.problem.single.dto.SingleProblemSolveResult;
+import kr.co.mathrank.domain.problem.single.entity.ChallengeLog;
 import kr.co.mathrank.domain.problem.single.entity.SingleProblem;
 import kr.co.mathrank.domain.problem.single.exception.AlreadyRegisteredProblemException;
 import kr.co.mathrank.domain.problem.single.exception.CannotFindSingleProblemException;
@@ -65,10 +66,10 @@ public class SingleProblemService {
 			});
 		// 채점 서비스 호출.
 		// 외부 호출임에 따라, 트랜잭션 제거
-		final SingleProblemSolveResult solveResult = SingleProblemSolveResult.from(
-			problemInfoManager.solve(singleProblem.getProblemId(), command.answers()));
+		final SolveResult solveResult = problemInfoManager.solve(singleProblem.getProblemId(), command.answers());
+		final SingleProblemSolveResult singleProblemSolveResult = SingleProblemSolveResult.from(solveResult);
 
-		challengeLogSaveManager.saveLog(singleProblem.getId(), command.memberId(), solveResult, command.duration());
-		return solveResult;
+		final Long challengeLogId = challengeLogSaveManager.saveLog(singleProblem.getId(), command.memberId(), singleProblemSolveResult, command.duration());
+		return SingleProblemSolveResult.from(solveResult, challengeLogId);
 	}
 }
