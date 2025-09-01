@@ -16,12 +16,12 @@ import kr.co.mathrank.app.api.common.authentication.LoginInfo;
 import kr.co.mathrank.app.api.common.authentication.MemberPrincipal;
 import kr.co.mathrank.common.page.PageResult;
 import kr.co.mathrank.domain.problem.assessment.dto.AssessmentDetailReadModelResult;
-import kr.co.mathrank.domain.problem.assessment.dto.AssessmentQuery;
-import kr.co.mathrank.domain.problem.assessment.dto.AssessmentQueryResult;
-import kr.co.mathrank.domain.problem.assessment.dto.AssessmentSubmissionQueryResult;
-import kr.co.mathrank.domain.problem.assessment.dto.AssessmentSubmissionQueryResults;
-import kr.co.mathrank.domain.problem.assessment.entity.AssessmentOrderDirection;
+import kr.co.mathrank.domain.problem.assessment.dto.AssessmentPageQuery;
+import kr.co.mathrank.domain.problem.assessment.dto.AssessmentPageQueryResult;
+import kr.co.mathrank.domain.problem.assessment.dto.SubmissionQueryResults;
+import kr.co.mathrank.domain.problem.assessment.dto.SubmissionQueryResult;
 import kr.co.mathrank.domain.problem.assessment.entity.AssessmentOrder;
+import kr.co.mathrank.domain.problem.assessment.entity.AssessmentOrderDirection;
 import kr.co.mathrank.domain.problem.assessment.service.AssessmentDetailReadService;
 import kr.co.mathrank.domain.problem.assessment.service.AssessmentQueryService;
 import kr.co.mathrank.domain.problem.assessment.service.SubmissionQueryService;
@@ -38,7 +38,7 @@ public class AssessmentReadController {
 	@Operation(summary = "제출된 답안지 채점 상태 조회 API")
 	@Authorization(openedForAll = true)
 	@GetMapping("/api/v1/problem/assessment/submission/{submissionId}")
-	public ResponseEntity<AssessmentSubmissionQueryResult> querySubmissionResult(
+	public ResponseEntity<SubmissionQueryResult> querySubmissionResult(
 		@PathVariable final Long submissionId
 	) {
 		return ResponseEntity.ok(submissionQueryService.getSubmissionResult(submissionId));
@@ -47,7 +47,7 @@ public class AssessmentReadController {
 	@Operation(summary = "제출 이력 확인 API")
 	@Authorization(openedForAll = true)
 	@GetMapping("/api/v1/problem/assessment/{assessmentId}/submission")
-	public ResponseEntity<AssessmentSubmissionQueryResults> querySubmissionResults(
+	public ResponseEntity<SubmissionQueryResults> querySubmissionResults(
 		@PathVariable final Long assessmentId,
 		@LoginInfo final MemberPrincipal memberPrincipal
 	) {
@@ -57,8 +57,8 @@ public class AssessmentReadController {
 	@Operation(summary = "문제집 페이지 조회 API")
 	@Authorization(openedForAll = true)
 	@GetMapping("/api/v1/problem/assessment")
-	public ResponseEntity<PageResult<AssessmentQueryResult>> queryPage(
-		@ModelAttribute @ParameterObject final AssessmentQuery assessmentQuery,
+	public ResponseEntity<PageResult<AssessmentPageQueryResult>> queryPage(
+		@ModelAttribute @ParameterObject final AssessmentPageQuery assessmentQuery,
 		@RequestParam final AssessmentOrder order,
 		@RequestParam final AssessmentOrderDirection direction,
 		@RequestParam(defaultValue = "10") @Range(min = 1, max = 20) final Integer pageSize,
