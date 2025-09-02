@@ -63,8 +63,8 @@ public class AssessmentReadController {
 	@GetMapping("/api/v1/problem/assessment")
 	public ResponseEntity<PageResult<AssessmentPageQueryResult>> queryPage(
 		@ModelAttribute @ParameterObject final AssessmentPageQuery assessmentQuery,
-		@RequestParam final AssessmentOrder order,
-		@RequestParam final AssessmentOrderDirection direction,
+		@RequestParam(required = false, defaultValue = "LATEST") final AssessmentOrder order,
+		@RequestParam(required = false, defaultValue = "DESC") final AssessmentOrderDirection direction,
 		@RequestParam(defaultValue = "10") @Range(min = 1, max = 20) final Integer pageSize,
 		@RequestParam(defaultValue = "1") @Range(min = 1, max = 1000) final Integer pageNumber
 	) {
