@@ -1,11 +1,14 @@
 package kr.co.mathrank.domain.problem.single.service;
 
+import java.util.Collections;
+
 import org.springframework.stereotype.Service;
 import org.springframework.validation.annotation.Validated;
 
 import jakarta.validation.constraints.NotNull;
 import kr.co.mathrank.domain.problem.single.dto.ChallengerQueryResults;
 import kr.co.mathrank.domain.problem.single.dto.SingleProblemChallengeLogResults;
+import kr.co.mathrank.domain.problem.single.entity.Challenger;
 import kr.co.mathrank.domain.problem.single.exception.CannotFindChallengerException;
 import kr.co.mathrank.domain.problem.single.repository.ChallengerRepository;
 import lombok.RequiredArgsConstructor;
@@ -26,7 +29,7 @@ public class ChallengerQueryService {
 	) {
 		return SingleProblemChallengeLogResults.from(
 			challengerRepository.findByMemberIdAndSingleProblemId(requestMemberId, singleProblemId)
-				.orElseThrow(CannotFindChallengerException::new)
-				.getChallengeLogs());
+				.map(Challenger::getChallengeLogs)
+				.orElse(Collections.emptyList()));
 	}
 }

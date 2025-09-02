@@ -76,4 +76,13 @@ class ChallengerQueryServiceTest {
 		Assertions.assertEquals(1, challengerQueryService.findMemberChallenges(0L).results().size());
 		Assertions.assertTrue(challengerQueryService.findMemberChallenges(0L).results().getFirst().success());
 	}
+
+	@Test
+	void 풀이_이력이_없으면_빈_배열을_리턴한다() {
+		Mockito.when(problemInfoManager.solve(Mockito.anyLong(), Mockito.anyList()))
+			.thenReturn(new SolveResult(true, Collections.emptySet(), Collections.emptyList()));
+
+		// 풀이 기록이 없으면 빈 리스트
+		Assertions.assertTrue(challengerQueryService.findMemberChallenges(0L).results().isEmpty());
+	}
 }
