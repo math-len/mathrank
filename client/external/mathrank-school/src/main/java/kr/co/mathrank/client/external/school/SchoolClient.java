@@ -6,9 +6,11 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestClient;
 
+import kr.co.mathrank.client.exception.aspect.Client;
 import lombok.RequiredArgsConstructor;
 
 @Component
+@Client
 @RequiredArgsConstructor
 public class SchoolClient {
 	@Value("${neice.school.key:}")

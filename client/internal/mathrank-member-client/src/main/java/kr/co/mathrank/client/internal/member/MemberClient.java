@@ -5,11 +5,13 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestClient;
 
+import kr.co.mathrank.client.exception.aspect.Client;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Component
+@Client
 public class MemberClient {
 	private static final String URL_FORMAT = "%s:%s";
 
