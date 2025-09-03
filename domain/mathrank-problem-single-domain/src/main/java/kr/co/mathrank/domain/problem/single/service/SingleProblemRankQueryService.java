@@ -35,19 +35,30 @@ public class SingleProblemRankQueryService {
 				return new CannotFindChallengeLogException();
 			});
 		final SingleProblemStatisticsResult result = singleProblemStatisticsService.loadFirstTrySucceedStatistics(challengeLog.getChallenger().getSingleProblem().getId());
-
 		final Duration myElapsedTime = challengeLog.getElapsedTime();
 
+		// 조회하는 기록이 첫번째 풀이임
+		if (challengeLog.isFirstTry()) {
+			return new SingleProblemRankResult(
+				challengeLog.getSuccess() ? findRankIndex(result, myElapsedTime, result.elapsedTimes().size()) : null, // 실패했을땐 등수 계산 X
+				result.elapsedTimes().size(),
+				myElapsedTime,
+				result.elapsedTimes(),
+				result.averageElapsedTime()
+			);
+		}
+
+		// 조회하는 기록이 첫번째 풀이가 아님
 		return new SingleProblemRankResult(
-			result.distinctUserCount(),
-			challengeLog.getSuccess() ? getMyRank(result, myElapsedTime) : null, // 실패했을땐 등수 계산 X
+			challengeLog.getSuccess() ? findRankIndex(result, myElapsedTime, result.elapsedTimes().size() + 1) : null, // 실패했을땐 등수 계산 X
+			result.elapsedTimes().size() + 1,
 			myElapsedTime,
 			result.elapsedTimes(),
 			result.averageElapsedTime()
 		);
 	}
 
-	public SingleProblemRankResult queryRank(@NotNull @Valid final SingleProblemRankQuery query) {
+	public SingleProblemRankResult queryFirstTriedLogRank(@NotNull @Valid final SingleProblemRankQuery query) {
 		final SingleProblemStatisticsResult result = singleProblemStatisticsService.loadFirstTrySucceedStatistics(query.singleProblemId());
 
 		final Challenger challenger = challengerRepository.findByMemberIdAndSingleProblemId(
@@ -63,23 +74,28 @@ public class SingleProblemRankQueryService {
 		final Duration myElapsedTime = firstChallengeLog.getElapsedTime();
 
 		return new SingleProblemRankResult(
-			result.distinctUserCount(),
-			firstChallengeLog.getSuccess() ? getMyRank(result, myElapsedTime) : null, // 실패했을땐 등수 계산 X
+			firstChallengeLog.getSuccess() ? findRankIndex(result, myElapsedTime, result.elapsedTimes().size()) : null, // 실패했을땐 등수 계산 X
+			result.elapsedTimes().size(),
 			myElapsedTime,
 			result.elapsedTimes(),
 			result.averageElapsedTime()
 		);
 	}
 
-	private Integer getMyRank(final SingleProblemStatisticsResult result, final Duration myElapsedTime) {
-		if (myElapsedTime == null) { // 풀이에 실패한 사용자일 경우, 항상 꼴등
-			return null;
-		}
+	/**
+	 * @param result
+	 * @param myElapsedTime
+	 * @return 주어진 리스트에서 자신의 랭크를 반환한다.
+	 * 주어진 리스트에서 자신보다 첫번째로 크거나 같은놈의 (인덱스 + 1)을 반환한다.
+	 */
+	private Integer findRankIndex(final SingleProblemStatisticsResult result, final Duration myElapsedTime, final Integer totalUserCount) {
 		for (int i = 0; i < result.elapsedTimes().size(); i++) {
 			if (result.elapsedTimes().get(i).compareTo(myElapsedTime) >= 0) { // 내 경과 시간 보다 큰 경우
 				return i + 1;
 			}
 		}
-		return result.elapsedTimes().size();
+
+		// 꼴등
+		return totalUserCount;
 	}
 }

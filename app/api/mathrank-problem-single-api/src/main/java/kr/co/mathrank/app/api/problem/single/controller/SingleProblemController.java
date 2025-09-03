@@ -3,7 +3,6 @@ package kr.co.mathrank.app.api.problem.single.controller;
 import java.util.List;
 
 import org.springdoc.core.annotations.ParameterObject;
-import org.springframework.boot.autoconfigure.graphql.ConditionalOnGraphQlSchema;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -71,7 +70,7 @@ public class SingleProblemController {
 		@RequestParam final Long singleProblemId,
 		@LoginInfo final MemberPrincipal memberPrincipal
 	) {
-		final SingleProblemRankResult result = singleProblemRankQueryService.queryRank(
+		final SingleProblemRankResult result = singleProblemRankQueryService.queryFirstTriedLogRank(
 			new SingleProblemRankQuery(memberPrincipal.memberId(), singleProblemId));
 		final SingleProblemRankResponse response = SingleProblemRankResponse.from(result);
 		return ResponseEntity.ok(response);

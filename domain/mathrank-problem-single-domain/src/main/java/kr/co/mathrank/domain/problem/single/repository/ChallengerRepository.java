@@ -13,7 +13,7 @@ import kr.co.mathrank.domain.problem.single.dto.ChallengerQueryResult;
 import kr.co.mathrank.domain.problem.single.entity.Challenger;
 
 public interface ChallengerRepository extends JpaRepository<Challenger, Long> {
-	@Lock(LockModeType.PESSIMISTIC_READ)
+	// @Lock(LockModeType.PESSIMISTIC_READ)
 	@Query("SELECT c FROM Challenger c LEFT JOIN FETCH c.challengeLogs WHERE c.singleProblem.id = :singleProblemId AND c.memberId = :memberId")
 	Optional<Challenger> findByMemberIdAndSingleProblemIdForShare(@Param("memberId") Long memberId, @Param("singleProblemId") Long singleProblemId);
 
