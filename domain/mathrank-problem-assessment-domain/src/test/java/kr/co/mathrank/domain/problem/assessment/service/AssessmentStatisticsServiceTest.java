@@ -29,7 +29,7 @@ class AssessmentStatisticsServiceTest {
 
 	@Test
 	void 평가되지않은_시험지는_통계에_포함되지_않는다() {
-		final Assessment assessment = Assessment.of(1L, "test", Duration.ofMinutes(10));
+		final Assessment assessment = Assessment.unlimited(1L, "test", Duration.ofMinutes(10));
 
 		assessment.replaceItems(List.of(AssessmentItem.of(1L, 10))); // 문항 2개
 
@@ -47,7 +47,7 @@ class AssessmentStatisticsServiceTest {
 
 	@Test
 	void 첫번째_제출만_통계에_포함된다() {
-		final Assessment assessment = Assessment.of(1L, "test", Duration.ofMinutes(10));
+		final Assessment assessment = Assessment.unlimited(1L, "test", Duration.ofMinutes(10));
 
 		// 첫번째 사용자가 걸린 시간
 		final Duration firstUsersElapsedTime = Duration.ofMinutes(5);
@@ -77,7 +77,7 @@ class AssessmentStatisticsServiceTest {
 
 	@Test
 	void 각_사용자의_첫번째_제출만_통계에_포함된다() {
-		final Assessment assessment = Assessment.of(1L, "test", Duration.ofMinutes(10));
+		final Assessment assessment = Assessment.unlimited(1L, "test", Duration.ofMinutes(10));
 
 		// 첫번째 사용자가 걸린 시간
 		final Duration firstUsersElapsedTime = Duration.ofMinutes(5);

@@ -27,7 +27,7 @@ class AssessmentTest {
 
 	@Test
 	void 답안지_제출시간이_초과되면_제출할_수_없다() {
-		final Assessment assessment = Assessment.of(1L, "test", Duration.ofMinutes(100L));
+		final Assessment assessment = Assessment.unlimited(1L, "test", Duration.ofMinutes(100L));
 
 		Assertions.assertThrows(SubmissionTimeExceedException.class,
 			() -> assessment.registerSubmission(1L, Collections.emptyList(), Duration.ofMinutes(101L), true));
@@ -35,7 +35,7 @@ class AssessmentTest {
 
 	@Test
 	void 시험지_생성시_문항들은_1번부터_순서대로_등록된다() {
-		final Assessment assessment = Assessment.of(1L, "test", Duration.ofMinutes(100L));
+		final Assessment assessment = Assessment.unlimited(1L, "test", Duration.ofMinutes(100L));
 		// 시험 문제 번호
 		assessment.replaceItems(
 			List.of(
@@ -59,7 +59,7 @@ class AssessmentTest {
 
 	@Test
 	void 시험지내_문제_수정은_전체를_바꿔야한다() {
-		final Assessment assessment = Assessment.of(1L, "test", Duration.ofMinutes(100L));
+		final Assessment assessment = Assessment.unlimited(1L, "test", Duration.ofMinutes(100L));
 		// 바꾸기 전 시험 문제 번호
 		assessment.replaceItems(List.of(
 			AssessmentItem.of(1L, 25),
@@ -88,7 +88,7 @@ class AssessmentTest {
 	@Test
 	@Transactional
 	void 트랜잭션_안에서_문항_변경시_DB_정상반영() {
-		final Assessment assessment = Assessment.of(1L, "test", Duration.ofMinutes(100L));
+		final Assessment assessment = Assessment.unlimited(1L, "test", Duration.ofMinutes(100L));
 		// 시험 문제 번호
 		assessment.replaceItems(
 			List.of(

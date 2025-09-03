@@ -36,7 +36,7 @@ class AssessmentDifficultyServiceTest {
 		Mockito.when(problemQueryManager.getProblemInfo(problemId1)).thenReturn(createProblemQueryResult(Difficulty.LOW));
 		Mockito.when(problemQueryManager.getProblemInfo(problemId2)).thenReturn(createProblemQueryResult(Difficulty.MID));
 
-		final Assessment assessment = Assessment.of(1L, "test", Duration.ofMinutes(10));
+		final Assessment assessment = Assessment.unlimited(1L, "test", Duration.ofMinutes(10));
 		assessment.replaceItems(List.of(AssessmentItem.of(problemId1, 10), AssessmentItem.of(problemId2, 90))); // 문항 2개 등록
 		assessmentRepository.save(assessment);
 

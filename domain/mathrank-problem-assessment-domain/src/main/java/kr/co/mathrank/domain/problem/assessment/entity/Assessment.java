@@ -80,7 +80,7 @@ public class Assessment {
 	@Embedded
 	private AssessmentSubmissionPeriod assessmentSubmissionPeriod = new AssessmentSubmissionPeriod();
 
-	public static Assessment of(final Long registerMemberId, final String assessmentName, final Duration assessmentDuration) {
+	public static Assessment unlimited(final Long registerMemberId, final String assessmentName, final Duration assessmentDuration) {
 		final Assessment assessment = new Assessment();
 		assessment.registerMemberId = registerMemberId;
 		assessment.assessmentName = assessmentName;

@@ -30,7 +30,7 @@ class SubmissionQueryServiceTest {
 	@Test
 	@Transactional
 	void 등록후에는_PENDING_상태로_조회된다() {
-		final Assessment assessment = Assessment.of(1L, "test", Duration.ofMinutes(100L));
+		final Assessment assessment = Assessment.unlimited(1L, "test", Duration.ofMinutes(100L));
 		// 시험 문제 번호
 		assessment.replaceItems(
 			List.of(
@@ -54,7 +54,7 @@ class SubmissionQueryServiceTest {
 
 	@Test
 	void 트랜잭션_없이_쿼리할떄_LAZY_INITIALIZE_예외가_발생하지_않는다() {
-		final Assessment assessment = Assessment.of(1L, "test", Duration.ofMinutes(100L));
+		final Assessment assessment = Assessment.unlimited(1L, "test", Duration.ofMinutes(100L));
 		// 시험 문제 번호
 		assessment.replaceItems(
 			List.of(
