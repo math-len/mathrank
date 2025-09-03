@@ -87,6 +87,7 @@ public class SubmissionRegisterService {
 			isFirstSubmission
 		));
 
+		log.info("[SubmissionRegisterService.submit] submission successfully registered - submissionId: {}", assessmentSubmission.getId());
 		return assessmentSubmission.getId();
 	}
 

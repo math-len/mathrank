@@ -1,6 +1,7 @@
 package kr.co.mathrank.domain.problem.assessment.service;
 
 import java.time.Duration;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;
@@ -22,8 +23,10 @@ import kr.co.mathrank.client.internal.problem.ProblemClient;
 import kr.co.mathrank.common.role.Role;
 import kr.co.mathrank.domain.problem.assessment.dto.AssessmentItemRegisterCommand;
 import kr.co.mathrank.domain.problem.assessment.dto.AssessmentRegisterCommand;
+import kr.co.mathrank.domain.problem.assessment.dto.LimitedAssessmentRegisterCommand;
 import kr.co.mathrank.domain.problem.assessment.dto.SubmissionRegisterCommand;
 import kr.co.mathrank.domain.problem.assessment.entity.AssessmentSubmission;
+import kr.co.mathrank.domain.problem.assessment.exception.SubmissionDeniedException;
 import kr.co.mathrank.domain.problem.assessment.repository.AssessmentRepository;
 import kr.co.mathrank.domain.problem.assessment.repository.AssessmentSubmissionRepository;
 
@@ -189,6 +192,64 @@ class SubmissionRegisterServiceTest {
 			.map(AssessmentSubmission::getIsFirstSubmission)
 			.filter(a -> a)
 			.count());
+	}
+
+	@Test
+	void 기간제한이_있는_문제집은_특정기간에_제출_성공하다() {
+		final Long assessmentId = assessmentRegisterService.registerLimited(new LimitedAssessmentRegisterCommand(
+			1L, Role.ADMIN,
+			"testName",
+			List.of(new AssessmentItemRegisterCommand(1L, 100)),
+			Duration.ofMinutes(100L),
+			LocalDateTime.now().minusMinutes(1L),
+			LocalDateTime.now().plusMinutes(1L)
+		));
+
+		final Long memberId = 10L;
+
+		Assertions.assertDoesNotThrow(() -> submissionRegisterService.submit(
+			new SubmissionRegisterCommand(memberId, assessmentId, List.of(List.of("test")), Duration.ofMinutes(10L))));
+	}
+
+	@Test
+	void 기간제한이_있는_문제집은_특정기간이_아니면_제출_실패한다() {
+		final Long assessmentId = assessmentRegisterService.registerLimited(new LimitedAssessmentRegisterCommand(
+			1L, Role.ADMIN,
+			"testName",
+			List.of(new AssessmentItemRegisterCommand(1L, 100)),
+			Duration.ofMinutes(100L),
+			LocalDateTime.now().plusMinutes(1L),
+			LocalDateTime.now().plusMinutes(1L)
+		));
+
+		final Long memberId = 10L;
+
+		Assertions.assertThrows(SubmissionDeniedException.class, () -> {
+			submissionRegisterService.submit(
+				new SubmissionRegisterCommand(memberId, assessmentId, List.of(List.of("test")), Duration.ofMinutes(10L)));
+		});
+	}
+
+	@Test
+	void 기간제한이_있는_문제집은_한번만_응시가능하다() {
+		final Long assessmentId = assessmentRegisterService.registerLimited(new LimitedAssessmentRegisterCommand(
+			1L, Role.ADMIN,
+			"testName",
+			List.of(new AssessmentItemRegisterCommand(1L, 100)),
+			Duration.ofMinutes(100L),
+			LocalDateTime.now().minusMinutes(1L),
+			LocalDateTime.now().plusMinutes(1L)
+		));
+
+		final Long memberId = 10L;
+
+		submissionRegisterService.submit(
+			new SubmissionRegisterCommand(memberId, assessmentId, List.of(List.of("test")), Duration.ofMinutes(10L)));
+
+		Assertions.assertThrows(SubmissionDeniedException.class, () -> {
+			submissionRegisterService.submit(
+				new SubmissionRegisterCommand(memberId, assessmentId, List.of(List.of("test")), Duration.ofMinutes(10L)));
+		});
 	}
 
 	@AfterEach

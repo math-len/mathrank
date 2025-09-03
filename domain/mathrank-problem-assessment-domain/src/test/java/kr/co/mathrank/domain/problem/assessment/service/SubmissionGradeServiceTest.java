@@ -49,7 +49,7 @@ class SubmissionGradeServiceTest {
 
 	@Test
 	void 채점_이후엔_FINISHED_상태로_전환된다() {
-		final Assessment assessment = Assessment.of(1L, "test", Duration.ofMinutes(10));
+		final Assessment assessment = Assessment.unlimited(1L, "test", Duration.ofMinutes(10));
 		assessment.replaceItems(List.of(AssessmentItem.of(1L, 10), AssessmentItem.of(2L, 90))); // 문항 2개
 
 		final List<List<String>> answersWithWrongCount = List.of(List.of("1"), List.of("2")); // 답안 2개
@@ -70,7 +70,7 @@ class SubmissionGradeServiceTest {
 
 	@Test
 	void 채점결과_합산_테스트() {
-		final Assessment assessment = Assessment.of(1L, "test", Duration.ofMinutes(10));
+		final Assessment assessment = Assessment.unlimited(1L, "test", Duration.ofMinutes(10));
 		assessment.replaceItems(List.of(AssessmentItem.of(1L, 10), AssessmentItem.of(2L, 90))); // 문항 2개
 
 		final List<List<String>> answersWithWrongCount = List.of(List.of("1"), List.of("2")); // 답안 2개
@@ -94,7 +94,7 @@ class SubmissionGradeServiceTest {
 
 	@Test
 	void 모든_문제가_채점되면_해당_답안지는_채점완료_처리된다() {
-		final Assessment assessment = Assessment.of(1L, "test", Duration.ofMinutes(10));
+		final Assessment assessment = Assessment.unlimited(1L, "test", Duration.ofMinutes(10));
 		assessment.replaceItems(List.of(AssessmentItem.of(1L, 10), AssessmentItem.of(2L, 90))); // 문항 2개
 
 		final List<List<String>> answersWithWrongCount = List.of(List.of("1"), List.of("2")); // 답안 2개
@@ -118,7 +118,7 @@ class SubmissionGradeServiceTest {
 
 	@Test
 	void 사용자의_첫_제출_점수만_assessment_평균점수에_반영된다() {
-		final Assessment assessment = Assessment.of(1L, "test", Duration.ofMinutes(10));
+		final Assessment assessment = Assessment.unlimited(1L, "test", Duration.ofMinutes(10));
 		final Long problemId1 = 1L;
 		final Long problemId2 = 2L;
 		assessment.replaceItems(List.of(
@@ -158,7 +158,7 @@ class SubmissionGradeServiceTest {
 
 	@Test
 	void 여러_사용자의_첫_제출_점수들은_모두_assessment_평균점수에_반영된다() {
-		final Assessment assessment = Assessment.of(1L, "test", Duration.ofMinutes(10));
+		final Assessment assessment = Assessment.unlimited(1L, "test", Duration.ofMinutes(10));
 		final Long problemId1 = 1L;
 		final Long problemId2 = 2L;
 		assessment.replaceItems(List.of(
@@ -203,7 +203,7 @@ class SubmissionGradeServiceTest {
 
 	@Test
 	void 제출은_재채점_불가능하다() {
-		final Assessment assessment = Assessment.of(1L, "test", Duration.ofMinutes(10));
+		final Assessment assessment = Assessment.unlimited(1L, "test", Duration.ofMinutes(10));
 		assessment.replaceItems(List.of(AssessmentItem.of(1L, 10), AssessmentItem.of(2L, 90))); // 문항 2개
 
 		final List<List<String>> answersWithWrongCount = List.of(List.of("1"), List.of("2")); // 답안 2개

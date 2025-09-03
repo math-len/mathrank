@@ -10,6 +10,7 @@ import org.hibernate.annotations.CreationTimestamp;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Convert;
+import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -19,6 +20,7 @@ import jakarta.persistence.OneToMany;
 import jakarta.persistence.OrderBy;
 import jakarta.persistence.Table;
 import kr.co.mathrank.domain.problem.assessment.exception.AssessmentSubmissionRegisterException;
+import kr.co.mathrank.domain.problem.assessment.exception.SubmissionDeniedException;
 import kr.co.mathrank.domain.problem.assessment.exception.SubmissionTimeExceedException;
 import kr.co.mathrank.domain.problem.core.Difficulty;
 import lombok.AccessLevel;
@@ -76,11 +78,25 @@ public class Assessment {
 	@Setter(AccessLevel.NONE)
 	private LocalDateTime createdAt;
 
-	public static Assessment of(final Long registerMemberId, final String assessmentName, final Duration assessmentDuration) {
+	@Embedded
+	private AssessmentSubmissionPeriod assessmentSubmissionPeriod = new AssessmentSubmissionPeriod();
+
+	public static Assessment unlimited(final Long registerMemberId, final String assessmentName, final Duration assessmentDuration) {
 		final Assessment assessment = new Assessment();
 		assessment.registerMemberId = registerMemberId;
 		assessment.assessmentName = assessmentName;
 		assessment.assessmentDuration = assessmentDuration;
+		assessment.assessmentSubmissionPeriod = AssessmentSubmissionPeriod.unlimited();
+
+		return assessment;
+	}
+
+	public static Assessment limited(final Long registerMemberId, final String assessmentName, final Duration assessmentDuration, final LocalDateTime startAt, final LocalDateTime endAt) {
+		final Assessment assessment = new Assessment();
+		assessment.registerMemberId = registerMemberId;
+		assessment.assessmentName = assessmentName;
+		assessment.assessmentDuration = assessmentDuration;
+		assessment.assessmentSubmissionPeriod = AssessmentSubmissionPeriod.limited(startAt, endAt);
 
 		return assessment;
 	}
@@ -117,6 +133,15 @@ public class Assessment {
 				"[Assessment.registerSubmission] elapsed time overed assessment time limit - elapsedTime: {}, assessmentTime: {}",
 				elapsedTime, this.assessmentDuration);
 			throw new SubmissionTimeExceedException();
+		}
+
+		final LocalDateTime now = LocalDateTime.now();
+
+		// 제출 가능한지 확인한다.
+		if (!assessmentSubmissionPeriod.canSubmit(now, isFirstSubmission)) {
+			log.info("[Assessment.registerSubmission] cannot register submission - startAt: {}, endAt: {}, submitAt: {}",
+				assessmentSubmissionPeriod.getStartAt(), assessmentSubmissionPeriod.getEndAt(), now);
+			throw new SubmissionDeniedException();
 		}
 
 		final AssessmentSubmission assessmentSubmission = AssessmentSubmission.of(this, memberId, elapsedTime, isFirstSubmission);

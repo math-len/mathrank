@@ -25,7 +25,7 @@ class AssessmentItemSubmissionTest {
 
 	@Test
 	void 채점결과의_갯수가_다르면_예외발생() {
-		final Assessment assessment = Assessment.of(1L, "test", Duration.ofMinutes(10));
+		final Assessment assessment = Assessment.unlimited(1L, "test", Duration.ofMinutes(10));
 		// 한 문제 등록
 		assessment.replaceItems(List.of(AssessmentItem.of(1L, 10)));
 		// 문항에 대한 답안 내용 (정답이 여러 개일 수 있음을 가정)
@@ -40,7 +40,7 @@ class AssessmentItemSubmissionTest {
 
 	@Test
 	void 문제의_problemId와_채점결과의_problemId가_다르면_예외발생() {
-		final Assessment assessment = Assessment.of(1L, "test", Duration.ofMinutes(10));
+		final Assessment assessment = Assessment.unlimited(1L, "test", Duration.ofMinutes(10));
 		// 한 문제 등록
 		assessment.replaceItems(List.of(AssessmentItem.of(1L, 10)));
 		// 문항에 대한 답안 내용 (정답이 여러 개일 수 있음을 가정)
@@ -54,7 +54,7 @@ class AssessmentItemSubmissionTest {
 
 	@Test
 	void 채점을_확인하여_점수를_반환한다() {
-		final Assessment assessment = Assessment.of(1L, "test", Duration.ofMinutes(10));
+		final Assessment assessment = Assessment.unlimited(1L, "test", Duration.ofMinutes(10));
 		// 한 문제 등록
 		assessment.replaceItems(List.of(AssessmentItem.of(1L, 10)));
 		// 문항에 대한 답안 내용 (정답이 여러 개일 수 있음을 가정)
@@ -68,7 +68,7 @@ class AssessmentItemSubmissionTest {
 
 	@Test
 	void 채점이_완료되면_체점상태_변경() {
-		final Assessment assessment = Assessment.of(1L, "test", Duration.ofMinutes(10));
+		final Assessment assessment = Assessment.unlimited(1L, "test", Duration.ofMinutes(10));
 		// 한 문제 등록
 		assessment.replaceItems(List.of(AssessmentItem.of(1L, 10)));
 		// 문항에 대한 답안 내용 (정답이 여러 개일 수 있음을 가정)
@@ -82,7 +82,7 @@ class AssessmentItemSubmissionTest {
 
 	@Test
 	void 채점은_다시_시도될_수_없다() {
-		final Assessment assessment = Assessment.of(1L, "test", Duration.ofMinutes(10));
+		final Assessment assessment = Assessment.unlimited(1L, "test", Duration.ofMinutes(10));
 		// 한 문제 등록
 		assessment.replaceItems(List.of(AssessmentItem.of(1L, 10)));
 		// 문항에 대한 답안 내용 (정답이 여러 개일 수 있음을 가정)
@@ -100,7 +100,7 @@ class AssessmentItemSubmissionTest {
 	@Test
 	void 시험지에_제출된_정답은_DB에_json_형식으로_저장된다() {
 		// given
-		final Assessment assessment = Assessment.of(1L, "test", Duration.ofMinutes(10));
+		final Assessment assessment = Assessment.unlimited(1L, "test", Duration.ofMinutes(10));
 		// 한 문제 등록
 		assessment.replaceItems(List.of(AssessmentItem.of(1L, 10)));
 		// 문항에 대한 답안 내용 (정답이 여러 개일 수 있음을 가정)
@@ -125,7 +125,7 @@ class AssessmentItemSubmissionTest {
 	@Test
 	void 제출된_답안의_개수가_시험_문항_수와_다르면_예외가_발생한다() {
 		// given
-		final Assessment assessment = Assessment.of(1L, "test", Duration.ofMinutes(10));
+		final Assessment assessment = Assessment.unlimited(1L, "test", Duration.ofMinutes(10));
 		assessment.replaceItems(List.of(AssessmentItem.of(1L, 10))); // 문항 1개
 
 		final List<List<String>> answersWithWrongCount = List.of(List.of("1"), List.of("2")); // 답안 2개
@@ -139,7 +139,7 @@ class AssessmentItemSubmissionTest {
 	@Test
 	void 새로운_제출물_저장시_해당_엔티티를_반환하여_ID_조회_가능하다() {
 		// given
-		final Assessment assessment = Assessment.of(1L, "test", Duration.ofMinutes(10));
+		final Assessment assessment = Assessment.unlimited(1L, "test", Duration.ofMinutes(10));
 		assessment.replaceItems(List.of(AssessmentItem.of(1L, 10)));
 		final List<List<String>> answersWithWrongCount = List.of(List.of("1"));
 

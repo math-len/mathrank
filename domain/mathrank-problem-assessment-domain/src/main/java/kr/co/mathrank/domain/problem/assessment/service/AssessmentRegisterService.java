@@ -14,8 +14,10 @@ import kr.co.mathrank.common.outbox.TransactionalOutboxPublisher;
 import kr.co.mathrank.common.role.Role;
 import kr.co.mathrank.domain.problem.assessment.dto.AssessmentItemRegisterCommand;
 import kr.co.mathrank.domain.problem.assessment.dto.AssessmentRegisterCommand;
+import kr.co.mathrank.domain.problem.assessment.dto.LimitedAssessmentRegisterCommand;
 import kr.co.mathrank.domain.problem.assessment.entity.Assessment;
 import kr.co.mathrank.domain.problem.assessment.entity.AssessmentItem;
+import kr.co.mathrank.domain.problem.assessment.entity.AssessmentPeriodType;
 import kr.co.mathrank.domain.problem.assessment.exception.AssessmentRegisterException;
 import kr.co.mathrank.domain.problem.assessment.repository.AssessmentRepository;
 import lombok.RequiredArgsConstructor;
@@ -31,20 +33,32 @@ public class AssessmentRegisterService {
 
 	@Transactional
 	public Long register(@NotNull @Valid final AssessmentRegisterCommand command) {
+		final Assessment assessment = Assessment.unlimited(command.registerMemberId(), command.assessmentName(), command.minutes());
+
+		return register(assessment, command.role(), toItems(command.assessmentItems())).getId();
+	}
+
+	@Transactional
+	public Long registerLimited(@NotNull @Valid final LimitedAssessmentRegisterCommand command) {
+		final Assessment assessment = Assessment.limited(command.registerMemberId(), command.assessmentName(),
+			command.minutes(), command.startAt(), command.endAt());
+
+		return register(assessment, command.role(), toItems(command.assessmentItems())).getId();
+	}
+
+	private Assessment register(final Assessment assessment, final Role role, final List<AssessmentItem> assessmentItems) {
 		// 관리자가 아닐 경우 에러
-		if (!command.role().equals(Role.ADMIN)) {
-			log.warn("[AssessmentRegisterService.register] cannot register assessment - command: {}", command);
+		if (!role.equals(Role.ADMIN)) {
+			log.warn("[AssessmentRegisterService.register] cannot register assessment - requestMember role: {}", role);
 			throw new AssessmentRegisterException();
 		}
-		// 관리자만 문제집 등록이 가능하다
-		final Assessment assessment = Assessment.of(command.registerMemberId(), command.assessmentName(), command.minutes());
-		final List<AssessmentItem> items = toItems(command.assessmentItems());
-		assessment.replaceItems(items);
+
+		assessment.replaceItems(assessmentItems);
 		assessmentRepository.save(assessment);
-		log.info("[AssessmentRegisterService.register] successfully registered assessment - assessmentId: {}, command: {}", assessment.getId(), command);
+		log.info("[AssessmentRegisterService.register] successfully registered assessment - assessmentId: {}", assessment.getId());
 
 		transactionalOutboxPublisher.publish("assessment-registered", AssessmentRegisteredEvent.from(assessment));
-		return assessment.getId();
+		return assessment;
 	}
 
 	private List<AssessmentItem> toItems(final List<AssessmentItemRegisterCommand> commands) {
@@ -59,7 +73,10 @@ public class AssessmentRegisterService {
 		String assessmentName,
 		Long assessmentMinutes,
 		List<Long> assessmentItemProblemIds,
-		LocalDateTime createdAt
+		LocalDateTime createdAt,
+		AssessmentPeriodType periodType,
+		LocalDateTime startAt,
+		LocalDateTime endAt
 	) implements EventPayload {
 		static AssessmentRegisteredEvent from(final Assessment assessment) {
 			return new AssessmentRegisteredEvent(
@@ -70,7 +87,10 @@ public class AssessmentRegisterService {
 				assessment.getAssessmentItems().stream()
 					.map(AssessmentItem::getProblemId)
 					.toList(),
-				assessment.getCreatedAt()
+				assessment.getCreatedAt(),
+				assessment.getAssessmentSubmissionPeriod().getPeriodType(),
+				assessment.getAssessmentSubmissionPeriod().getStartAt(),
+				assessment.getAssessmentSubmissionPeriod().getEndAt()
 			);
 		}
 	}
