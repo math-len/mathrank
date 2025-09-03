@@ -20,7 +20,7 @@ import jakarta.persistence.OneToMany;
 import jakarta.persistence.OrderBy;
 import jakarta.persistence.Table;
 import kr.co.mathrank.domain.problem.assessment.exception.AssessmentSubmissionRegisterException;
-import kr.co.mathrank.domain.problem.assessment.exception.SubmissionPeriodException;
+import kr.co.mathrank.domain.problem.assessment.exception.SubmissionDeniedException;
 import kr.co.mathrank.domain.problem.assessment.exception.SubmissionTimeExceedException;
 import kr.co.mathrank.domain.problem.core.Difficulty;
 import lombok.AccessLevel;
@@ -141,7 +141,7 @@ public class Assessment {
 		if (!assessmentSubmissionPeriod.canSubmit(now)) {
 			log.info("[Assessment.registerSubmission] period not matched - startAt: {}, endAt: {}, submitAt: {}",
 				assessmentSubmissionPeriod.getStartAt(), assessmentSubmissionPeriod.getEndAt(), now);
-			throw new SubmissionPeriodException();
+			throw new SubmissionDeniedException();
 		}
 
 		final AssessmentSubmission assessmentSubmission = AssessmentSubmission.of(this, memberId, elapsedTime, isFirstSubmission);
