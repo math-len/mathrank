@@ -9,7 +9,6 @@ import kr.co.mathrank.domain.problem.assessment.entity.AssessmentSubmission;
 import kr.co.mathrank.domain.problem.assessment.entity.EvaluationStatus;
 
 public record SubmissionQueryResult(
-	Long assessmentId,
 	Long submissionId,
 	Long assessmentAverageScore,
 	Long memberId,
@@ -21,7 +20,6 @@ public record SubmissionQueryResult(
 ) {
 	public static SubmissionQueryResult from(final AssessmentSubmission assessmentSubmission) {
 		return new SubmissionQueryResult(
-			assessmentSubmission.getAssessment().getId(),
 			assessmentSubmission.getId(),
 			assessmentSubmission.getAssessment().getAverageScore(),
 			assessmentSubmission.getMemberId(),
