@@ -10,6 +10,7 @@ import org.hibernate.annotations.CreationTimestamp;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Convert;
+import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -76,11 +77,25 @@ public class Assessment {
 	@Setter(AccessLevel.NONE)
 	private LocalDateTime createdAt;
 
+	@Embedded
+	private AssessmentSubmissionPeriod assessmentSubmissionPeriod = new AssessmentSubmissionPeriod();
+
 	public static Assessment of(final Long registerMemberId, final String assessmentName, final Duration assessmentDuration) {
 		final Assessment assessment = new Assessment();
 		assessment.registerMemberId = registerMemberId;
 		assessment.assessmentName = assessmentName;
 		assessment.assessmentDuration = assessmentDuration;
+		assessment.assessmentSubmissionPeriod = AssessmentSubmissionPeriod.unlimited();
+
+		return assessment;
+	}
+
+	public static Assessment limited(final Long registerMemberId, final String assessmentName, final Duration assessmentDuration, final LocalDateTime startAt, final LocalDateTime endAt) {
+		final Assessment assessment = new Assessment();
+		assessment.registerMemberId = registerMemberId;
+		assessment.assessmentName = assessmentName;
+		assessment.assessmentDuration = assessmentDuration;
+		assessment.assessmentSubmissionPeriod = AssessmentSubmissionPeriod.limited(startAt, endAt);
 
 		return assessment;
 	}
