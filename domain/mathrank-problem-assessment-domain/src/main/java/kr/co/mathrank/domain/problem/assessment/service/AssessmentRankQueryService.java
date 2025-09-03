@@ -37,22 +37,43 @@ public class AssessmentRankQueryService {
 			throw new SubmissionNotEvaluatedException();
 		}
 
+		// 해당 문제집 풀이 기록 조회
 		final AssessmentSubmissionStatisticQueryResult result = assessmentStatisticsService.query(assessmentSubmission.getAssessment().getId());
-		final int elapsedTimeRank = getElapsedTimeRank(result.ascendingElapsedTimes(),
+
+		// 이게 첫번째 제출인 경우
+		if (assessmentSubmission.getIsFirstSubmission()) {
+			final Integer elapsedTimeRank = getElapsedTimeRank(result.ascendingElapsedTimes(),
+				assessmentSubmission.getElapsedTime());
+			final Integer scoreRank = getScoreRank(result.descendingScores(), assessmentSubmission.getTotalScore());
+
+			return new AssessmentSubmissionRankResult(
+				result.descendingScores(),
+				assessmentSubmission.getTotalScore(),
+				scoreRank == null ? result.descendingScores().size() : scoreRank,
+				result.ascendingElapsedTimes(),
+				assessmentSubmission.getElapsedTime(),
+				elapsedTimeRank == null ? result.descendingScores().size() : elapsedTimeRank,
+				result.ascendingElapsedTimes().size()
+			);
+		}
+
+		// 이게 첫번째 제출이 아닌 경우
+		final Integer elapsedTimeRank = getElapsedTimeRank(result.ascendingElapsedTimes(),
 			assessmentSubmission.getElapsedTime());
-		final int scoreRank = getScoreRank(result.descendingScores(), assessmentSubmission.getTotalScore());
+		final Integer scoreRank = getScoreRank(result.descendingScores(), assessmentSubmission.getTotalScore());
 
 		return new AssessmentSubmissionRankResult(
 			result.descendingScores(),
 			assessmentSubmission.getTotalScore(),
-			scoreRank,
+			scoreRank == null ? result.descendingScores().size() + 1 : scoreRank,
 			result.ascendingElapsedTimes(),
 			assessmentSubmission.getElapsedTime(),
-			elapsedTimeRank
+			elapsedTimeRank == null ? result.descendingScores().size() + 1 : elapsedTimeRank,
+			result.descendingScores().size() + 1
 		);
 	}
 
-	private int getElapsedTimeRank(final List<Duration> ascendingDurations, final Duration elapsedTime) {
+	private Integer getElapsedTimeRank(final List<Duration> ascendingDurations, final Duration elapsedTime) {
 		for (int i = 0; i < ascendingDurations.size(); i++) {
 			final Duration currentDuration = ascendingDurations.get(i);
 
@@ -61,10 +82,11 @@ public class AssessmentRankQueryService {
 			}
 		}
 
-		return ascendingDurations.size();
+		// 들어갈 위치 찾을 수 없음
+		return null;
 	}
 
-	private int getScoreRank(final List<Integer> descendingScores, final int score) {
+	private Integer getScoreRank(final List<Integer> descendingScores, final int score) {
 		for (int i = 0; i < descendingScores.size(); i++) {
 			final int currentScore = descendingScores.get(i);
 
@@ -73,6 +95,7 @@ public class AssessmentRankQueryService {
 			}
 		}
 
-		return descendingScores.size();
+		// 들어갈 위치 찾을 수 없음
+		return null;
 	}
 }
