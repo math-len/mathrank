@@ -20,6 +20,7 @@ import jakarta.persistence.OneToMany;
 import jakarta.persistence.OrderBy;
 import jakarta.persistence.Table;
 import kr.co.mathrank.domain.problem.assessment.exception.AssessmentSubmissionRegisterException;
+import kr.co.mathrank.domain.problem.assessment.exception.SubmissionPeriodException;
 import kr.co.mathrank.domain.problem.assessment.exception.SubmissionTimeExceedException;
 import kr.co.mathrank.domain.problem.core.Difficulty;
 import lombok.AccessLevel;
@@ -132,6 +133,15 @@ public class Assessment {
 				"[Assessment.registerSubmission] elapsed time overed assessment time limit - elapsedTime: {}, assessmentTime: {}",
 				elapsedTime, this.assessmentDuration);
 			throw new SubmissionTimeExceedException();
+		}
+
+		final LocalDateTime now = LocalDateTime.now();
+
+		// 기한내에 제출된건지 확인한다.
+		if (!assessmentSubmissionPeriod.canSubmit(now)) {
+			log.info("[Assessment.registerSubmission] period not matched - startAt: {}, endAt: {}, submitAt: {}",
+				assessmentSubmissionPeriod.getStartAt(), assessmentSubmissionPeriod.getEndAt(), now);
+			throw new SubmissionPeriodException();
 		}
 
 		final AssessmentSubmission assessmentSubmission = AssessmentSubmission.of(this, memberId, elapsedTime, isFirstSubmission);
