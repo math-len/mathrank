@@ -28,6 +28,7 @@ include(
         'app:consumer:mathrank-problem-single-read-consumer-monolith',
 
         'client',
+        'client:mathrank-client-exception',
         'client:internal',
         'client:internal:mathrank-course-client',
         'client:internal:mathrank-member-client',
