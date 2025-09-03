@@ -14,7 +14,9 @@ public record AssessmentDetailResult(
 	Long distinctUserCount,
 	LocalDateTime createdAt,
 	Difficulty difficulty,
-	Long minutes
+	Long minutes,
+	LocalDateTime startAt,
+	LocalDateTime endAt
 ) {
 	public static AssessmentDetailResult from(final Assessment assessment) {
 		return new AssessmentDetailResult(
@@ -27,7 +29,9 @@ public record AssessmentDetailResult(
 			assessment.getDistinctTriedMemberCount(),
 			assessment.getCreatedAt(),
 			assessment.getDifficulty(),
-			assessment.getAssessmentDuration().toMinutes()
+			assessment.getAssessmentDuration().toMinutes(),
+			assessment.getAssessmentSubmissionPeriod().getStartAt(),
+			assessment.getAssessmentSubmissionPeriod().getEndAt()
 		);
 	}
 }

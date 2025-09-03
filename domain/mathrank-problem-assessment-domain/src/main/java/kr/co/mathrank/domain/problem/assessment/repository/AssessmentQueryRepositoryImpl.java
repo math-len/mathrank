@@ -13,6 +13,7 @@ import kr.co.mathrank.domain.problem.assessment.dto.AssessmentPageQuery;
 import kr.co.mathrank.domain.problem.assessment.entity.Assessment;
 import kr.co.mathrank.domain.problem.assessment.entity.AssessmentOrder;
 import kr.co.mathrank.domain.problem.assessment.entity.AssessmentOrderDirection;
+import kr.co.mathrank.domain.problem.assessment.entity.AssessmentPeriodType;
 import kr.co.mathrank.domain.problem.assessment.entity.QAssessment;
 import kr.co.mathrank.domain.problem.core.Difficulty;
 import lombok.RequiredArgsConstructor;
@@ -60,7 +61,8 @@ class AssessmentQueryRepositoryImpl implements AssessmentQueryRepository{
 	private BooleanExpression[] conditions(final AssessmentPageQuery assessmentQuery) {
 		return new BooleanExpression[] {
 			difficultyMatches(assessmentQuery.difficulty()),
-			nameContains(assessmentQuery.assessmentName())
+			nameContains(assessmentQuery.assessmentName()),
+			periodTypeMatches(assessmentQuery.periodType())
 		};
 	}
 
@@ -78,5 +80,13 @@ class AssessmentQueryRepositoryImpl implements AssessmentQueryRepository{
 		}
 
 		return QAssessment.assessment.assessmentName.contains(assessmentName);
+	}
+
+	private BooleanExpression periodTypeMatches(final AssessmentPeriodType assessmentPeriodType) {
+		if (assessmentPeriodType == null) {
+			return null;
+		}
+
+		return QAssessment.assessment.assessmentSubmissionPeriod.periodType.eq(assessmentPeriodType);
 	}
 }

@@ -6,6 +6,7 @@ import org.hibernate.validator.constraints.Range;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.annotation.Validated;
 
+import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 import kr.co.mathrank.common.page.PageResult;
 import kr.co.mathrank.common.page.PageUtil;
@@ -39,7 +40,7 @@ public class AssessmentQueryService {
 	}
 
 	public PageResult<AssessmentPageQueryResult> pageQuery(
-		@NotNull final AssessmentPageQuery assessmentQuery,
+		@NotNull @Valid final AssessmentPageQuery assessmentQuery,
 		@NotNull final AssessmentOrder assessmentOrder,
 		@NotNull final AssessmentOrderDirection direction,
 		@NotNull @Range(min = 1, max = 20) final Integer pageSize,

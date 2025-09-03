@@ -13,7 +13,9 @@ public record AssessmentDetailReadModelResult(
 	Long distinctUserCount,
 	LocalDateTime createdAt,
 	Difficulty difficulty,
-	Long minutes
+	Long minutes,
+	LocalDateTime startAt,
+	LocalDateTime endAt
 ) {
 	public static AssessmentDetailReadModelResult from(final AssessmentDetailResult detailResult, final List<AssessmentItemReadModelDetailResult> itemReadModelDetailResults) {
 		return new AssessmentDetailReadModelResult(
@@ -24,7 +26,9 @@ public record AssessmentDetailReadModelResult(
 			detailResult.distinctUserCount(),
 			detailResult.createdAt(),
 			detailResult.difficulty(),
-			detailResult.minutes()
+			detailResult.minutes(),
+			detailResult.startAt(),
+			detailResult.endAt()
 		);
 	}
 }
