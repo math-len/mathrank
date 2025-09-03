@@ -17,12 +17,13 @@ public class AssessmentSubmissionPeriod {
 
 	private LocalDateTime endAt;
 
-	public boolean canSubmit(final LocalDateTime submitTime) {
+	boolean canSubmit(final LocalDateTime submitTime, final boolean isFirstSubmission) {
 		if (periodType == AssessmentPeriodType.UNLIMITED) {
 			return true;
 		}
 
-		return startAt.isBefore(submitTime) && endAt.isAfter(submitTime);
+		// 기간제 문제집일 경우, 한번만 제출할 수 있다
+		return isFirstSubmission && startAt.isBefore(submitTime) && endAt.isAfter(submitTime);
 	}
 
 	static AssessmentSubmissionPeriod unlimited() {

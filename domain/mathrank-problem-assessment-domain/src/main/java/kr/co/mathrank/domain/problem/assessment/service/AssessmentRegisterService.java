@@ -18,7 +18,6 @@ import kr.co.mathrank.domain.problem.assessment.dto.LimitedAssessmentRegisterCom
 import kr.co.mathrank.domain.problem.assessment.entity.Assessment;
 import kr.co.mathrank.domain.problem.assessment.entity.AssessmentItem;
 import kr.co.mathrank.domain.problem.assessment.entity.AssessmentPeriodType;
-import kr.co.mathrank.domain.problem.assessment.entity.AssessmentSubmissionPeriod;
 import kr.co.mathrank.domain.problem.assessment.exception.AssessmentRegisterException;
 import kr.co.mathrank.domain.problem.assessment.repository.AssessmentRepository;
 import lombok.RequiredArgsConstructor;
