@@ -44,7 +44,7 @@ class Responses {
 	}
 
 	public record AssessmentSubmissionQueryResponse(
-		Long assessmentId,
+		Long submissionId,
 		Long assessmentAverageScore,
 		Long memberId,
 		EvaluationStatus evaluationStatus,
@@ -55,7 +55,7 @@ class Responses {
 	) {
 		public static AssessmentSubmissionQueryResponse from(final SubmissionQueryResult result) {
 			return new AssessmentSubmissionQueryResponse(
-				result.assessmentId(),
+				result.submissionId(),
 				result.assessmentAverageScore(),
 				result.memberId(),
 				result.evaluationStatus(),
