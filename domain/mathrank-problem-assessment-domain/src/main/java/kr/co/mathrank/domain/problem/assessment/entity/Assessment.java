@@ -137,7 +137,7 @@ public class Assessment {
 
 		final LocalDateTime now = LocalDateTime.now();
 
-		// 기한내에 제출됐으며, 처음 제출되야만 가능함
+		// 제출 가능한지 확인한다.
 		if (!assessmentSubmissionPeriod.canSubmit(now, isFirstSubmission)) {
 			log.info("[Assessment.registerSubmission] cannot register submission - startAt: {}, endAt: {}, submitAt: {}, ",
 				assessmentSubmissionPeriod.getStartAt(), assessmentSubmissionPeriod.getEndAt(), now);
