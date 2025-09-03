@@ -17,6 +17,8 @@ import kr.co.mathrank.domain.problem.assessment.dto.AssessmentRegisterCommand;
 import kr.co.mathrank.domain.problem.assessment.dto.LimitedAssessmentRegisterCommand;
 import kr.co.mathrank.domain.problem.assessment.entity.Assessment;
 import kr.co.mathrank.domain.problem.assessment.entity.AssessmentItem;
+import kr.co.mathrank.domain.problem.assessment.entity.AssessmentPeriodType;
+import kr.co.mathrank.domain.problem.assessment.entity.AssessmentSubmissionPeriod;
 import kr.co.mathrank.domain.problem.assessment.exception.AssessmentRegisterException;
 import kr.co.mathrank.domain.problem.assessment.repository.AssessmentRepository;
 import lombok.RequiredArgsConstructor;
@@ -72,7 +74,10 @@ public class AssessmentRegisterService {
 		String assessmentName,
 		Long assessmentMinutes,
 		List<Long> assessmentItemProblemIds,
-		LocalDateTime createdAt
+		LocalDateTime createdAt,
+		AssessmentPeriodType periodType,
+		LocalDateTime startAt,
+		LocalDateTime endAt
 	) implements EventPayload {
 		static AssessmentRegisteredEvent from(final Assessment assessment) {
 			return new AssessmentRegisteredEvent(
@@ -83,7 +88,10 @@ public class AssessmentRegisterService {
 				assessment.getAssessmentItems().stream()
 					.map(AssessmentItem::getProblemId)
 					.toList(),
-				assessment.getCreatedAt()
+				assessment.getCreatedAt(),
+				assessment.getAssessmentSubmissionPeriod().getPeriodType(),
+				assessment.getAssessmentSubmissionPeriod().getStartAt(),
+				assessment.getAssessmentSubmissionPeriod().getEndAt()
 			);
 		}
 	}
