@@ -139,7 +139,7 @@ public class Assessment {
 
 		// 제출 가능한지 확인한다.
 		if (!assessmentSubmissionPeriod.canSubmit(now, isFirstSubmission)) {
-			log.info("[Assessment.registerSubmission] cannot register submission - startAt: {}, endAt: {}, submitAt: {}, ",
+			log.info("[Assessment.registerSubmission] cannot register submission - startAt: {}, endAt: {}, submitAt: {}",
 				assessmentSubmissionPeriod.getStartAt(), assessmentSubmissionPeriod.getEndAt(), now);
 			throw new SubmissionDeniedException();
 		}
