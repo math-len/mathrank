@@ -201,13 +201,14 @@ class SubmissionRegisterServiceTest {
 			"testName",
 			List.of(new AssessmentItemRegisterCommand(1L, 100)),
 			Duration.ofMinutes(100L),
-			LocalDateTime.now().plusMinutes(1L),
+			LocalDateTime.now().minusMinutes(1L),
 			LocalDateTime.now().plusMinutes(1L)
 		));
 
 		final Long memberId = 10L;
 
-		Assertions.assertDoesNotThrow(() -> new SubmissionRegisterCommand(memberId, assessmentId, List.of(List.of("test")), Duration.ofMinutes(10L)));
+		Assertions.assertDoesNotThrow(() -> submissionRegisterService.submit(
+			new SubmissionRegisterCommand(memberId, assessmentId, List.of(List.of("test")), Duration.ofMinutes(10L))));
 	}
 
 	@Test
