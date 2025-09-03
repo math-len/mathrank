@@ -47,7 +47,7 @@ public class Challenger {
 	@ManyToOne(fetch = FetchType.LAZY)
 	private SingleProblem singleProblem;
 
-	private boolean successAtFirstTry;
+	private boolean successAtFirstTry = false;
 
 	public static Challenger of(final Long memberId, final SingleProblem singleProblem) {
 		final Challenger challenger = new Challenger();
@@ -59,12 +59,14 @@ public class Challenger {
 
 	public ChallengeLog addChallengeLog(final boolean success, final List<String> submittedAnswer, final List<String> correctAnswer, final
 		Duration elapsedTime) {
-		final ChallengeLog challengeLog = ChallengeLog.of(this, success, submittedAnswer, correctAnswer, elapsedTime);
-
 		// 첫 제출
-		if (challengeLogs.isEmpty()) {
+		boolean isFirstLog = challengeLogs.isEmpty();
+		if (isFirstLog) {
 			successAtFirstTry = success;
 		}
+
+		final ChallengeLog challengeLog = ChallengeLog.of(this, success, submittedAnswer, correctAnswer, elapsedTime, isFirstLog);
+
 		challengeLogs.add(challengeLog);
 
 		return challengeLog;
