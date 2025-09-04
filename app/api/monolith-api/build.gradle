@@ -15,6 +15,7 @@ dependencies {
     implementation project(':app:api:mathrank-problem-single-api')
     implementation project(':app:api:mathrank-problem-single-read-api')
     implementation project(':app:api:mathrank-problem-exam-api')
+    implementation project(':app:api:mathrank-problem-exam-read-api')
 
     implementation project(':app:init:mathrank-problem-init')
     implementation project(':app:init:mathrank-auth-init')
