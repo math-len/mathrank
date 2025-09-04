@@ -36,10 +36,10 @@ public class ContestReadController {
 	@Operation(summary = "제출된 답안지 채점 상태 조회 API")
 	@Authorization(openedForAll = true)
 	@GetMapping("/api/v1/problem/contest/submission/{submissionId}")
-	public ResponseEntity<Responses.ExamSubmissionQueryResponse> querySubmissionResult(
+	public ResponseEntity<Responses.ContestSubmissionQueryResponse> querySubmissionResult(
 		@PathVariable final Long submissionId
 	) {
-		final Responses.ExamSubmissionQueryResponse response = Responses.ExamSubmissionQueryResponse.from(
+		final Responses.ContestSubmissionQueryResponse response = Responses.ContestSubmissionQueryResponse.from(
 			submissionQueryService.getSubmissionResult(submissionId));
 		return ResponseEntity.ok(response);
 	}
@@ -47,11 +47,11 @@ public class ContestReadController {
 	@Operation(summary = "제출 이력 확인 API")
 	@Authorization(openedForAll = true)
 	@GetMapping("/api/v1/problem/contest/{contestId}/submission")
-	public ResponseEntity<Responses.ExamSubmissionQueryResponses> querySubmissionResults(
+	public ResponseEntity<Responses.ContestSubmissionQueryResponses> querySubmissionResults(
 		@PathVariable final Long contestId,
 		@LoginInfo final MemberPrincipal memberPrincipal
 	) {
-		final Responses.ExamSubmissionQueryResponses responses = Responses.ExamSubmissionQueryResponses.from(
+		final Responses.ContestSubmissionQueryResponses responses = Responses.ContestSubmissionQueryResponses.from(
 			submissionQueryService.getAssessmentSubmissionResults(contestId, memberPrincipal.memberId()));
 		return ResponseEntity.ok(responses);
 	}
@@ -59,34 +59,34 @@ public class ContestReadController {
 	@Operation(summary = "대회 페이지 조회 API")
 	@Authorization(openedForAll = true)
 	@GetMapping("/api/v1/problem/contest")
-	public ResponseEntity<PageResult<Responses.ExamPageResponse>> queryPage(
+	public ResponseEntity<PageResult<Responses.ContestPageResponse>> queryPage(
 		@ModelAttribute @ParameterObject final QueryRequests.ContestPageQueryRequest request,
 		@RequestParam(required = false, defaultValue = "LATEST") final AssessmentOrder order,
 		@RequestParam(required = false, defaultValue = "DESC") final AssessmentOrderDirection direction,
 		@RequestParam(defaultValue = "10") @Range(min = 1, max = 20) final Integer pageSize,
 		@RequestParam(defaultValue = "1") @Range(min = 1, max = 1000) final Integer pageNumber
 	) {
-		final PageResult<Responses.ExamPageResponse> pageResponses = assessmentQueryService.pageQuery(request.toQuery(),
+		final PageResult<Responses.ContestPageResponse> pageResponses = assessmentQueryService.pageQuery(request.toQuery(),
 				order, direction, pageSize, pageNumber)
-			.map(Responses.ExamPageResponse::from);
+			.map(Responses.ContestPageResponse::from);
 		return ResponseEntity.ok(pageResponses);
 	}
 
 	@Operation(summary = "대회 상세 조회 API")
 	@Authorization(openedForAll = true)
 	@GetMapping("/api/v1/problem/contest/{contestId}")
-	public ResponseEntity<Responses.ExamDetailResponse> getDetail(@PathVariable final Long contestId) {
-		return ResponseEntity.ok(Responses.ExamDetailResponse.from(assessmentDetailReadService.getDetail(
+	public ResponseEntity<Responses.ContestDetailResponse> getDetail(@PathVariable final Long contestId) {
+		return ResponseEntity.ok(Responses.ContestDetailResponse.from(assessmentDetailReadService.getDetail(
 			AssessmentDetailQuery.periodLimited(contestId))));
 	}
 
 	@Operation(summary = "대회 랭크 조회 API")
 	@Authorization(openedForAll = true)
 	@GetMapping("/api/v1/problem/contest/submission/{submissionId}/rank")
-	public ResponseEntity<Responses.ExamSubmissionRankResponse> getSubmissionRank(
+	public ResponseEntity<Responses.ContestSubmissionRankResponse> getSubmissionRank(
 		@PathVariable final Long submissionId
 	) {
-		Responses.ExamSubmissionRankResponse response = Responses.ExamSubmissionRankResponse.from(
+		Responses.ContestSubmissionRankResponse response = Responses.ContestSubmissionRankResponse.from(
 			assessmentRankQueryService.getRank(submissionId));
 		return ResponseEntity.ok(response);
 	}

@@ -29,7 +29,7 @@ public class ContestController {
 	@Operation(summary = "대회 등록", description = "문제집 등록은 관리자만 가능합니다.")
 	@PostMapping("/api/v1/problem/contest")
 	@Authorization(values = Role.ADMIN)
-	public ResponseEntity<Void> registerAssessment(
+	public ResponseEntity<Void> registerContest(
 		@RequestBody @Valid final Requests.ContestRegisterRequest request,
 		@LoginInfo final MemberPrincipal memberPrincipal
 	) {
@@ -43,7 +43,7 @@ public class ContestController {
 	@PostMapping("/api/v1/problem/contest/submission")
 	@Authorization(openedForAll = true)
 	public ResponseEntity<Long> registerSubmission(
-		@RequestBody @Valid final Requests.ExamSubmissionRegisterRequest request,
+		@RequestBody @Valid final Requests.ContestSubmissionRegisterRequest request,
 		@LoginInfo final MemberPrincipal memberPrincipal
 	) {
 		final SubmissionRegisterCommand command = request.toCommand(memberPrincipal.memberId());

@@ -15,7 +15,7 @@ import kr.co.mathrank.domain.problem.assessment.entity.EvaluationStatus;
 import kr.co.mathrank.domain.problem.core.Difficulty;
 
 class Responses {
-	public record ExamSubmissionRankResponse(
+	public record ContestSubmissionRankResponse(
 		List<Integer> descendingScores,
 		Integer score,
 		Integer scoreRank,
@@ -23,8 +23,8 @@ class Responses {
 		Long elapsedTimeSeconds,
 		Integer elapsedTimeRank
 	) {
-		public static ExamSubmissionRankResponse from(final AssessmentSubmissionRankResult result) {
-			return new ExamSubmissionRankResponse(
+		public static ContestSubmissionRankResponse from(final AssessmentSubmissionRankResult result) {
+			return new ContestSubmissionRankResponse(
 				result.descendingScores(),
 				result.score(),
 				result.scoreRank(),
@@ -37,19 +37,19 @@ class Responses {
 		}
 	}
 
-	public record ExamSubmissionQueryResponses(
-		List<ExamSubmissionQueryResponse> responses
+	public record ContestSubmissionQueryResponses(
+		List<ContestSubmissionQueryResponse> responses
 	) {
-		public static ExamSubmissionQueryResponses from(final SubmissionQueryResults results) {
-			return new ExamSubmissionQueryResponses(results.queryResults().stream()
-				.map(ExamSubmissionQueryResponse::from)
+		public static ContestSubmissionQueryResponses from(final SubmissionQueryResults results) {
+			return new ContestSubmissionQueryResponses(results.queryResults().stream()
+				.map(ContestSubmissionQueryResponse::from)
 				.toList());
 		}
 	}
 
-	public record ExamSubmissionQueryResponse(
+	public record ContestSubmissionQueryResponse(
 		Long submissionId,
-		Long assessmentAverageScore,
+		Long contestAverageScore,
 		Long memberId,
 		EvaluationStatus evaluationStatus,
 		Integer totalScore,
@@ -57,8 +57,8 @@ class Responses {
 		LocalDateTime submittedAt,
 		Long elapsedTimeSeconds
 	) {
-		public static ExamSubmissionQueryResponse from(final SubmissionQueryResult result) {
-			return new ExamSubmissionQueryResponse(
+		public static ContestSubmissionQueryResponse from(final SubmissionQueryResult result) {
+			return new ContestSubmissionQueryResponse(
 				result.submissionId(),
 				result.assessmentAverageScore(),
 				result.memberId(),
@@ -71,11 +71,11 @@ class Responses {
 		}
 	}
 
-	public record ExamDetailResponse(
-		Long assessmentId,
+	public record ContestDetailResponse(
+		Long contestId,
 		List<AssessmentItemReadModelDetailResult> itemDetails,
 		Long registeredMemberId,
-		String assessmentName,
+		String contestName,
 		Long distinctUserCount,
 		LocalDateTime createdAt,
 		Difficulty difficulty,
@@ -83,8 +83,8 @@ class Responses {
 		LocalDateTime startAt,
 		LocalDateTime endAt
 	) {
-		public static ExamDetailResponse from(AssessmentDetailReadModelResult result) {
-			return new ExamDetailResponse(
+		public static ContestDetailResponse from(AssessmentDetailReadModelResult result) {
+			return new ContestDetailResponse(
 				result.assessmentId(),
 				result.itemDetails(),
 				result.registeredMemberId(),
@@ -99,10 +99,10 @@ class Responses {
 		}
 	}
 
-	public record ExamPageResponse(
-		Long assessmentId,
+	public record ContestPageResponse(
+		Long contestId,
 		Long memberId,
-		String assessmentName,
+		String contestName,
 		Long distinctUserCount,
 		LocalDateTime createdAt,
 		Difficulty difficulty,
@@ -110,8 +110,8 @@ class Responses {
 		LocalDateTime startAt,
 		LocalDateTime endAt
 	) {
-		public static ExamPageResponse from(AssessmentPageQueryResult result) {
-			return new ExamPageResponse(
+		public static ContestPageResponse from(AssessmentPageQueryResult result) {
+			return new ContestPageResponse(
 				result.assessmentId(),
 				result.memberId(),
 				result.assessmentName(),

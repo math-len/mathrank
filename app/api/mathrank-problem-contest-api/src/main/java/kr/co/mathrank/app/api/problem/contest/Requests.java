@@ -61,16 +61,16 @@ public class Requests {
 		}
 	}
 
-	record ExamSubmissionRegisterRequest(
+	record ContestSubmissionRegisterRequest(
 		@NotNull
-		Long contest,
+		Long contestId,
 		@NotNull
 		List<List<String>> submittedAnswers,
 		@NotNull
 		Long elapsedTimeSeconds
 	) {
 		public SubmissionRegisterCommand toCommand(final Long memberId) {
-			return new SubmissionRegisterCommand(memberId, contest, submittedAnswers,
+			return new SubmissionRegisterCommand(memberId, contestId, submittedAnswers,
 				Duration.ofSeconds(elapsedTimeSeconds));
 		}
 	}
