@@ -20,7 +20,7 @@ import lombok.RequiredArgsConstructor;
 public class MemberController {
 	private final MemberUpdateService memberUpdateService;
 
-	@PutMapping("/api/v1/member")
+	@PutMapping("/api/v1/member/info/my")
 	@Operation(summary = "내 계정 정보 업데이트 API", description = "내 계정의 정보를 주어진 페이로드로 업데이트 합니다.")
 	@Authorization(openedForAll = true)
 	public ResponseEntity<Void> updateMyInfo(

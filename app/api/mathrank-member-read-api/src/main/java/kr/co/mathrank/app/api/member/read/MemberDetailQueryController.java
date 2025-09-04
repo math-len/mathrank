@@ -19,7 +19,7 @@ import lombok.RequiredArgsConstructor;
 public class MemberDetailQueryController {
 	private final MemberQueryService memberQueryService;
 
-	@GetMapping("/api/v1/member/info")
+	@GetMapping("/api/v1/member/info/my")
 	@Operation(summary = "내 계정 정보 조회 API", description = "내 계정의 정보를 조회합니다.")
 	@Authorization(openedForAll = true)
 	public ResponseEntity<MemberInfoResult> getMyInfo(
