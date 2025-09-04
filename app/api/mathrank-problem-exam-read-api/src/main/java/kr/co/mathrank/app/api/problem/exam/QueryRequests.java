@@ -4,7 +4,7 @@ import kr.co.mathrank.domain.problem.assessment.dto.AssessmentPageQuery;
 import kr.co.mathrank.domain.problem.assessment.entity.AssessmentPeriodType;
 import kr.co.mathrank.domain.problem.core.Difficulty;
 
-public class Requests {
+public class QueryRequests {
 	record ExamPageQueryRequest(
 		String assessmentName,
 		Difficulty difficulty

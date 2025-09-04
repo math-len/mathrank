@@ -15,6 +15,7 @@ import kr.co.mathrank.app.api.common.authentication.Authorization;
 import kr.co.mathrank.app.api.common.authentication.LoginInfo;
 import kr.co.mathrank.app.api.common.authentication.MemberPrincipal;
 import kr.co.mathrank.common.page.PageResult;
+import kr.co.mathrank.domain.problem.assessment.dto.AssessmentDetailQuery;
 import kr.co.mathrank.domain.problem.assessment.dto.AssessmentPageQueryResult;
 import kr.co.mathrank.domain.problem.assessment.entity.AssessmentOrder;
 import kr.co.mathrank.domain.problem.assessment.entity.AssessmentOrderDirection;
@@ -76,7 +77,8 @@ public class AssessmentReadController {
 	@GetMapping("/api/v1/problem/assessment/{assessmentId}")
 	public ResponseEntity<Responses.AssessmentDetailResponse> getDetail(@PathVariable final Long assessmentId) {
 		return ResponseEntity.ok(
-			Responses.AssessmentDetailResponse.from(assessmentDetailReadService.getDetail(assessmentId)));
+			Responses.AssessmentDetailResponse.from(
+				assessmentDetailReadService.getDetail(AssessmentDetailQuery.periodUnLimited(assessmentId))));
 	}
 
 	@Operation(summary = "문제집 랭크 조회 API")

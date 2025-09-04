@@ -15,9 +15,7 @@ import kr.co.mathrank.app.api.common.authentication.Authorization;
 import kr.co.mathrank.app.api.common.authentication.LoginInfo;
 import kr.co.mathrank.app.api.common.authentication.MemberPrincipal;
 import kr.co.mathrank.common.page.PageResult;
-import kr.co.mathrank.domain.problem.assessment.dto.AssessmentDetailReadModelResult;
-import kr.co.mathrank.domain.problem.assessment.dto.AssessmentPageQuery;
-import kr.co.mathrank.domain.problem.assessment.dto.AssessmentPageQueryResult;
+import kr.co.mathrank.domain.problem.assessment.dto.AssessmentDetailQuery;
 import kr.co.mathrank.domain.problem.assessment.entity.AssessmentOrder;
 import kr.co.mathrank.domain.problem.assessment.entity.AssessmentOrderDirection;
 import kr.co.mathrank.domain.problem.assessment.service.AssessmentDetailReadService;
@@ -62,7 +60,7 @@ public class ExamReadController {
 	@Authorization(openedForAll = true)
 	@GetMapping("/api/v1/problem/exam")
 	public ResponseEntity<PageResult<Responses.ExamPageResponse>> queryPage(
-		@ModelAttribute @ParameterObject final Requests.ExamPageQueryRequest request,
+		@ModelAttribute @ParameterObject final QueryRequests.ExamPageQueryRequest request,
 		@RequestParam(required = false, defaultValue = "LATEST") final AssessmentOrder order,
 		@RequestParam(required = false, defaultValue = "DESC") final AssessmentOrderDirection direction,
 		@RequestParam(defaultValue = "10") @Range(min = 1, max = 20) final Integer pageSize,
@@ -78,7 +76,8 @@ public class ExamReadController {
 	@Authorization(openedForAll = true)
 	@GetMapping("/api/v1/problem/exam/{examId}")
 	public ResponseEntity<Responses.ExamDetailResponse> getDetail(@PathVariable final Long examId) {
-		return ResponseEntity.ok(Responses.ExamDetailResponse.from(assessmentDetailReadService.getDetail(examId)));
+		return ResponseEntity.ok(Responses.ExamDetailResponse.from(assessmentDetailReadService.getDetail(
+			AssessmentDetailQuery.periodLimited(examId))));
 	}
 
 	@Operation(summary = "시험지 랭크 조회 API")
