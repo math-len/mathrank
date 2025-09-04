@@ -11,4 +11,9 @@ import jakarta.persistence.LockModeType;
 import kr.co.mathrank.domain.single.problem.rank.entity.Solver;
 
 public interface SolverRepository extends JpaRepository<Solver, Long> {
+	@Lock(LockModeType.PESSIMISTIC_WRITE)
+	@Query("SELECT s FROM Solver s WHERE s.memberId = :memberId")
+	Optional<Solver> findByMemberIdForUpdate(@Param("memberId") Long memberId);
+
+	Optional<Solver> findByMemberId(Long memberId);
 }
