@@ -39,16 +39,15 @@ class Requests {
 		}
 	}
 
-	public static record MemberRegistrationCompleteRequest(
+	public record MemberRegistrationCompleteRequest(
 		@NotNull
 		MemberType memberType,
-		@NotNull
-		Set<String> schoolCodes,
+		String schoolCode,
 		@NotNull
 		Boolean agreeToPrivacyPolicy
 	) {
 		public MemberInfoCompleteCommand toCommand(final Long memberId) {
-			return new MemberInfoCompleteCommand(memberId, memberType, schoolCodes, agreeToPrivacyPolicy);
+			return new MemberInfoCompleteCommand(memberId, memberType, schoolCode, agreeToPrivacyPolicy);
 		}
 	}
 }

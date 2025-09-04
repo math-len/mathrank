@@ -24,7 +24,7 @@ class MemberQueryServiceTest {
 	@Test
 	void 존재하는_멤버_조회_성공_테스트() {
 		final long memberId = 1L;
-		final Member member = Member.of(memberId, "testName", Role.USER, "testId", "testPassword", null, null, Collections.emptySet());
+		final Member member = Member.of(memberId, "testName", Role.USER, "testId", "testPassword", null, null, null);
 		memberRepository.save(member);
 
 		Assertions.assertEquals(MemberInfoResult.from(member), memberQueryService.getInfo(memberId));

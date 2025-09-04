@@ -30,7 +30,7 @@ public class MemberUpdateService {
 			});
 
 		member.setMemberType(command.memberType());
-		member.setSchools(Set.of(command.schoolCode()));
+		member.setSchoolCode(command.schoolCode());
 		member.setAgreeToPrivacyPolicy(command.agreeToPolicy());
 		member.setName(command.userNickName());
 

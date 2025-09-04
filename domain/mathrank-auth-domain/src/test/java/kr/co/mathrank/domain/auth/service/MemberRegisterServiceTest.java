@@ -28,7 +28,7 @@ class MemberRegisterServiceTest {
 		final Password password = new Password("1234");
 
 		final MemberRegisterCommand command = new MemberRegisterCommand(duplicatedId, userName, password, Role.USER, MemberType.NORMAL, true,
-			Collections.emptySet());
+			null);
 
 		memberRegisterService.register(command);
 		Assertions.assertThrows(AuthException.class, () -> memberRegisterService.register(command));
