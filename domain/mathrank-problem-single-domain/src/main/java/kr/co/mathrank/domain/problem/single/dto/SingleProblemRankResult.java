@@ -4,8 +4,8 @@ import java.time.Duration;
 import java.util.List;
 
 public record SingleProblemRankResult(
-	Long distinctUserCount,
 	Integer myRank,
+	Integer totalUserCount,
 	Duration myElapsedTime,
 	List<Duration> elapsedTimes,
 	Duration averageElapsedTime

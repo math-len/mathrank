@@ -17,7 +17,8 @@ class Responses {
 		Integer scoreRank,
 		List<Long> ascendingElapsedTimeSeconds,
 		Long elapsedTimeSeconds,
-		Integer elapsedTimeRank
+		Integer elapsedTimeRank,
+		Integer totalUserCount
 	) {
 		public static AssessmentSubmissionRankResponse from(final AssessmentSubmissionRankResult result) {
 			return new AssessmentSubmissionRankResponse(
@@ -28,7 +29,8 @@ class Responses {
 					.map(Duration::toSeconds)
 					.toList(),
 				result.elapsedTime().toSeconds(),
-				result.elapsedTimeRank()
+				result.elapsedTimeRank(),
+				result.totalUserCount()
 			);
 		}
 	}

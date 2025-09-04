@@ -44,16 +44,19 @@ public class ChallengeLog implements Persistable<Long> {
 	@Convert(converter = DurationConverter.class)
 	private Duration elapsedTime;
 
+	private boolean isFirstTry = false;
+
 	@CreationTimestamp
 	private LocalDateTime challengedAt;
 
-	static ChallengeLog of(final Challenger challenger, final boolean success, final List<String> submittedAnswer, final List<String> correctAnswer, final Duration elapsedTime) {
+	static ChallengeLog of(final Challenger challenger, final boolean success, final List<String> submittedAnswer, final List<String> correctAnswer, final Duration elapsedTime, final boolean isFirstTry) {
 		final ChallengeLog challengeLog = new ChallengeLog();
 		challengeLog.challenger = challenger;
 		challengeLog.submittedAnswer = submittedAnswer;
 		challengeLog.correctAnswer = correctAnswer;
 		challengeLog.success = success;
 		challengeLog.elapsedTime = elapsedTime;
+		challengeLog.isFirstTry = isFirstTry;
 
 		return challengeLog;
 	}
