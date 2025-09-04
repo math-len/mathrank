@@ -42,7 +42,7 @@ public class Solver {
 	}
 
 	public SolveLog addSolveLog(final Long problemId, final Long singleProblemId, final boolean success, final Integer score) {
-		final SolveLog solveLog = SolveLog.of(problemId, singleProblemId, this, success);
+		final SolveLog solveLog = SolveLog.of(singleProblemId, problemId, this, success);
 		solveLogs.add(solveLog);
 		if (success) {
 			this.score += score;

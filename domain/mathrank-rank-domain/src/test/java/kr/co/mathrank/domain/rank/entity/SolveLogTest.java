@@ -24,6 +24,16 @@ class SolveLogTest {
 	}
 
 	@Test
+	void 문제ID는_중복_가능하다() {
+		final Solver solver = new Solver();
+
+		solver.addSolveLog(1L, 1L, true, 100);
+		solver.addSolveLog(1L, 2L, true, 100);
+
+		Assertions.assertDoesNotThrow(() -> solverRepository.save(solver));
+	}
+
+	@Test
 	void 풀이에_성공한거면_점수추가한다() {
 		final Solver solver = new Solver();
 
