@@ -1,12 +1,16 @@
 package kr.co.mathrank.app.api.auth;
 
+import java.util.Set;
+
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotNull;
 import kr.co.mathrank.app.api.auth.serializer.PasswordDeserializer;
 import kr.co.mathrank.domain.auth.dto.LoginCommand;
+import kr.co.mathrank.domain.auth.dto.MemberInfoCompleteCommand;
 import kr.co.mathrank.domain.auth.dto.OAuthLoginCommand;
+import kr.co.mathrank.domain.auth.entity.MemberType;
 import kr.co.mathrank.domain.auth.entity.OAuthProvider;
 import kr.co.mathrank.domain.auth.entity.Password;
 
@@ -32,6 +36,19 @@ class Requests {
 	) {
 		public OAuthLoginCommand toCommand(final OAuthProvider provider) {
 			return new OAuthLoginCommand(code, state, provider);
+		}
+	}
+
+	public static record MemberRegistrationCompleteRequest(
+		@NotNull
+		MemberType memberType,
+		@NotNull
+		Set<String> schoolCodes,
+		@NotNull
+		Boolean agreeToPrivacyPolicy
+	) {
+		public MemberInfoCompleteCommand toCommand(final Long memberId) {
+			return new MemberInfoCompleteCommand(memberId, memberType, schoolCodes, agreeToPrivacyPolicy);
 		}
 	}
 }
