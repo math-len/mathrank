@@ -1,4 +1,4 @@
-package kr.co.mathrank.app.api.problem.exam;
+package kr.co.mathrank.app.api.problem.contest;
 
 import kr.co.mathrank.domain.problem.assessment.dto.AssessmentPageQuery;
 import kr.co.mathrank.domain.problem.assessment.entity.AssessmentPeriodType;

@@ -1,4 +1,4 @@
-package kr.co.mathrank.app.api.problem.exam;
+package kr.co.mathrank.app.api.problem.contest;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

@@ -1,4 +1,4 @@
-package kr.co.mathrank.app.api.problem.exam;
+package kr.co.mathrank.app.api.problem.contest;
 
 import java.time.Duration;
 import java.time.LocalDateTime;

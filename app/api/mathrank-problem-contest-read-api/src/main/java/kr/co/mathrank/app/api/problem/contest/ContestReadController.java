@@ -1,4 +1,4 @@
-package kr.co.mathrank.app.api.problem.exam;
+package kr.co.mathrank.app.api.problem.contest;
 
 import org.hibernate.validator.constraints.Range;
 import org.springdoc.core.annotations.ParameterObject;
