@@ -4,11 +4,16 @@ import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.List;
 
+import kr.co.mathrank.domain.problem.assessment.dto.AssessmentDetailReadModelResult;
+import kr.co.mathrank.domain.problem.assessment.dto.AssessmentItemReadModelDetailResult;
+import kr.co.mathrank.domain.problem.assessment.dto.AssessmentPageQueryResult;
 import kr.co.mathrank.domain.problem.assessment.dto.AssessmentSubmissionRankResult;
 import kr.co.mathrank.domain.problem.assessment.dto.SubmissionItemQueryResult;
 import kr.co.mathrank.domain.problem.assessment.dto.SubmissionQueryResult;
 import kr.co.mathrank.domain.problem.assessment.dto.SubmissionQueryResults;
+import kr.co.mathrank.domain.problem.assessment.entity.AssessmentPeriodType;
 import kr.co.mathrank.domain.problem.assessment.entity.EvaluationStatus;
+import kr.co.mathrank.domain.problem.core.Difficulty;
 
 class Responses {
 	public record AssessmentSubmissionRankResponse(
@@ -65,6 +70,51 @@ class Responses {
 				result.elapsedTime().toSeconds()
 			);
 		}
+	}
 
+	public record AssessmentDetailResponse(
+		Long assessmentId,
+		List<AssessmentItemReadModelDetailResult> itemDetails,
+		Long registeredMemberId,
+		String assessmentName,
+		Long distinctUserCount,
+		LocalDateTime createdAt,
+		Difficulty difficulty,
+		Long minutes
+	) {
+		public static AssessmentDetailResponse from(AssessmentDetailReadModelResult result) {
+			return new AssessmentDetailResponse(
+				result.assessmentId(),
+				result.itemDetails(),
+				result.registeredMemberId(),
+				result.assessmentName(),
+				result.distinctUserCount(),
+				result.createdAt(),
+				result.difficulty(),
+				result.minutes()
+			);
+		}
+	}
+
+	public record AssessmentPageResponse(
+		Long assessmentId,
+		Long memberId,
+		String assessmentName,
+		Long distinctUserCount,
+		LocalDateTime createdAt,
+		Difficulty difficulty,
+		Long minutes
+	) {
+		public static AssessmentPageResponse from(AssessmentPageQueryResult result) {
+			return new AssessmentPageResponse(
+				result.assessmentId(),
+				result.memberId(),
+				result.assessmentName(),
+				result.distinctUserCount(),
+				result.createdAt(),
+				result.difficulty(),
+				result.minutes()
+			);
+		}
 	}
 }

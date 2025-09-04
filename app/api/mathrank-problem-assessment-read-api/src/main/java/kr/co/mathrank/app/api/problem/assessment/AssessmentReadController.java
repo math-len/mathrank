@@ -15,8 +15,6 @@ import kr.co.mathrank.app.api.common.authentication.Authorization;
 import kr.co.mathrank.app.api.common.authentication.LoginInfo;
 import kr.co.mathrank.app.api.common.authentication.MemberPrincipal;
 import kr.co.mathrank.common.page.PageResult;
-import kr.co.mathrank.domain.problem.assessment.dto.AssessmentDetailReadModelResult;
-import kr.co.mathrank.domain.problem.assessment.dto.AssessmentPageQuery;
 import kr.co.mathrank.domain.problem.assessment.dto.AssessmentPageQueryResult;
 import kr.co.mathrank.domain.problem.assessment.entity.AssessmentOrder;
 import kr.co.mathrank.domain.problem.assessment.entity.AssessmentOrderDirection;
@@ -61,21 +59,24 @@ public class AssessmentReadController {
 	@Operation(summary = "문제집 페이지 조회 API")
 	@Authorization(openedForAll = true)
 	@GetMapping("/api/v1/problem/assessment")
-	public ResponseEntity<PageResult<AssessmentPageQueryResult>> queryPage(
-		@ModelAttribute @ParameterObject final AssessmentPageQuery assessmentQuery,
+	public ResponseEntity<PageResult<Responses.AssessmentPageResponse>> queryPage(
+		@ModelAttribute @ParameterObject final Requests.AssessmentPageQueryRequest assessmentQuery,
 		@RequestParam(required = false, defaultValue = "LATEST") final AssessmentOrder order,
 		@RequestParam(required = false, defaultValue = "DESC") final AssessmentOrderDirection direction,
 		@RequestParam(defaultValue = "10") @Range(min = 1, max = 20) final Integer pageSize,
 		@RequestParam(defaultValue = "1") @Range(min = 1, max = 1000) final Integer pageNumber
 	) {
-		return ResponseEntity.ok(assessmentQueryService.pageQuery(assessmentQuery, order, direction, pageSize, pageNumber));
+		final PageResult<Responses.AssessmentPageResponse> pageResponsePageResult = assessmentQueryService.pageQuery(assessmentQuery.toQuery(), order, direction, pageSize, pageNumber)
+			.map(Responses.AssessmentPageResponse::from);
+		return ResponseEntity.ok(pageResponsePageResult);
 	}
 
 	@Operation(summary = "문제집 상세 조회 API")
 	@Authorization(openedForAll = true)
 	@GetMapping("/api/v1/problem/assessment/{assessmentId}")
-	public ResponseEntity<AssessmentDetailReadModelResult> getDetail(@PathVariable final Long assessmentId) {
-		return ResponseEntity.ok(assessmentDetailReadService.getDetail(assessmentId));
+	public ResponseEntity<Responses.AssessmentDetailResponse> getDetail(@PathVariable final Long assessmentId) {
+		return ResponseEntity.ok(
+			Responses.AssessmentDetailResponse.from(assessmentDetailReadService.getDetail(assessmentId)));
 	}
 
 	@Operation(summary = "문제집 랭크 조회 API")
