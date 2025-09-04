@@ -23,7 +23,7 @@ public class Requests {
 		@NotNull
 		@Size(min = 1)
 		@Valid
-		List<ExamItemRegisterRequest> items,
+		List<ContestItemRegisterRequest> items,
 
 		@NotNull
 		@Min(1)
@@ -41,7 +41,7 @@ public class Requests {
 				role,
 				contestName,
 				items.stream()
-					.map(ExamItemRegisterRequest::toCommand)
+					.map(ContestItemRegisterRequest::toCommand)
 					.toList(),
 				Duration.ofMinutes(minutes),
 				startAt,
@@ -50,7 +50,7 @@ public class Requests {
 		}
 	}
 
-	record ExamItemRegisterRequest(
+	record ContestItemRegisterRequest(
 		@NotNull
 		Long problemId,
 		@NotNull
