@@ -4,10 +4,12 @@ import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
+import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 import kr.co.mathrank.client.internal.course.CourseQueryResult;
 import kr.co.mathrank.client.internal.problem.ProblemQueryResult;
 import kr.co.mathrank.domain.problem.assessment.AssessmentReadDomainConfiguration;
+import kr.co.mathrank.domain.problem.assessment.dto.AssessmentDetailQuery;
 import kr.co.mathrank.domain.problem.assessment.dto.AssessmentDetailReadModelResult;
 import kr.co.mathrank.domain.problem.assessment.dto.AssessmentDetailResult;
 import kr.co.mathrank.domain.problem.assessment.dto.AssessmentItemDetail;
@@ -23,9 +25,9 @@ public class AssessmentDetailReadService {
 	private final ProblemQueryManager problemQueryManager;
 	private final CourseQueryManager courseQueryManager;
 
-	@Cacheable(key = "#assessmentId")
-	public AssessmentDetailReadModelResult getDetail(@NotNull final Long assessmentId) {
-		final AssessmentDetailResult detailResult = assessmentQueryService.getAssessmentDetails(assessmentId);
+	@Cacheable(key = "'assessmentId::' + #detailQuery.assessmentId + 'periodType::' + #detailQuery.assessmentPeriodType")
+	public AssessmentDetailReadModelResult getDetail(@NotNull @Valid final AssessmentDetailQuery detailQuery) {
+		final AssessmentDetailResult detailResult = assessmentQueryService.getAssessmentDetails(detailQuery);
 		return AssessmentDetailReadModelResult.from(
 			detailResult,
 			detailResult.itemDetails().stream()

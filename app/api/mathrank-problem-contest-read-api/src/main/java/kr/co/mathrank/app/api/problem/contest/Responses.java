@@ -1,4 +1,4 @@
-package kr.co.mathrank.app.api.problem.assessment;
+package kr.co.mathrank.app.api.problem.contest;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
@@ -11,22 +11,20 @@ import kr.co.mathrank.domain.problem.assessment.dto.AssessmentSubmissionRankResu
 import kr.co.mathrank.domain.problem.assessment.dto.SubmissionItemQueryResult;
 import kr.co.mathrank.domain.problem.assessment.dto.SubmissionQueryResult;
 import kr.co.mathrank.domain.problem.assessment.dto.SubmissionQueryResults;
-import kr.co.mathrank.domain.problem.assessment.entity.AssessmentPeriodType;
 import kr.co.mathrank.domain.problem.assessment.entity.EvaluationStatus;
 import kr.co.mathrank.domain.problem.core.Difficulty;
 
 class Responses {
-	public record AssessmentSubmissionRankResponse(
+	public record ContestSubmissionRankResponse(
 		List<Integer> descendingScores,
 		Integer score,
 		Integer scoreRank,
 		List<Long> ascendingElapsedTimeSeconds,
 		Long elapsedTimeSeconds,
-		Integer elapsedTimeRank,
-		Integer totalUserCount
+		Integer elapsedTimeRank
 	) {
-		public static AssessmentSubmissionRankResponse from(final AssessmentSubmissionRankResult result) {
-			return new AssessmentSubmissionRankResponse(
+		public static ContestSubmissionRankResponse from(final AssessmentSubmissionRankResult result) {
+			return new ContestSubmissionRankResponse(
 				result.descendingScores(),
 				result.score(),
 				result.scoreRank(),
@@ -34,25 +32,24 @@ class Responses {
 					.map(Duration::toSeconds)
 					.toList(),
 				result.elapsedTime().toSeconds(),
-				result.elapsedTimeRank(),
-				result.totalUserCount()
+				result.elapsedTimeRank()
 			);
 		}
 	}
 
-	public record AssessmentSubmissionQueryResponses(
-		List<AssessmentSubmissionQueryResponse> responses
+	public record ContestSubmissionQueryResponses(
+		List<ContestSubmissionQueryResponse> responses
 	) {
-		public static AssessmentSubmissionQueryResponses from(final SubmissionQueryResults results) {
-			return new AssessmentSubmissionQueryResponses(results.queryResults().stream()
-				.map(AssessmentSubmissionQueryResponse::from)
+		public static ContestSubmissionQueryResponses from(final SubmissionQueryResults results) {
+			return new ContestSubmissionQueryResponses(results.queryResults().stream()
+				.map(ContestSubmissionQueryResponse::from)
 				.toList());
 		}
 	}
 
-	public record AssessmentSubmissionQueryResponse(
+	public record ContestSubmissionQueryResponse(
 		Long submissionId,
-		Long assessmentAverageScore,
+		Long contestAverageScore,
 		Long memberId,
 		EvaluationStatus evaluationStatus,
 		Integer totalScore,
@@ -60,8 +57,8 @@ class Responses {
 		LocalDateTime submittedAt,
 		Long elapsedTimeSeconds
 	) {
-		public static AssessmentSubmissionQueryResponse from(final SubmissionQueryResult result) {
-			return new AssessmentSubmissionQueryResponse(
+		public static ContestSubmissionQueryResponse from(final SubmissionQueryResult result) {
+			return new ContestSubmissionQueryResponse(
 				result.submissionId(),
 				result.assessmentAverageScore(),
 				result.memberId(),
@@ -74,18 +71,20 @@ class Responses {
 		}
 	}
 
-	public record AssessmentDetailResponse(
-		Long assessmentId,
+	public record ContestDetailResponse(
+		Long contestId,
 		List<AssessmentItemReadModelDetailResult> itemDetails,
 		Long registeredMemberId,
-		String assessmentName,
+		String contestName,
 		Long distinctUserCount,
 		LocalDateTime createdAt,
 		Difficulty difficulty,
-		Long minutes
+		Long minutes,
+		LocalDateTime startAt,
+		LocalDateTime endAt
 	) {
-		public static AssessmentDetailResponse from(AssessmentDetailReadModelResult result) {
-			return new AssessmentDetailResponse(
+		public static ContestDetailResponse from(AssessmentDetailReadModelResult result) {
+			return new ContestDetailResponse(
 				result.assessmentId(),
 				result.itemDetails(),
 				result.registeredMemberId(),
@@ -93,29 +92,35 @@ class Responses {
 				result.distinctUserCount(),
 				result.createdAt(),
 				result.difficulty(),
-				result.minutes()
+				result.minutes(),
+				result.startAt(),
+				result.endAt()
 			);
 		}
 	}
 
-	public record AssessmentPageResponse(
-		Long assessmentId,
+	public record ContestPageResponse(
+		Long contestId,
 		Long memberId,
-		String assessmentName,
+		String contestName,
 		Long distinctUserCount,
 		LocalDateTime createdAt,
 		Difficulty difficulty,
-		Long minutes
+		Long minutes,
+		LocalDateTime startAt,
+		LocalDateTime endAt
 	) {
-		public static AssessmentPageResponse from(AssessmentPageQueryResult result) {
-			return new AssessmentPageResponse(
+		public static ContestPageResponse from(AssessmentPageQueryResult result) {
+			return new ContestPageResponse(
 				result.assessmentId(),
 				result.memberId(),
 				result.assessmentName(),
 				result.distinctUserCount(),
 				result.createdAt(),
 				result.difficulty(),
-				result.minutes()
+				result.minutes(),
+				result.startAt(),
+				result.endAt()
 			);
 		}
 	}

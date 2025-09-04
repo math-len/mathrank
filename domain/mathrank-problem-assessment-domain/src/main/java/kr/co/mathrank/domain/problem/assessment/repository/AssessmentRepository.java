@@ -9,6 +9,7 @@ import org.springframework.data.repository.query.Param;
 
 import jakarta.persistence.LockModeType;
 import kr.co.mathrank.domain.problem.assessment.entity.Assessment;
+import kr.co.mathrank.domain.problem.assessment.entity.AssessmentPeriodType;
 
 public interface AssessmentRepository extends JpaRepository<Assessment, Long>, AssessmentQueryRepository{
 	@Query("""
@@ -25,6 +26,15 @@ public interface AssessmentRepository extends JpaRepository<Assessment, Long>, A
 						  WHERE ass.id = :assessmentId
 		""")
 	Optional<Assessment> findWithItems(@Param("assessmentId") final Long assessmentId);
+
+	@Query("""
+		SELECT ass FROM Assessment ass
+				 LEFT JOIN FETCH ass.assessmentItems
+						  WHERE ass.id = :assessmentId 
+								  AND ass.assessmentSubmissionPeriod.periodType = :periodType
+		""")
+	Optional<Assessment> findWithItemsByIdAndPeriod(@Param("assessmentId") final Long assessmentId, @Param("periodType") final
+		AssessmentPeriodType periodType);
 
 	@Query("""
 SELECT ass FROM Assessment ass

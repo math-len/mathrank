@@ -1,4 +1,4 @@
-package kr.co.mathrank.app.api.problem.assessment;
+package kr.co.mathrank.app.api.problem.contest;
 
 import org.hibernate.validator.constraints.Range;
 import org.springdoc.core.annotations.ParameterObject;
@@ -16,7 +16,6 @@ import kr.co.mathrank.app.api.common.authentication.LoginInfo;
 import kr.co.mathrank.app.api.common.authentication.MemberPrincipal;
 import kr.co.mathrank.common.page.PageResult;
 import kr.co.mathrank.domain.problem.assessment.dto.AssessmentDetailQuery;
-import kr.co.mathrank.domain.problem.assessment.dto.AssessmentPageQueryResult;
 import kr.co.mathrank.domain.problem.assessment.entity.AssessmentOrder;
 import kr.co.mathrank.domain.problem.assessment.entity.AssessmentOrderDirection;
 import kr.co.mathrank.domain.problem.assessment.service.AssessmentDetailReadService;
@@ -25,10 +24,10 @@ import kr.co.mathrank.domain.problem.assessment.service.AssessmentRankQueryServi
 import kr.co.mathrank.domain.problem.assessment.service.SubmissionQueryService;
 import lombok.RequiredArgsConstructor;
 
-@Tag(name = "문제집 API")
+@Tag(name = "대회 API")
 @RestController
 @RequiredArgsConstructor
-public class AssessmentReadController {
+public class ContestReadController {
 	private final AssessmentQueryService assessmentQueryService;
 	private final SubmissionQueryService submissionQueryService;
 	private final AssessmentDetailReadService assessmentDetailReadService;
@@ -36,58 +35,58 @@ public class AssessmentReadController {
 
 	@Operation(summary = "제출된 답안지 채점 상태 조회 API")
 	@Authorization(openedForAll = true)
-	@GetMapping("/api/v1/problem/assessment/submission/{submissionId}")
-	public ResponseEntity<Responses.AssessmentSubmissionQueryResponse> querySubmissionResult(
+	@GetMapping("/api/v1/problem/contest/submission/{submissionId}")
+	public ResponseEntity<Responses.ContestSubmissionQueryResponse> querySubmissionResult(
 		@PathVariable final Long submissionId
 	) {
-		final Responses.AssessmentSubmissionQueryResponse response = Responses.AssessmentSubmissionQueryResponse.from(
+		final Responses.ContestSubmissionQueryResponse response = Responses.ContestSubmissionQueryResponse.from(
 			submissionQueryService.getSubmissionResult(submissionId));
 		return ResponseEntity.ok(response);
 	}
 
 	@Operation(summary = "제출 이력 확인 API")
 	@Authorization(openedForAll = true)
-	@GetMapping("/api/v1/problem/assessment/{assessmentId}/submission")
-	public ResponseEntity<Responses.AssessmentSubmissionQueryResponses> querySubmissionResults(
-		@PathVariable final Long assessmentId,
+	@GetMapping("/api/v1/problem/contest/{contestId}/submission")
+	public ResponseEntity<Responses.ContestSubmissionQueryResponses> querySubmissionResults(
+		@PathVariable final Long contestId,
 		@LoginInfo final MemberPrincipal memberPrincipal
 	) {
-		final Responses.AssessmentSubmissionQueryResponses responses = Responses.AssessmentSubmissionQueryResponses.from(
-			submissionQueryService.getAssessmentSubmissionResults(assessmentId, memberPrincipal.memberId()));
+		final Responses.ContestSubmissionQueryResponses responses = Responses.ContestSubmissionQueryResponses.from(
+			submissionQueryService.getAssessmentSubmissionResults(contestId, memberPrincipal.memberId()));
 		return ResponseEntity.ok(responses);
 	}
 
-	@Operation(summary = "문제집 페이지 조회 API")
+	@Operation(summary = "대회 페이지 조회 API")
 	@Authorization(openedForAll = true)
-	@GetMapping("/api/v1/problem/assessment")
-	public ResponseEntity<PageResult<Responses.AssessmentPageResponse>> queryPage(
-		@ModelAttribute @ParameterObject final Requests.AssessmentPageQueryRequest assessmentQuery,
+	@GetMapping("/api/v1/problem/contest")
+	public ResponseEntity<PageResult<Responses.ContestPageResponse>> queryPage(
+		@ModelAttribute @ParameterObject final QueryRequests.ContestPageQueryRequest request,
 		@RequestParam(required = false, defaultValue = "LATEST") final AssessmentOrder order,
 		@RequestParam(required = false, defaultValue = "DESC") final AssessmentOrderDirection direction,
 		@RequestParam(defaultValue = "10") @Range(min = 1, max = 20) final Integer pageSize,
 		@RequestParam(defaultValue = "1") @Range(min = 1, max = 1000) final Integer pageNumber
 	) {
-		final PageResult<Responses.AssessmentPageResponse> pageResponsePageResult = assessmentQueryService.pageQuery(assessmentQuery.toQuery(), order, direction, pageSize, pageNumber)
-			.map(Responses.AssessmentPageResponse::from);
-		return ResponseEntity.ok(pageResponsePageResult);
+		final PageResult<Responses.ContestPageResponse> pageResponses = assessmentQueryService.pageQuery(request.toQuery(),
+				order, direction, pageSize, pageNumber)
+			.map(Responses.ContestPageResponse::from);
+		return ResponseEntity.ok(pageResponses);
 	}
 
-	@Operation(summary = "문제집 상세 조회 API")
+	@Operation(summary = "대회 상세 조회 API")
 	@Authorization(openedForAll = true)
-	@GetMapping("/api/v1/problem/assessment/{assessmentId}")
-	public ResponseEntity<Responses.AssessmentDetailResponse> getDetail(@PathVariable final Long assessmentId) {
-		return ResponseEntity.ok(
-			Responses.AssessmentDetailResponse.from(
-				assessmentDetailReadService.getDetail(AssessmentDetailQuery.periodUnLimited(assessmentId))));
+	@GetMapping("/api/v1/problem/contest/{contestId}")
+	public ResponseEntity<Responses.ContestDetailResponse> getDetail(@PathVariable final Long contestId) {
+		return ResponseEntity.ok(Responses.ContestDetailResponse.from(assessmentDetailReadService.getDetail(
+			AssessmentDetailQuery.periodLimited(contestId))));
 	}
 
-	@Operation(summary = "문제집 랭크 조회 API")
+	@Operation(summary = "대회 랭크 조회 API")
 	@Authorization(openedForAll = true)
-	@GetMapping("/api/v1/problem/assessment/submission/{submissionId}/rank")
-	public ResponseEntity<Responses.AssessmentSubmissionRankResponse> getSubmissionRank(
+	@GetMapping("/api/v1/problem/contest/submission/{submissionId}/rank")
+	public ResponseEntity<Responses.ContestSubmissionRankResponse> getSubmissionRank(
 		@PathVariable final Long submissionId
 	) {
-		Responses.AssessmentSubmissionRankResponse response = Responses.AssessmentSubmissionRankResponse.from(
+		Responses.ContestSubmissionRankResponse response = Responses.ContestSubmissionRankResponse.from(
 			assessmentRankQueryService.getRank(submissionId));
 		return ResponseEntity.ok(response);
 	}

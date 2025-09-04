@@ -3,6 +3,7 @@ package kr.co.mathrank.domain.problem.assessment.dto;
 import java.time.LocalDateTime;
 
 import kr.co.mathrank.domain.problem.assessment.entity.Assessment;
+import kr.co.mathrank.domain.problem.assessment.entity.AssessmentPeriodType;
 import kr.co.mathrank.domain.problem.core.Difficulty;
 
 public record AssessmentPageQueryResult(
@@ -12,7 +13,10 @@ public record AssessmentPageQueryResult(
 	Long distinctUserCount,
 	LocalDateTime createdAt,
 	Difficulty difficulty,
-	Long minutes
+	Long minutes,
+	AssessmentPeriodType periodType,
+	LocalDateTime startAt,
+	LocalDateTime endAt
 ) {
 	public static AssessmentPageQueryResult from(Assessment assessment) {
 		return new AssessmentPageQueryResult(
@@ -22,7 +26,10 @@ public record AssessmentPageQueryResult(
 			assessment.getDistinctTriedMemberCount(),
 			assessment.getCreatedAt(),
 			assessment.getDifficulty(),
-			assessment.getAssessmentDuration().toMinutes()
+			assessment.getAssessmentDuration().toMinutes(),
+			assessment.getAssessmentSubmissionPeriod().getPeriodType(),
+			assessment.getAssessmentSubmissionPeriod().getStartAt(),
+			assessment.getAssessmentSubmissionPeriod().getEndAt()
 		);
 	}
 }

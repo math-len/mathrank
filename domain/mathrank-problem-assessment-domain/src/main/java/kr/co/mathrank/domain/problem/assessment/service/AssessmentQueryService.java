@@ -6,9 +6,11 @@ import org.hibernate.validator.constraints.Range;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.annotation.Validated;
 
+import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 import kr.co.mathrank.common.page.PageResult;
 import kr.co.mathrank.common.page.PageUtil;
+import kr.co.mathrank.domain.problem.assessment.dto.AssessmentDetailQuery;
 import kr.co.mathrank.domain.problem.assessment.dto.AssessmentDetailResult;
 import kr.co.mathrank.domain.problem.assessment.dto.AssessmentPageQuery;
 import kr.co.mathrank.domain.problem.assessment.dto.AssessmentPageQueryResult;
@@ -27,11 +29,11 @@ import lombok.extern.slf4j.Slf4j;
 public class AssessmentQueryService {
 	private final AssessmentRepository assessmentRepository;
 
-	public AssessmentDetailResult getAssessmentDetails(@NotNull final Long assessmentId) {
-		final Assessment assessment = assessmentRepository.findWithItems(assessmentId)
+	public AssessmentDetailResult getAssessmentDetails(@NotNull final AssessmentDetailQuery detailQuery) {
+		final Assessment assessment = assessmentRepository.findWithItemsByIdAndPeriod(detailQuery.getAssessmentId(), detailQuery.getAssessmentPeriodType())
 			.orElseThrow(() -> {
-				log.info("[AssessmentQueryService.getAssessmentDetails] cannot found assessment - assessmentId: {}",
-					assessmentId);
+				log.info("[AssessmentQueryService.getAssessmentDetails] cannot found assessment - detailQuery: {}",
+					detailQuery);
 				return new NoSuchAssessmentException();
 			});
 		return AssessmentDetailResult.from(assessment);
@@ -39,7 +41,7 @@ public class AssessmentQueryService {
 	}
 
 	public PageResult<AssessmentPageQueryResult> pageQuery(
-		@NotNull final AssessmentPageQuery assessmentQuery,
+		@NotNull @Valid final AssessmentPageQuery assessmentQuery,
 		@NotNull final AssessmentOrder assessmentOrder,
 		@NotNull final AssessmentOrderDirection direction,
 		@NotNull @Range(min = 1, max = 20) final Integer pageSize,

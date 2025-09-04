@@ -4,6 +4,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 import kr.co.mathrank.domain.problem.assessment.entity.Assessment;
+import kr.co.mathrank.domain.problem.assessment.entity.AssessmentPeriodType;
 import kr.co.mathrank.domain.problem.core.Difficulty;
 
 public record AssessmentDetailResult(
@@ -14,7 +15,10 @@ public record AssessmentDetailResult(
 	Long distinctUserCount,
 	LocalDateTime createdAt,
 	Difficulty difficulty,
-	Long minutes
+	Long minutes,
+	AssessmentPeriodType periodType,
+	LocalDateTime startAt,
+	LocalDateTime endAt
 ) {
 	public static AssessmentDetailResult from(final Assessment assessment) {
 		return new AssessmentDetailResult(
@@ -27,7 +31,10 @@ public record AssessmentDetailResult(
 			assessment.getDistinctTriedMemberCount(),
 			assessment.getCreatedAt(),
 			assessment.getDifficulty(),
-			assessment.getAssessmentDuration().toMinutes()
+			assessment.getAssessmentDuration().toMinutes(),
+			assessment.getAssessmentSubmissionPeriod().getPeriodType(),
+			assessment.getAssessmentSubmissionPeriod().getStartAt(),
+			assessment.getAssessmentSubmissionPeriod().getEndAt()
 		);
 	}
 }
