@@ -5,13 +5,13 @@ import kr.co.mathrank.domain.problem.assessment.entity.AssessmentPeriodType;
 import kr.co.mathrank.domain.problem.core.Difficulty;
 
 public class QueryRequests {
-	record ExamPageQueryRequest(
-		String assessmentName,
+	record ContestPageQueryRequest(
+		String contestName,
 		Difficulty difficulty
 	){
 		AssessmentPageQuery toQuery() {
 			return new AssessmentPageQuery(
-				assessmentName,
+				contestName,
 				difficulty,
 				AssessmentPeriodType.LIMITED
 			);

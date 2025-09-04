@@ -16,9 +16,9 @@ import kr.co.mathrank.domain.problem.assessment.dto.LimitedAssessmentRegisterCom
 import kr.co.mathrank.domain.problem.assessment.dto.SubmissionRegisterCommand;
 
 public class Requests {
-	record ExamRegisterRequest(
+	record ContestRegisterRequest(
 		@NotBlank
-		String examName,
+		String contestName,
 
 		@NotNull
 		@Size(min = 1)
@@ -39,7 +39,7 @@ public class Requests {
 			return new LimitedAssessmentRegisterCommand(
 				registerMemberId,
 				role,
-				examName,
+				contestName,
 				items.stream()
 					.map(ExamItemRegisterRequest::toCommand)
 					.toList(),
@@ -63,14 +63,14 @@ public class Requests {
 
 	record ExamSubmissionRegisterRequest(
 		@NotNull
-		Long examId,
+		Long contest,
 		@NotNull
 		List<List<String>> submittedAnswers,
 		@NotNull
 		Long elapsedTimeSeconds
 	) {
 		public SubmissionRegisterCommand toCommand(final Long memberId) {
-			return new SubmissionRegisterCommand(memberId, examId, submittedAnswers,
+			return new SubmissionRegisterCommand(memberId, contest, submittedAnswers,
 				Duration.ofSeconds(elapsedTimeSeconds));
 		}
 	}

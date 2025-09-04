@@ -21,16 +21,16 @@ import lombok.RequiredArgsConstructor;
 
 @RestController
 @RequiredArgsConstructor
-@Tag(name = "시험지 API")
-public class ExamController {
+@Tag(name = "대회 API")
+public class ContestController {
 	private final AssessmentRegisterService assessmentRegisterService;
 	private final SubmissionRegisterService submissionRegisterService;
 
-	@Operation(summary = "시험지 등록", description = "문제집 등록은 관리자만 가능합니다.")
-	@PostMapping("/api/v1/problem/exam")
+	@Operation(summary = "대회 등록", description = "문제집 등록은 관리자만 가능합니다.")
+	@PostMapping("/api/v1/problem/contest")
 	@Authorization(values = Role.ADMIN)
 	public ResponseEntity<Void> registerAssessment(
-		@RequestBody @Valid final Requests.ExamRegisterRequest request,
+		@RequestBody @Valid final Requests.ContestRegisterRequest request,
 		@LoginInfo final MemberPrincipal memberPrincipal
 	) {
 		final LimitedAssessmentRegisterCommand command = request.toCommand(memberPrincipal.memberId(), memberPrincipal.role());
@@ -39,8 +39,8 @@ public class ExamController {
 		return ResponseEntity.status(HttpStatus.CREATED).build();
 	}
 
-	@Operation(summary = "시험지 답안지 등록 API")
-	@PostMapping("/api/v1/problem/exam/submission")
+	@Operation(summary = "대회 답안지 등록 API")
+	@PostMapping("/api/v1/problem/contest/submission")
 	@Authorization(openedForAll = true)
 	public ResponseEntity<Long> registerSubmission(
 		@RequestBody @Valid final Requests.ExamSubmissionRegisterRequest request,
