@@ -61,21 +61,24 @@ public class ExamReadController {
 	@Operation(summary = "시험지 페이지 조회 API")
 	@Authorization(openedForAll = true)
 	@GetMapping("/api/v1/problem/exam")
-	public ResponseEntity<PageResult<AssessmentPageQueryResult>> queryPage(
-		@ModelAttribute @ParameterObject final AssessmentPageQuery assessmentQuery,
+	public ResponseEntity<PageResult<Responses.ExamPageResponse>> queryPage(
+		@ModelAttribute @ParameterObject final Requests.ExamPageQueryRequest request,
 		@RequestParam(required = false, defaultValue = "LATEST") final AssessmentOrder order,
 		@RequestParam(required = false, defaultValue = "DESC") final AssessmentOrderDirection direction,
 		@RequestParam(defaultValue = "10") @Range(min = 1, max = 20) final Integer pageSize,
 		@RequestParam(defaultValue = "1") @Range(min = 1, max = 1000) final Integer pageNumber
 	) {
-		return ResponseEntity.ok(assessmentQueryService.pageQuery(assessmentQuery, order, direction, pageSize, pageNumber));
+		final PageResult<Responses.ExamPageResponse> pageResponses = assessmentQueryService.pageQuery(request.toQuery(),
+				order, direction, pageSize, pageNumber)
+			.map(Responses.ExamPageResponse::from);
+		return ResponseEntity.ok(pageResponses);
 	}
 
 	@Operation(summary = "시험지 상세 조회 API")
 	@Authorization(openedForAll = true)
 	@GetMapping("/api/v1/problem/exam/{examId}")
-	public ResponseEntity<AssessmentDetailReadModelResult> getDetail(@PathVariable final Long examId) {
-		return ResponseEntity.ok(assessmentDetailReadService.getDetail(examId));
+	public ResponseEntity<Responses.ExamDetailResponse> getDetail(@PathVariable final Long examId) {
+		return ResponseEntity.ok(Responses.ExamDetailResponse.from(assessmentDetailReadService.getDetail(examId)));
 	}
 
 	@Operation(summary = "시험지 랭크 조회 API")

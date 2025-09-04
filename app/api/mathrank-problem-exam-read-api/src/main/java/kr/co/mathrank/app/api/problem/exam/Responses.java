@@ -4,11 +4,15 @@ import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.List;
 
+import kr.co.mathrank.domain.problem.assessment.dto.AssessmentDetailReadModelResult;
+import kr.co.mathrank.domain.problem.assessment.dto.AssessmentItemReadModelDetailResult;
+import kr.co.mathrank.domain.problem.assessment.dto.AssessmentPageQueryResult;
 import kr.co.mathrank.domain.problem.assessment.dto.AssessmentSubmissionRankResult;
 import kr.co.mathrank.domain.problem.assessment.dto.SubmissionItemQueryResult;
 import kr.co.mathrank.domain.problem.assessment.dto.SubmissionQueryResult;
 import kr.co.mathrank.domain.problem.assessment.dto.SubmissionQueryResults;
 import kr.co.mathrank.domain.problem.assessment.entity.EvaluationStatus;
+import kr.co.mathrank.domain.problem.core.Difficulty;
 
 class Responses {
 	public record ExamSubmissionRankResponse(
@@ -63,6 +67,60 @@ class Responses {
 				result.submissionItemQueryResults(),
 				result.submittedAt(),
 				result.elapsedTime().toSeconds()
+			);
+		}
+	}
+
+	public record ExamDetailResponse(
+		Long assessmentId,
+		List<AssessmentItemReadModelDetailResult> itemDetails,
+		Long registeredMemberId,
+		String assessmentName,
+		Long distinctUserCount,
+		LocalDateTime createdAt,
+		Difficulty difficulty,
+		Long minutes,
+		LocalDateTime startAt,
+		LocalDateTime endAt
+	) {
+		public static ExamDetailResponse from(AssessmentDetailReadModelResult result) {
+			return new ExamDetailResponse(
+				result.assessmentId(),
+				result.itemDetails(),
+				result.registeredMemberId(),
+				result.assessmentName(),
+				result.distinctUserCount(),
+				result.createdAt(),
+				result.difficulty(),
+				result.minutes(),
+				result.startAt(),
+				result.endAt()
+			);
+		}
+	}
+
+	public record ExamPageResponse(
+		Long assessmentId,
+		Long memberId,
+		String assessmentName,
+		Long distinctUserCount,
+		LocalDateTime createdAt,
+		Difficulty difficulty,
+		Long minutes,
+		LocalDateTime startAt,
+		LocalDateTime endAt
+	) {
+		public static ExamPageResponse from(AssessmentPageQueryResult result) {
+			return new ExamPageResponse(
+				result.assessmentId(),
+				result.memberId(),
+				result.assessmentName(),
+				result.distinctUserCount(),
+				result.createdAt(),
+				result.difficulty(),
+				result.minutes(),
+				result.startAt(),
+				result.endAt()
 			);
 		}
 	}

@@ -14,7 +14,9 @@ public record AssessmentPageQueryResult(
 	LocalDateTime createdAt,
 	Difficulty difficulty,
 	Long minutes,
-	AssessmentPeriodType periodType
+	AssessmentPeriodType periodType,
+	LocalDateTime startAt,
+	LocalDateTime endAt
 ) {
 	public static AssessmentPageQueryResult from(Assessment assessment) {
 		return new AssessmentPageQueryResult(
@@ -25,7 +27,9 @@ public record AssessmentPageQueryResult(
 			assessment.getCreatedAt(),
 			assessment.getDifficulty(),
 			assessment.getAssessmentDuration().toMinutes(),
-			assessment.getAssessmentSubmissionPeriod().getPeriodType()
+			assessment.getAssessmentSubmissionPeriod().getPeriodType(),
+			assessment.getAssessmentSubmissionPeriod().getStartAt(),
+			assessment.getAssessmentSubmissionPeriod().getEndAt()
 		);
 	}
 }
