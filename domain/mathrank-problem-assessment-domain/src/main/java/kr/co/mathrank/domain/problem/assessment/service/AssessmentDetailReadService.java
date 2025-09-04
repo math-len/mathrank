@@ -25,7 +25,7 @@ public class AssessmentDetailReadService {
 	private final ProblemQueryManager problemQueryManager;
 	private final CourseQueryManager courseQueryManager;
 
-	@Cacheable(key = "#detailQuery")
+	@Cacheable(key = "'assessmentId::' + #detailQuery.assessmentId + 'periodType::' + #detailQuery.assessmentPeriodType")
 	public AssessmentDetailReadModelResult getDetail(@NotNull @Valid final AssessmentDetailQuery detailQuery) {
 		final AssessmentDetailResult detailResult = assessmentQueryService.getAssessmentDetails(detailQuery);
 		return AssessmentDetailReadModelResult.from(
