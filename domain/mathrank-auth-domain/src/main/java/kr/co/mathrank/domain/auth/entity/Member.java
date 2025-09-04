@@ -34,6 +34,7 @@ public class Member {
 	@Id
 	private Long id;
 
+	@Setter
 	private String name;
 
 	@Enumerated(EnumType.STRING)
