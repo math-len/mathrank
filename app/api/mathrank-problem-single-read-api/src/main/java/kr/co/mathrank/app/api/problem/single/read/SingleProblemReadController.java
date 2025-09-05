@@ -50,7 +50,6 @@ public class SingleProblemReadController {
 
 	@GetMapping("/api/v1/problem/single")
 	@Operation(summary = "풀이 시도 가능한 개별문제 페이징 조회 API", description = "정렬 기준 설정하지 않으면, 날짜 최신순 조회가 기본으로 사용됩니다.")
-	@Authorization(openedForAll = true)
 	public ResponseEntity<PageResult<SingleProblemReadModelResponse>> getSingleProblems(
 		@LoginInfo final MemberPrincipal memberPrincipal,
 		@ModelAttribute @ParameterObject final SingleProblemQueryRequest query,
@@ -63,7 +62,7 @@ public class SingleProblemReadController {
 			query.toQuery(),
 			orderColumn,
 			direction,
-			memberPrincipal.memberId(),
+			memberPrincipal == null ? null : memberPrincipal.memberId(), // 로그인 안된 사용자면 Null
 			pageSize,
 			pageNumber
 		);
