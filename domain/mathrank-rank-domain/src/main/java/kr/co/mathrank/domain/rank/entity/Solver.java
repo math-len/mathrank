@@ -17,7 +17,8 @@ import lombok.Getter;
 @Entity
 @Table(
 	indexes = {
-		@Index(name = "idx_score_memberId", columnList = "score desc, member_id")
+		@Index(name = "idx_score_memberId", columnList = "score desc, member_id"),
+		@Index(name = "idx_memberId_score", columnList = "member_id, score desc")
 	}
 )
 @Getter
