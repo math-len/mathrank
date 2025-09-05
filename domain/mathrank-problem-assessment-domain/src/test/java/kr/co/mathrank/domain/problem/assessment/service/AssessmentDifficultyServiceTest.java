@@ -60,6 +60,7 @@ class AssessmentDifficultyServiceTest {
 			null,
 			null,
 			null,
+			null,
 			null
 		);
 	}
