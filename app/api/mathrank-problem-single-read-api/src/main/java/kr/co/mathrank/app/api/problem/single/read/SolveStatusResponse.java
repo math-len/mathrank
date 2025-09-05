@@ -16,7 +16,7 @@ public record SolveStatusResponse(
 				.map(SolveStatusResult::singleProblemId)
 				.toList(),
 			solveStatusResults.solveStatusResults().stream()
-				.filter(SolveStatusResult::success)
+				.filter(solveStatusResult -> !solveStatusResult.success())
 				.map(SolveStatusResult::singleProblemId)
 				.toList()
 		);
