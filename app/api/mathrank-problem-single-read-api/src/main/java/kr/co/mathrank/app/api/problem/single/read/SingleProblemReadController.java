@@ -31,7 +31,6 @@ public class SingleProblemReadController {
 	private final SingleProblemQueryService singleProblemQueryService;
 	private final CourseClient courseClient;
 
-	@Authorization(openedForAll = true)
 	@Operation(summary = "단일 개별문제 조회 API")
 	@GetMapping("/api/v1/problem/single/{singleProblemId}")
 	public ResponseEntity<SingleProblemReadModelResponse> getDetail(
@@ -39,7 +38,9 @@ public class SingleProblemReadController {
 		@PathVariable final Long singleProblemId
 	) {
 		final SingleProblemReadModelResult result = singleProblemQueryService.getProblemWithSolverStatus(
-			singleProblemId, memberPrincipal.memberId());
+			singleProblemId,
+			memberPrincipal == null ? null : memberPrincipal.memberId() // 로그인 안된 사용자면 Null
+		);
 		final SingleProblemReadModelResponse response = SingleProblemReadModelResponse.of(
 			result,
 			courseClient.getParentCourses(result.coursePath())
