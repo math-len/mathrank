@@ -26,6 +26,7 @@ public class SingleProblemReadModelRegisterService {
 			command.difficulty(), 0L, 0L, 0L,
 			command.createdAt());
 		model.setLocation(command.location());
+		model.setSchoolCode(command.schoolCode());
 
 		singleProblemReadModelRepository.save(model);
 	}

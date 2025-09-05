@@ -15,6 +15,7 @@ public record SingleProblemReadModelRegisterCommand(
 	String singleProblemName,
 	@NotNull
 	String location,
+	String schoolCode,
 	@NotNull
 	String problemImage,
 	@NotNull

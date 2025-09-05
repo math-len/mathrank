@@ -15,6 +15,7 @@ public record SingleProblemReadModelUpdateCommand(
 	String problemImage,
 	@NotNull
 	String location,
+	String schoolCode,
 	@NotNull
 	AnswerType answerType,
 	@NotNull

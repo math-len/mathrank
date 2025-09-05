@@ -12,6 +12,8 @@ public record SingleProblemReadModelQuery(
 
 	String location,
 
+	String schoolCode,
+
 	AnswerType answerType,
 
 	Difficulty difficultyMinInclude,

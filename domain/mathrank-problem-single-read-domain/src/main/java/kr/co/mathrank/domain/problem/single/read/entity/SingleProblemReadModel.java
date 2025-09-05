@@ -59,6 +59,8 @@ public class SingleProblemReadModel implements Persistable<Long> {
 
 	private String location;
 
+	private String schoolCode;
+
 	private String problemImage;
 
 	private String coursePath;
