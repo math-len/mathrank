@@ -10,6 +10,8 @@ public record SingleProblemReadModelQuery(
 
 	String coursePath,
 
+	String location,
+
 	AnswerType answerType,
 
 	Difficulty difficultyMinInclude,

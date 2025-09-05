@@ -74,8 +74,17 @@ class SingleProblemReadModelQueryRepositoryImpl implements SingleProblemReadMode
 			accuracyIn(query.accuracyMinInclude(), query.accuracyMaxInclude()),
 			totalAttemptCountIn(query.totalAttemptCountMinInclude(), query.totalAttemptCountMaxInclude()),
 			answerTypeEqual(query.answerType()),
-			containsSingleProblemName(query.singleProblemName())
+			containsSingleProblemName(query.singleProblemName()),
+			startsWithLocation(query.location())
 		};
+	}
+
+	private BooleanExpression startsWithLocation(final String location) {
+		if (location == null) {
+			return null;
+		}
+
+		return QSingleProblemReadModel.singleProblemReadModel.location.contains(location);
 	}
 
 	private BooleanExpression containsSingleProblemName(final String singleProblemName) {
