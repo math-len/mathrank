@@ -16,9 +16,11 @@ public record AssessmentPageQueryResult(
 	Long minutes,
 	AssessmentPeriodType periodType,
 	LocalDateTime startAt,
-	LocalDateTime endAt
+	LocalDateTime endAt,
+
+	boolean solved
 ) {
-	public static AssessmentPageQueryResult from(Assessment assessment) {
+	public static AssessmentPageQueryResult from(Assessment assessment, boolean solved) {
 		return new AssessmentPageQueryResult(
 			assessment.getId(),
 			assessment.getRegisterMemberId(),
@@ -29,7 +31,8 @@ public record AssessmentPageQueryResult(
 			assessment.getAssessmentDuration().toMinutes(),
 			assessment.getAssessmentSubmissionPeriod().getPeriodType(),
 			assessment.getAssessmentSubmissionPeriod().getStartAt(),
-			assessment.getAssessmentSubmissionPeriod().getEndAt()
+			assessment.getAssessmentSubmissionPeriod().getEndAt(),
+			solved
 		);
 	}
 }

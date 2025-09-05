@@ -56,17 +56,20 @@ public class ContestReadController {
 		return ResponseEntity.ok(responses);
 	}
 
-	@Operation(summary = "대회 페이지 조회 API")
-	@Authorization(openedForAll = true)
 	@GetMapping("/api/v1/problem/contest")
+	@Operation(summary = "대회 페이지 조회 API", description = "풀이 여부를 함께 리턴합니다. 로그인이 안된 사용자의 경우, 모두 false를 리턴합니다.")
 	public ResponseEntity<PageResult<Responses.ContestPageResponse>> queryPage(
 		@ModelAttribute @ParameterObject final QueryRequests.ContestPageQueryRequest request,
+		@LoginInfo MemberPrincipal memberPrincipal,
 		@RequestParam(required = false, defaultValue = "LATEST") final AssessmentOrder order,
 		@RequestParam(required = false, defaultValue = "DESC") final AssessmentOrderDirection direction,
 		@RequestParam(defaultValue = "10") @Range(min = 1, max = 20) final Integer pageSize,
 		@RequestParam(defaultValue = "1") @Range(min = 1, max = 1000) final Integer pageNumber
 	) {
-		final PageResult<Responses.ContestPageResponse> pageResponses = assessmentQueryService.pageQuery(request.toQuery(),
+		final Long requestMemberId = memberPrincipal == null ? null : memberPrincipal.memberId();
+
+		final PageResult<Responses.ContestPageResponse> pageResponses = assessmentQueryService.pageQuery(
+				request.toQuery(), requestMemberId,
 				order, direction, pageSize, pageNumber)
 			.map(Responses.ContestPageResponse::from);
 		return ResponseEntity.ok(pageResponses);

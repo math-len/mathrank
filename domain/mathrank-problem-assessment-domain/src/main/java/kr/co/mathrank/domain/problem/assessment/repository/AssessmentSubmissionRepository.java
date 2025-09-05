@@ -9,6 +9,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import jakarta.persistence.LockModeType;
+import kr.co.mathrank.domain.problem.assessment.entity.Assessment;
 import kr.co.mathrank.domain.problem.assessment.entity.AssessmentSubmission;
 
 public interface AssessmentSubmissionRepository extends JpaRepository<AssessmentSubmission, Long> {
@@ -38,6 +39,14 @@ public interface AssessmentSubmissionRepository extends JpaRepository<Assessment
 		""")
 	@Lock(LockModeType.PESSIMISTIC_READ)
 	List<AssessmentSubmission> findAllByAssessmentIdAndMemberIdForShare(@Param("assessmentId") Long assessmentId, @Param("memberId") Long memberId);
+
+
+	@Query("""
+		SELECT ass
+		FROM AssessmentSubmission ass
+		WHERE ass.memberId = :memberId AND ass.assessment.id IN :assessmentIds
+		""")
+	List<AssessmentSubmission> findAllByMemberIdAndAssessmentIdsIn(@Param("memberId") Long memberId, @Param("assessmentIds") List<Assessment> assessmentId);
 
 	@Query("""
 		SELECT ass

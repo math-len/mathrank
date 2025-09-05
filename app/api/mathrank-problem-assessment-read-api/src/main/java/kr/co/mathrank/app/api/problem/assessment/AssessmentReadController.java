@@ -16,7 +16,6 @@ import kr.co.mathrank.app.api.common.authentication.LoginInfo;
 import kr.co.mathrank.app.api.common.authentication.MemberPrincipal;
 import kr.co.mathrank.common.page.PageResult;
 import kr.co.mathrank.domain.problem.assessment.dto.AssessmentDetailQuery;
-import kr.co.mathrank.domain.problem.assessment.dto.AssessmentPageQueryResult;
 import kr.co.mathrank.domain.problem.assessment.entity.AssessmentOrder;
 import kr.co.mathrank.domain.problem.assessment.entity.AssessmentOrderDirection;
 import kr.co.mathrank.domain.problem.assessment.service.AssessmentDetailReadService;
@@ -57,17 +56,19 @@ public class AssessmentReadController {
 		return ResponseEntity.ok(responses);
 	}
 
-	@Operation(summary = "문제집 페이지 조회 API")
-	@Authorization(openedForAll = true)
+	@Operation(summary = "문제집 페이지 조회 API", description = "풀이 여부를 함께 리턴합니다. 로그인이 안된 사용자의 경우, 모두 false를 리턴합니다.")
 	@GetMapping("/api/v1/problem/assessment")
 	public ResponseEntity<PageResult<Responses.AssessmentPageResponse>> queryPage(
 		@ModelAttribute @ParameterObject final Requests.AssessmentPageQueryRequest assessmentQuery,
+		@LoginInfo final MemberPrincipal memberPrincipal,
 		@RequestParam(required = false, defaultValue = "LATEST") final AssessmentOrder order,
 		@RequestParam(required = false, defaultValue = "DESC") final AssessmentOrderDirection direction,
 		@RequestParam(defaultValue = "10") @Range(min = 1, max = 20) final Integer pageSize,
 		@RequestParam(defaultValue = "1") @Range(min = 1, max = 1000) final Integer pageNumber
 	) {
-		final PageResult<Responses.AssessmentPageResponse> pageResponsePageResult = assessmentQueryService.pageQuery(assessmentQuery.toQuery(), order, direction, pageSize, pageNumber)
+		final Long requestMemberId = memberPrincipal == null ? null : memberPrincipal.memberId();
+
+		final PageResult<Responses.AssessmentPageResponse> pageResponsePageResult = assessmentQueryService.pageQuery(assessmentQuery.toQuery(), requestMemberId, order, direction, pageSize, pageNumber)
 			.map(Responses.AssessmentPageResponse::from);
 		return ResponseEntity.ok(pageResponsePageResult);
 	}
