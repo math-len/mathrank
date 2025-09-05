@@ -22,7 +22,6 @@ public class CourseController {
 
 	@Operation(summary = "다음 단계의 과정을 조회합니다.", description = "depth 가 정확히 \"1\" 높은 과정들만 조회합니다. ex) 초1 조회 시 -> {01 다항식, 02 방정식, ..., 04 도형의 방정식}")
 	@GetMapping("/api/v1/problem/course")
-	@Authorization(openedForAll = true)
 	public ResponseEntity<List<CourseQueryResult>> getChildes(
 		@RequestParam(defaultValue = "", required = false) final String path
 	) {
