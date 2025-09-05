@@ -64,6 +64,12 @@ public enum Tier {
 	private final float percentage;
 
 	public static Tier getMatchTier(final long rank, final long totalUserCount) {
+		if (totalUserCount == 0) {
+			log.warn("[Tier.getMatchTier] rank cannot divide with 0 - rank: {}, totalUserCount: {}", rank,
+				totalUserCount);
+			return Tier.NONE;
+		}
+
 		final float top = (float) rank / totalUserCount * 100;
 
 		// 첫번째로 만족하는 놈으로 결정
