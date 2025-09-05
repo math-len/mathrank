@@ -52,7 +52,7 @@ public class RankPageQueryService {
 	}
 
 	private RankItemResult mapToRankQueryResult(final Solver solver, final Long totalCount) {
-		final Long rank = solverRepository.findRankByMemberId(solver.getMemberId());
+		final Long rank = solverRepository.findRankByMemberId(solver.getMemberId()) + 1;
 
 		return RankItemResult.from(
 			solver,
