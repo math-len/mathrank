@@ -4,6 +4,7 @@ dependencies {
     implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.7.0'
 
     implementation project(':domain:mathrank-rank-domain')
+    implementation project(':client:internal:mathrank-member-client')
 
     implementation project(':app:api:mathrank-api-common')
 
