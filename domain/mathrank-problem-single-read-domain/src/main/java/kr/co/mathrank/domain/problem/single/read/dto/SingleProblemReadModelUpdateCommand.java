@@ -14,6 +14,8 @@ public record SingleProblemReadModelUpdateCommand(
 	@NotNull
 	String problemImage,
 	@NotNull
+	String location,
+	@NotNull
 	AnswerType answerType,
 	@NotNull
 	Difficulty difficulty,

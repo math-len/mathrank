@@ -36,6 +36,7 @@ import lombok.ToString;
 	@Index(name = "idx_coursePath", columnList = "course_path"),
 	@Index(name = "idx_problemId", columnList = "problem_id"),
 	@Index(name = "idx_answerType", columnList = "answer_type"),
+	@Index(name = "idx_location", columnList = "location"),
 	@Index(name = "idx_difficulty", columnList = "difficulty"),
 	@Index(name = "idx_totalAttemptedCount", columnList = "total_attempted_count"),
 	@Index(name = "idx_firstTrySuccessCount", columnList = "first_try_success_count desc"),
@@ -55,6 +56,8 @@ public class SingleProblemReadModel implements Persistable<Long> {
 	private Long problemId; // problem id
 
 	private String singleProblemName;
+
+	private String location;
 
 	private String problemImage;
 
