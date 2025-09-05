@@ -7,6 +7,6 @@ public record SolveStatusResult(
 	Boolean success
 ) {
 	public static SolveStatusResult from(final SingleProblemSolver singleProblemSolver) {
-		return new SolveStatusResult(singleProblemSolver.getId(), singleProblemSolver.isSuccess());
+		return new SolveStatusResult(singleProblemSolver.getSingleProblemReadModel().getProblemId(), singleProblemSolver.isSuccess());
 	}
 }

@@ -6,6 +6,7 @@ import java.util.Map;
 
 import org.hibernate.validator.constraints.Range;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.annotation.Validated;
 
 import jakarta.validation.Valid;
@@ -102,6 +103,7 @@ public class SingleProblemQueryService {
 			});
 	}
 
+	@Transactional(readOnly = true)
 	public SolveStatusResults querySolveStatus(@NotNull final Long memberId) {
 		return SolveStatusResults.from(singleProblemSolverRepository.findAllByMemberId(memberId));
 	}
