@@ -59,7 +59,7 @@ class SolveLogSaveManagerTest {
 	}
 
 	@Test
-	void 동시성환경에서도_정상_저장_및_계산() throws InterruptedException {
+	void 동시성환경에서도_무결성_예외시_롤백확인() throws InterruptedException {
 		final Long memberId = 1L;
 		final int tryCount = 10;
 		final int score = 100;
@@ -83,6 +83,34 @@ class SolveLogSaveManagerTest {
 		Assertions.assertEquals(1, solverRepository.count());
 		Assertions.assertEquals(1, solver.getSolveLogs().size());
 		Assertions.assertEquals(score, solver.getScore());
+	}
+
+	@Test
+	void 동시성환경에_무결성_에외가_아니면_정상저장() throws InterruptedException {
+		final Long memberId = 1L;
+		final int tryCount = 10;
+		final int score = 100;
+
+		final ExecutorService executorService = Executors.newFixedThreadPool(5);
+		final CountDownLatch countDownLatch = new CountDownLatch(10);
+
+		for (int i = 0; i < tryCount; i++) {
+			final long singleProblemId = i;
+			executorService.submit(() -> {
+				try {
+					solveLogSaveManager.save(new SolveLogRegisterCommand(singleProblemId, 2L, memberId, true), score);
+				} finally {
+					countDownLatch.countDown();
+				}
+			});
+		}
+
+		countDownLatch.await();
+
+		final Solver solver = solverRepository.findByMemberId(memberId).get();
+		Assertions.assertEquals(1, solverRepository.count());
+		Assertions.assertEquals(tryCount, solver.getSolveLogs().size());
+		Assertions.assertEquals(tryCount * score, solver.getScore());
 	}
 
 	@AfterEach
