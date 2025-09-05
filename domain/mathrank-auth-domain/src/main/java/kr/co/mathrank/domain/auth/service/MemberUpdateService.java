@@ -1,7 +1,5 @@
 package kr.co.mathrank.domain.auth.service;
 
-import java.util.Set;
-
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.annotation.Validated;
@@ -22,6 +20,7 @@ import lombok.extern.slf4j.Slf4j;
 public class MemberUpdateService {
 	private final MemberRepository memberRepository;
 
+	@Transactional
 	public void update(@NotNull @Valid final MemberUpdateCommand command) {
 		final Member member = memberRepository.findById(command.memberId())
 			.orElseThrow(() -> {
