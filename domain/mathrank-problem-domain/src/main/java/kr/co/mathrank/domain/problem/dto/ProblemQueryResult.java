@@ -20,7 +20,8 @@ public record ProblemQueryResult(
 	Integer year,
 	String solutionVideoLink,
 	String solutionImage,
-	String memo
+	String memo,
+	String location
 ) {
 	public static ProblemQueryResult from(Problem problem) {
 		return new ProblemQueryResult(
@@ -37,7 +38,8 @@ public record ProblemQueryResult(
 			problem.getYears(),
 			problem.getSolutionVideoLink(),
 			problem.getSolutionImage(),
-			problem.getMemo()
+			problem.getMemo(),
+			problem.getLocation()
 		);
 	}
 }

@@ -19,6 +19,7 @@ public record ProblemQueryResult(
 	Integer year,
 	String solutionVideoLink,
 	String solutionImage,
-	String memo
+	String memo,
+	String location
 ) {
 }
