@@ -28,6 +28,7 @@ public class EventPayloads {
 				coursePath,
 				problemImage,
 				location,
+				schoolCode,
 				answerType,
 				difficulty,
 				updatedAt
@@ -63,6 +64,7 @@ public class EventPayloads {
 		String coursePath,
 		String problemImage,
 		String location,
+		String schoolCode,
 		AnswerType answerType,
 		Difficulty difficulty,
 		LocalDateTime registeredAt,
@@ -76,6 +78,7 @@ public class EventPayloads {
 				problemId,
 				singleProblemName,
 				location,
+				schoolCode,
 				problemImage,
 				answerType,
 				difficulty,
