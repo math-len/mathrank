@@ -57,7 +57,6 @@ class SolveLogSaveManager {
 		} catch (CannotAcquireLockException e) {
 			// (2) Solver 중복 문제
 			// 		- 동시 삽입 시도로 인해 gap lock이 발생, 데드락.
-			//		-
 			// 		- 현재 해당 기능에 대한 트래픽이 크지 않을거라 예상 중
 			// 		retry 활용하여 1회 재시도 만으로 해결
 			log.warn("[SolveLogSaveManager.save] solver already exist. it will be retry - memberId: {}", command.memberId(), e);
