@@ -14,6 +14,8 @@ import kr.co.mathrank.common.page.PageResult;
 import kr.co.mathrank.common.page.PageUtil;
 import kr.co.mathrank.domain.problem.single.read.dto.SingleProblemReadModelQuery;
 import kr.co.mathrank.domain.problem.single.read.dto.SingleProblemReadModelResult;
+import kr.co.mathrank.domain.problem.single.read.dto.SolveStatusResult;
+import kr.co.mathrank.domain.problem.single.read.dto.SolveStatusResults;
 import kr.co.mathrank.domain.problem.single.read.entity.OrderColumn;
 import kr.co.mathrank.domain.problem.single.read.entity.OrderDirection;
 import kr.co.mathrank.domain.problem.single.read.entity.SingleProblemReadModel;
@@ -98,6 +100,10 @@ public class SingleProblemQueryService {
 				log.info("[SingleProblemQueryService.getProblemWithSolverStatus] Problem not found. singleProblemId={}", singleProblemId);
 				return new CannotFoundProblemException();
 			});
+	}
+
+	public SolveStatusResults querySolveStatus(@NotNull final Long memberId) {
+		return SolveStatusResults.from(singleProblemSolverRepository.findAllByMemberId(memberId));
 	}
 
 	/**

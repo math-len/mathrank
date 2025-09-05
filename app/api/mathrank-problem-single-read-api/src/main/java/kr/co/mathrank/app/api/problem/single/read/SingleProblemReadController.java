@@ -1,7 +1,5 @@
 package kr.co.mathrank.app.api.problem.single.read;
 
-import java.util.List;
-
 import org.hibernate.validator.constraints.Range;
 import org.springdoc.core.annotations.ParameterObject;
 import org.springframework.http.ResponseEntity;
@@ -68,6 +66,16 @@ public class SingleProblemReadController {
 			pageNumber
 		);
 		return ResponseEntity.ok(result.map(this::mapToResponse));
+	}
+
+	@Operation(summary = "풀이 기록 조회 API")
+	@Authorization(openedForAll = true)
+	@GetMapping("/api/v1/problem/single/my")
+	public ResponseEntity<SolveStatusResponse> getMySolvedProblems(
+		@LoginInfo final MemberPrincipal memberPrincipal
+	) {
+		return ResponseEntity.ok(
+			SolveStatusResponse.from(singleProblemQueryService.querySolveStatus(memberPrincipal.memberId())));
 	}
 
 	private SingleProblemReadModelResponse mapToResponse(final SingleProblemReadModelResult modelResult) {
