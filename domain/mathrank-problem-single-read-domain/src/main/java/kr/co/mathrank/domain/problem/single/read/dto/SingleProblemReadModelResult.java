@@ -11,6 +11,8 @@ public record SingleProblemReadModelResult(
 	String singleProblemName,
 	String problemImage,
 	String coursePath,
+	String location,
+	String schoolCode,
 	AnswerType answerType,
 	Difficulty difficulty,
 	Long firstTrySuccessCount, // 첫번째 시도에서 성공한 횟수
@@ -26,6 +28,8 @@ public record SingleProblemReadModelResult(
 			model.getSingleProblemName(),
 			model.getProblemImage(),
 			model.getCoursePath(),
+			model.getLocation(),
+			model.getSchoolCode(),
 			model.getAnswerType(),
 			model.getDifficulty(),
 			model.getFirstTrySuccessCount(),
