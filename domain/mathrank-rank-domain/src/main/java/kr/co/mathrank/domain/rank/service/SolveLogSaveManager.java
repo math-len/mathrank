@@ -38,6 +38,10 @@ class SolveLogSaveManager {
 	void save(@NotNull @Valid final SolveLogRegisterCommand command, final Integer score) {
 		try {
 			final Solver solver = getSolverOrCreate(command.memberId());
+
+			// 자식의 유니크 제약조건 예외를 발견하고 롤백을 위함
+			// 		- 전파 속성으로 영속화할 때, 유니크 제약조건 위반으로 인한 롤백을 예상했으나, 실제론 예외를 던지지 않았고 롤백 X, 부모엔티티만 영속화되는 버그 발견
+			//		- 아래와 같이 직접적으로 영속화 시 예외를 정상적으로 던짐. => 롤백을 위함
 			solveLogRepository.save(
 				solver.addSolveLog(command.problemId(), command.singleProblemId(), command.success(), score));
 
