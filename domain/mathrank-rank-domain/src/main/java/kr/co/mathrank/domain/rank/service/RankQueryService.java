@@ -13,10 +13,13 @@ import lombok.extern.slf4j.Slf4j;
 public class RankQueryService {
 	private final SolverRepository solverRepository;
 
+	private final RankScoreQueryManager rankScoreQueryManager;
+
 	public RankQueryResult getRank(final Long memberId) {
 		final int rank = solverRepository.findRankByMemberId(memberId) + 1;
 		final long count = solverRepository.count();
+		final Long score = rankScoreQueryManager.getScore(memberId);
 
-		return RankQueryResult.of(rank, count);
+		return RankQueryResult.of(rank, score, count);
 	}
 }
