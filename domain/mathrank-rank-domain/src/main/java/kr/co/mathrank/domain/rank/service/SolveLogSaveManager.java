@@ -33,7 +33,7 @@ class SolveLogSaveManager {
 		retryFor = SolverAlreadyExistException.class,
 		maxAttempts = 2,
 		backoff = @Backoff(
-			delay = 1000 // 첫 번째 재시도 대기 시간 (1000ms = 11초)
+			delay = 1000 // 첫 번째 재시도 대기 시간 (1000ms = 1초)
 		))
 	void save(@NotNull @Valid final SolveLogRegisterCommand command, final Integer score) {
 		try {
