@@ -32,9 +32,9 @@ class RankQueryServiceTest {
 
 		Assertions.assertAll(
 			// solver1 는 랭크 1위
-			() -> Assertions.assertEquals(1, rankQueryService.getRank(solver1.getId()).rank()),
+			() -> Assertions.assertEquals(1, rankQueryService.getRank(solver1.getMemberId()).rank()),
 			// solver2 는 랭크 2위
-			() -> Assertions.assertEquals(2, rankQueryService.getRank(solver2.getId()).rank())
+			() -> Assertions.assertEquals(2, rankQueryService.getRank(solver2.getMemberId()).rank())
 		);
 	}
 
@@ -60,7 +60,7 @@ class RankQueryServiceTest {
 
 		// solver4 는 랭크 4위
 		// solver 보다 높은 점수가 3명임
-		Assertions.assertEquals(4, rankQueryService.getRank(solver4.getId()).rank());
+		Assertions.assertEquals(4, rankQueryService.getRank(solver4.getMemberId()).rank());
 	}
 
 	@Test
@@ -88,12 +88,12 @@ class RankQueryServiceTest {
 
 		// 동일 점수는 동일 랭크
 		Assertions.assertAll(
-			() -> Assertions.assertEquals(1, rankQueryService.getRank(solver1.getId()).rank()),
-			() -> Assertions.assertEquals(1, rankQueryService.getRank(solver2.getId()).rank()),
-			() -> Assertions.assertEquals(1, rankQueryService.getRank(solver3.getId()).rank()),
+			() -> Assertions.assertEquals(1, rankQueryService.getRank(solver1.getMemberId()).rank()),
+			() -> Assertions.assertEquals(1, rankQueryService.getRank(solver2.getMemberId()).rank()),
+			() -> Assertions.assertEquals(1, rankQueryService.getRank(solver3.getMemberId()).rank()),
 
-			() -> Assertions.assertEquals(4, rankQueryService.getRank(solver4.getId()).rank()),
-			() -> Assertions.assertEquals(4, rankQueryService.getRank(solver5.getId()).rank())
+			() -> Assertions.assertEquals(4, rankQueryService.getRank(solver4.getMemberId()).rank()),
+			() -> Assertions.assertEquals(4, rankQueryService.getRank(solver5.getMemberId()).rank())
 		);
 	}
 }

@@ -25,7 +25,7 @@ FROM Solver s
 WHERE s.score > (
 	SELECT solver.score 
 	FROM Solver solver 
-	WHERE solver.id = :memberId
+	WHERE solver.memberId = :memberId
 )
 """)
 	Integer findRankByMemberId(@Param("memberId") Long memberId);
