@@ -105,7 +105,8 @@ class Responses {
 		Long distinctUserCount,
 		LocalDateTime createdAt,
 		Difficulty difficulty,
-		Long minutes
+		Long minutes,
+		Boolean solved
 	) {
 		public static AssessmentPageResponse from(AssessmentPageQueryResult result) {
 			return new AssessmentPageResponse(
@@ -115,7 +116,8 @@ class Responses {
 				result.distinctUserCount(),
 				result.createdAt(),
 				result.difficulty(),
-				result.minutes()
+				result.minutes(),
+				result.solved()
 			);
 		}
 	}

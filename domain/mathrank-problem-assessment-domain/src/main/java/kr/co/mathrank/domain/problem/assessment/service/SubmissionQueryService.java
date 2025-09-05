@@ -35,7 +35,7 @@ public class SubmissionQueryService {
 		@NotNull final Long memberId
 	) {
 		return new SubmissionQueryResults(
-			assessmentSubmissionRepository.findAllByAssessmentIdAndMemberId(assessmentId, memberId)
+			assessmentSubmissionRepository.findAllByAssessmentIdAndMemberIdWithSubmittedItems(assessmentId, memberId)
 				.stream()
 				.map(SubmissionQueryResult::from)
 				.sorted(Comparator.comparing(SubmissionQueryResult::submittedAt).reversed())

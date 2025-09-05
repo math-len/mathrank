@@ -1,6 +1,8 @@
 package kr.co.mathrank.domain.problem.assessment.service;
 
 import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 import org.hibernate.validator.constraints.Range;
 import org.springframework.stereotype.Service;
@@ -17,8 +19,10 @@ import kr.co.mathrank.domain.problem.assessment.dto.AssessmentPageQueryResult;
 import kr.co.mathrank.domain.problem.assessment.entity.Assessment;
 import kr.co.mathrank.domain.problem.assessment.entity.AssessmentOrder;
 import kr.co.mathrank.domain.problem.assessment.entity.AssessmentOrderDirection;
+import kr.co.mathrank.domain.problem.assessment.entity.AssessmentSubmission;
 import kr.co.mathrank.domain.problem.assessment.exception.NoSuchAssessmentException;
 import kr.co.mathrank.domain.problem.assessment.repository.AssessmentRepository;
+import kr.co.mathrank.domain.problem.assessment.repository.AssessmentSubmissionRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -28,6 +32,7 @@ import lombok.extern.slf4j.Slf4j;
 @RequiredArgsConstructor
 public class AssessmentQueryService {
 	private final AssessmentRepository assessmentRepository;
+	private final AssessmentSubmissionRepository assessmentSubmissionRepository;
 
 	public AssessmentDetailResult getAssessmentDetails(@NotNull final AssessmentDetailQuery detailQuery) {
 		final Assessment assessment = assessmentRepository.findWithItemsByIdAndPeriod(detailQuery.getAssessmentId(), detailQuery.getAssessmentPeriodType())
@@ -42,6 +47,7 @@ public class AssessmentQueryService {
 
 	public PageResult<AssessmentPageQueryResult> pageQuery(
 		@NotNull @Valid final AssessmentPageQuery assessmentQuery,
+		final Long requestMemberId,
 		@NotNull final AssessmentOrder assessmentOrder,
 		@NotNull final AssessmentOrderDirection direction,
 		@NotNull @Range(min = 1, max = 20) final Integer pageSize,
@@ -50,14 +56,34 @@ public class AssessmentQueryService {
 		final List<Assessment> queryResults = assessmentRepository.query(assessmentQuery, pageSize, pageNumber, assessmentOrder, direction);
 		final Long totalCount = assessmentRepository.count(assessmentQuery);
 		final List<Integer> nextPages = PageUtil.getNextPages(pageSize, pageNumber, totalCount, queryResults.size());
+		final Set<Long> solvedAssessmentIds = getSolvedAssessmentIds(requestMemberId, queryResults);
 
 		return PageResult.of(
 			queryResults.stream()
-				.map(AssessmentPageQueryResult::from)
+				.map(assessment ->  AssessmentPageQueryResult.from(
+					assessment,
+					isSolved(assessment.getId(), solvedAssessmentIds))
+				)
 				.toList(),
 			pageNumber,
 			pageSize,
 			nextPages
 		);
+	}
+
+	private Set<Long> getSolvedAssessmentIds(final Long memberId, final List<Assessment> assessments) {
+		final List<AssessmentSubmission> solvedList = assessmentSubmissionRepository.findAllByMemberIdAndAssessmentIdsIn(
+			memberId,
+			assessments
+		);
+
+		return solvedList.stream()
+			.map(AssessmentSubmission::getAssessment)
+			.map(Assessment::getId)
+			.collect(Collectors.toSet());
+	}
+
+	private boolean isSolved(final Long assessmentId, final Set<Long> solvedAssessments) {
+		return solvedAssessments.contains(assessmentId);
 	}
 }

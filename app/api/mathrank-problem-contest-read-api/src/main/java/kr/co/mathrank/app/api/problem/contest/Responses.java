@@ -108,7 +108,8 @@ class Responses {
 		Difficulty difficulty,
 		Long minutes,
 		LocalDateTime startAt,
-		LocalDateTime endAt
+		LocalDateTime endAt,
+		Boolean solved
 	) {
 		public static ContestPageResponse from(AssessmentPageQueryResult result) {
 			return new ContestPageResponse(
@@ -120,7 +121,8 @@ class Responses {
 				result.difficulty(),
 				result.minutes(),
 				result.startAt(),
-				result.endAt()
+				result.endAt(),
+				result.solved()
 			);
 		}
 	}
