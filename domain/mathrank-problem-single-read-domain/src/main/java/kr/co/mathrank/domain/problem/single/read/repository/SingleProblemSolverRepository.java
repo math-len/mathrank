@@ -20,4 +20,6 @@ public interface SingleProblemSolverRepository extends JpaRepository<SingleProbl
 		@Param("singleProblemId") Long singleProblemId);
 
 	List<SingleProblemSolver> findByMemberIdAndSingleProblemReadModelIn(Long memberId, Collection<SingleProblemReadModel> singleProblemReadModels);
+
+	List<SingleProblemSolver> findAllByMemberId(Long memberId);
 }
