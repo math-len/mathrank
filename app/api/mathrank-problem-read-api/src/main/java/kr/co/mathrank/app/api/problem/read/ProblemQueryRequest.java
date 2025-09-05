@@ -15,7 +15,8 @@ public record ProblemQueryRequest(
 	String coursePath,
 	Boolean videoExist,
 	Integer year,
-	String location
+	String location,
+	String schoolCode
 ) {
 	public ProblemQuery toQuery(final Long requestMemberId) {
 		return new ProblemQuery(
@@ -29,7 +30,8 @@ public record ProblemQueryRequest(
 			coursePath,
 			videoExist,
 			year,
-			location
+			location,
+			schoolCode
 		);
 	}
 }

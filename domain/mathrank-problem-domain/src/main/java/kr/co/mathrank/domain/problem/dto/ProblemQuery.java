@@ -12,6 +12,7 @@ public record ProblemQuery(
 	String path,
 	Boolean solutionVideoExist,
 	Integer year,
-	String location
+	String location,
+	String schoolCode
 ) {
 }

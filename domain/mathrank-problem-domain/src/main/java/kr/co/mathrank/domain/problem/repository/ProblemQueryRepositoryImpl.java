@@ -64,8 +64,17 @@ class ProblemQueryRepositoryImpl implements ProblemQueryRepository {
 			problemCourseStartsWith(problemQuery.path()),
 			solutionVideoLinkExist(problemQuery.solutionVideoExist()),
 			yearMatch(problemQuery.year()),
-			locationMatch(problemQuery.location())
+			locationMatch(problemQuery.location()),
+			schoolCodeMatch(problemQuery.schoolCode()),
 		};
+	}
+
+	private BooleanExpression schoolCodeMatch(final String schoolCode) {
+		if (schoolCode == null) {
+			return null;
+		}
+
+		return QProblem.problem.schoolCode.eq(schoolCode);
 	}
 
 	private BooleanExpression memberIdEq(final Long memberId) {
