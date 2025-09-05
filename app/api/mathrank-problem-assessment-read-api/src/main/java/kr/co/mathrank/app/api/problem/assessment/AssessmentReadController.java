@@ -74,7 +74,6 @@ public class AssessmentReadController {
 	}
 
 	@Operation(summary = "문제집 상세 조회 API")
-	@Authorization(openedForAll = true)
 	@GetMapping("/api/v1/problem/assessment/{assessmentId}")
 	public ResponseEntity<Responses.AssessmentDetailResponse> getDetail(@PathVariable final Long assessmentId) {
 		return ResponseEntity.ok(

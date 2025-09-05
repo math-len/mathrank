@@ -49,7 +49,7 @@ public class SingleProblemQueryService {
 		@NotNull @Valid final SingleProblemReadModelQuery query,
 		OrderColumn orderColumn,
 		OrderDirection direction,
-		@NotNull final Long memberId,
+		final Long memberId,
 		@NotNull @Range(min = 1, max = 20) final Integer pageSize,
 		@NotNull @Range(max = 1000) final Integer pageNumber // 페이지 번호 (1부터 시작). 내부 offset 계산 시 사용됨: offset = (pageNumber - 1) * pageSize
 	) {
@@ -91,7 +91,7 @@ public class SingleProblemQueryService {
 	 */
 	public SingleProblemReadModelResult getProblemWithSolverStatus(
 		@NotNull final Long singleProblemId,
-		@NotNull final Long requestMemberId
+		final Long requestMemberId
 	) {
 		return singleProblemRepository.findByIdWithSolvedInfo(singleProblemId, requestMemberId)
 			.orElseThrow(() -> {
