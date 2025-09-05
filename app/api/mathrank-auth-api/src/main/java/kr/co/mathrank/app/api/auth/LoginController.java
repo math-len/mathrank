@@ -57,7 +57,7 @@ public class LoginController {
         예시: https://yourapp.com/oauth/callback/kakao
     """)
 	@GetMapping("/api/v1/auth/login/oauth/{provider}")
-	public ResponseEntity<LoginOAuthResponse> loginByoAuth(
+	public ResponseEntity<Responses.LoginOAuthResponse> loginByoAuth(
 		@PathVariable final OAuthProvider provider,
 		@Valid @ParameterObject @ModelAttribute final Requests.OAuthLoginRequest loginRequest,
 		final HttpServletResponse response
@@ -68,14 +68,14 @@ public class LoginController {
 		final ResponseCookie cookie = createRefreshTokenCookie(result.refreshToken(), Duration.ofDays(7));
 		response.setHeader(HttpHeaders.SET_COOKIE, cookie.toString());
 
-		return ResponseEntity.ok(new LoginOAuthResponse(result.accessToken(), result.userName(), result.isNewUser()));
+		return ResponseEntity.ok(new Responses.LoginOAuthResponse(result.accessToken(), result.userName(), result.isNewUser()));
 	}
 
 	@Operation(summary = "oAuth로 등록된 계정에 필요한 정보들을 추가로 등록하는 API", description = "oAuth를 통해 가입된 계정은 필수정보가 누락되어있습니다. 해당 API를 통해 추가 정보를 등록해야 서비스를 제한없이 사용할 수 있습니다.")
 	@Authorization(openedForAll = true)
 	@PutMapping("/api/v1/member/registration")
 	public ResponseEntity<Void> completeRegister(
-		@RequestBody @Valid final MemberRegistrationCompleteRequest request,
+		@RequestBody @Valid final Requests.MemberRegistrationCompleteRequest request,
 		@LoginInfo final MemberPrincipal memberPrincipal
 	) {
 		final MemberInfoCompleteCommand command = request.toCommand(memberPrincipal.memberId());
@@ -86,7 +86,7 @@ public class LoginController {
 
 	@Operation(summary = "로그인 API", description = "로그인 성공 시, accessToken을 body로 refreshToken을 쿠키로 응답합니다. 중복 로그인 시, 이전에 발급된 refreshToken이 무효화 처리 됩니다.")
 	@PostMapping("/api/v1/auth/login")
-	public ResponseEntity<LoginResponse> login(
+	public ResponseEntity<Responses.LoginResponse> login(
 		@RequestBody final Requests.LoginRequest request,
 		final HttpServletResponse response
 	) {
@@ -94,12 +94,12 @@ public class LoginController {
 		final ResponseCookie cookie = createRefreshTokenCookie(result.refreshToken(), Duration.ofDays(7));
 		response.setHeader(HttpHeaders.SET_COOKIE, cookie.toString());
 
-		return ResponseEntity.ok(new LoginResponse(result.accessToken(), result.userName()));
+		return ResponseEntity.ok(new Responses.LoginResponse(result.accessToken(), result.userName()));
 	}
 
 	@Operation(summary = "로그인 갱신 API", description = "로그인 시 응답받은 refreshToken을 통해 accessToken을 새로 갱신받습니다. 무효한 refreshToken 사용시 에러를 응답합니다.")
 	@PostMapping("/api/v1/auth/login/refresh")
-	public ResponseEntity<LoginResponse> loginWithRefreshToken(
+	public ResponseEntity<Responses.LoginResponse> loginWithRefreshToken(
 		@CookieValue(name = RefreshTokenCookieManager.REFRESH_TOKEN_HEADER_NAME) final String refreshToken,
 		final HttpServletResponse response
 	) {
@@ -109,7 +109,7 @@ public class LoginController {
 		final ResponseCookie cookie = createRefreshTokenCookie(result.refreshToken(), Duration.ofDays(7));
 		response.setHeader(HttpHeaders.SET_COOKIE, cookie.toString());
 
-		return ResponseEntity.ok(new LoginResponse(result.accessToken(), result.userName()));
+		return ResponseEntity.ok(new Responses.LoginResponse(result.accessToken(), result.userName()));
 	}
 
 	@Operation(summary = "로그아웃 API", description = "클라이언트의 refreshToken을 무효화합니다.")

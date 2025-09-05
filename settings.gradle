@@ -6,6 +6,8 @@ include(
         'app:init:mathrank-auth-init',
         'app:init:mathrank-problem-init',
         'app:api',
+        'app:api:mathrank-member-read-api',
+        'app:api:mathrank-member-api',
         'app:api:mathrank-rank-read-api',
         'app:api:mathrank-problem-contest-api',
         'app:api:mathrank-problem-contest-read-api',

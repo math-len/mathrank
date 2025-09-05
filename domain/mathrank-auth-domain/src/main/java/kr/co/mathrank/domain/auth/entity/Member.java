@@ -34,6 +34,7 @@ public class Member {
 	@Id
 	private Long id;
 
+	@Setter
 	private String name;
 
 	@Enumerated(EnumType.STRING)
@@ -63,20 +64,19 @@ public class Member {
 	@Setter
 	private Boolean pending = true;
 
-	@BatchSize(size = 100)
-	@OneToMany(mappedBy = "member", cascade = CascadeType.PERSIST, orphanRemoval = true)
-	private Set<School> relatedSchools = new HashSet<>();
+	@Setter
+	private String schoolCode;
 
 	public static Member of(final Long id, final String name, final Role role, final String loginId,
 		final String password, final MemberType memberType, final Boolean agreeToPrivacyPolicy,
-		final Set<String> schoolCodes) {
+		final String schoolCode) {
 		final Member member = new Member();
 		member.id = id;
 		member.role = role;
 		member.name = name;
 		member.loginId = loginId;
 		member.password = password;
-		member.completeRegister(memberType, agreeToPrivacyPolicy, schoolCodes);
+		member.completeRegister(memberType, agreeToPrivacyPolicy, schoolCode);
 
 		return member;
 	}
@@ -93,17 +93,10 @@ public class Member {
 		return member;
 	}
 
-	public void completeRegister(final MemberType memberType, final Boolean agreeToPrivacyPolicy, final Set<String> schoolCodes) {
+	public void completeRegister(final MemberType memberType, final Boolean agreeToPrivacyPolicy, final String schoolCode) {
 		this.setMemberType(memberType);
 		this.setAgreeToPrivacyPolicy(agreeToPrivacyPolicy);
-		this.setSchools(schoolCodes);
+		this.setSchoolCode(schoolCode);
 		this.setPending(false);
-	}
-
-	public void setSchools(final Set<String> schoolCodes) {
-		this.relatedSchools.clear();
-		this.relatedSchools.addAll(schoolCodes.stream()
-			.map(code -> School.of(this, code))
-			.collect(Collectors.toSet()));
 	}
 }

@@ -1,0 +1,13 @@
+package kr.co.mathrank.domain.auth.dto;
+
+import jakarta.validation.constraints.NotNull;
+import kr.co.mathrank.domain.auth.entity.MemberType;
+
+public record MemberUpdateCommand(
+	@NotNull Long memberId,
+	@NotNull String userNickName,
+	@NotNull MemberType memberType,
+	@NotNull String schoolCode,
+	@NotNull Boolean agreeToPolicy
+) {
+}
