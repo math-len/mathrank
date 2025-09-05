@@ -18,12 +18,14 @@ dependencies {
     implementation project(':app:api:mathrank-problem-single-read-api')
     implementation project(':app:api:mathrank-problem-contest-api')
     implementation project(':app:api:mathrank-problem-contest-read-api')
+    implementation project(':app:api:mathrank-rank-read-api')
 
     implementation project(':app:init:mathrank-problem-init')
     implementation project(':app:init:mathrank-auth-init')
 
     implementation project(':app:consumer:mathrank-problem-single-read-consumer-monolith')
     implementation project(':app:consumer:mathrank-assessment-consumer-monolith')
+    implementation project(':app:consumer:mathrank-rank-consumer-monolith')
 
     implementation project(':common:mathrank-cache-caffeine')
 }
