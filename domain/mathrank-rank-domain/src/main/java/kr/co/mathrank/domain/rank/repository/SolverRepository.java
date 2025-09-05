@@ -1,7 +1,9 @@
 package kr.co.mathrank.domain.rank.repository;
 
+import java.util.List;
 import java.util.Optional;
 
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Lock;
 import org.springframework.data.jpa.repository.Query;
@@ -35,4 +37,9 @@ FROM Solver s
 WHERE s.memberId = :memberId
 """)
 	Long findScoreByMemberId(@Param("memberId") Long memberId);
+
+	@Query("""
+SELECT s FROM Solver s
+""")
+	List<Solver> findAllSolversDescendingScores(Pageable pageable);
 }

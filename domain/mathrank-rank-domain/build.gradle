@@ -5,6 +5,7 @@ dependencies {
     implementation 'org.springframework.retry:spring-retry'
 
     implementation project(':common:mathrank-exception')
+    implementation project(':common:mathrank-page')
     implementation project(':client:internal:mathrank-problem-client')
 
     testImplementation 'org.testcontainers:junit-jupiter'

@@ -3,6 +3,8 @@ package kr.co.mathrank.domain.rank.entity;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.hibernate.annotations.BatchSize;
+
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -28,6 +30,7 @@ public class Solver {
 	private Long id;
 
 	@OneToMany(mappedBy = "solver", cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
+	@BatchSize(size = 100)
 	private final List<SolveLog> solveLogs = new ArrayList<>();
 
 	private Long score = 0L;
