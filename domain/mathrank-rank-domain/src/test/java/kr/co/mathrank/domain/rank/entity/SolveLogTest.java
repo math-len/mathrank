@@ -38,7 +38,7 @@ class SolveLogTest {
 		final Solver solver = new Solver();
 
 		solver.addSolveLog(1L, 2L, true, 100);
-		solver.addSolveLog(1L, 2L, false, 100);
+		solver.addSolveLog(1L, 3L, false, 100);
 
 		Assertions.assertEquals(100, solver.getScore());
 	}
