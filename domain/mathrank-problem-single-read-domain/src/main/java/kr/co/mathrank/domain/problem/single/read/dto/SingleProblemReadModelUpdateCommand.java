@@ -13,7 +13,6 @@ public record SingleProblemReadModelUpdateCommand(
 	String coursePath,
 	@NotNull
 	String problemImage,
-	@NotNull
 	String location,
 	String schoolCode,
 	@NotNull
