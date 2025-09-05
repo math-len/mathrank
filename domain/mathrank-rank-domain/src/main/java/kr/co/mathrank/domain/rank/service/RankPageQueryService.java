@@ -6,6 +6,7 @@ import org.hibernate.validator.constraints.Range;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.annotation.Validated;
 
 import jakarta.validation.constraints.NotNull;
@@ -23,6 +24,7 @@ import lombok.RequiredArgsConstructor;
 public class RankPageQueryService {
 	private final SolverRepository solverRepository;
 
+	@Transactional(readOnly = true)
 	public PageResult<RankItemResult> queryResultPageResult(
 		@NotNull @Range(min = 1, max = 20) final Integer pageSize,
 		@NotNull @Range(min = 1, max = 2000) final Integer pageNumber
