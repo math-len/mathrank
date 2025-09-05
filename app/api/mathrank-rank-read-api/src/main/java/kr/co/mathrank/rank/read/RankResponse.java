@@ -4,7 +4,7 @@ import kr.co.mathrank.domain.rank.dto.RankQueryResult;
 import kr.co.mathrank.domain.rank.entity.Tier;
 
 public record RankResponse(
-	Integer rank,
+	Long rank,
 	Tier tier,
 	Long score,
 	Long totalUserCount

@@ -17,7 +17,7 @@ public class RankQueryService {
 	private final RankScoreQueryManager rankScoreQueryManager;
 
 	public RankQueryResult getRank(final Long memberId) {
-		final int rank = solverRepository.findRankByMemberId(memberId) + 1;
+		final long rank = solverRepository.findRankByMemberId(memberId) + 1;
 		final long totalMemberCount = solverRepository.count();
 		final Tier tier = Tier.getMatchTier(rank, totalMemberCount);
 		final Long score = rankScoreQueryManager.getScore(memberId);

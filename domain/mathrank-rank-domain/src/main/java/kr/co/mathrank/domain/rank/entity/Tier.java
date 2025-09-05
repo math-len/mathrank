@@ -63,7 +63,7 @@ public enum Tier {
 
 	private final float percentage;
 
-	public static Tier getMatchTier(final int rank, final long totalUserCount) {
+	public static Tier getMatchTier(final long rank, final long totalUserCount) {
 		final float top = (float) rank / totalUserCount * 100;
 
 		// 첫번째로 만족하는 놈으로 결정
