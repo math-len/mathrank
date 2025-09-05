@@ -2,6 +2,7 @@ package kr.co.mathrank.domain.problem.service;
 
 import java.util.List;
 
+import org.hibernate.validator.constraints.Range;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.annotation.Validated;
@@ -10,7 +11,7 @@ import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 import kr.co.mathrank.common.page.PageResult;
 import kr.co.mathrank.common.page.PageUtil;
-import kr.co.mathrank.domain.problem.dto.ProblemQueryCommand;
+import kr.co.mathrank.domain.problem.dto.ProblemQuery;
 import kr.co.mathrank.domain.problem.dto.ProblemQueryResult;
 import kr.co.mathrank.domain.problem.entity.Problem;
 import kr.co.mathrank.domain.problem.exception.CannotFoundProblemException;
@@ -35,35 +36,25 @@ public class ProblemQueryService {
 	}
 
 	@Transactional
-	public PageResult<ProblemQueryResult> query(@NotNull @Valid final ProblemQueryCommand command) {
-		final List<Problem> problems = problemRepository.query(command.memberId(),
-			command.problemId(),
-			command.difficultyMinInclude(),
-			command.difficultyMaxInclude(),
-			command.answerType(),
-			command.coursePath(),
-			command.videoExist(),
-			command.year(),
-			command.location(),
-			command.pageSize(),
-			command.pageNumber());
-		final Long totalCount = problemRepository.count(command.memberId(),
-			command.problemId(),
-			command.difficultyMinInclude(),
-			command.difficultyMaxInclude(),
-			command.coursePath(),
-			command.answerType(),
-			command.videoExist(),
-			command.year(),
-			command.location());
+	public PageResult<ProblemQueryResult> query(
+		@NotNull @Valid final ProblemQuery query,
+		@NotNull
+		@Range(min = 1, max = 20)
+		Integer pageSize,
+		@NotNull
+		@Range(min = 1, max = 1000)
+		Integer pageNumber) {
+
+		final List<Problem> problems = problemRepository.query(query, pageSize, pageNumber);
+		final Long totalCount = problemRepository.count(query);
 
 		return PageResult.of(
 			problems.stream()
 				.map(ProblemQueryResult::from)
 				.toList(),
-			command.pageNumber(),
-			command.pageSize(),
-			PageUtil.getNextPages(command.pageSize(), command.pageNumber(), totalCount, problems.size())
+			pageNumber,
+			pageSize,
+			PageUtil.getNextPages(pageSize, pageNumber, totalCount, problems.size())
 		);
 	}
 }

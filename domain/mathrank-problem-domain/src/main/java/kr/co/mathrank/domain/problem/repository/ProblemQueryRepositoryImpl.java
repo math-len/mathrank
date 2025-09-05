@@ -9,6 +9,7 @@ import com.querydsl.jpa.impl.JPAQueryFactory;
 
 import kr.co.mathrank.domain.problem.core.AnswerType;
 import kr.co.mathrank.domain.problem.core.Difficulty;
+import kr.co.mathrank.domain.problem.dto.ProblemQuery;
 import kr.co.mathrank.domain.problem.entity.Problem;
 import kr.co.mathrank.domain.problem.entity.QProblem;
 import lombok.RequiredArgsConstructor;
@@ -19,23 +20,14 @@ class ProblemQueryRepositoryImpl implements ProblemQueryRepository {
 	private final JPAQueryFactory queryFactory;
 
 	@Override
-	public List<Problem> query(Long memberId, Long problemId, Difficulty difficultyMinInclude,
-		Difficulty difficultyMaxInclude, AnswerType answerType, String path, Boolean solutionVideoExist, Integer year,
-		String location, Integer pageSize, Integer pageNumber) {
+	public List<Problem> query(ProblemQuery problemQuery, Integer pageSize, Integer pageNumber) {
 		final QProblem problem = QProblem.problem;
 
 		final List<Problem> problems = queryFactory.query()
 			.select(problem)
 			.from(problem)
 			.where(
-				memberIdEq(memberId),
-				problemIdEq(problemId),
-				difficultyIn(difficultyMinInclude, difficultyMaxInclude),
-				answerTypeEq(answerType),
-				problemCourseStartsWith(path),
-				solutionVideoLinkExist(solutionVideoExist),
-				yearMatch(year),
-				locationMatch(location)
+				conditions(problemQuery)
 			)
 			.offset((pageNumber - 1) * pageSize)
 			.limit(pageSize)
@@ -51,24 +43,29 @@ class ProblemQueryRepositoryImpl implements ProblemQueryRepository {
 	}
 
 	@Override
-	public Long count(Long memberId, Long problemId, Difficulty difficultyMinInclude, Difficulty difficultyMaxInclude,
-		String path, AnswerType answerType, Boolean solutionVideoExist, Integer year, String location) {
+	public Long count(ProblemQuery problemQuery) {
 		final QProblem problem = QProblem.problem;
 
 		return queryFactory.query()
 			.select(problem.count())
 			.from(problem)
 			.where(
-				memberIdEq(memberId),
-				problemIdEq(problemId),
-				difficultyIn(difficultyMinInclude, difficultyMaxInclude),
-				answerTypeEq(answerType),
-				problemCourseStartsWith(path),
-				solutionVideoLinkExist(solutionVideoExist),
-				yearMatch(year),
-				locationMatch(location)
+				conditions(problemQuery)
 			)
 			.fetchOne();
+	}
+
+	private BooleanExpression[] conditions(final ProblemQuery problemQuery) {
+		return new BooleanExpression[] {
+			memberIdEq(problemQuery.memberId()),
+			problemIdEq(problemQuery.problemId()),
+			difficultyIn(problemQuery.difficultyMinInclude(), problemQuery.difficultyMaxInclude()),
+			answerTypeEq(problemQuery.answerType()),
+			problemCourseStartsWith(problemQuery.path()),
+			solutionVideoLinkExist(problemQuery.solutionVideoExist()),
+			yearMatch(problemQuery.year()),
+			locationMatch(problemQuery.location())
+		};
 	}
 
 	private BooleanExpression memberIdEq(final Long memberId) {
