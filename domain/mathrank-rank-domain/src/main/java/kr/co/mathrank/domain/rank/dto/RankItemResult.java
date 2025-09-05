@@ -22,7 +22,7 @@ public record RankItemResult(
 			rank,
 			tier,
 			solver.getScore(),
-			solver.getSolveLogs().stream().count(),
+			(long) solver.getSolveLogs().size(),
 			solver.getSolveLogs().stream()
 				.filter(SolveLog::isSuccess)
 				.count()
