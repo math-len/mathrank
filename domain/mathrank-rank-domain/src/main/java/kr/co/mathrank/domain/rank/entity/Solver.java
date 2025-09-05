@@ -26,7 +26,7 @@ public class Solver {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 
-	@OneToMany(mappedBy = "solver", cascade = CascadeType.PERSIST)
+	@OneToMany(mappedBy = "solver", cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
 	private final List<SolveLog> solveLogs = new ArrayList<>();
 
 	private Long score = 0L;

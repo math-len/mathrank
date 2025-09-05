@@ -15,5 +15,6 @@ public interface SolverRepository extends JpaRepository<Solver, Long> {
 	@Query("SELECT s FROM Solver s WHERE s.memberId = :memberId")
 	Optional<Solver> findByMemberIdForUpdate(@Param("memberId") Long memberId);
 
+	@Query("SELECT s FROM Solver s LEFT JOIN FETCH s.solveLogs WHERE s.memberId = :memberId")
 	Optional<Solver> findByMemberId(Long memberId);
 }

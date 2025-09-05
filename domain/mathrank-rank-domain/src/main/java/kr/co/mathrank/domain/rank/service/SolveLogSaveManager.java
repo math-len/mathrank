@@ -12,6 +12,7 @@ import jakarta.validation.constraints.NotNull;
 import kr.co.mathrank.domain.rank.dto.SolveLogRegisterCommand;
 import kr.co.mathrank.domain.rank.entity.Solver;
 import kr.co.mathrank.domain.rank.exception.SolveLogAlreadyRegisteredException;
+import kr.co.mathrank.domain.rank.repository.SolveLogRepository;
 import kr.co.mathrank.domain.rank.repository.SolverRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -22,6 +23,7 @@ import lombok.extern.slf4j.Slf4j;
 @RequiredArgsConstructor
 class SolveLogSaveManager {
 	private final SolverRepository solverRepository;
+	private final SolveLogRepository solveLogRepository;
 
 	@Transactional
 	@Retryable(
@@ -33,7 +35,8 @@ class SolveLogSaveManager {
 	void save(@NotNull @Valid final SolveLogRegisterCommand command, final Integer score) {
 		try {
 			final Solver solver = getSolverOrCreate(command.memberId());
-			solver.addSolveLog(command.problemId(), command.singleProblemId(), command.success(), score);
+			solveLogRepository.save(
+				solver.addSolveLog(command.problemId(), command.singleProblemId(), command.success(), score));
 
 			solverRepository.saveAndFlush(solver);
 		} catch (DataIntegrityViolationException e) {
@@ -51,6 +54,7 @@ class SolveLogSaveManager {
 
 	private Solver getSolverOrCreate(final Long memberId) {
 		return solverRepository.findByMemberIdForUpdate(memberId)
+			.stream().peek(System.out::println).findFirst()
 			.orElseGet(() -> Solver.of(memberId));
 	}
 }
