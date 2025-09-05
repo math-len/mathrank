@@ -22,6 +22,7 @@ dependencies {
 
     implementation project(':app:consumer:mathrank-problem-single-read-consumer-monolith')
     implementation project(':app:consumer:mathrank-assessment-consumer-monolith')
+    implementation project(':app:consumer:mathrank-rank-consumer-monolith')
 
     implementation project(':common:mathrank-cache-caffeine')
 }
