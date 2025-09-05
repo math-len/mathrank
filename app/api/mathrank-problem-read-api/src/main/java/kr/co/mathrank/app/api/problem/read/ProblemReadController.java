@@ -1,5 +1,6 @@
 package kr.co.mathrank.app.api.problem.read;
 
+import org.hibernate.validator.constraints.Range;
 import org.springdoc.core.annotations.ParameterObject;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -10,6 +11,7 @@ import org.springframework.web.bind.annotation.RestController;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotNull;
 import kr.co.mathrank.app.api.common.authentication.Authorization;
 import kr.co.mathrank.app.api.common.authentication.LoginInfo;
 import kr.co.mathrank.app.api.common.authentication.MemberPrincipal;
@@ -21,7 +23,7 @@ import kr.co.mathrank.client.internal.course.CourseQueryContainsParentsResult;
 import kr.co.mathrank.client.internal.member.MemberClient;
 import kr.co.mathrank.client.internal.member.MemberInfo;
 import kr.co.mathrank.common.page.PageResult;
-import kr.co.mathrank.domain.problem.dto.ProblemQueryCommand;
+import kr.co.mathrank.domain.problem.dto.ProblemQuery;
 import kr.co.mathrank.domain.problem.dto.ProblemQueryResult;
 import kr.co.mathrank.domain.problem.service.ProblemQueryService;
 import lombok.RequiredArgsConstructor;
@@ -40,10 +42,12 @@ public class ProblemReadController {
 	@GetMapping(value = "/api/v1/problem")
 	public ResponseEntity<PageResult<ProblemResponse>> problems(
 		@ParameterObject @ModelAttribute @Valid final ProblemQueryRequest request,
-		@LoginInfo final MemberPrincipal loginInfo
+		@LoginInfo final MemberPrincipal loginInfo,
+		@NotNull @Range(min = 1, max = 20) Integer pageSize,
+		@NotNull @Range(min = 1, max = 1000) Integer pageNumber
 	) {
-		final ProblemQueryCommand command = request.toCommand(loginInfo.memberId());
-		final PageResult<ProblemQueryResult> pageQueryResult = problemQueryService.query(command);
+		final ProblemQuery query = request.toQuery(loginInfo.memberId());
+		final PageResult<ProblemQueryResult> pageQueryResult = problemQueryService.query(query, pageSize, pageNumber);
 
 		return ResponseEntity.ok(pageQueryResult.map(this::toResponse));
 	}

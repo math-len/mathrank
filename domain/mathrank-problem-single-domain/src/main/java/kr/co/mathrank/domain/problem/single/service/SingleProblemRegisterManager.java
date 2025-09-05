@@ -36,6 +36,8 @@ class SingleProblemRegisterManager {
 			problem.getSingleProblemName(),
 			result.path(),
 			result.imageSource(),
+			result.location(),
+			result.schoolCode(),
 			result.type(),
 			result.difficulty(),
 			problem.getSingleProblemRegisteredAt(),
@@ -51,10 +53,12 @@ class SingleProblemRegisterManager {
 		String singleProblemName,
 		String coursePath,
 		String problemImage,
+		String location,
+		String schoolCode,
 		AnswerType answerType,
 		Difficulty difficulty,
 		LocalDateTime registeredAt,
-		Long firstTrySuccessCount,
+		Long firstTrySuccessCount, // 첫 시도에 성공한 횟수
 		Long totalAttemptedCount, // 문제를 풀려고 시도한 총 횟수
 		Long attemptedUserDistinctCount // 해당 문제를 풀려고 한 사용자 수
 	) implements EventPayload {

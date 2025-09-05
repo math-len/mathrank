@@ -107,6 +107,7 @@ class SingleProblemServiceTest {
 			null,
 			null,
 			null,
+			null,
 			null
 		);
 	}

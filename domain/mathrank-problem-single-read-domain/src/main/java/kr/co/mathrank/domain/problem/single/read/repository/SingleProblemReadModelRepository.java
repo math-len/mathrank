@@ -23,7 +23,7 @@ public interface SingleProblemReadModelRepository
 
 	@Query(
 """
-	SELECT new kr.co.mathrank.domain.problem.single.read.dto.SingleProblemReadModelResult(sp.id, slv.success, sp.problemId, sp.singleProblemName, sp.problemImage, sp.coursePath, sp.answerType, sp.difficulty, sp.firstTrySuccessCount, sp.totalAttemptedCount, sp.attemptedUserDistinctCount, sp.accuracy) 
+	SELECT new kr.co.mathrank.domain.problem.single.read.dto.SingleProblemReadModelResult(sp.id, slv.success, sp.problemId, sp.singleProblemName, sp.problemImage, sp.coursePath, sp.location, sp.schoolCode, sp.answerType, sp.difficulty, sp.firstTrySuccessCount, sp.totalAttemptedCount, sp.attemptedUserDistinctCount, sp.accuracy) 
 	 FROM SingleProblemReadModel sp 
 	 LEFT JOIN sp.solvers slv WITH slv.memberId = :memberId
 	 WHERE sp.id = :singleProblemId

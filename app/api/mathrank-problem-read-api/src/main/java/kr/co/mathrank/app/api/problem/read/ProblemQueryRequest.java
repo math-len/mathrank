@@ -1,11 +1,9 @@
 package kr.co.mathrank.app.api.problem.read;
 
-import org.hibernate.validator.constraints.Range;
-
 import jakarta.validation.constraints.NotNull;
 import kr.co.mathrank.domain.problem.core.AnswerType;
 import kr.co.mathrank.domain.problem.core.Difficulty;
-import kr.co.mathrank.domain.problem.dto.ProblemQueryCommand;
+import kr.co.mathrank.domain.problem.dto.ProblemQuery;
 
 public record ProblemQueryRequest(
 	@NotNull
@@ -18,15 +16,10 @@ public record ProblemQueryRequest(
 	Boolean videoExist,
 	Integer year,
 	String location,
-	@NotNull
-	@Range(min = 1, max = 20)
-	Integer pageSize,
-	@NotNull
-	@Range(min = 1, max = 1000)
-	Integer pageNumber
+	String schoolCode
 ) {
-	public ProblemQueryCommand toCommand(final Long requestMemberId) {
-		return new ProblemQueryCommand(
+	public ProblemQuery toQuery(final Long requestMemberId) {
+		return new ProblemQuery(
 			// true -> 본인 아이디로 지정한다.
 			// false -> null 로 지정한다.
 			mine ? requestMemberId : null,
@@ -38,8 +31,7 @@ public record ProblemQueryRequest(
 			videoExist,
 			year,
 			location,
-			pageSize,
-			pageNumber
+			schoolCode
 		);
 	}
 }

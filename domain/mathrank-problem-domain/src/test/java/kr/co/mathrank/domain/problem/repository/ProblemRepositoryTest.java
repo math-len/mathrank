@@ -15,6 +15,7 @@ import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import kr.co.mathrank.domain.problem.core.AnswerType;
 import kr.co.mathrank.domain.problem.core.Difficulty;
+import kr.co.mathrank.domain.problem.dto.ProblemQuery;
 import kr.co.mathrank.domain.problem.entity.Answer;
 import kr.co.mathrank.domain.problem.entity.Problem;
 
@@ -40,7 +41,7 @@ class ProblemRepositoryTest {
 		problemRepository.save(owner1);
 		problemRepository.save(owner2);
 
-		final List<Problem> problems = problemRepository.query(1L, null, null, null, null, null, null, 1001, null, 10,
+		final List<Problem> problems = problemRepository.query(new ProblemQuery(1L, null, null, null, null, null, null, 1001, null, null), 10,
 			1);
 
 		Assertions.assertEquals(1, problems.size());
@@ -59,8 +60,9 @@ class ProblemRepositoryTest {
 
 		problemRepository.save(problem);
 
-		final List<Problem> problems = problemRepository.query(null, problemId, null, null, null, null, null, 1001,
-			null, 10, 1);
+		final List<Problem> problems = problemRepository.query(
+			new ProblemQuery(null, problemId, null, null, null, null, null, 1001,
+				null, null), 10, 1);
 
 		Assertions.assertEquals(1, problems.size());
 	}
@@ -76,7 +78,7 @@ class ProblemRepositoryTest {
 		problemRepository.save(problem1);
 		problemRepository.save(problem2);
 
-		final List<Problem> problems = problemRepository.query(null, null, null, null, null, null, null, 1001, null, 10,
+		final List<Problem> problems = problemRepository.query(new ProblemQuery(null, null, null, null, null, null, null, 1001, null, null), 10,
 			1);
 
 		Assertions.assertEquals(2, problems.size());
@@ -96,8 +98,9 @@ class ProblemRepositoryTest {
 		problemRepository.save(problem1);
 		problemRepository.save(problem2);
 
-		final List<Problem> problems = problemRepository.query(null, null, Difficulty.KILLER, Difficulty.KILLER, null,
-			null, null, 1001, null, 10, 1);
+		final List<Problem> problems = problemRepository.query(
+			new ProblemQuery(null, null, Difficulty.KILLER, Difficulty.KILLER, null,
+				null, null, 1001, null, null), 10, 1);
 
 		Assertions.assertEquals(1, problems.size());
 	}
@@ -113,9 +116,10 @@ class ProblemRepositoryTest {
 		problemRepository.save(problem1);
 		problemRepository.save(problem2);
 
-		final List<Problem> problems = problemRepository.query(1L, null, Difficulty.KILLER, Difficulty.KILLER,
-			AnswerType.MULTIPLE_CHOICE,
-			"testPath", null, 1001, null, 10, 1);
+		final List<Problem> problems = problemRepository.query(
+			new ProblemQuery(1L, null, Difficulty.KILLER, Difficulty.KILLER,
+				AnswerType.MULTIPLE_CHOICE,
+				"testPath", null, 1001, null, null), 10, 1);
 
 		Assertions.assertEquals(1, problems.size());
 	}
@@ -131,8 +135,9 @@ class ProblemRepositoryTest {
 		problemRepository.save(problem1);
 		problemRepository.save(problem2);
 
-		final List<Problem> problems = problemRepository.query(null, null, Difficulty.HIGH, Difficulty.HIGH, null, null,
-			null, 1001, null, 10, 1);
+		final List<Problem> problems = problemRepository.query(
+			new ProblemQuery(null, null, Difficulty.HIGH, Difficulty.HIGH, null, null,
+				null, 1001, null, null), 10, 1);
 
 		Assertions.assertTrue(problems.isEmpty());
 	}
@@ -147,7 +152,7 @@ class ProblemRepositoryTest {
 			problemRepository.save(problem);
 		}
 
-		assertEquals(10, problemRepository.count(null, null, null, null, null, null, null, 1001, null));
+		assertEquals(10, problemRepository.count(new ProblemQuery(null, null, null, null, null, null, null, 1001, null, null)));
 	}
 
 	@Test
@@ -168,7 +173,8 @@ class ProblemRepositoryTest {
 		}
 
 		assertEquals(10,
-			problemRepository.count(null, null, Difficulty.KILLER, Difficulty.KILLER, null, null, null, 1001, null));
+			problemRepository.count(
+				new ProblemQuery(null, null, Difficulty.KILLER, Difficulty.KILLER, null, null, null, 1001, null, null)));
 	}
 
 	@Test
@@ -187,7 +193,8 @@ class ProblemRepositoryTest {
 			problemRepository.save(problem);
 		}
 
-		assertEquals(20, problemRepository.count(null, null, null, null, null, null, null, 1001, null));
+		assertEquals(20,
+			problemRepository.count(new ProblemQuery(null, null, null, null, null, null, null, 1001, null, null)));
 	}
 
 	@Test
@@ -207,7 +214,8 @@ class ProblemRepositoryTest {
 		entityManager.clear();
 
 		// 5개 조회
-		final List<Problem> problems = problemRepository.query(1L, null, null, null, null, null, null, 1001, null, 5, 1);
+		final List<Problem> problems = problemRepository.query(
+			new ProblemQuery(1L, null, null, null, null, null, null, 1001, null, null), 5, 1);
 		// 로그를 확인했을 때, limit과 offset을 활용하는것을 확인
 		Assertions.assertEquals(5, problems.size());
 	}

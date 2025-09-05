@@ -106,6 +106,8 @@ class SingleProblemReadModelRepositoryTest {
 				null,
 				null,
 				null,
+				null,
+				null,
 				null
 			),
 			10,
@@ -172,6 +174,8 @@ class SingleProblemReadModelRepositoryTest {
 			new SingleProblemReadModelQuery(
 				null,
 				"singleProblemName",
+				null,
+				null,
 				null,
 				null,
 				null,
@@ -246,6 +250,8 @@ class SingleProblemReadModelRepositoryTest {
 					"singleProblemName",
 					null,
 					null,
+					null,
+					null,
 					Difficulty.MID,
 					Difficulty.KILLER,
 					null,
@@ -265,6 +271,8 @@ class SingleProblemReadModelRepositoryTest {
 					"singleProblemName",
 					null,
 					null,
+					null,
+					null,
 					Difficulty.MID,
 					null,
 					null,
@@ -282,6 +290,8 @@ class SingleProblemReadModelRepositoryTest {
 				new SingleProblemReadModelQuery(
 					null,
 					"singleProblemName",
+					null,
+					null,
 					null,
 					null,
 					Difficulty.MID,
@@ -360,6 +370,8 @@ class SingleProblemReadModelRepositoryTest {
 					null,
 					null,
 					null,
+					null,
+					null,
 					10,
 					30,
 					null,
@@ -375,6 +387,8 @@ class SingleProblemReadModelRepositoryTest {
 				new SingleProblemReadModelQuery(
 					null,
 					"singleProblemName",
+					null,
+					null,
 					null,
 					null,
 					null,
@@ -407,7 +421,8 @@ class SingleProblemReadModelRepositoryTest {
 			// math로 시작하는 것만
 			() -> Assertions.assertEquals(2, singleProblemReadModelRepository.queryPage(
 				new SingleProblemReadModelQuery(
-					null, "singleProblemName","math", null, null, null,
+					null, "singleProblemName","math", null,
+					null,null, null, null,
 					null, null, null, null
 				),
 				10, 1, null, null
@@ -417,6 +432,7 @@ class SingleProblemReadModelRepositoryTest {
 			() -> Assertions.assertEquals(1, singleProblemReadModelRepository.queryPage(
 				new SingleProblemReadModelQuery(
 					null, "singleProblemName", "science", null, null, null,
+					null,null,
 					null, null, null, null
 				),
 				10, 1,
@@ -428,6 +444,7 @@ class SingleProblemReadModelRepositoryTest {
 			() -> Assertions.assertEquals(0, singleProblemReadModelRepository.queryPage(
 				new SingleProblemReadModelQuery(
 					null, "singleProblemName","english", null, null, null,
+					null,null,
 					null, null, null, null
 				),
 				10, 1,
@@ -453,7 +470,8 @@ class SingleProblemReadModelRepositoryTest {
 			() -> Assertions.assertEquals(2, singleProblemReadModelRepository.queryPage(
 				new SingleProblemReadModelQuery(
 					null, "singleProblemName",null, null, null, null,
-					null, null,
+					null, null,null,
+					null,
 					200L, 300L
 				),
 				10, 1, null, null
@@ -462,7 +480,8 @@ class SingleProblemReadModelRepositoryTest {
 			// 최대값만 지정 시 500 이하 전부
 			() -> Assertions.assertEquals(3, singleProblemReadModelRepository.queryPage(
 				new SingleProblemReadModelQuery(
-					null, "singleProblemName",null, null, null, null,
+					null, "singleProblemName",null, null, null, null,null,
+					null,
 					null, null,
 					null, 500L
 				),
@@ -474,7 +493,8 @@ class SingleProblemReadModelRepositoryTest {
 			// 400 이상은 하나만
 			() -> Assertions.assertEquals(1, singleProblemReadModelRepository.queryPage(
 				new SingleProblemReadModelQuery(
-					null, "singleProblemName",null, null, null, null,
+					null, "singleProblemName",null, null, null, null,null,
+					null,
 					null, null,
 					400L, null
 				),
@@ -510,6 +530,8 @@ class SingleProblemReadModelRepositoryTest {
 			"singleProblemName",
 			"math",
 			null,
+			null,
+			null,
 			Difficulty.MID,
 			Difficulty.MID,
 			30,
@@ -533,7 +555,8 @@ class SingleProblemReadModelRepositoryTest {
 			// MULTIPLE_CHOICE만 검색하면 2개
 			() -> Assertions.assertEquals(2, singleProblemReadModelRepository.queryPage(
 				new SingleProblemReadModelQuery(
-					null, "singleProblemName",null, AnswerType.MULTIPLE_CHOICE, null, null,
+					null, "singleProblemName",null, null,
+					null, AnswerType.MULTIPLE_CHOICE, null, null,
 					null, null, null, null
 				), 10, 1, null, null
 			).size()),
@@ -541,7 +564,8 @@ class SingleProblemReadModelRepositoryTest {
 			// SHORT_ANSWER만 검색하면 1개
 			() -> Assertions.assertEquals(1, singleProblemReadModelRepository.queryPage(
 				new SingleProblemReadModelQuery(
-					null, "singleProblemName",null, AnswerType.SHORT_ANSWER, null, null,
+					null, "singleProblemName",null,null,
+					null, AnswerType.SHORT_ANSWER, null, null,
 					null, null, null, null
 				),
 				10, 1,
@@ -554,6 +578,8 @@ class SingleProblemReadModelRepositoryTest {
 				new SingleProblemReadModelQuery(
 					null,
 					"singleProblemName",
+					null,
+					null,
 					null,
 					null,
 					null,
@@ -582,7 +608,8 @@ class SingleProblemReadModelRepositoryTest {
 
 		// when
 		final SingleProblemReadModelQuery query = new SingleProblemReadModelQuery(
-			null,"problem", null, null, null, null, null, null, null, null
+			null,"problem", null, null,
+			null,null, null, null, null, null, null, null
 		);
 		final List<SingleProblemReadModel> result = singleProblemReadModelRepository.queryPage(query, 10, 1, null, null);
 

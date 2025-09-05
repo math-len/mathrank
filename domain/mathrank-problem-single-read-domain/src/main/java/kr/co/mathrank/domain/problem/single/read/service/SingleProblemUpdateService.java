@@ -51,6 +51,8 @@ public class SingleProblemUpdateService {
 			model.setDifficulty(command.difficulty());
 			model.setCoursePath(command.coursePath());
 			model.setAnswerType(command.answerType());
+			model.setLocation(command.location());
+			model.setSchoolCode(command.schoolCode());
 
 			model.setUpdatedAt(command.updatedAt());
 			log.info("[SingleProblemUpdateService.updateProblemInfo] read model updated: {}", command);

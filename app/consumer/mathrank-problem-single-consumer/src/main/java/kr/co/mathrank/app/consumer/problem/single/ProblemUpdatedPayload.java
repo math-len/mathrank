@@ -11,12 +11,14 @@ public record ProblemUpdatedPayload(
 	Long problemId,
 	String coursePath,
 	String problemImage,
+	String location,
+	String schoolCode,
 	AnswerType answerType,
 	Difficulty difficulty,
 	LocalDateTime updatedAt
 ) implements EventPayload {
 	public SingleProblemReadModelUpdateCommand toCommand() {
-		return new SingleProblemReadModelUpdateCommand(problemId, coursePath, problemImage, answerType, difficulty,
+		return new SingleProblemReadModelUpdateCommand(problemId, coursePath, problemImage, location, schoolCode, answerType, difficulty,
 			updatedAt);
 	}
 }

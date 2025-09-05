@@ -117,6 +117,8 @@ class SingleProblemQueryServiceTest {
 			null,
 			null,
 			null,
+			null,
+			null,
 			null
 		);
 		final PageResult<SingleProblemReadModelResult> result = queryService.queryPage(query, null, null, memberId, 10, 1);
@@ -138,7 +140,8 @@ class SingleProblemQueryServiceTest {
 	@Test
 	@Transactional
 	void 오프셋이_20_000초과로_조회할_수_없다() {
-		final SingleProblemReadModelQuery query = new SingleProblemReadModelQuery(null, "singleProblemName", "math", null, Difficulty.MID, Difficulty.MID, 10, 30, null, null);
+		final SingleProblemReadModelQuery query = new SingleProblemReadModelQuery(null, "singleProblemName", "math", null, null,
+			null, Difficulty.MID, Difficulty.MID, 10, 30, null, null);
 		final Long memberId = 10L;
 
 		Assertions.assertThrows(ConstraintViolationException.class, () -> queryService.queryPage(query, null, null, memberId, 20, 1001));
@@ -162,6 +165,8 @@ class SingleProblemQueryServiceTest {
 			null,
 			"singleProblemName",
 			"math",
+			null,
+			null,
 			null,
 			Difficulty.MID,
 			Difficulty.MID,

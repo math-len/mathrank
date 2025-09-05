@@ -11,6 +11,10 @@ public record SingleProblemQueryRequest(
 
 	String singleProblemName,
 
+	String location,
+
+	String schoolCode,
+
 	AnswerType answerType,
 
 	Difficulty difficultyMinInclude,
@@ -27,6 +31,8 @@ public record SingleProblemQueryRequest(
 			singleProblemId,
 			singleProblemName,
 			coursePath,
+			location,
+			schoolCode,
 			answerType,
 			difficultyMinInclude,
 			difficultyMaxInclude,

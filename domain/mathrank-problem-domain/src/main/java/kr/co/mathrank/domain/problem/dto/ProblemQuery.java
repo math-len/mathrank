@@ -1,26 +1,18 @@
 package kr.co.mathrank.domain.problem.dto;
 
-import org.hibernate.validator.constraints.Range;
-
-import jakarta.validation.constraints.NotNull;
 import kr.co.mathrank.domain.problem.core.AnswerType;
 import kr.co.mathrank.domain.problem.core.Difficulty;
 
-public record ProblemQueryCommand(
+public record ProblemQuery(
 	Long memberId,
 	Long problemId,
 	Difficulty difficultyMinInclude,
 	Difficulty difficultyMaxInclude,
 	AnswerType answerType,
-	String coursePath,
-	Boolean videoExist,
+	String path,
+	Boolean solutionVideoExist,
 	Integer year,
 	String location,
-	@NotNull
-	@Range(min = 1, max = 20)
-	Integer pageSize,
-	@NotNull
-	@Range(min = 1, max = 1000)
-	Integer pageNumber
+	String schoolCode
 ) {
 }

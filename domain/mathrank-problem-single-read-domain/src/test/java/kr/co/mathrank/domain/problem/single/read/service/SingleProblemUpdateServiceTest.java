@@ -74,7 +74,8 @@ class SingleProblemUpdateServiceTest {
 
 		// path를 updatedPath
 		singleProblemUpdateService.updateProblemInfo(new SingleProblemReadModelUpdateCommand(
-			problemId, updatedPath, "null", AnswerType.MULTIPLE_CHOICE, Difficulty.KILLER, updatedTime
+			problemId, updatedPath, "null", null,
+			null, AnswerType.MULTIPLE_CHOICE, Difficulty.KILLER, updatedTime
 		));
 
 		entityManager.flush();
@@ -107,7 +108,8 @@ class SingleProblemUpdateServiceTest {
 
 		// outdatedTime으로 업데이트 시도
 		singleProblemUpdateService.updateProblemInfo(new SingleProblemReadModelUpdateCommand(
-			problemId, outdatedPath, "img", AnswerType.MULTIPLE_CHOICE, Difficulty.KILLER, outdatedTime
+			problemId, outdatedPath, "img", null,
+			null, AnswerType.MULTIPLE_CHOICE, Difficulty.KILLER, outdatedTime
 		));
 
 		entityManager.flush();
@@ -140,7 +142,8 @@ class SingleProblemUpdateServiceTest {
 
 		// 동일한 시간으로 업데이트 시도
 		singleProblemUpdateService.updateProblemInfo(new SingleProblemReadModelUpdateCommand(
-			problemId, updatedPath, "img", AnswerType.SHORT_ANSWER, Difficulty.KILLER, time
+			problemId, updatedPath, "img", null,
+			null, AnswerType.SHORT_ANSWER, Difficulty.KILLER, time
 		));
 
 		entityManager.flush();
@@ -270,6 +273,8 @@ class SingleProblemUpdateServiceTest {
 								problemId,
 								"path_" + index,
 								"img_" + index,
+								null,
+								null,
 								AnswerType.MULTIPLE_CHOICE,
 								Difficulty.KILLER,
 								updatedAt

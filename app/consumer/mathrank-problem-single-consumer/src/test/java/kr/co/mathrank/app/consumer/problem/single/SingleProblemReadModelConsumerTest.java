@@ -50,6 +50,8 @@ class SingleProblemReadModelConsumerTest {
 			101L,
 			"수학I > 지수함수와 로그함수",
 			"problem.png",
+			null,
+			null,
 			AnswerType.MULTIPLE_CHOICE,
 			Difficulty.LOW,
 			LocalDateTime.now()

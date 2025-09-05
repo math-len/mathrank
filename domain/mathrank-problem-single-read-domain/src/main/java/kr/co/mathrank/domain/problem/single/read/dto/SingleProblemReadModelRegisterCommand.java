@@ -13,7 +13,8 @@ public record SingleProblemReadModelRegisterCommand(
 	Long problemId,
 	@NotNull
 	String singleProblemName,
-	@NotNull
+	String location,
+	String schoolCode,
 	String problemImage,
 	@NotNull
 	AnswerType answerType,
