@@ -76,7 +76,6 @@ public class ContestReadController {
 	}
 
 	@Operation(summary = "대회 상세 조회 API")
-	@Authorization(openedForAll = true)
 	@GetMapping("/api/v1/problem/contest/{contestId}")
 	public ResponseEntity<Responses.ContestDetailResponse> getDetail(@PathVariable final Long contestId) {
 		return ResponseEntity.ok(Responses.ContestDetailResponse.from(assessmentDetailReadService.getDetail(
