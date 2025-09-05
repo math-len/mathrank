@@ -24,7 +24,7 @@ public class InitMembers implements CommandLineRunner {
 		final String loginId = "test1";
 		final String password = "0000";
 		memberRegisterService.register(new MemberRegisterCommand("test1", "testName", new Password("0000"), Role.ADMIN, MemberType.NORMAL, true,
-			Collections.emptySet()));
+			null));
 		log.info("[InitMembers.run] initialized test member - loginId: {}, password: {}", loginId, password);
 	}
 }

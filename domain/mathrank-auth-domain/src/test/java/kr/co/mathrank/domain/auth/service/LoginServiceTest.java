@@ -50,7 +50,7 @@ class LoginServiceTest {
 
 		memberRegisterService.register(
 			new MemberRegisterCommand(loginId, userName, password, Role.USER, MemberType.NORMAL, true,
-				Collections.emptySet()));
+				null));
 		Assertions.assertNotNull(loginService.login(new LoginCommand(loginId, password)));
 	}
 
@@ -62,7 +62,7 @@ class LoginServiceTest {
 		final Password wrongPassword = new Password("wrong");
 
 		memberRegisterService.register(new MemberRegisterCommand(loginId, userName, password, Role.USER, MemberType.NORMAL, true,
-			Collections.emptySet()));
+			null));
 		Assertions.assertThrows(
 			PasswordMismatchedException.class, () -> loginService.login(new LoginCommand(loginId, wrongPassword)));
 	}
@@ -75,7 +75,7 @@ class LoginServiceTest {
 		final Password wrongPassword = new Password("wrong");
 
 		memberRegisterService.register(new MemberRegisterCommand(loginId, userName, password, Role.USER, MemberType.NORMAL, true,
-			Collections.emptySet()));
+			null));
 
 		for (int i = 0; i < 3; i ++) {
 			Assertions.assertThrows(PasswordMismatchedException.class, () -> loginService.login(new LoginCommand(loginId, wrongPassword)));
@@ -91,7 +91,7 @@ class LoginServiceTest {
 		final Password wrongPassword = new Password("wrong");
 
 		memberRegisterService.register(new MemberRegisterCommand(loginId, userName, password, Role.USER, MemberType.NORMAL, true,
-			Collections.emptySet()));
+			null));
 
 		for (int i = 0; i < 2; i ++) {
 			Assertions.assertThrows(PasswordMismatchedException.class, () -> loginService.login(new LoginCommand(loginId, wrongPassword)));
@@ -109,7 +109,7 @@ class LoginServiceTest {
 		final Password wrongPassword = new Password("wrong");
 
 		memberRegisterService.register(new MemberRegisterCommand(loginId, userName, password, Role.USER, MemberType.NORMAL, true,
-			Collections.emptySet()));
+			null));
 		for (int i = 0; i < 3; i++) {
 			Assertions.assertThrows(PasswordMismatchedException.class,
 				() -> loginService.login(new LoginCommand(loginId, wrongPassword)));

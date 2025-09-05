@@ -17,4 +17,22 @@ public interface SolverRepository extends JpaRepository<Solver, Long> {
 
 	@Query("SELECT s FROM Solver s LEFT JOIN FETCH s.solveLogs WHERE s.memberId = :memberId")
 	Optional<Solver> findByMemberId(Long memberId);
+
+	// 회원의 랭크를 조회하는 쿼리 (점수 기준 내림차순으로 랭크 계산)
+	@Query("""
+SELECT COUNT(s) FROM Solver s
+WHERE s.score > (
+	SELECT solver.score 
+	FROM Solver solver 
+	WHERE solver.memberId = :memberId
+)
+""")
+	Long findRankByMemberId(@Param("memberId") Long memberId);
+
+	@Query("""
+SELECT s.score 
+FROM Solver s 
+WHERE s.memberId = :memberId
+""")
+	Long findScoreByMemberId(@Param("memberId") Long memberId);
 }

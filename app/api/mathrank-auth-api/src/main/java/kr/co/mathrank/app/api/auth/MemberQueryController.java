@@ -17,9 +17,9 @@ public class MemberQueryController {
 
 	@Operation(hidden = true)
 	@GetMapping("/api/inner/v1/member/info")
-	public ResponseEntity<MemberInfoResult> getMemberInfo(
+	public ResponseEntity<Responses.MemberInfoResponse> getMemberInfo(
 		@RequestParam final Long memberId
 	) {
-		return ResponseEntity.ok(memberQueryService.getInfo(memberId));
+		return ResponseEntity.ok(Responses.MemberInfoResponse.from(memberQueryService.getInfo(memberId)));
 	}
 }
