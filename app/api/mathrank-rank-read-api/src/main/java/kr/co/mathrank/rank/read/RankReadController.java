@@ -17,7 +17,7 @@ import lombok.RequiredArgsConstructor;
 public class RankReadController {
 	private final RankQueryService rankQueryService;
 
-	@Operation(summary = "사용자의 랭크 조회 API", description = "사용자의 랭크를 조회합니다. 사용자 문제 풀이 기록에 맞춰 실시간으로 반영됩니다.")
+	@Operation(summary = "랭크 조회 API", description = "사용자의 랭크를 조회합니다. 사용자 문제 풀이 기록에 맞춰 실시간으로 반영됩니다.")
 	@GetMapping("/api/v1/rank")
 	@Authorization(openedForAll = true)
 	public ResponseEntity<RankResponse> queryRank(@RequestParam final Long memberId) {
