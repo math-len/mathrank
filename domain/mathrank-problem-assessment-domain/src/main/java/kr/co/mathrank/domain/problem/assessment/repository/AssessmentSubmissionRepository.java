@@ -47,5 +47,5 @@ public interface AssessmentSubmissionRepository extends JpaRepository<Assessment
 		LEFT JOIN FETCH sia.assessmentItem
 		WHERE ass.assessment.id = :assessmentId AND ass.memberId = :memberId
 		""")
-	List<AssessmentSubmission> findAllByAssessmentIdAndMemberId(@Param("assessmentId") Long assessmentId, @Param("memberId") Long memberId);
+	List<AssessmentSubmission> findAllByAssessmentIdAndMemberIdWithSubmittedItems(@Param("assessmentId") Long assessmentId, @Param("memberId") Long memberId);
 }
