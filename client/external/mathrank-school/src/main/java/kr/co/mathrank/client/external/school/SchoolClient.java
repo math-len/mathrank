@@ -22,6 +22,10 @@ public class SchoolClient {
 	}
 
 	public Optional<SchoolInfo> getSchool(final String type, final String schoolCode) {
+		if (schoolCode == null) {
+			return Optional.of(SchoolInfo.none());
+		}
+
 		// SD_SCHUL_CODE
 		final SchoolResponse response = restClient.get()
 			.uri(uriBuilder -> uriBuilder.path("/hub/schoolInfo")
