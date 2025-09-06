@@ -22,8 +22,8 @@ public class SchoolClient {
 	}
 
 	public Optional<SchoolInfo> getSchool(final String type, final String schoolCode) {
-		if (schoolCode == null) {
-			return Optional.of(SchoolInfo.none());
+		if (schoolCode == null || schoolCode.isBlank()) {
+			return Optional.empty();
 		}
 
 		// SD_SCHUL_CODE

@@ -43,7 +43,13 @@ class SchoolClientTest {
 	@Test
 	void 학교코드_NULL일때_가락고등학교_그만와라() {
 		final Optional<SchoolInfo> info = schoolClient.getSchool(RequestType.JSON.getType(), null);
-		Assertions.assertEquals(SchoolInfo.none(), info.get());
+		Assertions.assertTrue(info.isEmpty());
+	}
+
+	@Test
+	void 학교코드_공백일때_가락고등학교_그만와라() {
+		final Optional<SchoolInfo> info = schoolClient.getSchool(RequestType.JSON.getType(), "  ");
+		Assertions.assertTrue(info.isEmpty());
 	}
 
 	@Test
