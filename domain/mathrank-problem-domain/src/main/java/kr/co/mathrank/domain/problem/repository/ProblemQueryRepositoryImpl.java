@@ -130,7 +130,7 @@ class ProblemQueryRepositoryImpl implements ProblemQueryRepository {
 	}
 
 	private BooleanExpression locationMatch(final String location) {
-		if (location == null) {
+		if (location == null || location.isBlank()) {
 			return null;
 		}
 		return QProblem.problem.location.contains(location);
