@@ -1,4 +1,4 @@
-package kr.co.mathrank.app.api.problem.read;
+package kr.co.mathrank.domain.problem.read.dto;
 
 import kr.co.mathrank.client.internal.course.CourseQueryResult;
 
