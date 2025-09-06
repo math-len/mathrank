@@ -70,7 +70,7 @@ class ProblemQueryRepositoryImpl implements ProblemQueryRepository {
 	}
 
 	private BooleanExpression schoolCodeMatch(final String schoolCode) {
-		if (schoolCode == null) {
+		if (schoolCode == null || schoolCode.isBlank()) {
 			return null;
 		}
 
