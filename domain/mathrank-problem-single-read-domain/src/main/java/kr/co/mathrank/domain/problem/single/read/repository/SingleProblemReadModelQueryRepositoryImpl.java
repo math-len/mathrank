@@ -81,7 +81,7 @@ class SingleProblemReadModelQueryRepositoryImpl implements SingleProblemReadMode
 	}
 
 	private BooleanExpression schoolCodeMatch(final String schoolCode) {
-		if (schoolCode == null) {
+		if (schoolCode == null || schoolCode.isBlank()) {
 			return null;
 		}
 
@@ -89,7 +89,7 @@ class SingleProblemReadModelQueryRepositoryImpl implements SingleProblemReadMode
 	}
 
 	private BooleanExpression startsWithLocation(final String location) {
-		if (location == null) {
+		if (location == null || location.isBlank()) {
 			return null;
 		}
 
