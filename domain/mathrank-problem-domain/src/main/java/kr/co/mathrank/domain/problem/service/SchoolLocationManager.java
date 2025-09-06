@@ -6,6 +6,7 @@ import org.springframework.validation.annotation.Validated;
 import jakarta.validation.constraints.NotNull;
 import kr.co.mathrank.client.external.school.RequestType;
 import kr.co.mathrank.client.external.school.SchoolClient;
+import kr.co.mathrank.client.external.school.SchoolInfo;
 import kr.co.mathrank.domain.problem.exception.CannotFoundSchoolException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -19,10 +20,10 @@ class SchoolLocationManager {
 
 	public String getSchoolLocation(@NotNull final String schoolCode) {
 		return schoolClient.getSchool(RequestType.JSON.getType(), schoolCode)
-			.orElseThrow(() -> {
+			.map(SchoolInfo::ORG_RDNMA)
+			.orElseGet(() -> {
 				log.warn("[SchoolLocationManager.getSchoolLocation] cannot found school - code: {}", schoolCode);
-				return new CannotFoundSchoolException();
-			})
-			.ORG_RDNMA();
+				return null;
+			});
 	}
 }
