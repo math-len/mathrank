@@ -39,9 +39,8 @@ public class ProblemReadQueryService {
 
 	public ProblemResponse getProblem(final Long problemId) {
 		final ProblemQueryResult result = problemQueryService.getSingle(problemId);
-		final ProblemResponse response = mapInfos(result);
 
-		return response;
+		return mapInfos(result);
 	}
 
 	private ProblemResponse mapInfos(final ProblemQueryResult problem) {

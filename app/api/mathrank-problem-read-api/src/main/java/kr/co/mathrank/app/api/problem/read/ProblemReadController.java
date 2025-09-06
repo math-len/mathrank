@@ -37,10 +37,9 @@ public class ProblemReadController {
 		@NotNull @Range(min = 1, max = 1000) Integer pageNumber
 	) {
 		final ProblemReadQuery query = request.toQuery(loginInfo.memberId());
-		final PageResult<ProblemResponse> pageQueryResult = problemReadQueryService.queryPages(query, pageSize,
-			pageNumber);
 
-		return ResponseEntity.ok(pageQueryResult);
+		return ResponseEntity.ok(problemReadQueryService.queryPages(query, pageSize,
+			pageNumber));
 	}
 
 	@Operation(summary = "문제 단일 조회 API")
