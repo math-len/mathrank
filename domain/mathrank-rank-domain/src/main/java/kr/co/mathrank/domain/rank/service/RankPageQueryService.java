@@ -29,19 +29,17 @@ public class RankPageQueryService {
 		@NotNull @Range(min = 1, max = 20) final Integer pageSize,
 		@NotNull @Range(min = 1, max = 2000) final Integer pageNumber
 	) {
-		final int currentPageNumber = pageNumber - 1;
-
 		final Sort sort = Sort.by(Sort.Direction.DESC, "score");
-		final PageRequest pageRequest = PageRequest.of(currentPageNumber, pageSize, sort);
+		final PageRequest pageRequest = PageRequest.of(pageNumber - 1, pageSize, sort);
 		final List<Solver> solvers = solverRepository.findAllSolversDescendingScores(pageRequest);
 		final Long totalCount = solverRepository.count();
 
 		final PageResult<Solver> solverPageResult = PageResult.of(solvers,
-			currentPageNumber,
+			pageNumber,
 			pageSize,
 			PageUtil.getNextPages(
 				pageSize,
-				currentPageNumber,
+				pageNumber,
 				totalCount,
 				solvers.size()
 			)
