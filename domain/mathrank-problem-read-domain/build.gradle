@@ -1,0 +1,17 @@
+plugins {
+    id 'java-library'
+}
+
+dependencies {
+    implementation 'org.springframework.boot:spring-boot-starter'
+    implementation 'org.springframework.boot:spring-boot-starter-validation'
+
+    implementation project(':domain:mathrank-problem-domain')
+    implementation project(':common:mathrank-page')
+
+    implementation project(':client:internal:mathrank-member-client')
+    implementation project(':client:internal:mathrank-course-client')
+    implementation project(':client:external:mathrank-school')
+
+    api project(':domain:mathrank-problem-core-domain')
+}

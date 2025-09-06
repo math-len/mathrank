@@ -3,7 +3,7 @@ package kr.co.mathrank.app.api.problem.read;
 import jakarta.validation.constraints.NotNull;
 import kr.co.mathrank.domain.problem.core.AnswerType;
 import kr.co.mathrank.domain.problem.core.Difficulty;
-import kr.co.mathrank.domain.problem.dto.ProblemQuery;
+import kr.co.mathrank.domain.problem.read.dto.ProblemReadQuery;
 
 public record ProblemQueryRequest(
 	@NotNull
@@ -18,8 +18,8 @@ public record ProblemQueryRequest(
 	String location,
 	String schoolCode
 ) {
-	public ProblemQuery toQuery(final Long requestMemberId) {
-		return new ProblemQuery(
+	public ProblemReadQuery toQuery(final Long requestMemberId) {
+		return new ProblemReadQuery(
 			// true -> 본인 아이디로 지정한다.
 			// false -> null 로 지정한다.
 			mine ? requestMemberId : null,

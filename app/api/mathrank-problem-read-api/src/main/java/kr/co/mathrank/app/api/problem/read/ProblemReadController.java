@@ -15,27 +15,17 @@ import jakarta.validation.constraints.NotNull;
 import kr.co.mathrank.app.api.common.authentication.Authorization;
 import kr.co.mathrank.app.api.common.authentication.LoginInfo;
 import kr.co.mathrank.app.api.common.authentication.MemberPrincipal;
-import kr.co.mathrank.client.external.school.RequestType;
-import kr.co.mathrank.client.external.school.SchoolClient;
-import kr.co.mathrank.client.external.school.SchoolInfo;
-import kr.co.mathrank.client.internal.course.CourseClient;
-import kr.co.mathrank.client.internal.course.CourseQueryContainsParentsResult;
-import kr.co.mathrank.client.internal.member.MemberClient;
-import kr.co.mathrank.client.internal.member.MemberInfo;
 import kr.co.mathrank.common.page.PageResult;
-import kr.co.mathrank.domain.problem.dto.ProblemQuery;
-import kr.co.mathrank.domain.problem.dto.ProblemQueryResult;
-import kr.co.mathrank.domain.problem.service.ProblemQueryService;
+import kr.co.mathrank.domain.problem.read.dto.ProblemReadQuery;
+import kr.co.mathrank.domain.problem.read.dto.ProblemResponse;
+import kr.co.mathrank.domain.problem.read.service.ProblemReadQueryService;
 import lombok.RequiredArgsConstructor;
 
 @RestController
 @RequiredArgsConstructor
 @Tag(name = "문제 API")
 public class ProblemReadController {
-	private final ProblemQueryService problemQueryService;
-	private final CourseClient courseClient;
-	private final MemberClient memberClient;
-	private final SchoolClient schoolClient;
+	private final ProblemReadQueryService problemReadQueryService;
 
 	@Operation(summary = "문제 페이지 조회 API", description = "각 필드를 null 로 설정할 시, 해당 필드는 조건에 포함하지 않습니다. +) coursePath 를 통해 조회시, 하위의 과정의 문제들까지 모두 조회됩니다.")
 	@Authorization(openedForAll = true)
@@ -46,10 +36,11 @@ public class ProblemReadController {
 		@NotNull @Range(min = 1, max = 20) Integer pageSize,
 		@NotNull @Range(min = 1, max = 1000) Integer pageNumber
 	) {
-		final ProblemQuery query = request.toQuery(loginInfo.memberId());
-		final PageResult<ProblemQueryResult> pageQueryResult = problemQueryService.query(query, pageSize, pageNumber);
+		final ProblemReadQuery query = request.toQuery(loginInfo.memberId());
+		final PageResult<ProblemResponse> pageQueryResult = problemReadQueryService.queryPages(query, pageSize,
+			pageNumber);
 
-		return ResponseEntity.ok(pageQueryResult.map(this::toResponse));
+		return ResponseEntity.ok(pageQueryResult);
 	}
 
 	@Operation(summary = "문제 단일 조회 API")
@@ -57,17 +48,6 @@ public class ProblemReadController {
 	public ResponseEntity<ProblemResponse> getProblem(
 		@PathVariable final Long problemId
 	) {
-		final ProblemQueryResult result = problemQueryService.getSingle(problemId);
-		final ProblemResponse response = toResponse(result);
-
-		return ResponseEntity.ok(response);
-	}
-
-	private ProblemResponse toResponse(final ProblemQueryResult problem) {
-		final MemberInfo info = memberClient.getMemberInfo(problem.memberId());
-		final SchoolInfo schoolInfo = schoolClient.getSchool(RequestType.JSON.getType(), problem.schoolCode())
-			.orElse(SchoolInfo.none());
-		final CourseQueryContainsParentsResult result = courseClient.getParentCourses(problem.path());
-		return ProblemResponse.from(problem, info, schoolInfo, result);
+		return ResponseEntity.ok(problemReadQueryService.getProblem(problemId));
 	}
 }

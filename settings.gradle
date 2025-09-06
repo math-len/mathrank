@@ -48,6 +48,7 @@ include(
         'domain:mathrank-auth-domain',
         'domain:mathrank-problem-core-domain',
         'domain:mathrank-problem-domain',
+        'domain:mathrank-problem-read-domain',
         'domain:mathrank-problem-single-domain',
         'domain:mathrank-rank-domain',
         'domain:mathrank-problem-single-read-domain',
