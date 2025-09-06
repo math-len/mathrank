@@ -42,12 +42,14 @@ class Requests {
 	public record MemberRegistrationCompleteRequest(
 		@NotNull
 		MemberType memberType,
+		@NotNull
+		String nickName,
 		String schoolCode,
 		@NotNull
 		Boolean agreeToPrivacyPolicy
 	) {
 		public MemberInfoCompleteCommand toCommand(final Long memberId) {
-			return new MemberInfoCompleteCommand(memberId, memberType, schoolCode, agreeToPrivacyPolicy);
+			return new MemberInfoCompleteCommand(memberId, nickName, memberType, schoolCode, agreeToPrivacyPolicy);
 		}
 	}
 }

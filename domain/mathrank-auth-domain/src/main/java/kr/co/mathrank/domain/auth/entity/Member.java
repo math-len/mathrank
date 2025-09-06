@@ -76,7 +76,7 @@ public class Member {
 		member.name = name;
 		member.loginId = loginId;
 		member.password = password;
-		member.completeRegister(memberType, agreeToPrivacyPolicy, schoolCode);
+		member.completeRegister(memberType, agreeToPrivacyPolicy, schoolCode, name);
 
 		return member;
 	}
@@ -93,8 +93,9 @@ public class Member {
 		return member;
 	}
 
-	public void completeRegister(final MemberType memberType, final Boolean agreeToPrivacyPolicy, final String schoolCode) {
+	public void completeRegister(final MemberType memberType, final Boolean agreeToPrivacyPolicy, final String schoolCode, final String nickName) {
 		this.setMemberType(memberType);
+		this.setName(nickName);
 		this.setAgreeToPrivacyPolicy(agreeToPrivacyPolicy);
 		this.setSchoolCode(schoolCode);
 		this.setPending(false);
