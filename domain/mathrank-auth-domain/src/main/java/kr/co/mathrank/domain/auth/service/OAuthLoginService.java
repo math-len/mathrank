@@ -63,7 +63,7 @@ public class OAuthLoginService {
 		memberRepository.findById(command.memberId())
 			.ifPresentOrElse(member -> {
 					// 사용자 존재 시, 업데이트 마무리
-					member.completeRegister(command.memberType(), command.agreeToPrivacyPolicy(), command.schoolCode());
+					member.completeRegister(command.memberType(), command.agreeToPrivacyPolicy(), command.schoolCode(), command.userNickName());
 				},
 				() -> {
 					// 사용자를 찾을 수 없을 때, 예외처리

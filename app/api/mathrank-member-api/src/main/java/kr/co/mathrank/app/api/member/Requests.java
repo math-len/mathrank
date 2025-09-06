@@ -8,7 +8,7 @@ public class Requests {
 	public record MemberUpdateRequest(
 		@NotNull String userNickName,
 		@NotNull MemberType memberType,
-		@NotNull String schoolCode,
+		String schoolCode,
 		@NotNull Boolean agreeToPolicy
 	) {
 		MemberUpdateCommand toCommand(final Long memberId) {
