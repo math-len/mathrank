@@ -38,11 +38,6 @@ public class RedisCacheAssembler implements CacheSpecAssembler {
 	private CacheManager createCacheManager(
 		Map<String, RedisCacheConfiguration> caches
 	) {
-		if (redisConnectionFactory.getConnection().isClosed()) {
-			log.error("Redis connection is closed");
-			throw new RuntimeException("Redis connection is closed");
-		}
-
 		return RedisCacheManager.builder()
 			.withInitialCacheConfigurations(caches)
 			.cacheWriter(RedisCacheWriter.nonLockingRedisCacheWriter(redisConnectionFactory))
