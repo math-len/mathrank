@@ -64,16 +64,12 @@ class RedisCacheAssemblerTest {
 	}
 
 	@Test
-	void TTL_만료되면_다시호출한다() {
+	void TTL_만료되면_다시호출한다() throws InterruptedException {
 		final int uuid = 11;
 
 		testService.getGenericResult(uuid);
 
-		try {
-			Thread.sleep(1500L);
-		} catch (InterruptedException e) {
-			throw new RuntimeException(e);
-		}
+		Thread.sleep(1500L);
 
 		testService.getGenericResult(uuid);
 
