@@ -55,6 +55,7 @@ include(
 
         'common',
         'common:mathrank-cache',
+        'common:mathrank-cache-redis',
         'common:mathrank-cache-caffeine',
         'common:mathrank-querydsl',
         'common:mathrank-page',
