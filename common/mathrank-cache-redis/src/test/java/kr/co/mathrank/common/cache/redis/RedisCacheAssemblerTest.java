@@ -29,7 +29,7 @@ class RedisCacheAssemblerTest {
 	TestService testService;
 
 	@Test
-	void 인터페이스_자료형은_캐시_역직렬화_안된다() {
+	void 인터페이스_타입_역직렬화_시_예외_발생() {
 		final int uuid = 1;
 		// 첫 번째 호출
 		testService.getAbstractValue(uuid);
