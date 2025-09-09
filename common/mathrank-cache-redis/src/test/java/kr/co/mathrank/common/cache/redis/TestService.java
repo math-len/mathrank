@@ -1,18 +1,15 @@
 package kr.co.mathrank.common.cache.redis;
 
 import java.time.Duration;
-import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Component;
-import org.testcontainers.junit.jupiter.Testcontainers;
 
 import kr.co.mathrank.common.cache.RequiredCacheSpec;
 
 @Component
-@Testcontainers
 public class TestService {
 
 	@Cacheable(cacheNames = "common::cache::redis::test", key = "#uuid")
