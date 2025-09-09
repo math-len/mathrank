@@ -22,7 +22,7 @@ public class TestService {
 		return List.of("test");
 	}
 
-	@Cacheable(cacheNames = "common::cache::redis::test", key = "'generic' +#uuid")
+	@Cacheable(cacheNames = "common::cache::redis::test", key = "'generic::' +#uuid")
 	public TestResult<String> getGenericResult(int uuid) {
 		return new TestResult<>("test");
 	}
