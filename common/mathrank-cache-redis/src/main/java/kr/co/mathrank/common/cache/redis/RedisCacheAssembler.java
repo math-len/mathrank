@@ -44,7 +44,8 @@ public class RedisCacheAssembler implements CacheSpecAssembler {
 			.build();
 	}
 
-	private RedisCacheConfiguration serializeConfiguration() {
+	@Bean
+	public RedisCacheConfiguration initSerializeConfiguration() {
 		return RedisCacheConfiguration.defaultCacheConfig()
 			.serializeKeysWith(
 				RedisSerializationContext.SerializationPair.fromSerializer(new StringRedisSerializer()))
@@ -64,7 +65,7 @@ public class RedisCacheAssembler implements CacheSpecAssembler {
 		return requiredCacheSpecs.stream()
 			.collect(Collectors.toMap(
 				RequiredCacheSpec::cacheName,
-				requiredCacheSpec -> serializeConfiguration()
+				requiredCacheSpec -> initSerializeConfiguration()
 					.entryTtl(requiredCacheSpec.ttl())));
 	}
 }
