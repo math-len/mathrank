@@ -38,7 +38,7 @@ public class SchoolQueryService {
 		@NotNull final String cityName,
 		@NotNull final String district
 	) {
-		final String formattedDistrict = district.replaceAll(DISTRICT_FORMAT, "");
+		final String formattedDistrict = String.format(DISTRICT_FORMAT, district);
 
 		return new SchoolResponses(schoolCityQueryManager.getSchoolsIn(cityName).getSchoolInfo()
 			.stream()
