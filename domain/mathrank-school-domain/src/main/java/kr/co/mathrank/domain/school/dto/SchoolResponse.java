@@ -1,4 +1,4 @@
-package kr.co.mathrank.app.api.school;
+package kr.co.mathrank.domain.school.dto;
 
 import kr.co.mathrank.client.external.school.SchoolInfo;
 
