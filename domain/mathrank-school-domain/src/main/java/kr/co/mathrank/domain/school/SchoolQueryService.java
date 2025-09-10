@@ -1,6 +1,9 @@
 package kr.co.mathrank.domain.school;
 
+import org.springframework.cache.annotation.CacheConfig;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
+import org.springframework.validation.annotation.Validated;
 
 import jakarta.validation.constraints.NotNull;
 import kr.co.mathrank.client.external.school.RequestType;
@@ -10,6 +13,7 @@ import kr.co.mathrank.domain.school.dto.SchoolResponses;
 import lombok.RequiredArgsConstructor;
 
 @Service
+@Validated
 @RequiredArgsConstructor
 public class SchoolQueryService {
 	private final SchoolCityQueryManager schoolCityQueryManager;
@@ -20,10 +24,10 @@ public class SchoolQueryService {
 	private static final String DISTRICT_FORMAT = " %s ";
 
 	public SchoolResponses searchSchools(
-		@NotNull String schoolName,
+		String schoolName,
 		@NotNull Integer pageIndex,
 		@NotNull Integer pageSize
-		) {
+	) {
 		return new SchoolResponses(schoolClient.getSchools(RequestType.JSON.getType(), pageIndex, pageSize, schoolName)
 			.getSchoolInfo().stream()
 			.map(SchoolResponse::from)
