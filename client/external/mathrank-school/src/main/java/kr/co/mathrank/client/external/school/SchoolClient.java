@@ -1,13 +1,24 @@
 package kr.co.mathrank.client.external.school;
 
+import java.time.Duration;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.http.client.ClientHttpRequestFactory;
+import org.springframework.http.client.SimpleClientHttpRequestFactory;
 import org.springframework.stereotype.Component;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.client.RestClient;
 
+import jakarta.validation.constraints.NotNull;
 import kr.co.mathrank.client.exception.aspect.Client;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
 
 @Component
 @Client
@@ -17,11 +28,20 @@ public class SchoolClient {
 	private String key;
 	private final RestClient restClient;
 
-	public SchoolClient() {
+	public SchoolClient(final SchoolClientProperties schoolClientProperties) {
 		restClient = RestClient.builder()
+			.requestFactory(configureTimeoutConfiguration(schoolClientProperties))
 			.baseUrl("https://open.neis.go.kr")
 			.build();
 	}
+
+	private static ClientHttpRequestFactory configureTimeoutConfiguration(final SchoolClientProperties properties) {
+		final SimpleClientHttpRequestFactory clientHttpRequestFactory = new SimpleClientHttpRequestFactory();
+		clientHttpRequestFactory.setConnectTimeout(Duration.ofSeconds(properties.getConnectionTimeoutSeconds()));
+		clientHttpRequestFactory.setReadTimeout(Duration.ofSeconds(properties.getReadTimeoutSeconds()));
+		return clientHttpRequestFactory;
+	}
+
 
 	public Optional<SchoolInfo> getSchool(final String type, final String schoolCode) {
 		if (schoolCode == null || schoolCode.isBlank()) {
@@ -73,5 +93,19 @@ public class SchoolClient {
 				.build())
 			.retrieve()
 			.body(SchoolResponse.class);
+	}
+
+	@Getter
+	@Configuration
+	@ConfigurationProperties("client.school")
+	@NoArgsConstructor
+	@Setter
+	@Validated
+	@ToString
+	static class SchoolClientProperties {
+		@NotNull
+		private Integer connectionTimeoutSeconds;
+		@NotNull
+		private Integer readTimeoutSeconds;
 	}
 }

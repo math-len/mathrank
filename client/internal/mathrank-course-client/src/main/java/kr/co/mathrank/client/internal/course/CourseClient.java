@@ -1,7 +1,11 @@
 package kr.co.mathrank.client.internal.course;
 
+import java.time.Duration;
+
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.client.ClientHttpRequestFactory;
+import org.springframework.http.client.SimpleClientHttpRequestFactory;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.client.RestClient;
@@ -26,8 +30,16 @@ public class CourseClient {
 		final String baseURL = URL_FORMAT.formatted(properties.getHost(), properties.getPort());
 		log.info("[CourseClient.new] init : {}", baseURL);
 		this.restClient = RestClient.builder()
+			.requestFactory(configureTimeoutConfiguration(properties))
 			.baseUrl(baseURL)
 			.build();
+	}
+
+	private static ClientHttpRequestFactory configureTimeoutConfiguration(final CourseClientProperties properties) {
+		final SimpleClientHttpRequestFactory clientHttpRequestFactory = new SimpleClientHttpRequestFactory();
+		clientHttpRequestFactory.setConnectTimeout(Duration.ofSeconds(properties.getConnectionTimeoutSeconds()));
+		clientHttpRequestFactory.setReadTimeout(Duration.ofSeconds(properties.getReadTimeoutSeconds()));
+		return clientHttpRequestFactory;
 	}
 
 	public CourseQueryContainsParentsResult getParentCourses(final String coursePath) {
@@ -53,5 +65,9 @@ public class CourseClient {
 		private String host;
 		@NotNull
 		private Integer port;
+		@NotNull
+		private Integer connectionTimeoutSeconds;
+		@NotNull
+		private Integer readTimeoutSeconds;
 	}
 }

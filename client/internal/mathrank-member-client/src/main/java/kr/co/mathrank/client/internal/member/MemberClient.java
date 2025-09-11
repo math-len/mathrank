@@ -1,7 +1,11 @@
 package kr.co.mathrank.client.internal.member;
 
+import java.time.Duration;
+
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.client.ClientHttpRequestFactory;
+import org.springframework.http.client.SimpleClientHttpRequestFactory;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestClient;
 
@@ -21,8 +25,16 @@ public class MemberClient {
 	MemberClient(final MemberClientProperties properties) {
 		this.properties = properties;
 		this.restClient = RestClient.builder()
+			.requestFactory(configureTimeoutConfiguration(properties))
 			.baseUrl(getUrlFormat(properties.host, properties.port))
 			.build();
+	}
+
+	private static ClientHttpRequestFactory configureTimeoutConfiguration(final MemberClientProperties properties) {
+		final SimpleClientHttpRequestFactory clientHttpRequestFactory = new SimpleClientHttpRequestFactory();
+		clientHttpRequestFactory.setConnectTimeout(Duration.ofSeconds(properties.getConnectionTimeoutSeconds()));
+		clientHttpRequestFactory.setReadTimeout(Duration.ofSeconds(properties.getReadTimeoutSeconds()));
+		return clientHttpRequestFactory;
 	}
 
 	public MemberInfo getMemberInfo(final Long memberId) {
@@ -48,5 +60,7 @@ public class MemberClient {
 		private String host = "http://localhost";
 		private Integer port = 8080;
 		private String uri = "/api/inner/v1/member/info";
+		private Integer connectionTimeoutSeconds;
+		private Integer readTimeoutSeconds;
 	}
 }
