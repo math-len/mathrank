@@ -39,7 +39,7 @@ public class MemberClient extends TimeoutConfiguredClient {
 	public MemberInfo getMemberInfo(final Long memberId) {
 		return restClient.get()
 			.uri(uriBuilder -> uriBuilder
-				.path(properties.uri)
+				.path(properties.getUri())
 				.queryParam("memberId", memberId)
 				.build())
 			.retrieve()
