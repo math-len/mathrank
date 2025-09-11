@@ -26,7 +26,7 @@ public class MemberClient {
 		this.properties = properties;
 		this.restClient = RestClient.builder()
 			.requestFactory(configureTimeoutConfiguration(properties))
-			.baseUrl(getUrlFormat(properties.host, properties.port))
+			.baseUrl(getUrlFormat(properties.getHost(), properties.getPort()))
 			.build();
 	}
 
