@@ -8,6 +8,7 @@ import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
 
+import kr.co.mathrank.domain.image.exception.NoSuchImageException;
 import kr.co.mathrank.domain.image.exception.StoreException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -17,6 +18,7 @@ import software.amazon.awssdk.services.s3.S3Client;
 import software.amazon.awssdk.services.s3.model.DeleteObjectResponse;
 import software.amazon.awssdk.services.s3.model.GetObjectRequest;
 import software.amazon.awssdk.services.s3.model.GetObjectResponse;
+import software.amazon.awssdk.services.s3.model.NoSuchKeyException;
 import software.amazon.awssdk.services.s3.model.PutObjectRequest;
 
 @Slf4j
@@ -54,15 +56,21 @@ class AwsImageStorage implements ImageStorage {
 
 	@Override
 	public ImageFileResult load(String fullFileName) {
-		final ResponseInputStream<GetObjectResponse> responseInputStream  = s3Client.getObject(GetObjectRequest.builder()
-			.bucket(BUCKET_NAME)
-			.key(fullFileName)
-			.build());
+		try {
+			final ResponseInputStream<GetObjectResponse> responseInputStream  = s3Client.getObject(GetObjectRequest.builder()
+				.bucket(BUCKET_NAME)
+				.key(fullFileName)
+				.build());
 
-		return new ImageFileResult(
-			responseInputStream,
-			MediaType.parseMediaType(URLConnection.guessContentTypeFromName(fullFileName)),
-			responseInputStream.response().contentLength()
-		);
+			return new ImageFileResult(
+				responseInputStream,
+				MediaType.parseMediaType(URLConnection.guessContentTypeFromName(fullFileName)),
+				responseInputStream.response().contentLength()
+			);
+		} catch (NoSuchKeyException e) {
+			log.info("[AwsImageStorage.load] load image failed - key: {}", fullFileName);
+			throw new NoSuchImageException("이미지를 찾을 수 없음: " + fullFileName);
+		}
+
 	}
 }
