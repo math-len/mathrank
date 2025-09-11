@@ -30,14 +30,14 @@ public class ClientExceptionAspect {
 				log.warn("[ClientExceptionAspect.mapException] wrong response with 4xx status code", httpStatusCodeException);
 				throw new ClientBadRequestException(
 					httpStatusCodeException.getMessage(),
-					httpStatusCodeException.getCause()
+					httpStatusCodeException
 				);
 				// 500 번대 ( 서버 에러인 경우 )
 			} else if (httpStatusCodeException.getStatusCode().is5xxServerError()) {
 				log.error("[ClientExceptionAspect.mapException] wrong response with 5xx status code", httpStatusCodeException);
 				throw new ServerResponseException(
 					httpStatusCodeException.getMessage(),
-					httpStatusCodeException.getCause()
+					httpStatusCodeException
 				);
 			}
 		}
