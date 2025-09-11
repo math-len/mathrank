@@ -7,8 +7,10 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.http.client.ClientHttpRequestFactory;
 import org.springframework.http.client.SimpleClientHttpRequestFactory;
 import org.springframework.stereotype.Component;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.client.RestClient;
 
+import jakarta.validation.constraints.NotNull;
 import kr.co.mathrank.client.exception.aspect.Client;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -55,12 +57,18 @@ public class MemberClient {
 	@Configuration
 	@ConfigurationProperties("client.member")
 	@NoArgsConstructor
+	@Validated
 	@Setter
 	static class MemberClientProperties {
+		@NotNull
 		private String host = "http://localhost";
+		@NotNull
 		private Integer port = 8080;
+		@NotNull
 		private String uri = "/api/inner/v1/member/info";
+		@NotNull
 		private Integer connectionTimeoutSeconds;
+		@NotNull
 		private Integer readTimeoutSeconds;
 	}
 }
