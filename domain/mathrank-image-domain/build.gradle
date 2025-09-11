@@ -2,6 +2,9 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-json'
     implementation 'org.springframework.boot:spring-boot-starter-validation'
 
+    implementation platform('software.amazon.awssdk:bom:2.27.21')
+    implementation 'software.amazon.awssdk:s3'
+
     implementation project(':common:mathrank-snowflake')
     implementation project(':common:mathrank-exception')
 }
