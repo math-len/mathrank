@@ -9,7 +9,7 @@ import org.springframework.web.client.ResourceAccessException;
 import kr.co.mathrank.client.exception.ClientBadRequestException;
 import kr.co.mathrank.client.exception.ClientException;
 import kr.co.mathrank.client.exception.ClientRequestTimeoutException;
-import kr.co.mathrank.client.exception.ClientServerException;
+import kr.co.mathrank.client.exception.ServerResponseException;
 import lombok.extern.slf4j.Slf4j;
 
 /**
@@ -35,7 +35,7 @@ public class ClientExceptionAspect {
 				// 500 번대 ( 서버 에러인 경우 )
 			} else if (httpStatusCodeException.getStatusCode().is5xxServerError()) {
 				log.error("[ClientExceptionAspect.mapException] wrong response with 5xx status code", httpStatusCodeException);
-				throw new ClientServerException(
+				throw new ServerResponseException(
 					httpStatusCodeException.getMessage(),
 					httpStatusCodeException.getCause()
 				);
