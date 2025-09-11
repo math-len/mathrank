@@ -27,24 +27,24 @@ public class ClientExceptionAspect {
 			log.error("HTTP Status Code: {}", httpStatusCodeException.getStatusCode(), httpStatusCodeException);
 			// 400 번대 ( 잘못된 요청인 경우 )
 			if (httpStatusCodeException.getStatusCode().is4xxClientError()) {
+				log.warn("[ClientExceptionAspect.mapException] wrong response with 4xx status code", httpStatusCodeException);
 				throw new ClientBadRequestException(
 					httpStatusCodeException.getMessage(),
 					httpStatusCodeException.getCause()
 				);
 				// 500 번대 ( 서버 에러인 경우 )
 			} else if (httpStatusCodeException.getStatusCode().is5xxServerError()) {
+				log.error("[ClientExceptionAspect.mapException] wrong response with 5xx status code", httpStatusCodeException);
 				throw new ClientServerException(
 					httpStatusCodeException.getMessage(),
 					httpStatusCodeException.getCause()
 				);
 			}
-
-			throw httpStatusCodeException;
 		}
 
 		// 타임 아웃 에러인 경우
 		if (throwable instanceof ResourceAccessException) {
-			log.error("Resource access timeout exception: ", throwable);
+			log.warn("Resource access timeout exception: ", throwable);
 			throw new ClientRequestTimeoutException(throwable.getMessage(), throwable);
 		}
 
