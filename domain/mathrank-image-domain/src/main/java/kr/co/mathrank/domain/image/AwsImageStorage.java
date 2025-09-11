@@ -4,6 +4,7 @@ import java.io.BufferedInputStream;
 import java.io.IOException;
 import java.net.URLConnection;
 
+import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
 
@@ -19,7 +20,6 @@ import software.amazon.awssdk.services.s3.model.GetObjectResponse;
 import software.amazon.awssdk.services.s3.model.PutObjectRequest;
 
 @Slf4j
-@Component
 @RequiredArgsConstructor
 class AwsImageStorage implements ImageStorage {
 	private static final String BUCKET_NAME = "mathrank-image";

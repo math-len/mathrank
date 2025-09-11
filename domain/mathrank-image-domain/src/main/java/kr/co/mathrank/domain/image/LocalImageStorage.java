@@ -22,7 +22,6 @@ import kr.co.mathrank.domain.image.exception.StoreException;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
-// @Component
 class LocalImageStorage implements ImageStorage {
 	@Value("${server.local.storage}")
 	private String storagePath;
