@@ -1,24 +1,37 @@
 package kr.co.mathrank.client.external.school;
 
+import java.time.Duration;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.stereotype.Component;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.client.RestClient;
 
+import jakarta.validation.constraints.NotNull;
+import kr.co.mathrank.client.config.TimeoutConfiguredClient;
 import kr.co.mathrank.client.exception.aspect.Client;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
 
-@Component
 @Client
-@RequiredArgsConstructor
-public class SchoolClient {
+@Component
+public class SchoolClient extends TimeoutConfiguredClient {
 	@Value("${neice.school.key:}")
 	private String key;
 	private final RestClient restClient;
 
-	public SchoolClient() {
+	public SchoolClient(final SchoolClientProperties schoolClientProperties) {
 		restClient = RestClient.builder()
+			.requestFactory(configureTimeoutConfiguration(
+				Duration.ofSeconds(schoolClientProperties.getConnectionTimeoutSeconds()),
+				Duration.ofSeconds(schoolClientProperties.getReadTimeoutSeconds())
+			))
 			.baseUrl("https://open.neis.go.kr")
 			.build();
 	}
@@ -73,5 +86,19 @@ public class SchoolClient {
 				.build())
 			.retrieve()
 			.body(SchoolResponse.class);
+	}
+
+	@Getter
+	@Configuration
+	@ConfigurationProperties("client.school")
+	@NoArgsConstructor
+	@Setter
+	@Validated
+	@ToString
+	static class SchoolClientProperties {
+		@NotNull
+		private Integer connectionTimeoutSeconds;
+		@NotNull
+		private Integer readTimeoutSeconds;
 	}
 }

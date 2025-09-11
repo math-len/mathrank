@@ -24,6 +24,8 @@ class ProblemClientTest {
 		final ProblemClient.ProblemClientProperties props = new ProblemClient.ProblemClientProperties();
 		props.setHost("http://localhost");
 		props.setPort(port);
+		props.setConnectionTimeoutSeconds(10);
+		props.setReadTimeoutSeconds(10);
 		final ProblemClient problemClient = new ProblemClient(props);
 
 		Assertions.assertThrows(HttpClientErrorException.class, () -> problemClient.matchAnswer(1L, Collections.emptyList()));
