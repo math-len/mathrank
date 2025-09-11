@@ -7,6 +7,7 @@ import java.net.URLConnection;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
 
+import kr.co.mathrank.domain.image.exception.StoreException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import software.amazon.awssdk.core.ResponseInputStream;
@@ -32,11 +33,12 @@ class AwsImageStorage implements ImageStorage {
 					.bucket(BUCKET_NAME)
 					.key(uploadFile.fullFileName())
 					.build(),
-				RequestBody.fromBytes(inputStream
+				RequestBody.fromBytes(inputStream // 현재 스펙 상 크기 모름
 				.readAllBytes()));
 			log.info("[AwsImageStorage.store] store file succeed - uploadFileName: {}", uploadFile.fullFileName());
 		} catch (IOException e) {
-			throw new RuntimeException(e);
+			log.error("[AwsImageStorage.store] store file failed - uploadFileName: {}", uploadFile.fullFileName(), e);
+			throw new StoreException("파일 저장 불가");
 		}
 	}
 
