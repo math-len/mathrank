@@ -19,9 +19,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
-@Component
 @Client
-@RequiredArgsConstructor
+@Component
 public class SchoolClient extends TimeoutConfiguredClient {
 	@Value("${neice.school.key:}")
 	private String key;

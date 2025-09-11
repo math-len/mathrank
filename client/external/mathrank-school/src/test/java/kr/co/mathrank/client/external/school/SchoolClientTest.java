@@ -10,7 +10,10 @@ import org.springframework.boot.test.context.SpringBootTest;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
-@SpringBootTest
+@SpringBootTest(properties = """
+client.school.read-timeout-seconds=10
+client.school.connection-timeout-seconds=10
+""")
 class SchoolClientTest {
 	@Autowired
 	private SchoolClient schoolClient;
