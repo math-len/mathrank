@@ -6,13 +6,12 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.http.client.ClientHttpRequestFactory;
-import org.springframework.http.client.SimpleClientHttpRequestFactory;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.client.RestClient;
 
 import jakarta.validation.constraints.NotNull;
+import kr.co.mathrank.client.config.TimeoutConfiguredClient;
 import kr.co.mathrank.client.exception.aspect.Client;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -23,25 +22,20 @@ import lombok.ToString;
 @Component
 @Client
 @RequiredArgsConstructor
-public class SchoolClient {
+public class SchoolClient extends TimeoutConfiguredClient {
 	@Value("${neice.school.key:}")
 	private String key;
 	private final RestClient restClient;
 
 	public SchoolClient(final SchoolClientProperties schoolClientProperties) {
 		restClient = RestClient.builder()
-			.requestFactory(configureTimeoutConfiguration(schoolClientProperties))
+			.requestFactory(configureTimeoutConfiguration(
+				Duration.ofSeconds(schoolClientProperties.getConnectionTimeoutSeconds()),
+				Duration.ofSeconds(schoolClientProperties.getReadTimeoutSeconds())
+			))
 			.baseUrl("https://open.neis.go.kr")
 			.build();
 	}
-
-	private static ClientHttpRequestFactory configureTimeoutConfiguration(final SchoolClientProperties properties) {
-		final SimpleClientHttpRequestFactory clientHttpRequestFactory = new SimpleClientHttpRequestFactory();
-		clientHttpRequestFactory.setConnectTimeout(Duration.ofSeconds(properties.getConnectionTimeoutSeconds()));
-		clientHttpRequestFactory.setReadTimeout(Duration.ofSeconds(properties.getReadTimeoutSeconds()));
-		return clientHttpRequestFactory;
-	}
-
 
 	public Optional<SchoolInfo> getSchool(final String type, final String schoolCode) {
 		if (schoolCode == null || schoolCode.isBlank()) {

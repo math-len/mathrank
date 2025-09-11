@@ -11,6 +11,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.client.RestClient;
 
 import jakarta.validation.constraints.NotNull;
+import kr.co.mathrank.client.config.TimeoutConfiguredClient;
 import kr.co.mathrank.client.exception.aspect.Client;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -18,7 +19,7 @@ import lombok.Setter;
 
 @Component
 @Client
-public class MemberClient {
+public class MemberClient extends TimeoutConfiguredClient {
 	private static final String URL_FORMAT = "%s:%s";
 
 	private final MemberClientProperties properties;
@@ -27,16 +28,12 @@ public class MemberClient {
 	MemberClient(final MemberClientProperties properties) {
 		this.properties = properties;
 		this.restClient = RestClient.builder()
-			.requestFactory(configureTimeoutConfiguration(properties))
+			.requestFactory(configureTimeoutConfiguration(
+				Duration.ofSeconds(properties.getConnectionTimeoutSeconds()),
+				Duration.ofSeconds(properties.getReadTimeoutSeconds()))
+			)
 			.baseUrl(getUrlFormat(properties.getHost(), properties.getPort()))
 			.build();
-	}
-
-	private static ClientHttpRequestFactory configureTimeoutConfiguration(final MemberClientProperties properties) {
-		final SimpleClientHttpRequestFactory clientHttpRequestFactory = new SimpleClientHttpRequestFactory();
-		clientHttpRequestFactory.setConnectTimeout(Duration.ofSeconds(properties.getConnectionTimeoutSeconds()));
-		clientHttpRequestFactory.setReadTimeout(Duration.ofSeconds(properties.getReadTimeoutSeconds()));
-		return clientHttpRequestFactory;
 	}
 
 	public MemberInfo getMemberInfo(final Long memberId) {

@@ -12,6 +12,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.client.RestClient;
 
 import jakarta.validation.constraints.NotNull;
+import kr.co.mathrank.client.config.TimeoutConfiguredClient;
 import kr.co.mathrank.client.exception.aspect.Client;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -22,7 +23,7 @@ import lombok.extern.slf4j.Slf4j;
 @Component
 @Validated
 @Client
-public class ProblemClient {
+public class ProblemClient extends TimeoutConfiguredClient {
 	private static final String URL_FORMAT = "%s:%s";
 	private final RestClient problemClient;
 
@@ -31,16 +32,12 @@ public class ProblemClient {
 		log.info("[ProblemClient.new] initialized with url: {}", url);
 
 		this.problemClient = RestClient.builder()
-			.requestFactory(configureTimeoutConfiguration(properties))
+			.requestFactory(configureTimeoutConfiguration(
+				Duration.ofSeconds(properties.getConnectionTimeoutSeconds()),
+				Duration.ofSeconds(properties.getReadTimeoutSeconds()))
+			)
 			.baseUrl(url)
 			.build();
-	}
-
-	private static ClientHttpRequestFactory configureTimeoutConfiguration(final ProblemClientProperties properties) {
-		final SimpleClientHttpRequestFactory clientHttpRequestFactory = new SimpleClientHttpRequestFactory();
-		clientHttpRequestFactory.setConnectTimeout(Duration.ofSeconds(properties.getConnectionTimeoutSeconds()));
-		clientHttpRequestFactory.setReadTimeout(Duration.ofSeconds(properties.getReadTimeoutSeconds()));
-		return clientHttpRequestFactory;
 	}
 
 	public SolveResult matchAnswer(@NotNull final Long problemId, @NotNull final List<String> answers) {

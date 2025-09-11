@@ -4,13 +4,12 @@ import java.time.Duration;
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.http.client.ClientHttpRequestFactory;
-import org.springframework.http.client.SimpleClientHttpRequestFactory;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.client.RestClient;
 
 import jakarta.validation.constraints.NotNull;
+import kr.co.mathrank.client.config.TimeoutConfiguredClient;
 import kr.co.mathrank.client.exception.aspect.Client;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -21,7 +20,7 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @Component
 @Client
-public class CourseClient {
+public class CourseClient extends TimeoutConfiguredClient {
 	private static final String URL_FORMAT = "%s:%s";
 
 	private final RestClient restClient;
@@ -30,16 +29,12 @@ public class CourseClient {
 		final String baseURL = URL_FORMAT.formatted(properties.getHost(), properties.getPort());
 		log.info("[CourseClient.new] init : {}", baseURL);
 		this.restClient = RestClient.builder()
-			.requestFactory(configureTimeoutConfiguration(properties))
+			.requestFactory(configureTimeoutConfiguration(
+				Duration.ofSeconds(properties.getConnectionTimeoutSeconds()),
+				Duration.ofSeconds(properties.getReadTimeoutSeconds()))
+			)
 			.baseUrl(baseURL)
 			.build();
-	}
-
-	private static ClientHttpRequestFactory configureTimeoutConfiguration(final CourseClientProperties properties) {
-		final SimpleClientHttpRequestFactory clientHttpRequestFactory = new SimpleClientHttpRequestFactory();
-		clientHttpRequestFactory.setConnectTimeout(Duration.ofSeconds(properties.getConnectionTimeoutSeconds()));
-		clientHttpRequestFactory.setReadTimeout(Duration.ofSeconds(properties.getReadTimeoutSeconds()));
-		return clientHttpRequestFactory;
 	}
 
 	public CourseQueryContainsParentsResult getParentCourses(final String coursePath) {
