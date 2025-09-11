@@ -49,6 +49,7 @@ public class ClientExceptionAspect {
 		}
 
 		// 그 외 전체 래핑
+		log.warn("[ClientExceptionAspect.mapException] unexpected exception occurred", throwable);
 		throw new ClientException(throwable.getMessage(), throwable);
 	}
 }
