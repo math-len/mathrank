@@ -24,7 +24,6 @@ public class ClientExceptionAspect {
 	public void mapException(final Throwable throwable) {
 		// http 응답이 200번대가 아닐때
 		if (throwable instanceof HttpStatusCodeException httpStatusCodeException) {
-			log.error("HTTP Status Code: {}", httpStatusCodeException.getStatusCode(), httpStatusCodeException);
 			// 400 번대 ( 잘못된 요청인 경우 )
 			if (httpStatusCodeException.getStatusCode().is4xxClientError()) {
 				log.warn("[ClientExceptionAspect.mapException] wrong response with 4xx status code", httpStatusCodeException);
