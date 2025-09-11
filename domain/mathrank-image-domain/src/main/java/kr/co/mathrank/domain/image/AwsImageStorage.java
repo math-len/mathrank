@@ -45,7 +45,7 @@ class AwsImageStorage implements ImageStorage {
 	@Override
 	public void delete(String fullFileName) {
 		final DeleteObjectResponse response = s3Client.deleteObject(builder -> builder.bucket(BUCKET_NAME).key(fullFileName));
-		if (response.deleteMarker()) {
+		if (response.sdkHttpResponse().isSuccessful()) {
 			log.info("[AwsImageStorage.delete] delete image succeeded - fullFileName = {}", fullFileName);
 			return;
 		}
