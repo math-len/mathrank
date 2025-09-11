@@ -11,8 +11,8 @@ import org.springframework.web.bind.annotation.RestController;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import kr.co.mathrank.client.external.school.RequestType;
-import kr.co.mathrank.client.external.school.SchoolClient;
+import kr.co.mathrank.domain.school.SchoolQueryService;
+import kr.co.mathrank.domain.school.dto.SchoolResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -21,11 +21,7 @@ import lombok.extern.slf4j.Slf4j;
 @RestController
 @RequiredArgsConstructor
 public class SchoolQueryController {
-	private final SchoolClient schoolClient;
-
-	// 단일 "구"로 필터링 하기 위한 포맷
-	// " 서구 "
-	private static final String DISTRICT_FORMAT = " %s ";
+	private final SchoolQueryService schoolQueryService;
 
 	@Operation(summary = "학교의 이름을 통한 조회 API", description = "schoolName 을 입력하지 않을 시, 빈값으로 사용됩니다.")
 	@GetMapping("/api/v1/schools")
@@ -40,10 +36,8 @@ public class SchoolQueryController {
 		final Integer pageSize
 	) {
 		return ResponseEntity.ok(
-			schoolClient.getSchools(RequestType.JSON.getType(), pageIndex, pageSize, schoolName)
-				.getSchoolInfo().stream()
-				.map(SchoolResponse::from)
-				.toList());
+			schoolQueryService.searchSchools(schoolName, pageIndex, pageSize).schools()
+		);
 	}
 
 	@Operation(summary = "학교 위치 정보기반 학교 조회 API", description = "cityName에 주의해야합니다. 반드시 서울특별시, 부산광역시 와 같은 풀네임으로 검색해야 합니다. ex) 부산 (X), 서울 (X)")
@@ -60,12 +54,6 @@ public class SchoolQueryController {
 		// ex)
 		// 이전: "서구" 조회 시, "강서구"도 조회 결과에 포함됨
 		// 현재: "서구" 조회 시, "서구"만 조회됨
-		final String formattedDistrict = DISTRICT_FORMAT.formatted(district);
-		return ResponseEntity.ok(schoolClient.getSchoolsByCityName(RequestType.JSON.getType(), cityName).getSchoolInfo()
-			.stream()
-			.filter(schoolInfo -> schoolInfo.ORG_RDNMA() != null)
-			.filter(schoolInfo -> schoolInfo.ORG_RDNMA().contains(formattedDistrict))
-			.map(SchoolResponse::from)
-			.toList());
+		return ResponseEntity.ok(schoolQueryService.searchSchoolsBySchoolByAddress(cityName, district).schools());
 	}
 }
