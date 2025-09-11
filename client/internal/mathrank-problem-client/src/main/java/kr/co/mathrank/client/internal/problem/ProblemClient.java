@@ -38,7 +38,7 @@ public class ProblemClient {
 
 	private static ClientHttpRequestFactory configureTimeoutConfiguration(final ProblemClientProperties properties) {
 		final SimpleClientHttpRequestFactory clientHttpRequestFactory = new SimpleClientHttpRequestFactory();
-		clientHttpRequestFactory.setConnectTimeout(Duration.ofSeconds(properties.getConnnectTimeoutSeconds()));
+		clientHttpRequestFactory.setConnectTimeout(Duration.ofSeconds(properties.getConnectionTimeoutSeconds()));
 		clientHttpRequestFactory.setReadTimeout(Duration.ofSeconds(properties.getReadTimeoutSeconds()));
 		return clientHttpRequestFactory;
 	}
@@ -75,7 +75,7 @@ public class ProblemClient {
 		@NotNull
 		private Integer port;
 		@NotNull
-		private Integer connnectTimeoutSeconds;
+		private Integer connectionTimeoutSeconds;
 		@NotNull
 		private Integer readTimeoutSeconds;
 	}
