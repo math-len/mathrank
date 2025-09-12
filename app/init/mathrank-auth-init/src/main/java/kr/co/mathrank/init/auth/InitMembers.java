@@ -1,8 +1,7 @@
 package kr.co.mathrank.init.auth;
 
-import java.util.Collections;
-
 import org.springframework.boot.CommandLineRunner;
+import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
 
 import kr.co.mathrank.common.role.Role;
@@ -14,7 +13,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
-// @Component
+@Component
+@Profile("init-member")
 @RequiredArgsConstructor
 public class InitMembers implements CommandLineRunner {
 	private final MemberRegisterService memberRegisterService;
