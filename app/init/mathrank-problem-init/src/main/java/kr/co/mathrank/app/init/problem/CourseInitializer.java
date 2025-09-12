@@ -22,7 +22,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
-@Component
+// @Component
 @RequiredArgsConstructor
 public class CourseInitializer implements CommandLineRunner {
 	private final CourseRepository courseRepository;
