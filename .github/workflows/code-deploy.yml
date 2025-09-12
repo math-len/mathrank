@@ -1,0 +1,53 @@
+name: Deploy via CodeDeploy
+
+on:
+  pull_request:
+    branches: [ develop ]
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+
+    permissions:
+      id-token: write
+      contents: read
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Set up JDK 21
+        uses: actions/setup-java@v1
+        with:
+          java-version: 21
+
+      - name: Build
+        run: ./gradlew :app:api:monolith-api:bootJar
+
+      - name: Package bundle
+        run: |
+          mkdir -p bundle
+          cp app/api/monolith-api/build/libs/monolith-api.jar bundle/app.jar
+          cp appspec.yml bundle/appspec.yml
+          cd bundle && zip -r ../release-${GITHUB_SHA}.zip . && cd ..
+
+      - name: Configure AWS credentials (OIDC)
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: arn:aws:iam::688567299537:role/mathrank-git-action-s3
+          aws-region: ap-northeast-2
+
+      - name: Upload to S3
+        run: aws s3 cp release-${GITHUB_SHA}.zip s3://mathrank-mono-jar/releases/
+
+      - name: Create CodeDeploy deployment
+        id: deploy
+        run: |
+          DEPLOY_ID=$(aws deploy create-deployment \
+            --application-name mathrank-mono-app \
+            --deployment-group-name mathrank-mono-app-deploy \
+            --s3-location bucket=mathrank-mono-jar,key=releases/release-${GITHUB_SHA}.zip,bundleType=zip \
+            --output text --query deploymentId)
+          echo "deployment_id=${DEPLOY_ID}" >> $GITHUB_OUTPUT
+#
+#      - name: Wait until success
+#        run: aws deploy wait deployment-successful --deployment-id ${{ steps.deploy.outputs.deployment_id }}
