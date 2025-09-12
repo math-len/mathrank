@@ -1,4 +1,5 @@
 # 문제풀이 랭킹 어플리케이션
+초·중·고 학생들이 푼 수학문제를 점수화하여 전국 단위로 순위를 확인할 수 있는 학습 경쟁 플랫폼입니다.
 
 ### Architecture - monolith deploy
 <img width="841" height="781" src="https://github.com/user-attachments/assets/abc4166b-ce54-4435-822b-246124971165" />
