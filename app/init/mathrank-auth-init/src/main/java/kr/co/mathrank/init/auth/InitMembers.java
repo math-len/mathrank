@@ -1,7 +1,5 @@
 package kr.co.mathrank.init.auth;
 
-import java.util.Collections;
-
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
