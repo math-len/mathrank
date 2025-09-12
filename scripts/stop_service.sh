@@ -1,1 +1,1 @@
-sudo systemctl stop mathrankapi.service
+systemctl stop mathrankapi.service

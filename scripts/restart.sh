@@ -1,1 +1,1 @@
-sudo systemctl restart mathrankapi.service
+systemctl restart mathrankapi.service
