@@ -1,5 +1,8 @@
 # 문제풀이 랭킹 어플리케이션
 
+### Architecture - monolith deploy
+<img width="841" height="781" src="https://github.com/user-attachments/assets/abc4166b-ce54-4435-822b-246124971165" />
+
 ### Participants
 
 ### Module Convention
