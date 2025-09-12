@@ -3,7 +3,7 @@ name: Deploy via CodeDeploy
 on:
   push:
     branches:
-      - 'main'
+      - 'release/**'
 
 jobs:
   build-and-deploy:
