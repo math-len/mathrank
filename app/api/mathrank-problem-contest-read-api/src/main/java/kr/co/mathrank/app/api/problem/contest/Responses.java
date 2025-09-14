@@ -8,10 +8,12 @@ import kr.co.mathrank.domain.problem.assessment.dto.AssessmentDetailReadModelRes
 import kr.co.mathrank.domain.problem.assessment.dto.AssessmentItemReadModelDetailResult;
 import kr.co.mathrank.domain.problem.assessment.dto.AssessmentPageQueryResult;
 import kr.co.mathrank.domain.problem.assessment.dto.AssessmentSubmissionRankResult;
+import kr.co.mathrank.domain.problem.assessment.dto.CourseDetailResult;
 import kr.co.mathrank.domain.problem.assessment.dto.SubmissionItemQueryResult;
 import kr.co.mathrank.domain.problem.assessment.dto.SubmissionQueryResult;
 import kr.co.mathrank.domain.problem.assessment.dto.SubmissionQueryResults;
 import kr.co.mathrank.domain.problem.assessment.entity.EvaluationStatus;
+import kr.co.mathrank.domain.problem.core.AnswerType;
 import kr.co.mathrank.domain.problem.core.Difficulty;
 
 class Responses {
@@ -48,9 +50,9 @@ class Responses {
 	}
 
 	public record ContestSubmissionQueryResponse(
-		Long submissionId,
+		String submissionId,
 		Long contestAverageScore,
-		Long memberId,
+		String memberId,
 		EvaluationStatus evaluationStatus,
 		Integer totalScore,
 		List<SubmissionItemQueryResult> itemSubmissionResults,
@@ -59,9 +61,9 @@ class Responses {
 	) {
 		public static ContestSubmissionQueryResponse from(final SubmissionQueryResult result) {
 			return new ContestSubmissionQueryResponse(
-				result.submissionId(),
+				String.valueOf(result.submissionId()),
 				result.assessmentAverageScore(),
-				result.memberId(),
+				String.valueOf(result.memberId()),
 				result.evaluationStatus(),
 				result.totalScore(),
 				result.submissionItemQueryResults(),
@@ -72,9 +74,9 @@ class Responses {
 	}
 
 	public record ContestDetailResponse(
-		Long contestId,
-		List<AssessmentItemReadModelDetailResult> itemDetails,
-		Long registeredMemberId,
+		String contestId,
+		List<ContestItemReadModelDetailResponse> itemDetails,
+		String registeredMemberId,
 		String contestName,
 		Long distinctUserCount,
 		LocalDateTime createdAt,
@@ -85,9 +87,11 @@ class Responses {
 	) {
 		public static ContestDetailResponse from(AssessmentDetailReadModelResult result) {
 			return new ContestDetailResponse(
-				result.assessmentId(),
-				result.itemDetails(),
-				result.registeredMemberId(),
+				String.valueOf(result.assessmentId()),
+				result.itemDetails().stream()
+					.map(ContestItemReadModelDetailResponse::from)
+					.toList(),
+				String.valueOf(result.registeredMemberId()),
 				result.assessmentName(),
 				result.distinctUserCount(),
 				result.createdAt(),
@@ -99,9 +103,38 @@ class Responses {
 		}
 	}
 
+	public record ContestItemReadModelDetailResponse(
+		String problemId,
+		String problemImage,
+		String memberId,
+		Integer score,
+		CourseDetailResult courseDetailResult,
+		Difficulty difficulty,
+		AnswerType type,
+		String schoolCode,
+		LocalDateTime createdAt,
+		Integer year
+	) {
+		public static ContestItemReadModelDetailResponse from(final AssessmentItemReadModelDetailResult result) {
+			return new ContestItemReadModelDetailResponse(
+				String.valueOf(result.problemId()),
+				result.problemImage(),
+				String.valueOf(result.memberId()),
+				result.score(),
+				result.courseDetailResult(),
+				result.difficulty(),
+				result.type(),
+				result.schoolCode(),
+				result.createdAt(),
+				result.year()
+			);
+		}
+
+	}
+
 	public record ContestPageResponse(
-		Long contestId,
-		Long memberId,
+		String contestId,
+		String memberId,
 		String contestName,
 		Long distinctUserCount,
 		LocalDateTime createdAt,
@@ -113,8 +146,8 @@ class Responses {
 	) {
 		public static ContestPageResponse from(AssessmentPageQueryResult result) {
 			return new ContestPageResponse(
-				result.assessmentId(),
-				result.memberId(),
+				String.valueOf(result.assessmentId()),
+				String.valueOf(result.memberId()),
 				result.assessmentName(),
 				result.distinctUserCount(),
 				result.createdAt(),

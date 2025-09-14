@@ -24,11 +24,11 @@ public record RankPageItemResponse(
 	}
 
 	record MemberResponse(
-		Long memberId,
+		String memberId,
 		String nickName
 	) {
 		static MemberResponse from(MemberInfo memberInfo) {
-			return new MemberResponse(memberInfo.memberId(), memberInfo.memberName());
+			return new MemberResponse(String.valueOf(memberInfo.memberId()), memberInfo.memberName());
 		}
 	}
 }

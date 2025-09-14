@@ -8,11 +8,13 @@ import kr.co.mathrank.domain.problem.assessment.dto.AssessmentDetailReadModelRes
 import kr.co.mathrank.domain.problem.assessment.dto.AssessmentItemReadModelDetailResult;
 import kr.co.mathrank.domain.problem.assessment.dto.AssessmentPageQueryResult;
 import kr.co.mathrank.domain.problem.assessment.dto.AssessmentSubmissionRankResult;
+import kr.co.mathrank.domain.problem.assessment.dto.CourseDetailResult;
 import kr.co.mathrank.domain.problem.assessment.dto.SubmissionItemQueryResult;
 import kr.co.mathrank.domain.problem.assessment.dto.SubmissionQueryResult;
 import kr.co.mathrank.domain.problem.assessment.dto.SubmissionQueryResults;
 import kr.co.mathrank.domain.problem.assessment.entity.AssessmentPeriodType;
 import kr.co.mathrank.domain.problem.assessment.entity.EvaluationStatus;
+import kr.co.mathrank.domain.problem.core.AnswerType;
 import kr.co.mathrank.domain.problem.core.Difficulty;
 
 class Responses {
@@ -51,9 +53,9 @@ class Responses {
 	}
 
 	public record AssessmentSubmissionQueryResponse(
-		Long submissionId,
+		String submissionId,
 		Long assessmentAverageScore,
-		Long memberId,
+		String memberId,
 		EvaluationStatus evaluationStatus,
 		Integer totalScore,
 		List<SubmissionItemQueryResult> itemSubmissionResults,
@@ -62,9 +64,9 @@ class Responses {
 	) {
 		public static AssessmentSubmissionQueryResponse from(final SubmissionQueryResult result) {
 			return new AssessmentSubmissionQueryResponse(
-				result.submissionId(),
+				String.valueOf(result.submissionId()),
 				result.assessmentAverageScore(),
-				result.memberId(),
+				String.valueOf(result.memberId()),
 				result.evaluationStatus(),
 				result.totalScore(),
 				result.submissionItemQueryResults(),
@@ -75,9 +77,9 @@ class Responses {
 	}
 
 	public record AssessmentDetailResponse(
-		Long assessmentId,
-		List<AssessmentItemReadModelDetailResult> itemDetails,
-		Long registeredMemberId,
+		String assessmentId,
+		List<AssessmentItemReadModelDetailResponse> itemDetails,
+		String registeredMemberId,
 		String assessmentName,
 		Long distinctUserCount,
 		LocalDateTime createdAt,
@@ -86,9 +88,11 @@ class Responses {
 	) {
 		public static AssessmentDetailResponse from(AssessmentDetailReadModelResult result) {
 			return new AssessmentDetailResponse(
-				result.assessmentId(),
-				result.itemDetails(),
-				result.registeredMemberId(),
+				String.valueOf(result.assessmentId()),
+				result.itemDetails().stream()
+					.map(AssessmentItemReadModelDetailResponse::from)
+					.toList(),
+				String.valueOf(result.registeredMemberId()),
 				result.assessmentName(),
 				result.distinctUserCount(),
 				result.createdAt(),
@@ -98,9 +102,38 @@ class Responses {
 		}
 	}
 
+	public record AssessmentItemReadModelDetailResponse(
+		String problemId,
+		String problemImage,
+		String memberId,
+		Integer score,
+		CourseDetailResult courseDetailResult,
+		Difficulty difficulty,
+		AnswerType type,
+		String schoolCode,
+		LocalDateTime createdAt,
+		Integer year
+	) {
+		public static AssessmentItemReadModelDetailResponse from(final AssessmentItemReadModelDetailResult result) {
+			return new AssessmentItemReadModelDetailResponse(
+				String.valueOf(result.problemId()),
+				result.problemImage(),
+				String.valueOf(result.memberId()),
+				result.score(),
+				result.courseDetailResult(),
+				result.difficulty(),
+				result.type(),
+				result.schoolCode(),
+				result.createdAt(),
+				result.year()
+			);
+		}
+
+	}
+
 	public record AssessmentPageResponse(
-		Long assessmentId,
-		Long memberId,
+		String assessmentId,
+		String memberId,
 		String assessmentName,
 		Long distinctUserCount,
 		LocalDateTime createdAt,
@@ -110,8 +143,8 @@ class Responses {
 	) {
 		public static AssessmentPageResponse from(AssessmentPageQueryResult result) {
 			return new AssessmentPageResponse(
-				result.assessmentId(),
-				result.memberId(),
+				String.valueOf(result.assessmentId()),
+				String.valueOf(result.memberId()),
 				result.assessmentName(),
 				result.distinctUserCount(),
 				result.createdAt(),
