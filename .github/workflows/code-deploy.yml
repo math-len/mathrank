@@ -1,7 +1,7 @@
 name: Deploy via CodeDeploy
 
 on:
-  push:
+  pull_request:
     branches:
       - 'release/**'
 
