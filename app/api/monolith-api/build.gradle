@@ -1,6 +1,9 @@
 dependencies {
     implementation 'org.springframework.boot:spring-boot-starter'
 
+    implementation 'io.awspring.cloud:spring-cloud-aws-dependencies::3.1.0'
+    implementation 'io.awspring.cloud:spring-cloud-aws-starter-parameter-store'
+
     implementation project(':app:api:mathrank-member-api')
     implementation project(':app:api:mathrank-member-read-api')
     implementation project(':app:api:mathrank-auth-api')
