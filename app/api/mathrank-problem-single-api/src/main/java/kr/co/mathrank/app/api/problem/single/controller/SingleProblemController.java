@@ -40,14 +40,14 @@ public class SingleProblemController {
 	@Operation(summary = "개별 문제 풀이 API", description = "해당 사용자의 문제풀이를 채점하고, 결과를 저장합니다. 풀이 결과는 모두 저장됩니다")
 	@PostMapping("/api/v1/problem/single/solve")
 	@Authorization(openedForAll = true)
-	public ResponseEntity<SingleProblemSolveResult> solveSingleProblem(
+	public ResponseEntity<SingleProblemSolveResponse> solveSingleProblem(
 		@ModelAttribute @ParameterObject @Valid final SingleProblemSolveRequest request,
 		@LoginInfo final MemberPrincipal memberPrincipal
 	) {
 		final SingleProblemSolveCommand command = request.toCommand(memberPrincipal.memberId());
 		final SingleProblemSolveResult result = singleProblemService.solve(command);
 
-		return ResponseEntity.ok(result);
+		return ResponseEntity.ok(SingleProblemSolveResponse.from(result));
 	}
 
 	@Operation(summary = "개별 문제 등록 API", description = "특정 문제를 개별문제로 등록합니다. 문제 중복 등록 시도시, 거부됩니다.")
