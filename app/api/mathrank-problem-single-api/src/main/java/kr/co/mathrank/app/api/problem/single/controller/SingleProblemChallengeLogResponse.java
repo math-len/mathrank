@@ -6,7 +6,7 @@ import java.util.List;
 import kr.co.mathrank.domain.problem.single.dto.SingleProblemChallengeLogResult;
 
 public record SingleProblemChallengeLogResponse(
-	Long challengeLogId,
+	String challengeLogId,
 	Boolean success,
 	LocalDateTime submittedAt,
 	Long elapsedTimeSeconds,
@@ -15,7 +15,7 @@ public record SingleProblemChallengeLogResponse(
 ) {
 	public static SingleProblemChallengeLogResponse from(SingleProblemChallengeLogResult result) {
 		return new SingleProblemChallengeLogResponse(
-			result.challengeLogId(),
+			String.valueOf(result.challengeLogId()),
 			result.success(),
 			result.submittedAt(),
 			result.elapsedTime().toSeconds(),

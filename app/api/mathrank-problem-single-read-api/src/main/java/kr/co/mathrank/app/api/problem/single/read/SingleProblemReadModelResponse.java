@@ -6,9 +6,9 @@ import kr.co.mathrank.domain.problem.core.Difficulty;
 import kr.co.mathrank.domain.problem.single.read.dto.SingleProblemReadModelResult;
 
 public record SingleProblemReadModelResponse(
-	Long id, // single problem id
+	String id, // single problem id
 	Boolean successAtFirstTry, // null: 푼적 없음, true: 성공해썽, false: 실패해썽
-	Long problemId, // problem id
+	String problemId, // problem id
 	String singleProblemName,
 	String problemImage,
 
@@ -23,9 +23,9 @@ public record SingleProblemReadModelResponse(
 ) {
 	public static SingleProblemReadModelResponse of(SingleProblemReadModelResult result, CourseQueryContainsParentsResult courseInfo) {
 		return new SingleProblemReadModelResponse(
-			result.id(),
+			String.valueOf(result.id()),
 			result.successAtFirstTry(),
-			result.problemId(),
+			String.valueOf(result.problemId()),
 			result.singleProblemName(),
 			result.problemImage(),
 			courseInfo,

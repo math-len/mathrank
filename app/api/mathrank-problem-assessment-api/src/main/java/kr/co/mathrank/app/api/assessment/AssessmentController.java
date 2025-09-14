@@ -42,11 +42,12 @@ public class AssessmentController {
 	@Operation(summary = "문제집 답안지 등록 API")
 	@PostMapping("/api/v1/problem/assessment/submission")
 	@Authorization(openedForAll = true)
-	public ResponseEntity<Long> registerSubmission(
+	public ResponseEntity<String> registerSubmission(
 		@RequestBody @Valid final Requests.AssessmentSubmissionRegisterRequest request,
 		@LoginInfo final MemberPrincipal memberPrincipal
 	) {
 		final SubmissionRegisterCommand command = request.toCommand(memberPrincipal.memberId());
-		return ResponseEntity.status(HttpStatus.CREATED).body(submissionRegisterService.submit(command));
+		return ResponseEntity.status(HttpStatus.CREATED)
+			.body(String.valueOf(submissionRegisterService.submit(command)));
 	}
 }

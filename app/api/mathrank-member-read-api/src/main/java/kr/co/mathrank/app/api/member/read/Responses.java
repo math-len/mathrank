@@ -9,7 +9,7 @@ import kr.co.mathrank.domain.auth.entity.MemberType;
 
 public class Responses {
 	record MemberInfoDetailResponse(
-		Long memberId,
+		String memberId,
 		String nickName,
 		Role role,
 		MemberType memberType,
@@ -20,7 +20,7 @@ public class Responses {
 	) {
 		public static MemberInfoDetailResponse from(final MemberInfoResult result, final SchoolInfo schoolInfo) {
 			return new MemberInfoDetailResponse(
-				result.memberId(),
+				String.valueOf(result.memberId()),
 				result.nickName(),
 				result.role(),
 				result.memberType(),

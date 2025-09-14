@@ -17,11 +17,11 @@ public class Responses {
 	}
 
 	public record MemberInfoResponse(
-		Long memberId,
+		String memberId,
 		String memberName
 	) {
 		public static MemberInfoResponse from(final MemberInfoResult result) {
-			return new MemberInfoResponse(result.memberId(), result.nickName());
+			return new MemberInfoResponse(String.valueOf(result.memberId()), result.nickName());
 		}
 	}
 }
