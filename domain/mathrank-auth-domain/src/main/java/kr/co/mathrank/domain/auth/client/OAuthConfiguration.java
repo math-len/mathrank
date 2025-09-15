@@ -16,4 +16,11 @@ class OAuthConfiguration {
 		log.info("[OAuthClientConfiguration] kakao oauth client registered - configuration: {}", configuration);
 		return new KakaoOAuthClient(configuration);
 	}
+
+	@Bean
+	@ConditionalOnBean(NaverConfiguration.class)
+	NaverOAuthClient naverOAuthClient(final NaverConfiguration configuration) {
+		log.info("[OAuthClientConfiguration] naver oauth client registered - configuration: {}", configuration);
+		return new NaverOAuthClient(configuration);
+	}
 }
