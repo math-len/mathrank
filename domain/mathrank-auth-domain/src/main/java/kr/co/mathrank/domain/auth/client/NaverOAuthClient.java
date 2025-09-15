@@ -1,5 +1,6 @@
 package kr.co.mathrank.domain.auth.client;
 
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.web.client.RestClient;
 
@@ -9,6 +10,7 @@ import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
 class NaverOAuthClient implements OAuthClientHandler {
+	private static final String TOKEN_FORMAT = "Bearer %s";
 	// 토큰 발급 URI
 	private static final String TOKEN_URL = "https://nid.naver.com/oauth2.0/token";
 	// 사용자 정보 조회 URI
@@ -44,11 +46,11 @@ class NaverOAuthClient implements OAuthClientHandler {
 	}
 
 	private MemberInfoResponse getUserInfo(final String accessToken) {
-		final String headerValue = "Bearer " + accessToken;
-		return infoClient.get()
-			.header("Authorization", headerValue)
+		return infoClient.post()
+			.contentType(MediaType.APPLICATION_FORM_URLENCODED)
+			.header(HttpHeaders.AUTHORIZATION, TOKEN_FORMAT.formatted(accessToken))
 			.retrieve()
-			.body(NaverMemberInfoResponse.class);
+			.body(KakaoMemberInfoResponse.class);
 	}
 
 	@Override
