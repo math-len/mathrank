@@ -55,6 +55,6 @@ class GoogleOAuthClient implements OAuthClientHandler {
 
 	@Override
 	public boolean supports(OAuthProvider provider) {
-		return false;
+		return OAuthProvider.GOOGLE.equals(provider);
 	}
 }
