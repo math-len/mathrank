@@ -22,7 +22,7 @@ class MemberRepositoryTest {
 
 	@Test
 	void oAuth_제공자와_ID로_조회성공() {
-		final Long oAuthId = 12L;
+		final String oAuthId = "12";
 		final Member member = Member.fromOAuth(1L, oAuthId, OAuthProvider.KAKAO, "nickName", Role.USER);
 		memberRepository.save(member);
 

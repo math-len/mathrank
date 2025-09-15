@@ -18,13 +18,13 @@ public interface MemberRepository extends JpaRepository<Member, Long> {
 	@Query("SELECT m FROM Member m WHERE m.oAuthInfo.oAuthUserId = :oAuthId AND m.oAuthInfo.oAuthProvider = :provider")
 	@Lock(LockModeType.PESSIMISTIC_WRITE)
 	Optional<Member> findByOAuthIdAndProvider(
-		@Param("oAuthId") final Long oAuthInfoOAuthUserId,
+		@Param("oAuthId") final String oAuthInfoOAuthUserId,
 		@Param("provider") final OAuthProvider provider
 	);
 
 	@Query("SELECT m FROM Member m WHERE m.oAuthInfo.oAuthUserId = :oAuthId AND m.oAuthInfo.oAuthProvider = :provider")
 	List<Member> findAllByOAuthIdAndProviderNoLock(
-		@Param("oAuthId") final Long oAuthInfoOAuthUserId,
+		@Param("oAuthId") final String oAuthInfoOAuthUserId,
 		@Param("provider") final OAuthProvider provider
 	);
 }

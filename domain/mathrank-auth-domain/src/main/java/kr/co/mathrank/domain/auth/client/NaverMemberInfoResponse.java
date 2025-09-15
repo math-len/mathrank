@@ -10,7 +10,7 @@ record NaverMemberInfoResponse(
 
 	record NaverResponse(
 		String nickname,
-		Long id
+		String id
 	) {
 	}
 }
