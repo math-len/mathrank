@@ -16,4 +16,18 @@ class OAuthConfiguration {
 		log.info("[OAuthClientConfiguration] kakao oauth client registered - configuration: {}", configuration);
 		return new KakaoOAuthClient(configuration);
 	}
+
+	@Bean
+	@ConditionalOnBean(GoogleConfiguration.class)
+	GoogleOAuthClient googleOAuthClient(final GoogleConfiguration configuration) {
+		log.info("[OAuthClientConfiguration] google oauth client registered - configuration: {}", configuration);
+		return new GoogleOAuthClient(configuration);
+	}
+
+	@Bean
+	@ConditionalOnBean(NaverConfiguration.class)
+	NaverOAuthClient naverOAuthClient(final NaverConfiguration configuration) {
+		log.info("[OAuthClientConfiguration] naver oauth client registered - configuration: {}", configuration);
+		return new NaverOAuthClient(configuration);
+	}
 }

@@ -56,7 +56,7 @@ class OAuthLoginServiceTest {
 		final OAuthProvider kakao = OAuthProvider.KAKAO;
 		final OAuthLoginCommand command = new OAuthLoginCommand("testCode", "testState", kakao);
 
-		final long oAuthId = 12345L;
+		final String oAuthId = "12345";
 		final MemberInfo memberInfo = new MemberInfo(oAuthId, "nickName");
 		// 항상 memberInfo 리턴
 		Mockito.when(oAuthClientManager.getMemberInfo(command)).thenReturn(memberInfo);
@@ -90,7 +90,7 @@ class OAuthLoginServiceTest {
 		final OAuthProvider kakao = OAuthProvider.KAKAO;
 		final OAuthLoginCommand command = new OAuthLoginCommand("testCode", "testState", kakao);
 
-		final long oAuthId = 12345L;
+		final String oAuthId = "12345";
 		final MemberInfo memberInfo = new MemberInfo(oAuthId, "nickName");
 		// 항상 memberInfo 리턴
 		Mockito.when(oAuthClientManager.getMemberInfo(command)).thenReturn(memberInfo);
