@@ -13,12 +13,15 @@ class GoogleOAuthClient implements OAuthClientHandler {
 	private static final String TOKEN_FORMAT = "Bearer %s";
 	private final GoogleConfiguration googleConfiguration;
 
+	private static final String TOKEN_URL = "https://oauth2.googleapis.com/token";
+	private static final String INFO_URL = "https://www.googleapis.com/oauth2/v2/userinfo";
+
 	private final RestClient tokenClient = RestClient.builder()
-		.baseUrl("https://oauth2.googleapis.com/token")
+		.baseUrl(TOKEN_URL)
 		.build();
 
 	private final RestClient infoClient = RestClient.builder()
-		.baseUrl("https://www.googleapis.com/oauth2/v2/userinfo")
+		.baseUrl(INFO_URL)
 		.build();
 
 	@Override
