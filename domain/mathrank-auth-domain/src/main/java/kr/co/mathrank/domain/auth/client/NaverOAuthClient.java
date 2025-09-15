@@ -1,15 +1,12 @@
 package kr.co.mathrank.domain.auth.client;
 
 import org.springframework.http.MediaType;
-import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestClient;
 
-import kr.co.mathrank.domain.auth.dto.MemberInfoResult;
 import kr.co.mathrank.domain.auth.dto.OAuthLoginCommand;
 import kr.co.mathrank.domain.auth.entity.OAuthProvider;
 import lombok.RequiredArgsConstructor;
 
-@Component
 @RequiredArgsConstructor
 class NaverOAuthClient implements OAuthClientHandler {
 	private static final String TOKEN_URL = "https://nid.naver.com/oauth2.0/token";
