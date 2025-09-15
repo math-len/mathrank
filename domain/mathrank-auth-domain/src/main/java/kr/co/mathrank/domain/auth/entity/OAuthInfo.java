@@ -16,5 +16,5 @@ public class OAuthInfo {
 	private OAuthProvider oAuthProvider;
 
 	@Column(name = "oauth_user_id")
-	private Long oAuthUserId;
+	private String oAuthUserId;
 }

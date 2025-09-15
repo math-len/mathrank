@@ -81,7 +81,7 @@ public class Member {
 		return member;
 	}
 
-	public static Member fromOAuth(final Long id, final Long oAuthId, final OAuthProvider provider,
+	public static Member fromOAuth(final Long id, final String oAuthId, final OAuthProvider provider,
 		final String nickName, final Role role) {
 		final Member member = new Member();
 		member.id = id;
