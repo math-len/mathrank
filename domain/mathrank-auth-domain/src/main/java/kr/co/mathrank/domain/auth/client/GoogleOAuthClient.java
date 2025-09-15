@@ -2,14 +2,12 @@ package kr.co.mathrank.domain.auth.client;
 
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
-import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestClient;
 
 import kr.co.mathrank.domain.auth.dto.OAuthLoginCommand;
 import kr.co.mathrank.domain.auth.entity.OAuthProvider;
 import lombok.RequiredArgsConstructor;
 
-@Component
 @RequiredArgsConstructor
 class GoogleOAuthClient implements OAuthClientHandler {
 	private static final String TOKEN_FORMAT = "Bearer %s";
