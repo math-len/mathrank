@@ -9,7 +9,9 @@ import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
 class NaverOAuthClient implements OAuthClientHandler {
+	// 토큰 발급 URI
 	private static final String TOKEN_URL = "https://nid.naver.com/oauth2.0/token";
+	// 사용자 정보 조회 URI
 	private static final String USER_INFO_URL = "https://openapi.naver.com/v1/nid/me";
 
 	private final NaverConfiguration naverConfiguration;
