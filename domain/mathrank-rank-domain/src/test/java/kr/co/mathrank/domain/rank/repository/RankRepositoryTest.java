@@ -27,6 +27,16 @@ class RankRepositoryTest {
 	}
 
 	@Test
+	void 없는_사용자_점수_조회시_null() {
+		Assertions.assertNull(rankRepository.getScore(String.valueOf(0)));
+	}
+
+	@Test
+	void 없는_사용자_랭크_조회시_null() {
+		Assertions.assertNull(rankRepository.getRank(String.valueOf(0)));
+	}
+
+	@Test
 	void 서로_다른_점수일때_내림차순_랭크() {
 		for (int i = 0; i < 100; i++) {
 			rankRepository.set(String.valueOf(i), (long)i);

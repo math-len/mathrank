@@ -35,13 +35,17 @@ public class RankRepository {
 	 */
 	public Long getRank(@NotNull final String userId) {
 		// O(1)
-		final Double userScore = redisTemplate.opsForZSet().score(KEY, userId);
+		final Long userScore = getScore(userId);
+		if (userScore == null) {
+			return null;
+		}
 		// O(logN)
 		return redisTemplate.opsForZSet().count(KEY, userScore + 1, Double.MAX_VALUE) + 1;
 	}
 
 	public Long getScore(@NotNull final String userId) {
-		return redisTemplate.opsForZSet().score(KEY, userId).longValue();
+		final Double userScore = redisTemplate.opsForZSet().score(KEY, userId);
+		return userScore == null ? null : userScore.longValue();
 	}
 
 	public void set(@NotNull final String userId, @NotNull final Long score) {
