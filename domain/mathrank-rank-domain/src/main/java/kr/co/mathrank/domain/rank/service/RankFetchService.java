@@ -30,7 +30,5 @@ public class RankFetchService {
 			solvers.forEach(solver -> rankRepository.setIfGreaterThan(String.valueOf(solver.getMemberId()), solver.getScore()));
 			pageNumber++;
 		}
-
-		log.info("[RankRefreshService.updateScore] ");
 	}
 }
