@@ -21,14 +21,14 @@ public class RankFetchService {
 	public void syncRedis() {
 		final Long totalCount = solverRepository.count();
 
-		int offset = 0;
+		int pageNumber = 0;
 		int pageSize = 100;
 
-		while(offset < totalCount) {
-			final PageRequest pageRequest = PageRequest.of(offset, pageSize);
+		while(pageNumber * pageSize < totalCount) {
+			final PageRequest pageRequest = PageRequest.of(pageNumber, pageSize);
 			final List<Solver> solvers = solverRepository.findAllSolversDescendingScores(pageRequest);
 			solvers.forEach(solver -> rankRepository.setIfGreaterThan(String.valueOf(solver.getMemberId()), solver.getScore()));
-			offset += pageSize;
+			pageNumber++;
 		}
 
 		log.info("[RankRefreshService.updateScore] ");
