@@ -37,6 +37,10 @@ public class RankRepository {
 		return redisTemplate.opsForZSet().count(KEY, userScore + 1, Double.MAX_VALUE) + 1;
 	}
 
+	public Long getScore(@NotNull final String userId) {
+		return redisTemplate.opsForZSet().score(KEY, userId).longValue();
+	}
+
 	public void set(@NotNull final String userId, @NotNull final Long score) {
 		redisTemplate.opsForZSet().add(KEY, userId, score);
 	}
