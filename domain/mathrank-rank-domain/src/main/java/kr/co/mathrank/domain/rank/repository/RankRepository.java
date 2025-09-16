@@ -1,5 +1,8 @@
 package kr.co.mathrank.domain.rank.repository;
 
+import org.springframework.data.redis.connection.RedisZSetCommands;
+import org.springframework.data.redis.connection.StringRedisConnection;
+import org.springframework.data.redis.core.RedisCallback;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.annotation.Validated;
@@ -43,6 +46,19 @@ public class RankRepository {
 
 	public void set(@NotNull final String userId, @NotNull final Long score) {
 		redisTemplate.opsForZSet().add(KEY, userId, score);
+	}
+
+	/**
+	 * 기존에 없던 값이거나 저장된 값보다 클때만 업데이트 합니다.
+	 * @param userId
+	 * @param score
+	 */
+	public void setIfGreaterThan(@NotNull final String userId, @NotNull final Long score) {
+		redisTemplate.execute((RedisCallback<?>) connection -> {
+			final StringRedisConnection redisConnection = (StringRedisConnection) connection;
+			redisConnection.zAdd(KEY, score, userId, RedisZSetCommands.ZAddArgs.empty().gt());
+			return null;
+		});
 	}
 
 	public Long getTotalRankerCount() {
