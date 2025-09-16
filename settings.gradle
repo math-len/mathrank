@@ -27,6 +27,7 @@ include(
         'app:api:mathrank-course-api',
         'app:api:mathrank-course-inner-api',
         'app:batch',
+        'app:batch:mathrank-rank-batch',
         'app:consumer',
         'app:consumer:mathrank-rank-consumer-monolith',
         'app:consumer:mathrank-assessment-consumer-monolith',
