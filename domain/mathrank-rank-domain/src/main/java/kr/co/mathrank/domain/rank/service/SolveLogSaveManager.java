@@ -35,7 +35,7 @@ class SolveLogSaveManager {
 		backoff = @Backoff(
 			delay = 1000 // 첫 번째 재시도 대기 시간 (1000ms = 1초)
 		))
-	void save(@NotNull @Valid final SolveLogRegisterCommand command, final Integer score) {
+	Long save(@NotNull @Valid final SolveLogRegisterCommand command, final Integer score) {
 		try {
 			final Solver solver = getSolverOrCreate(command.memberId());
 
@@ -46,6 +46,8 @@ class SolveLogSaveManager {
 				solver.addSolveLog(command.problemId(), command.singleProblemId(), command.success(), score));
 
 			solverRepository.saveAndFlush(solver);
+
+			return solver.getScore();
 		} catch (DataIntegrityViolationException e) {
 			// (1) SolveLog 중복
 			//		- 이미 페어가 존재
