@@ -12,6 +12,7 @@ dependencies {
     implementation project(':domain:mathrank-problem-core-domain')
     implementation project(':client:internal:mathrank-course-client')
 
+    implementation project(':common:mathrank-cache')
     implementation project(':common:mathrank-page')
     implementation project(':common:mathrank-exception')
     implementation project(':common:mathrank-querydsl')
