@@ -14,8 +14,8 @@ import jakarta.validation.constraints.NotNull;
 import kr.co.mathrank.common.page.PageResult;
 import kr.co.mathrank.common.page.PageUtil;
 import kr.co.mathrank.domain.problem.single.read.dto.SingleProblemReadModelQuery;
+import kr.co.mathrank.domain.problem.single.read.dto.SingleProblemReadModelQueryResult;
 import kr.co.mathrank.domain.problem.single.read.dto.SingleProblemReadModelResult;
-import kr.co.mathrank.domain.problem.single.read.dto.SolveStatusResult;
 import kr.co.mathrank.domain.problem.single.read.dto.SolveStatusResults;
 import kr.co.mathrank.domain.problem.single.read.entity.OrderColumn;
 import kr.co.mathrank.domain.problem.single.read.entity.OrderDirection;
@@ -34,6 +34,7 @@ import lombok.extern.slf4j.Slf4j;
 public class SingleProblemQueryService {
 	private final SingleProblemReadModelRepository singleProblemRepository;
 	private final SingleProblemSolverRepository singleProblemSolverRepository;
+	private final CourseManager courseManager;
 
 	/**
 	 * 필터 조건에 맞는 개별 문제 목록을 페이지네이션하여 조회합니다.
@@ -48,7 +49,7 @@ public class SingleProblemQueryService {
 	 * @param pageNumber   조회할 페이지 번호 (1부터 시작)
 	 * @return 페이지네이션된 문제 목록 및 관련 정보
 	 */
-	public PageResult<SingleProblemReadModelResult> queryPage(
+	public PageResult<SingleProblemReadModelQueryResult> queryPage(
 		@NotNull @Valid final SingleProblemReadModelQuery query,
 		OrderColumn orderColumn,
 		OrderDirection direction,
@@ -71,8 +72,9 @@ public class SingleProblemQueryService {
 		// 4. 최종 결과 형태로 변환하여 반환
 		return PageResult.of(
 			readModels.stream()
-				.map(model -> SingleProblemReadModelResult.from(
+				.map(model -> SingleProblemReadModelQueryResult.from(
 					model,
+					courseManager.courseQueryResult(model.getCoursePath()),
 					getTryStatus(model.getId(), solverMap)))
 				.toList(),
 			pageNumber,
@@ -92,15 +94,17 @@ public class SingleProblemQueryService {
 	 * @return                  문제 상세 정보 및 풀이 성공 여부 (풀이 기록이 없으면 null)
 	 * @throws CannotFoundProblemException  해당 문제를 찾을 수 없는 경우 발생
 	 */
-	public SingleProblemReadModelResult getProblemWithSolverStatus(
+	public SingleProblemReadModelQueryResult getProblemWithSolverStatus(
 		@NotNull final Long singleProblemId,
 		final Long requestMemberId
 	) {
-		return singleProblemRepository.findByIdWithSolvedInfo(singleProblemId, requestMemberId)
+		final SingleProblemReadModelResult result = singleProblemRepository.findByIdWithSolvedInfo(singleProblemId, requestMemberId)
 			.orElseThrow(() -> {
 				log.info("[SingleProblemQueryService.getProblemWithSolverStatus] Problem not found. singleProblemId={}", singleProblemId);
 				return new CannotFoundProblemException();
 			});
+
+		return SingleProblemReadModelQueryResult.from(result, courseManager.courseQueryResult(result.coursePath()));
 	}
 
 	@Transactional(readOnly = true)

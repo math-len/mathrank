@@ -7,7 +7,6 @@ dependencies {
     implementation project(':domain:mathrank-problem-core-domain')
 
     implementation project(':app:api:mathrank-api-common')
-    implementation project(':client:internal:mathrank-course-client')
 
     implementation project(':common:mathrank-page')
 }

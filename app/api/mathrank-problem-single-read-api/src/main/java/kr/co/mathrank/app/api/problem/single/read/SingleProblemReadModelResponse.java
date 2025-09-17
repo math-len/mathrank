@@ -1,9 +1,9 @@
 package kr.co.mathrank.app.api.problem.single.read;
 
-import kr.co.mathrank.client.internal.course.CourseQueryContainsParentsResult;
 import kr.co.mathrank.domain.problem.core.AnswerType;
 import kr.co.mathrank.domain.problem.core.Difficulty;
-import kr.co.mathrank.domain.problem.single.read.dto.SingleProblemReadModelResult;
+import kr.co.mathrank.domain.problem.single.read.dto.CourseContainsParentResult;
+import kr.co.mathrank.domain.problem.single.read.dto.SingleProblemReadModelQueryResult;
 
 public record SingleProblemReadModelResponse(
 	String id, // single problem id
@@ -12,7 +12,7 @@ public record SingleProblemReadModelResponse(
 	String singleProblemName,
 	String problemImage,
 
-	CourseQueryContainsParentsResult courseInfo,
+	CourseContainsParentResult courseInfo,
 
 	AnswerType answerType,
 	Difficulty difficulty,
@@ -21,14 +21,14 @@ public record SingleProblemReadModelResponse(
 	Long attemptedUserDistinctCount, // 해당 문제를 풀려고 한 사용자 수
 	Double accuracy // 정답률
 ) {
-	public static SingleProblemReadModelResponse of(SingleProblemReadModelResult result, CourseQueryContainsParentsResult courseInfo) {
+	public static SingleProblemReadModelResponse of(SingleProblemReadModelQueryResult result) {
 		return new SingleProblemReadModelResponse(
 			String.valueOf(result.id()),
 			result.successAtFirstTry(),
 			String.valueOf(result.problemId()),
 			result.singleProblemName(),
 			result.problemImage(),
-			courseInfo,
+			result.courseInfo(),
 			result.answerType(),
 			result.difficulty(),
 			result.firstTrySuccessCount(),

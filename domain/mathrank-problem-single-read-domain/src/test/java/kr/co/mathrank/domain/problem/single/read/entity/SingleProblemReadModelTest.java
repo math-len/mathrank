@@ -20,13 +20,7 @@ import kr.co.mathrank.domain.problem.core.Difficulty;
 import kr.co.mathrank.domain.problem.single.read.repository.SingleProblemReadModelRepository;
 
 @Transactional
-@SpringBootTest(
-	properties =
-"""
-spring.jpa.show-sql=true
-spring.jpa.hibernate.ddl-auto=create
-"""
-)
+@SpringBootTest
 @Testcontainers
 class SingleProblemReadModelTest {
 	@Autowired
