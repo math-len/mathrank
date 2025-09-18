@@ -17,12 +17,7 @@ import kr.co.mathrank.domain.problem.core.AnswerType;
 import kr.co.mathrank.domain.problem.core.Difficulty;
 import kr.co.mathrank.domain.problem.single.read.dto.SingleProblemReadModelRegisterCommand;
 
-@SpringBootTest(
-	properties = {
-		"spring.jpa.show-sql=true",
-		"spring.jpa.hibernate.ddl-auto=create"
-	}
-)
+@SpringBootTest
 @Testcontainers
 @Transactional
 class SingleProblemReadModelRegisterServiceTest {

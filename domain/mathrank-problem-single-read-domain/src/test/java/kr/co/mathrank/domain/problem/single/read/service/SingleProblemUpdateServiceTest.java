@@ -27,12 +27,7 @@ import kr.co.mathrank.domain.problem.single.read.entity.SingleProblemReadModel;
 import kr.co.mathrank.domain.problem.single.read.exception.CannotFoundProblemException;
 import kr.co.mathrank.domain.problem.single.read.repository.SingleProblemReadModelRepository;
 
-@SpringBootTest(
-	properties = {
-		"spring.jpa.show-sql=true",
-		"spring.jpa.hibernate.ddl-auto=create"
-	}
-)
+@SpringBootTest
 @Testcontainers
 class SingleProblemUpdateServiceTest {
 	@Autowired

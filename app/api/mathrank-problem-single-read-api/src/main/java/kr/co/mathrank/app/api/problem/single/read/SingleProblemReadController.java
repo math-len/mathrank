@@ -14,9 +14,8 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import kr.co.mathrank.app.api.common.authentication.Authorization;
 import kr.co.mathrank.app.api.common.authentication.LoginInfo;
 import kr.co.mathrank.app.api.common.authentication.MemberPrincipal;
-import kr.co.mathrank.client.internal.course.CourseClient;
 import kr.co.mathrank.common.page.PageResult;
-import kr.co.mathrank.domain.problem.single.read.dto.SingleProblemReadModelResult;
+import kr.co.mathrank.domain.problem.single.read.dto.SingleProblemReadModelQueryResult;
 import kr.co.mathrank.domain.problem.single.read.entity.OrderColumn;
 import kr.co.mathrank.domain.problem.single.read.entity.OrderDirection;
 import kr.co.mathrank.domain.problem.single.read.service.SingleProblemQueryService;
@@ -27,7 +26,6 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class SingleProblemReadController {
 	private final SingleProblemQueryService singleProblemQueryService;
-	private final CourseClient courseClient;
 
 	@Operation(summary = "단일 개별문제 조회 API")
 	@GetMapping("/api/v1/problem/single/{singleProblemId}")
@@ -35,13 +33,12 @@ public class SingleProblemReadController {
 		@LoginInfo final MemberPrincipal memberPrincipal,
 		@PathVariable final Long singleProblemId
 	) {
-		final SingleProblemReadModelResult result = singleProblemQueryService.getProblemWithSolverStatus(
+		final SingleProblemReadModelQueryResult result = singleProblemQueryService.getProblemWithSolverStatus(
 			singleProblemId,
 			memberPrincipal == null ? null : memberPrincipal.memberId() // 로그인 안된 사용자면 Null
 		);
 		final SingleProblemReadModelResponse response = SingleProblemReadModelResponse.of(
-			result,
-			courseClient.getParentCourses(result.coursePath())
+			result
 		);
 
 		return ResponseEntity.ok(response);
@@ -57,7 +54,7 @@ public class SingleProblemReadController {
 		@Range(min = 1, max = 1000) @RequestParam(defaultValue = "1") final Integer pageNumber,
 		@Range(min = 1, max = 20) @RequestParam(defaultValue = "1") final Integer pageSize
 	) {
-		final PageResult<SingleProblemReadModelResult> result = singleProblemQueryService.queryPage(
+		final PageResult<SingleProblemReadModelQueryResult> result = singleProblemQueryService.queryPage(
 			query.toQuery(),
 			orderColumn,
 			direction,
@@ -65,7 +62,7 @@ public class SingleProblemReadController {
 			pageSize,
 			pageNumber
 		);
-		return ResponseEntity.ok(result.map(this::mapToResponse));
+		return ResponseEntity.ok(result.map(SingleProblemReadModelResponse::of));
 	}
 
 	@Operation(summary = "풀이 기록 조회 API")
@@ -76,9 +73,5 @@ public class SingleProblemReadController {
 	) {
 		return ResponseEntity.ok(
 			SolveStatusResponse.from(singleProblemQueryService.querySolveStatus(memberPrincipal.memberId())));
-	}
-
-	private SingleProblemReadModelResponse mapToResponse(final SingleProblemReadModelResult modelResult) {
-		return SingleProblemReadModelResponse.of(modelResult, courseClient.getParentCourses(modelResult.coursePath()));
 	}
 }

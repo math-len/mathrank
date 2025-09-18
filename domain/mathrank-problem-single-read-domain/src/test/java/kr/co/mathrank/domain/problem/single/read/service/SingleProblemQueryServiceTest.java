@@ -11,29 +11,28 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.DynamicPropertyRegistry;
 import org.springframework.test.context.DynamicPropertySource;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.transaction.annotation.Transactional;
 import org.testcontainers.containers.MySQLContainer;
 import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
 
 import jakarta.validation.ConstraintViolationException;
+import kr.co.mathrank.client.internal.course.CourseClient;
 import kr.co.mathrank.common.page.PageResult;
 import kr.co.mathrank.domain.problem.core.Difficulty;
 import kr.co.mathrank.domain.problem.single.read.dto.SingleProblemAttemptStatsUpdateCommand;
 import kr.co.mathrank.domain.problem.single.read.dto.SingleProblemReadModelQuery;
-import kr.co.mathrank.domain.problem.single.read.dto.SingleProblemReadModelResult;
+import kr.co.mathrank.domain.problem.single.read.dto.SingleProblemReadModelQueryResult;
 import kr.co.mathrank.domain.problem.single.read.entity.SingleProblemReadModel;
 import kr.co.mathrank.domain.problem.single.read.repository.SingleProblemReadModelRepository;
 
-@SpringBootTest(
-	properties = {
-		"spring.jpa.show-sql=true",
-		"spring.jpa.hibernate.ddl-auto=create"
-	}
-)
+@SpringBootTest
 @Testcontainers
+@Transactional
 class SingleProblemQueryServiceTest {
-
+	@MockitoBean
+	private CourseClient courseClient;
 	@Autowired
 	private SingleProblemQueryService queryService;
 	@Autowired
@@ -121,12 +120,12 @@ class SingleProblemQueryServiceTest {
 			null,
 			null
 		);
-		final PageResult<SingleProblemReadModelResult> result = queryService.queryPage(query, null, null, memberId, 10, 1);
-		final List<SingleProblemReadModelResult> results = result.queryResults();
+		final PageResult<SingleProblemReadModelQueryResult> result = queryService.queryPage(query, null, null, memberId, 10, 1);
+		final List<SingleProblemReadModelQueryResult> results = result.queryResults();
 
 		// 1번 문제부터 정렬
-		final List<SingleProblemReadModelResult> sorted = results.stream()
-			.sorted(Comparator.comparing(SingleProblemReadModelResult::problemId))
+		final List<SingleProblemReadModelQueryResult> sorted = results.stream()
+			.sorted(Comparator.comparing(SingleProblemReadModelQueryResult::problemId))
 			.toList();
 
 		Assertions.assertAll(
@@ -138,7 +137,6 @@ class SingleProblemQueryServiceTest {
 	}
 
 	@Test
-	@Transactional
 	void 오프셋이_20_000초과로_조회할_수_없다() {
 		final SingleProblemReadModelQuery query = new SingleProblemReadModelQuery(null, "singleProblemName", "math", null, null,
 			null, Difficulty.MID, Difficulty.MID, 10, 30, null, null);
@@ -149,7 +147,6 @@ class SingleProblemQueryServiceTest {
 	}
 
 	@Test
-	@Transactional
 	void 정답률과_난이도조건으로_페이징_조회한다() {
 		// Given
 		repository.saveAll(List.of(
@@ -177,7 +174,7 @@ class SingleProblemQueryServiceTest {
 		);
 
 		// When
-		final PageResult<SingleProblemReadModelResult> result = queryService.queryPage(query,null, null,  1000L, 2, 1);
+		final PageResult<SingleProblemReadModelQueryResult> result = queryService.queryPage(query,null, null,  1000L, 2, 1);
 
 		// Then
 		// 두개가 나와야 한다
@@ -187,17 +184,12 @@ class SingleProblemQueryServiceTest {
 		Assertions.assertEquals(1, result.possibleNextPageNumbers().size()); // 다음 페이지가 1개 존재한다
 
 		// 다음 페이지도 테스트
-		final PageResult<SingleProblemReadModelResult> nextResult = queryService.queryPage(query, null, null, 1000L, 2, 2);
+		final PageResult<SingleProblemReadModelQueryResult> nextResult = queryService.queryPage(query, null, null, 1000L, 2, 2);
 
 		// 다음 페이지에 1개가존재해야한다
 		Assertions.assertEquals(1, nextResult.queryResults().size());
 
 		// 다음 페이지는 없다
 		Assertions.assertTrue(nextResult.possibleNextPageNumbers().isEmpty());
-	}
-
-	@AfterEach
-	void clear() {
-		singleProblemReadModelRepository.deleteAll();
 	}
 }
