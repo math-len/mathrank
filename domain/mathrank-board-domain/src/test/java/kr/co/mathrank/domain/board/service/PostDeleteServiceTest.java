@@ -63,5 +63,6 @@ class PostDeleteServiceTest {
 
 		Assertions.assertDoesNotThrow(
 			() -> postDeleteService.delete(new PostDeleteCommand(postId, otherUserId, Role.ADMIN)));
+		Assertions.assertTrue(postRepository.findById(postId).isEmpty());
 	}
 }
