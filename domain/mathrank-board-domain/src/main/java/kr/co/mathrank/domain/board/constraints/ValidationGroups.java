@@ -7,4 +7,5 @@ public class ValidationGroups {
 	public interface AssessmentPostGroup extends Default {}
 	public interface ContestPostGroup extends Default {}
 	public interface FreePostGroup extends Default {}
+	public interface NoticePostGroup extends Default {}
 }

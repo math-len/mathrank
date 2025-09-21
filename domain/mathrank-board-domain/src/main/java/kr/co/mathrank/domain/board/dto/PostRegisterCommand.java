@@ -4,6 +4,8 @@ import org.hibernate.validator.group.GroupSequenceProvider;
 
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
+import kr.co.mathrank.common.role.Role;
+import kr.co.mathrank.domain.board.constraints.NoticePostConstraint;
 import kr.co.mathrank.domain.board.constraints.PostGroupSequenceProvider;
 import kr.co.mathrank.domain.board.constraints.ValidationGroups;
 import kr.co.mathrank.domain.board.entity.Post;
@@ -20,6 +22,9 @@ public record PostRegisterCommand(
 	@NotNull
 	Long memberId,
 
+	@NoticePostConstraint(groups = ValidationGroups.NoticePostGroup.class)
+	Role memberRole,
+
 	@NotNull(groups = ValidationGroups.SingleProblemPostGroup.class)
 	Long problemId,
 	@NotNull(groups = ValidationGroups.AssessmentPostGroup.class)
@@ -33,6 +38,7 @@ public record PostRegisterCommand(
 			case CONTEST -> Post.ofContest(title, content, memberId, contestId);
 			case ASSESSMENT -> Post.ofAssessment(title, content, memberId, assessmentId);
 			case SINGLE_PROBLEM -> Post.ofSingleProblem(title, content, memberId, problemId);
+			case NOTICE -> Post.ofNotice(title, content, memberId);
 		};
 	}
 }

@@ -79,4 +79,11 @@ public class Post {
 
 		return post;
 	}
+
+	public static Post ofNotice(String title, String content, Long userId) {
+		final Post post = new Post(title, content, userId);
+		post.postType = PostType.NOTICE;
+
+		return post;
+	}
 }
