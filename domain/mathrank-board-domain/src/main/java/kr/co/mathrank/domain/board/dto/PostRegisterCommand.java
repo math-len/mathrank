@@ -33,40 +33,27 @@ public record PostRegisterCommand(
 	Long contestId
 ) {
 	public Post toEntity() {
-		return switch (postType) {
-			case FREE -> Post.builder()
-				.title(title)
-				.content(content)
-				.memberId(memberId)
-				.postType(PostType.FREE)
-				.build();
-			case CONTEST -> Post.builder()
-				.title(title)
-				.content(content)
-				.memberId(memberId)
+		final Post.PostBuilder postBuilder = Post.builder()
+			.title(title)
+			.content(content)
+			.memberId(memberId);
+
+		final Post.PostBuilder post = switch (postType) {
+			case FREE -> postBuilder
+				.postType(PostType.FREE);
+			case CONTEST -> postBuilder
 				.contestId(contestId)
-				.postType(PostType.CONTEST)
-				.build();
-			case ASSESSMENT -> Post.builder()
-				.title(title)
-				.content(content)
-				.memberId(memberId)
+				.postType(PostType.CONTEST);
+			case ASSESSMENT -> postBuilder
 				.assessmentId(assessmentId)
-				.postType(PostType.ASSESSMENT)
-				.build();
-			case SINGLE_PROBLEM -> Post.builder()
-				.title(title)
-				.content(content)
-				.memberId(memberId)
+				.postType(PostType.ASSESSMENT);
+			case SINGLE_PROBLEM -> postBuilder
 				.postType(PostType.SINGLE_PROBLEM)
-				.singleProblemId(problemId)
-				.build();
-			case NOTICE -> Post.builder()
-				.title(title)
-				.content(content)
-				.memberId(memberId)
-				.postType(PostType.NOTICE)
-				.build();
+				.singleProblemId(problemId);
+			case NOTICE -> postBuilder
+				.postType(PostType.NOTICE);
 		};
+
+		return post.build();
 	}
 }
