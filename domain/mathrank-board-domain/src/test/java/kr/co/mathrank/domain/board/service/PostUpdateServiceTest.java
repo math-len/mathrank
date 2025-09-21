@@ -1,7 +1,5 @@
 package kr.co.mathrank.domain.board.service;
 
-import static org.junit.jupiter.api.Assertions.*;
-
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,7 +22,7 @@ class PostUpdateServiceTest {
 	@Test
 	void 본인이_수정할땐_성공() {
 		final Long userId = 1L;
-		final Long postId = postRepository.save(Post.ofFree("title", "content", userId))
+		final Long postId = postRepository.save(Post.of("title", "content", userId))
 			.getId();
 
 		postUpdateService.update(new PostUpdateCommand(postId, userId, "newTitle", "newContent"));
@@ -41,7 +39,7 @@ class PostUpdateServiceTest {
 	void 어드민이든_뭐든_본인게_아니면_수정_불가() {
 		final Long userId = 1L;
 		final Long anotherUserId = 2L;
-		final Long postId = postRepository.save(Post.ofFree("title", "content", userId))
+		final Long postId = postRepository.save(Post.of("title", "content", userId))
 			.getId();
 
 		postUpdateService.update(new PostUpdateCommand(postId, userId, "newTitle", "newContent"));

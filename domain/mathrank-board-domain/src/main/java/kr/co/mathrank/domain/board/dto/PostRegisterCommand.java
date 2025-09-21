@@ -34,11 +34,39 @@ public record PostRegisterCommand(
 ) {
 	public Post toEntity() {
 		return switch (postType) {
-			case FREE -> Post.ofFree(title, content, memberId);
-			case CONTEST -> Post.ofContest(title, content, memberId, contestId);
-			case ASSESSMENT -> Post.ofAssessment(title, content, memberId, assessmentId);
-			case SINGLE_PROBLEM -> Post.ofSingleProblem(title, content, memberId, problemId);
-			case NOTICE -> Post.ofNotice(title, content, memberId);
+			case FREE -> Post.builder()
+				.title(title)
+				.content(content)
+				.memberId(memberId)
+				.postType(PostType.FREE)
+				.build();
+			case CONTEST -> Post.builder()
+				.title(title)
+				.content(content)
+				.memberId(memberId)
+				.contestId(contestId)
+				.postType(PostType.CONTEST)
+				.build();
+			case ASSESSMENT -> Post.builder()
+				.title(title)
+				.content(content)
+				.memberId(memberId)
+				.assessmentId(assessmentId)
+				.postType(PostType.ASSESSMENT)
+				.build();
+			case SINGLE_PROBLEM -> Post.builder()
+				.title(title)
+				.content(content)
+				.memberId(memberId)
+				.postType(PostType.SINGLE_PROBLEM)
+				.singleProblemId(problemId)
+				.build();
+			case NOTICE -> Post.builder()
+				.title(title)
+				.content(content)
+				.memberId(memberId)
+				.postType(PostType.NOTICE)
+				.build();
 		};
 	}
 }
