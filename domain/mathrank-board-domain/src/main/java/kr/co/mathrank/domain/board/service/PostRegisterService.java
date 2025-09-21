@@ -21,7 +21,7 @@ public class PostRegisterService {
 	public Long register(@NotNull @Valid final PostRegisterCommand command) {
 		final Post post = command.toEntity();
 		postRepository.save(post);
-		log.info("[PostRegisterService.register] post saved - postId: {}", post.getId());
+		log.info("[PostRegisterService.register] post saved - postId: {}, postType: {}", post.getId(), post.getPostType());
 		return post.getId();
 	}
 }
