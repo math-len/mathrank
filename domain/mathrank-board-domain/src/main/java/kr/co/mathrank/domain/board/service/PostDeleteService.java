@@ -50,6 +50,6 @@ public class PostDeleteService {
 		}
 
 		// 일반 사용자일 경우 본인 글만 지울 수 있음
-		return requestMemberId.equals(post.getUserId());
+		return requestMemberId.equals(post.getMemberId());
 	}
 }
