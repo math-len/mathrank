@@ -36,24 +36,19 @@ public record PostRegisterCommand(
 		final Post.PostBuilder postBuilder = Post.builder()
 			.title(title)
 			.content(content)
-			.memberId(memberId);
+			.memberId(memberId)
+			.postType(postType);
 
-		final Post.PostBuilder post = switch (postType) {
-			case FREE -> postBuilder
-				.postType(PostType.FREE);
+		switch (postType) {
 			case CONTEST -> postBuilder
-				.contestId(contestId)
-				.postType(PostType.CONTEST);
+				.contestId(contestId);
 			case ASSESSMENT -> postBuilder
-				.assessmentId(assessmentId)
-				.postType(PostType.ASSESSMENT);
+				.assessmentId(assessmentId);
 			case SINGLE_PROBLEM -> postBuilder
-				.postType(PostType.SINGLE_PROBLEM)
 				.singleProblemId(problemId);
-			case NOTICE -> postBuilder
-				.postType(PostType.NOTICE);
+			case NOTICE, FREE -> {}
 		};
 
-		return post.build();
+		return postBuilder.build();
 	}
 }
