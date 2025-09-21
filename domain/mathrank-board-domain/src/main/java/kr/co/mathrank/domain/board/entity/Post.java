@@ -25,6 +25,7 @@ import lombok.Setter;
 	@Index(name = "idx_createdAt_contestId", columnList = "created_at, contest_id"),
 	@Index(name = "idx_createdAt_assessmentId", columnList = "created_at, assessment_id"),
 	@Index(name = "idx_createdAt_singleProblemId", columnList = "created_at, single_problem_id"),
+	@Index(name = "idx_createdAt_nickName", columnList = "created_at, member_nick_name")
 })
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Post {

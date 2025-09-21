@@ -53,7 +53,8 @@ class PostQueryRepositoryImpl implements PostQueryRepository {
 			matchPostId(postQuery.postId()),
 			matchAssessmentId(postQuery.assessmentId()),
 			matchContestId(postQuery.contestId()),
-			containsTitle(postQuery.title())
+			containsTitle(postQuery.title()),
+			containsMemberNickName(postQuery.nickName())
 		};
 	}
 
@@ -63,6 +64,14 @@ class PostQueryRepositoryImpl implements PostQueryRepository {
 		}
 
 		return QPost.post.id.eq(postId);
+	}
+
+	private BooleanExpression containsMemberNickName(final String nickName) {
+		if (nickName == null) {
+			return null;
+		}
+
+		return QPost.post.memberNickName.contains(nickName);
 	}
 
 	private BooleanExpression matchAssessmentId(final Long assessmentId) {
