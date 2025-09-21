@@ -74,6 +74,9 @@ class PostQueryRepositoryImpl implements PostQueryRepository {
 	}
 
 	private BooleanExpression matchContestId(final Long contestId) {
+		if (contestId == null) {
+			return null;
+		}
 		return QPost.post.contestId.eq(contestId);
 	}
 
