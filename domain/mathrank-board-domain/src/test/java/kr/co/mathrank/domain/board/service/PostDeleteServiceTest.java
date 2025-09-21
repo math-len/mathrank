@@ -24,7 +24,7 @@ class PostDeleteServiceTest {
 	@Transactional
 	void 게시글을_찾을_수_없으면_예외발생() {
 		final Long userId = 1L;
-		final Long postId = postRepository.save(new Post("title", "content", userId))
+		final Long postId = postRepository.save(Post.ofFree("title", "content", userId))
 			.getId();
 		final Long anotherPostId = 1000L;
 
@@ -36,7 +36,7 @@ class PostDeleteServiceTest {
 	@Transactional
 	void 일반_사용자가_본인_게시글_삭제_가능하다() {
 		final Long userId = 1L;
-		final Long postId = postRepository.save(new Post("title", "content", userId))
+		final Long postId = postRepository.save(Post.ofFree("title", "content", userId))
 			.getId();
 
 		postDeleteService.delete(new PostDeleteCommand(postId, userId, Role.USER));
@@ -49,7 +49,7 @@ class PostDeleteServiceTest {
 	void 일반_사용자가_본인_게시글외_삭제시_예외발생() {
 		final Long userId = 1L;
 		final Long otherUserId = 2L;
-		final Long postId = postRepository.save(new Post("title", "content", userId))
+		final Long postId = postRepository.save(Post.ofFree("title", "content", userId))
 			.getId();
 
 		Assertions.assertThrows(CannotDeletePostException.class,
@@ -60,7 +60,7 @@ class PostDeleteServiceTest {
 	void 어드민은_모두_삭제_가능() {
 		final Long userId = 1L;
 		final Long otherUserId = 2L;
-		final Long postId = postRepository.save(new Post("title", "content", userId))
+		final Long postId = postRepository.save(Post.ofFree("title", "content", userId))
 			.getId();
 
 		Assertions.assertDoesNotThrow(
