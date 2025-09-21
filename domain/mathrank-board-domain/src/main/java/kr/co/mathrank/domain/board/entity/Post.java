@@ -32,7 +32,6 @@ public class Post {
 	@Setter
 	private String content;
 
-	@Setter
 	private Long userId;
 
 	@Enumerated(EnumType.STRING)
