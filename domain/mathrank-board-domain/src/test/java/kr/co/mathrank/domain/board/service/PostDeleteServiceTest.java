@@ -14,6 +14,7 @@ import kr.co.mathrank.domain.board.exception.CannotDeletePostException;
 import kr.co.mathrank.domain.board.repository.PostRepository;
 
 @SpringBootTest
+@Transactional
 class PostDeleteServiceTest {
 	@Autowired
 	private PostDeleteService postDeleteService;
@@ -21,7 +22,6 @@ class PostDeleteServiceTest {
 	private PostRepository postRepository;
 
 	@Test
-	@Transactional
 	void 게시글을_찾을_수_없으면_예외발생() {
 		final Long userId = 1L;
 		final Long postId = postRepository.save(Post.ofFree("title", "content", userId))
@@ -33,7 +33,6 @@ class PostDeleteServiceTest {
 	}
 
 	@Test
-	@Transactional
 	void 일반_사용자가_본인_게시글_삭제_가능하다() {
 		final Long userId = 1L;
 		final Long postId = postRepository.save(Post.ofFree("title", "content", userId))
@@ -45,7 +44,6 @@ class PostDeleteServiceTest {
 	}
 
 	@Test
-	@Transactional
 	void 일반_사용자가_본인_게시글외_삭제시_예외발생() {
 		final Long userId = 1L;
 		final Long otherUserId = 2L;
