@@ -9,7 +9,7 @@ import lombok.RequiredArgsConstructor;
 @Component
 @RequiredArgsConstructor
 class PostMemberManager {
-	private MemberClient memberClient;
+	private final MemberClient memberClient;
 
 	public String fetchMemberNickName(@NotNull final Long memberId) {
 		return memberClient.getMemberInfo(memberId)
