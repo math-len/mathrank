@@ -23,6 +23,7 @@ public class PostGroupSequenceProvider implements DefaultGroupSequenceProvider<P
 			case ASSESSMENT -> groups.add(ValidationGroups.AssessmentPostGroup.class);
 			case CONTEST -> groups.add(ValidationGroups.ContestPostGroup.class);
 			case FREE -> groups.add(ValidationGroups.FreePostGroup.class);
+			case NOTICE -> groups.add(ValidationGroups.NoticePostGroup.class);
 		}
 		return groups;
 	}

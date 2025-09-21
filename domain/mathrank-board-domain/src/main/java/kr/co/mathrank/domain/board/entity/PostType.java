@@ -4,5 +4,6 @@ public enum PostType {
 	FREE,
 	CONTEST,
 	ASSESSMENT,
-	SINGLE_PROBLEM
+	SINGLE_PROBLEM,
+	NOTICE
 }

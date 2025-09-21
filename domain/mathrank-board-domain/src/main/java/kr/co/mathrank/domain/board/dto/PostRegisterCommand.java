@@ -4,6 +4,8 @@ import org.hibernate.validator.group.GroupSequenceProvider;
 
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
+import kr.co.mathrank.common.role.Role;
+import kr.co.mathrank.domain.board.constraints.NoticePostConstraint;
 import kr.co.mathrank.domain.board.constraints.PostGroupSequenceProvider;
 import kr.co.mathrank.domain.board.constraints.ValidationGroups;
 import kr.co.mathrank.domain.board.entity.Post;
@@ -20,6 +22,9 @@ public record PostRegisterCommand(
 	@NotNull
 	Long memberId,
 
+	@NoticePostConstraint(groups = ValidationGroups.NoticePostGroup.class)
+	Role memberRole,
+
 	@NotNull(groups = ValidationGroups.SingleProblemPostGroup.class)
 	Long problemId,
 	@NotNull(groups = ValidationGroups.AssessmentPostGroup.class)
@@ -28,11 +33,22 @@ public record PostRegisterCommand(
 	Long contestId
 ) {
 	public Post toEntity() {
-		return switch (postType) {
-			case FREE -> Post.ofFree(title, content, memberId);
-			case CONTEST -> Post.ofContest(title, content, memberId, contestId);
-			case ASSESSMENT -> Post.ofAssessment(title, content, memberId, assessmentId);
-			case SINGLE_PROBLEM -> Post.ofSingleProblem(title, content, memberId, problemId);
+		final Post.PostBuilder postBuilder = Post.builder()
+			.title(title)
+			.content(content)
+			.memberId(memberId)
+			.postType(postType);
+
+		switch (postType) {
+			case CONTEST -> postBuilder
+				.contestId(contestId);
+			case ASSESSMENT -> postBuilder
+				.assessmentId(assessmentId);
+			case SINGLE_PROBLEM -> postBuilder
+				.singleProblemId(problemId);
+			case NOTICE, FREE -> {}
 		};
+
+		return postBuilder.build();
 	}
 }
