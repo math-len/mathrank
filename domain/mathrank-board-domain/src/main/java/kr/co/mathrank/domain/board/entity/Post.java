@@ -40,6 +40,8 @@ public class Post {
 
 	private Long memberId;
 
+	private String memberNickName;
+
 	@Enumerated(EnumType.STRING)
 	private PostType postType;
 
@@ -53,18 +55,20 @@ public class Post {
 	private LocalDateTime createdAt;
 
 	@Builder
-	Post(String title, String content, Long memberId, PostType postType, Long contestId, Long assessmentId,
-		Long singleProblemId) {
+	public Post(String title, String content, Long memberId, String memberNickName, PostType postType, Long contestId,
+		Long assessmentId, Long singleProblemId) {
 		this.title = title;
 		this.content = content;
 		this.memberId = memberId;
-
+		this.memberNickName = memberNickName;
 		this.postType = postType;
-
 		this.contestId = contestId;
 		this.assessmentId = assessmentId;
 		this.singleProblemId = singleProblemId;
 	}
+
+	@Builder
+
 
 	private Post(String title, String content, Long userId) {
 		this.title = title;

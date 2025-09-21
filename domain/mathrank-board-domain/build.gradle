@@ -6,6 +6,7 @@ dependencies {
     implementation project(':common:mathrank-exception')
     implementation project(':common:mathrank-querydsl')
     implementation project(':common:mathrank-page')
+    implementation project(':client:internal:mathrank-member-client')
 
     testRuntimeOnly 'com.h2database:h2'
 
