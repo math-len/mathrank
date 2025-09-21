@@ -38,7 +38,7 @@ public class Post {
 
 	private Long assessmentId;
 
-	private Long problemId;
+	private Long singleProblemId;
 
 	@CreationTimestamp
 	private LocalDateTime createdAt;
@@ -74,7 +74,7 @@ public class Post {
 
 	public static Post ofSingleProblem(String title, String content, Long userId, Long singelProblemId) {
 		final Post post = new Post(title, content, userId);
-		post.problemId = singelProblemId;
+		post.singleProblemId = singelProblemId;
 		post.postType = PostType.SINGLE_PROBLEM;
 
 		return post;
