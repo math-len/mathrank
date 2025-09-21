@@ -36,7 +36,7 @@ public class PostUpdateService {
 	private Post getPost(final Long postId) {
 		return postRepository.findById(postId)
 			.orElseThrow(() -> {
-				log.info("[PostDeleteService.delete] cannot found post - postId: {}", postId);
+				log.info("[PostUpdateService.update] cannot found post - postId: {}", postId);
 				return new CannotFoundPostException();
 			});
 	}
