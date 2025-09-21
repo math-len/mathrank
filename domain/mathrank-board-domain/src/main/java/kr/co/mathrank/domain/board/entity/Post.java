@@ -10,6 +10,8 @@ import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.Index;
+import jakarta.persistence.Table;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -17,6 +19,12 @@ import lombok.Setter;
 
 @Entity
 @Getter
+@Table(indexes = {
+	@Index(name = "idx_createdAt_title", columnList = "created_at, title"),
+	@Index(name = "idx_createdAt_contestId", columnList = "created_at, contest_id"),
+	@Index(name = "idx_createdAt_assessmentId", columnList = "created_at, assessment_id"),
+	@Index(name = "idx_createdAt_singleProblemId", columnList = "created_at, single_problem_id"),
+})
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Post {
 	@Id
