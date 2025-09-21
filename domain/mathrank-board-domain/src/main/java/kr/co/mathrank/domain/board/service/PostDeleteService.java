@@ -26,13 +26,12 @@ public class PostDeleteService {
 	public void delete(@NotNull @Valid final PostDeleteCommand command) {
 		final Post post = getPost(command.postId());
 
-		if (isOwner(command.role(), command.memberId(), post)) {
-			postRepository.delete(post);
-			log.info("[PostDeleteService.delete] post deleted - postId: {}, requestMemberId: {}, requestMemberRole: {}", post.getId(), command.memberId(), command.role());
-			return;
+		if (!isOwner(command.role(), command.memberId(), post)) {
+			log.info("[PostDeleteService.delete] post not deleted - postId: {}, requestMemberId: {}, requestMemberRole: {}", post.getId(), command.memberId(), command.role());
+			throw new CannotDeletePostException();
 		}
-		log.info("[PostDeleteService.delete] post not deleted - postId: {}, requestMemberId: {}, requestMemberRole: {}", post.getId(), command.memberId(), command.role());
-		throw new CannotDeletePostException();
+		postRepository.delete(post);
+		log.info("[PostDeleteService.delete] post deleted - postId: {}, requestMemberId: {}, requestMemberRole: {}", post.getId(), command.memberId(), command.role());
 	}
 
 	private Post getPost(final Long postId) {
