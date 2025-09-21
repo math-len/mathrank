@@ -29,7 +29,7 @@ public class Post {
 	@Setter
 	private String content;
 
-	private Long userId;
+	private Long memberId;
 
 	@Enumerated(EnumType.STRING)
 	private PostType postType;
@@ -46,7 +46,7 @@ public class Post {
 	private Post(String title, String content, Long userId) {
 		this.title = title;
 		this.content = content;
-		this.userId = userId;
+		this.memberId = userId;
 	}
 
 	public static Post ofFree(String title, String content, Long userId) {
