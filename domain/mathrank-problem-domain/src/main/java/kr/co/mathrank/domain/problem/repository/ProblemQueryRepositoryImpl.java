@@ -9,6 +9,7 @@ import com.querydsl.jpa.impl.JPAQueryFactory;
 
 import kr.co.mathrank.domain.problem.core.AnswerType;
 import kr.co.mathrank.domain.problem.core.Difficulty;
+import kr.co.mathrank.domain.problem.core.PastProblem;
 import kr.co.mathrank.domain.problem.dto.ProblemQuery;
 import kr.co.mathrank.domain.problem.entity.Problem;
 import kr.co.mathrank.domain.problem.entity.QProblem;
@@ -66,7 +67,16 @@ class ProblemQueryRepositoryImpl implements ProblemQueryRepository {
 			yearMatch(problemQuery.year()),
 			locationMatch(problemQuery.location()),
 			schoolCodeMatch(problemQuery.schoolCode()),
+			pastProblemMatch(problemQuery.pastProblem())
 		};
+	}
+
+	private BooleanExpression pastProblemMatch(final PastProblem pastProblem) {
+		if (pastProblem == null) {
+			return null;
+		}
+
+		return QProblem.problem.pastProblem.eq(pastProblem);
 	}
 
 	private BooleanExpression schoolCodeMatch(final String schoolCode) {
