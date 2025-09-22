@@ -22,6 +22,7 @@ public record ProblemRegisterCommand(
 	String coursePath,
 	@NotNull
 	Difficulty difficulty,
+	@NotNull
 	PastProblem pastProblem,
 	String schoolCode,
 	@Size(min = 1, max = 100)

@@ -21,6 +21,7 @@ public record ProblemUpdateCommand(
 	AnswerType answerType,
 	@NotNull
 	Difficulty difficulty,
+	@NotNull
 	PastProblem pastProblem,
 	@NotNull
 	String coursePath,
