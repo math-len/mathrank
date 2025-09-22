@@ -69,9 +69,6 @@ public class Post {
 		this.singleProblemId = singleProblemId;
 	}
 
-	@Builder
-
-
 	private Post(String title, String content, Long userId) {
 		this.title = title;
 		this.content = content;
