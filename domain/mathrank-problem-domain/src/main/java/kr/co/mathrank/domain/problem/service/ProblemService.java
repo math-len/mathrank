@@ -50,6 +50,8 @@ command.schoolCode(),
 			command.schoolCode() == null ? null : schoolLocationManager.getSchoolLocation(command.schoolCode()),
 			command.memo()
 		);
+		problem.setPastProblem(command.pastProblem()); // of 도저히 못바꾸겠어서 그냥 setter 로 추가했어요 ㅠㅠ
+
 		final Set<Answer> answers = mapToAnswer(command.answers(), problem);
 		problem.setAnswers(answers);
 

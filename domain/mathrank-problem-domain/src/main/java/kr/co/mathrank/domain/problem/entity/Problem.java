@@ -22,6 +22,7 @@ import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import kr.co.mathrank.domain.problem.core.AnswerType;
 import kr.co.mathrank.domain.problem.core.Difficulty;
+import kr.co.mathrank.domain.problem.core.PastProblem;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -36,7 +37,8 @@ import lombok.extern.slf4j.Slf4j;
 	@Index(name = "idx_difficulty", columnList = "difficulty"),
 	@Index(name = "idx_type", columnList = "type"),
 	@Index(name = "idx_videoLink", columnList = "solution_video_link"),
-	@Index(name = "idx_location", columnList = "location")
+	@Index(name = "idx_location", columnList = "location"),
+	@Index(name = "idx_pastProblem", columnList = "past_problem")
 })
 @Getter
 @Setter
@@ -59,6 +61,9 @@ public class Problem implements Persistable<Long> {
 
 	@Enumerated(EnumType.STRING)
 	private AnswerType type;
+
+	@Enumerated(EnumType.STRING)
+	private PastProblem pastProblem;
 
 	private String coursePath;
 
