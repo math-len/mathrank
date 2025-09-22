@@ -53,7 +53,7 @@ public class BoardController {
 	}
 
 	@Operation(summary = "게시글 수정 API")
-	@PutMapping("/api/v1/board/post")
+	@PutMapping("/api/v1/board/post/{postId}")
 	@Authorization(openedForAll = true)
 	public ResponseEntity<Void> update(
 		@ModelAttribute @ParameterObject @Valid final Requests.PostUpdateRequest request,
