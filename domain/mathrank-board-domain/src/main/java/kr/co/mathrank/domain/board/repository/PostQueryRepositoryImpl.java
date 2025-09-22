@@ -55,8 +55,17 @@ class PostQueryRepositoryImpl implements PostQueryRepository {
 			matchContestId(postQuery.contestId()),
 			containsTitle(postQuery.title()),
 			containsMemberNickName(postQuery.nickName()),
-			matchMemberId(postQuery.memberId())
+			matchMemberId(postQuery.memberId()),
+			matchSingleProblemId(postQuery.singleProblemId())
 		};
+	}
+
+	private BooleanExpression matchSingleProblemId(final Long singleProblemId) {
+		if (singleProblemId == null) {
+			return null;
+		}
+
+		return QPost.post.singleProblemId.eq(singleProblemId);
 	}
 
 	private BooleanExpression matchMemberId(final Long memberId) {
