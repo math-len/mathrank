@@ -17,9 +17,11 @@ import lombok.extern.slf4j.Slf4j;
 @RequiredArgsConstructor
 public class PostRegisterService {
 	private final PostRepository postRepository;
+	private final PostMemberManager postMemberManager;
 
 	public Long register(@NotNull @Valid final PostRegisterCommand command) {
-		final Post post = command.toEntity();
+		final String nickName = postMemberManager.fetchMemberNickName(command.memberId());
+		final Post post = command.toEntity(nickName);
 		postRepository.save(post);
 		log.info("[PostRegisterService.register] post saved - postId: {}, postType: {}", post.getId(), post.getPostType());
 		return post.getId();

@@ -21,10 +21,12 @@ import lombok.Setter;
 @Entity
 @Getter
 @Table(indexes = {
-	@Index(name = "idx_createdAt_title", columnList = "created_at, title"),
-	@Index(name = "idx_createdAt_contestId", columnList = "created_at, contest_id"),
-	@Index(name = "idx_createdAt_assessmentId", columnList = "created_at, assessment_id"),
-	@Index(name = "idx_createdAt_singleProblemId", columnList = "created_at, single_problem_id"),
+	@Index(name = "idx_contestId_createdAt", columnList = "contest_id, created_at desc"),
+	@Index(name = "idx_assessmentId_createdAt", columnList = "assessment_id, created_at desc"),
+	@Index(name = "idx_singleProblemId_createdAt", columnList = "single_problem_id, created_at desc"),
+	@Index(name = "idx_memberId_createdAt", columnList = "member_id, created_at desc"),
+	@Index(name = "idx_postType_createdAt", columnList = "post_type, created_at desc"),
+	@Index(name = "idx_createdAt", columnList = "created_at desc"),
 })
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Post {
@@ -40,6 +42,8 @@ public class Post {
 
 	private Long memberId;
 
+	private String memberNickName;
+
 	@Enumerated(EnumType.STRING)
 	private PostType postType;
 
@@ -53,14 +57,13 @@ public class Post {
 	private LocalDateTime createdAt;
 
 	@Builder
-	Post(String title, String content, Long memberId, PostType postType, Long contestId, Long assessmentId,
-		Long singleProblemId) {
+	public Post(String title, String content, Long memberId, String memberNickName, PostType postType, Long contestId,
+		Long assessmentId, Long singleProblemId) {
 		this.title = title;
 		this.content = content;
 		this.memberId = memberId;
-
+		this.memberNickName = memberNickName;
 		this.postType = postType;
-
 		this.contestId = contestId;
 		this.assessmentId = assessmentId;
 		this.singleProblemId = singleProblemId;

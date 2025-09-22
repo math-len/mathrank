@@ -32,11 +32,12 @@ public record PostRegisterCommand(
 	@NotNull(groups = ValidationGroups.ContestPostGroup.class)
 	Long contestId
 ) {
-	public Post toEntity() {
+	public Post toEntity(String memberName) {
 		final Post.PostBuilder postBuilder = Post.builder()
 			.title(title)
 			.content(content)
 			.memberId(memberId)
+			.memberNickName(memberName)
 			.postType(postType);
 
 		switch (postType) {
