@@ -106,6 +106,7 @@ class SingleProblemReadModelRepositoryTest {
 				null,
 				null,
 				null,
+				null,
 				null
 			),
 			10,
@@ -172,6 +173,7 @@ class SingleProblemReadModelRepositoryTest {
 			new SingleProblemReadModelQuery(
 				null,
 				"singleProblemName",
+				null,
 				null,
 				null,
 				null,
@@ -250,6 +252,7 @@ class SingleProblemReadModelRepositoryTest {
 					null,
 					null,
 					null,
+					null,
 					Difficulty.MID,
 					Difficulty.KILLER,
 					null,
@@ -271,6 +274,7 @@ class SingleProblemReadModelRepositoryTest {
 					null,
 					null,
 					null,
+					null,
 					Difficulty.MID,
 					null,
 					null,
@@ -288,6 +292,7 @@ class SingleProblemReadModelRepositoryTest {
 				new SingleProblemReadModelQuery(
 					null,
 					"singleProblemName",
+					null,
 					null,
 					null,
 					null,
@@ -370,6 +375,7 @@ class SingleProblemReadModelRepositoryTest {
 					null,
 					null,
 					null,
+					null,
 					10,
 					30,
 					null,
@@ -385,6 +391,7 @@ class SingleProblemReadModelRepositoryTest {
 				new SingleProblemReadModelQuery(
 					null,
 					"singleProblemName",
+					null,
 					null,
 					null,
 					null,
@@ -420,7 +427,7 @@ class SingleProblemReadModelRepositoryTest {
 			() -> Assertions.assertEquals(2, singleProblemReadModelRepository.queryPage(
 				new SingleProblemReadModelQuery(
 					null, "singleProblemName","math", null,
-					null,null, null, null,
+					null,null, null,null, null,
 					null, null, null, null
 				),
 				10, 1, null, null
@@ -430,7 +437,7 @@ class SingleProblemReadModelRepositoryTest {
 			() -> Assertions.assertEquals(1, singleProblemReadModelRepository.queryPage(
 				new SingleProblemReadModelQuery(
 					null, "singleProblemName", "science", null, null, null,
-					null,null,
+					null, null,null,
 					null, null, null, null
 				),
 				10, 1,
@@ -442,7 +449,7 @@ class SingleProblemReadModelRepositoryTest {
 			() -> Assertions.assertEquals(0, singleProblemReadModelRepository.queryPage(
 				new SingleProblemReadModelQuery(
 					null, "singleProblemName","english", null, null, null,
-					null,null,
+					null, null,null,
 					null, null, null, null
 				),
 				10, 1,
@@ -469,7 +476,7 @@ class SingleProblemReadModelRepositoryTest {
 				new SingleProblemReadModelQuery(
 					null, "singleProblemName",null, null, null, null,
 					null, null,null,
-					null,
+					null, null,
 					200L, 300L
 				),
 				10, 1, null, null
@@ -479,7 +486,7 @@ class SingleProblemReadModelRepositoryTest {
 			() -> Assertions.assertEquals(3, singleProblemReadModelRepository.queryPage(
 				new SingleProblemReadModelQuery(
 					null, "singleProblemName",null, null, null, null,null,
-					null,
+					null, null,
 					null, null,
 					null, 500L
 				),
@@ -492,7 +499,7 @@ class SingleProblemReadModelRepositoryTest {
 			() -> Assertions.assertEquals(1, singleProblemReadModelRepository.queryPage(
 				new SingleProblemReadModelQuery(
 					null, "singleProblemName",null, null, null, null,null,
-					null,
+					null, null,
 					null, null,
 					400L, null
 				),
@@ -530,6 +537,7 @@ class SingleProblemReadModelRepositoryTest {
 			null,
 			null,
 			null,
+			null,
 			Difficulty.MID,
 			Difficulty.MID,
 			30,
@@ -554,7 +562,7 @@ class SingleProblemReadModelRepositoryTest {
 			() -> Assertions.assertEquals(2, singleProblemReadModelRepository.queryPage(
 				new SingleProblemReadModelQuery(
 					null, "singleProblemName",null, null,
-					null, AnswerType.MULTIPLE_CHOICE, null, null,
+					null, AnswerType.MULTIPLE_CHOICE, null, null, null,
 					null, null, null, null
 				), 10, 1, null, null
 			).size()),
@@ -563,7 +571,7 @@ class SingleProblemReadModelRepositoryTest {
 			() -> Assertions.assertEquals(1, singleProblemReadModelRepository.queryPage(
 				new SingleProblemReadModelQuery(
 					null, "singleProblemName",null,null,
-					null, AnswerType.SHORT_ANSWER, null, null,
+					null, AnswerType.SHORT_ANSWER, null, null, null,
 					null, null, null, null
 				),
 				10, 1,
@@ -576,6 +584,7 @@ class SingleProblemReadModelRepositoryTest {
 				new SingleProblemReadModelQuery(
 					null,
 					"singleProblemName",
+					null,
 					null,
 					null,
 					null,
@@ -607,7 +616,7 @@ class SingleProblemReadModelRepositoryTest {
 		// when
 		final SingleProblemReadModelQuery query = new SingleProblemReadModelQuery(
 			null,"problem", null, null,
-			null,null, null, null, null, null, null, null
+			null, null,null, null, null, null, null, null, null
 		);
 		final List<SingleProblemReadModel> result = singleProblemReadModelRepository.queryPage(query, 10, 1, null, null);
 

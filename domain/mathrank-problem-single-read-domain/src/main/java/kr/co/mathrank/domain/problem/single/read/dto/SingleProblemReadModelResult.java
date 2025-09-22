@@ -2,6 +2,7 @@ package kr.co.mathrank.domain.problem.single.read.dto;
 
 import kr.co.mathrank.domain.problem.core.AnswerType;
 import kr.co.mathrank.domain.problem.core.Difficulty;
+import kr.co.mathrank.domain.problem.core.PastProblem;
 import kr.co.mathrank.domain.problem.single.read.entity.SingleProblemReadModel;
 
 public record SingleProblemReadModelResult(
@@ -15,6 +16,7 @@ public record SingleProblemReadModelResult(
 	String schoolCode,
 	AnswerType answerType,
 	Difficulty difficulty,
+	PastProblem pastProblem,
 	Long firstTrySuccessCount, // 첫번째 시도에서 성공한 횟수
 	Long totalAttemptedCount, // 문제를 풀려고 시도한 총 횟수
 	Long attemptedUserDistinctCount, // 해당 문제를 풀려고 한 사용자 수
@@ -32,6 +34,7 @@ public record SingleProblemReadModelResult(
 			model.getSchoolCode(),
 			model.getAnswerType(),
 			model.getDifficulty(),
+			model.getPastProblem(),
 			model.getFirstTrySuccessCount(),
 			model.getTotalAttemptedCount(),
 			model.getAttemptedUserDistinctCount(),

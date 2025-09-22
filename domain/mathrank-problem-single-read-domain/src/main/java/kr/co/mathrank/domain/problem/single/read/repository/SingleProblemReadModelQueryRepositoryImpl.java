@@ -11,6 +11,7 @@ import com.querydsl.jpa.impl.JPAQueryFactory;
 
 import kr.co.mathrank.domain.problem.core.AnswerType;
 import kr.co.mathrank.domain.problem.core.Difficulty;
+import kr.co.mathrank.domain.problem.core.PastProblem;
 import kr.co.mathrank.domain.problem.single.read.dto.SingleProblemReadModelQuery;
 import kr.co.mathrank.domain.problem.single.read.entity.OrderColumn;
 import kr.co.mathrank.domain.problem.single.read.entity.OrderDirection;
@@ -76,8 +77,17 @@ class SingleProblemReadModelQueryRepositoryImpl implements SingleProblemReadMode
 			answerTypeEqual(query.answerType()),
 			containsSingleProblemName(query.singleProblemName()),
 			startsWithLocation(query.location()),
-			schoolCodeMatch(query.schoolCode())
+			schoolCodeMatch(query.schoolCode()),
+			pastProblemMatch(query.pastProblem())
 		};
+	}
+
+	private BooleanExpression pastProblemMatch(final PastProblem pastProblem) {
+		if (pastProblem == null) {
+			return null;
+		}
+
+		return QSingleProblemReadModel.singleProblemReadModel.pastProblem.eq(pastProblem);
 	}
 
 	private BooleanExpression schoolCodeMatch(final String schoolCode) {
