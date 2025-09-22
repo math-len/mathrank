@@ -21,11 +21,9 @@ import lombok.Setter;
 @Entity
 @Getter
 @Table(indexes = {
-	@Index(name = "idx_title_createdAt", columnList = "title, created_at desc"),
 	@Index(name = "idx_contestId_createdAt", columnList = "contest_id, created_at desc"),
 	@Index(name = "idx_assessmentId_createdAt", columnList = "assessment_id, created_at desc"),
 	@Index(name = "idx_singleProblemId_createdAt", columnList = "single_problem_id, created_at desc"),
-	@Index(name = "idx_nickName_createdAt", columnList = "member_nick_name, created_at desc"),
 	@Index(name = "idx_memberId_createdAt", columnList = "member_id, created_at desc"),
 	@Index(name = "idx_postType_createdAt", columnList = "post_type, created_at desc"),
 	@Index(name = "idx_createdAt", columnList = "created_at desc"),
