@@ -51,6 +51,7 @@ public class SingleProblemUpdateService {
 			model.setDifficulty(command.difficulty());
 			model.setCoursePath(command.coursePath());
 			model.setAnswerType(command.answerType());
+			model.setPastProblem(command.pastProblem());
 			model.setLocation(command.location());
 			model.setSchoolCode(command.schoolCode());
 

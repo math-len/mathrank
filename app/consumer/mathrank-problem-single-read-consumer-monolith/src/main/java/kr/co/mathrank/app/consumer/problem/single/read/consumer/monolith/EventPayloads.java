@@ -17,6 +17,7 @@ public class EventPayloads {
 		String problemImage,
 		AnswerType answerType,
 		Difficulty difficulty,
+		PastProblem pastProblem,
 		LocalDateTime updatedAt,
 		Integer year,
 		String schoolCode,
