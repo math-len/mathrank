@@ -21,12 +21,12 @@ import lombok.Setter;
 @Entity
 @Getter
 @Table(indexes = {
-	@Index(name = "idx_createdAt_title", columnList = "created_at desc, title"),
-	@Index(name = "idx_createdAt_contestId", columnList = "created_at desc, contest_id"),
-	@Index(name = "idx_createdAt_assessmentId", columnList = "created_at desc, assessment_id"),
-	@Index(name = "idx_createdAt_singleProblemId", columnList = "created_at desc, single_problem_id"),
-	@Index(name = "idx_createdAt_nickName", columnList = "created_at desc, member_nick_name"),
-	@Index(name = "idx_createdAt_memberId", columnList = "created_at desc, member_id")
+	@Index(name = "idx_title_createdAt", columnList = "title, created_at desc"),
+	@Index(name = "idx_contestId_createdAt", columnList = "contest_id, created_at desc"),
+	@Index(name = "idx_assessmentId_createdAt", columnList = "assessment_id, created_at desc"),
+	@Index(name = "idx_singleProblemId_createdAt", columnList = "single_problem_id, created_at desc"),
+	@Index(name = "idx_nickName_createdAt", columnList = "member_nick_name, created_at desc"),
+	@Index(name = "idx_memberId_createdAt", columnList = "member_id, created_at desc")
 })
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Post {
