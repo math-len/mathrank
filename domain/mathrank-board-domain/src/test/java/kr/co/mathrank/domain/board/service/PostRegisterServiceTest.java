@@ -4,8 +4,10 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
 
 import jakarta.validation.ConstraintViolationException;
+import kr.co.mathrank.client.internal.member.MemberClient;
 import kr.co.mathrank.common.role.Role;
 import kr.co.mathrank.domain.board.dto.PostRegisterCommand;
 import kr.co.mathrank.domain.board.entity.PostType;
@@ -14,6 +16,8 @@ import kr.co.mathrank.domain.board.entity.PostType;
 class PostRegisterServiceTest {
 	@Autowired
 	private PostRegisterService postRegisterService;
+	@MockitoBean
+	private PostMemberManager postMemberManager;
 
 	@Test
 	void 타입에_상관없이_디폴트_예외처리() {
