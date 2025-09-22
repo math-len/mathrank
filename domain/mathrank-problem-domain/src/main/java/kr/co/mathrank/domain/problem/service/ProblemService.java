@@ -60,7 +60,7 @@ command.schoolCode(),
 	}
 
 	public void update(@NotNull @Valid final ProblemUpdateCommand command) {
-		final String schoolLocation = schoolLocationManager.getSchoolLocation(command.schoolCode());
+		final String schoolLocation = command.schoolCode() == null ? null : schoolLocationManager.getSchoolLocation(command.schoolCode());
 		problemUpdateManager.update(command, schoolLocation);
 	}
 
