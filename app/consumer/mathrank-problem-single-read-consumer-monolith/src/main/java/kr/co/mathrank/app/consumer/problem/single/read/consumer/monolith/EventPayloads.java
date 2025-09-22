@@ -5,6 +5,7 @@ import java.time.LocalDateTime;
 import kr.co.mathrank.common.event.EventPayload;
 import kr.co.mathrank.domain.problem.core.AnswerType;
 import kr.co.mathrank.domain.problem.core.Difficulty;
+import kr.co.mathrank.domain.problem.core.PastProblem;
 import kr.co.mathrank.domain.problem.single.read.dto.SingleProblemAttemptStatsUpdateCommand;
 import kr.co.mathrank.domain.problem.single.read.dto.SingleProblemReadModelRegisterCommand;
 import kr.co.mathrank.domain.problem.single.read.dto.SingleProblemReadModelUpdateCommand;
@@ -68,6 +69,7 @@ public class EventPayloads {
 		AnswerType answerType,
 		Difficulty difficulty,
 		LocalDateTime registeredAt,
+		PastProblem pastProblem,
 		Long firstTrySuccessCount, // 첫 시도에 성공한 횟수
 		Long totalAttemptedCount, // 문제를 풀려고 시도한 총 횟수
 		Long attemptedUserDistinctCount // 해당 문제를 풀려고 한 사용자 수
@@ -82,6 +84,7 @@ public class EventPayloads {
 				problemImage,
 				answerType,
 				difficulty,
+				pastProblem,
 				coursePath,
 				registeredAt
 			);
