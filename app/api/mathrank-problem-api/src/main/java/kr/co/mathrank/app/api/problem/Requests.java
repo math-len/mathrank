@@ -60,6 +60,7 @@ class Requests {
 		String coursePath,
 		@NotNull
 		Difficulty difficulty,
+		PastProblem pastProblem,
 		String schoolCode,
 		@Size(min = 1, max = 100)
 		Set<String> answers,
@@ -75,6 +76,7 @@ class Requests {
 				solutionImage,
 				answerType,
 				difficulty,
+				pastProblem,
 				coursePath,
 				schoolCode,
 				answers,
