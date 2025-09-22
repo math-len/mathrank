@@ -5,6 +5,7 @@ import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import kr.co.mathrank.common.role.Role;
 import kr.co.mathrank.domain.board.dto.PostRegisterCommand;
+import kr.co.mathrank.domain.board.dto.PostUpdateCommand;
 import kr.co.mathrank.domain.board.entity.PostType;
 
 public class Requests {
@@ -45,6 +46,19 @@ public class Requests {
 				assessmentId,
 				contestId
 			);
+		}
+	}
+
+	record PostUpdateRequest(
+		@NotNull
+		Long postId,
+		@NotEmpty
+		String title,
+		@NotEmpty
+		String content
+	) {
+		public PostUpdateCommand toCommand(final Long memberId) {
+			return new PostUpdateCommand(postId, memberId, title, content);
 		}
 	}
 }
