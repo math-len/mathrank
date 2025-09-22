@@ -78,7 +78,7 @@ public class BoardController {
 		return ResponseEntity.ok().build();
 	}
 
-	@Operation(summary = "페이지 조회 API", description = "정렬은 날짜 내림차순을로 적용됩니다.")
+	@Operation(summary = "페이지 조회 API", description = "정렬은 날짜 내림차순으로 적용됩니다.")
 	@GetMapping("/api/v1/board/post")
 	public ResponseEntity<PageResult<PostPageQueryResult>> pageQuery(
 		@RequestParam(defaultValue = "1") @Range(min = 1, max = 1000) final Integer pageNumber,
