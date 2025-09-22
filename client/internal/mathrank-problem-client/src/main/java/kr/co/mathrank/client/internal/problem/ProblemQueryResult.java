@@ -5,6 +5,7 @@ import java.util.Set;
 
 import kr.co.mathrank.domain.problem.core.AnswerType;
 import kr.co.mathrank.domain.problem.core.Difficulty;
+import kr.co.mathrank.domain.problem.core.PastProblem;
 
 public record ProblemQueryResult(
 	Long id,
@@ -13,6 +14,7 @@ public record ProblemQueryResult(
 	String path,
 	Difficulty difficulty,
 	AnswerType type,
+	PastProblem pastProblem,
 	String schoolCode,
 	Set<String> answer,
 	LocalDateTime createdAt,
