@@ -43,11 +43,11 @@ public class ProblemService {
 			command.difficulty(),
 			command.answerType(),
 			command.coursePath(),
-command.schoolCode(),
+			command.schoolCode(),
 			command.solutionVideoLink(),
 			command.solutionImage(),
 			command.year(),
-			command.schoolCode() == null ? null : schoolLocationManager.getSchoolLocation(command.schoolCode()),
+			fetchSchoolLocation(command.schoolCode()),
 			command.memo()
 		);
 		final Set<Answer> answers = mapToAnswer(command.answers(), problem);
@@ -60,7 +60,7 @@ command.schoolCode(),
 	}
 
 	public void update(@NotNull @Valid final ProblemUpdateCommand command) {
-		final String schoolLocation = command.schoolCode() == null ? null : schoolLocationManager.getSchoolLocation(command.schoolCode());
+		final String schoolLocation = fetchSchoolLocation(command.schoolCode());
 		problemUpdateManager.update(command, schoolLocation);
 	}
 
@@ -90,5 +90,13 @@ command.schoolCode(),
 			.map(String::trim)
 			.map(answer -> Answer.of(snowflake.nextId(), answer, problem))
 			.collect(Collectors.toSet());
+	}
+
+	private String fetchSchoolLocation(final String schoolCode) {
+		if (schoolCode == null) {
+			return null;
+		}
+
+		return schoolLocationManager.getSchoolLocation(schoolCode);
 	}
 }
