@@ -11,6 +11,7 @@ import jakarta.persistence.PersistenceContext;
 import kr.co.mathrank.common.page.PageResult;
 import kr.co.mathrank.domain.problem.core.AnswerType;
 import kr.co.mathrank.domain.problem.core.Difficulty;
+import kr.co.mathrank.domain.problem.core.PastProblem;
 import kr.co.mathrank.domain.problem.dto.ProblemQuery;
 import kr.co.mathrank.domain.problem.dto.ProblemQueryResult;
 import kr.co.mathrank.domain.problem.entity.Problem;
