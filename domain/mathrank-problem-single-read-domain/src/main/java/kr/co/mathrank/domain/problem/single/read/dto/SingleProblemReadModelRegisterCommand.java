@@ -5,6 +5,7 @@ import java.time.LocalDateTime;
 import jakarta.validation.constraints.NotNull;
 import kr.co.mathrank.domain.problem.core.AnswerType;
 import kr.co.mathrank.domain.problem.core.Difficulty;
+import kr.co.mathrank.domain.problem.core.PastProblem;
 
 public record SingleProblemReadModelRegisterCommand(
 	@NotNull
@@ -20,6 +21,7 @@ public record SingleProblemReadModelRegisterCommand(
 	AnswerType answerType,
 	@NotNull
 	Difficulty difficulty,
+	PastProblem pastProblem,
 	@NotNull
 	String coursePath,
 	@NotNull

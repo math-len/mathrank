@@ -24,6 +24,7 @@ import jakarta.persistence.Table;
 import jakarta.persistence.Transient;
 import kr.co.mathrank.domain.problem.core.AnswerType;
 import kr.co.mathrank.domain.problem.core.Difficulty;
+import kr.co.mathrank.domain.problem.core.PastProblem;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -42,6 +43,7 @@ import lombok.ToString;
 	@Index(name = "idx_firstTrySuccessCount", columnList = "first_try_success_count desc"),
 	@Index(name = "idx_attemptedUserDistinctCount", columnList = "attempted_user_distinct_count desc"),
 	@Index(name = "idx_accuracy", columnList = "accuracy desc"),
+	@Index(name = "idx_pastProblem", columnList = "past_problem"),
 })
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Setter
@@ -70,6 +72,9 @@ public class SingleProblemReadModel implements Persistable<Long> {
 
 	@Convert(converter = DifficultyConverter.class)
 	private Difficulty difficulty;
+
+	@Enumerated(EnumType.STRING)
+	private PastProblem pastProblem;
 
 	private Long firstTrySuccessCount = 0L; // 첫번째 시도에서 성공한 횟수
 

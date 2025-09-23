@@ -8,6 +8,7 @@ import kr.co.mathrank.client.internal.course.CourseQueryContainsParentsResult;
 import kr.co.mathrank.client.internal.member.MemberInfo;
 import kr.co.mathrank.domain.problem.core.AnswerType;
 import kr.co.mathrank.domain.problem.core.Difficulty;
+import kr.co.mathrank.domain.problem.core.PastProblem;
 import kr.co.mathrank.domain.problem.dto.ProblemQueryResult;
 
 public record ProblemResponse(
@@ -17,6 +18,7 @@ public record ProblemResponse(
 	String problemImage,
 	String solutionImage,
 	Difficulty difficulty,
+	PastProblem pastProblem,
 	AnswerType type,
 	SchoolResponse schoolInfo,
 	Set<String> answers,
@@ -38,6 +40,7 @@ public record ProblemResponse(
 			result.imageSource(),
 			result.solutionImage(),
 			result.difficulty(),
+			result.pastProblem(),
 			result.type(),
 			SchoolResponse.from(schoolInfo),
 			result.answer(),

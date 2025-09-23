@@ -2,11 +2,13 @@ package kr.co.mathrank.app.api.problem;
 
 import java.util.Set;
 
+import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import kr.co.mathrank.domain.problem.core.AnswerType;
 import kr.co.mathrank.domain.problem.core.Difficulty;
+import kr.co.mathrank.domain.problem.core.PastProblem;
 import kr.co.mathrank.domain.problem.dto.ProblemRegisterCommand;
 import kr.co.mathrank.domain.problem.dto.ProblemUpdateCommand;
 
@@ -22,6 +24,8 @@ class Requests {
 		String coursePath,
 		@NotNull
 		Difficulty difficulty,
+		@NotNull
+		PastProblem pastProblem,
 		String schoolCode,
 		@Size(min = 1, max = 100)
 		Set<String> answers,
@@ -36,6 +40,7 @@ class Requests {
 				answerType,
 				coursePath,
 				difficulty,
+				pastProblem,
 				schoolCode,
 				answers,
 				year,
@@ -57,6 +62,8 @@ class Requests {
 		String coursePath,
 		@NotNull
 		Difficulty difficulty,
+		@NotNull
+		PastProblem pastProblem,
 		String schoolCode,
 		@Size(min = 1, max = 100)
 		Set<String> answers,
@@ -72,6 +79,7 @@ class Requests {
 				solutionImage,
 				answerType,
 				difficulty,
+				pastProblem,
 				coursePath,
 				schoolCode,
 				answers,

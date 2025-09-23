@@ -47,14 +47,14 @@ class SingleProblemReadModelRegisterServiceTest {
 
 		singleProblemReadModelRegisterService.save(new SingleProblemReadModelRegisterCommand(
 			singleProblemId1, problemId, "singleProblemName", "img", null,
-			null, AnswerType.SHORT_ANSWER, Difficulty.LOW, "initialPath", baseTime
+			null, AnswerType.SHORT_ANSWER, Difficulty.LOW, null, "initialPath", baseTime
 		));
 
 		Assertions.assertDoesNotThrow(
 			() -> singleProblemReadModelRegisterService.save(new SingleProblemReadModelRegisterCommand(
 				// 다른 singleProblemId
 				singleProblemId2, problemId, "singleProblemName", "img", null,
-				null, AnswerType.SHORT_ANSWER, Difficulty.LOW, "initialPath", baseTime
+				null, AnswerType.SHORT_ANSWER, Difficulty.LOW, null, "initialPath", baseTime
 			)));
 	}
 }
