@@ -9,6 +9,7 @@ import kr.co.mathrank.domain.board.entity.PostType;
 public record PostDetailQueryResult(
 	Long postId,
 	Long memberId,
+	String memberNickName,
 	PostType postType,
 
 	String title,
@@ -26,6 +27,7 @@ public record PostDetailQueryResult(
 		return new PostDetailQueryResult(
 			post.getId(),
 			post.getMemberId(),
+			post.getMemberNickName(),
 			post.getPostType(),
 			post.getTitle(),
 			post.getContent(),

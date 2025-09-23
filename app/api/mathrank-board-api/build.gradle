@@ -7,4 +7,5 @@ dependencies {
     implementation project(':common:mathrank-role')
     implementation project(':common:mathrank-page')
     implementation project(':app:api:mathrank-api-common')
+    implementation project(':client:internal:mathrank-member-client')
 }
