@@ -2,6 +2,7 @@ package kr.co.mathrank.app.api.problem;
 
 import java.util.Set;
 
+import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
@@ -23,6 +24,7 @@ class Requests {
 		String coursePath,
 		@NotNull
 		Difficulty difficulty,
+		@NotNull
 		PastProblem pastProblem,
 		String schoolCode,
 		@Size(min = 1, max = 100)
@@ -60,6 +62,7 @@ class Requests {
 		String coursePath,
 		@NotNull
 		Difficulty difficulty,
+		@NotNull
 		PastProblem pastProblem,
 		String schoolCode,
 		@Size(min = 1, max = 100)
