@@ -1,9 +1,12 @@
 package kr.co.mathrank.domain.board.entity;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.hibernate.annotations.CreationTimestamp;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
@@ -11,6 +14,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Index;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -53,6 +57,9 @@ public class Post {
 
 	private Long singleProblemId;
 
+	@OneToMany(mappedBy = "post", cascade = CascadeType.PERSIST, orphanRemoval = true)
+	private final List<Comment> comments = new ArrayList<>();
+
 	@CreationTimestamp
 	private LocalDateTime createdAt;
 
@@ -77,5 +84,12 @@ public class Post {
 
 	public static Post of(String title, String content, Long userId) {
 		return new Post(title, content, userId);
+	}
+
+	public Comment addComment(final String content, final Long memberId) {
+		final Comment comment = Comment.of(content, memberId, this);
+		this.getComments().add(comment);
+
+		return comment;
 	}
 }
