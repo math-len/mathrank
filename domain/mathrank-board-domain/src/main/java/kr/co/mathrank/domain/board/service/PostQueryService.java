@@ -6,13 +6,11 @@ import org.hibernate.validator.constraints.Range;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.annotation.Validated;
 
-import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 import kr.co.mathrank.common.page.PageResult;
 import kr.co.mathrank.common.page.PageUtil;
 import kr.co.mathrank.domain.board.dto.PostPageQuery;
 import kr.co.mathrank.domain.board.dto.PostPageQueryResult;
-import kr.co.mathrank.domain.board.entity.Post;
 import kr.co.mathrank.domain.board.repository.PostRepository;
 import lombok.RequiredArgsConstructor;
 
