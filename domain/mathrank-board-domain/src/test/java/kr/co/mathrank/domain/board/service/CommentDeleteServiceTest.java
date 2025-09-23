@@ -109,7 +109,7 @@ class CommentDeleteServiceTest {
 
 		latch.await();
 
-		Assertions.assertEquals(1, commentRepository.count());
+		Assertions.assertEquals(1, postRepository.findById(postId).get().getCommentCount());
 
 		postRepository.deleteAll();
 	}
