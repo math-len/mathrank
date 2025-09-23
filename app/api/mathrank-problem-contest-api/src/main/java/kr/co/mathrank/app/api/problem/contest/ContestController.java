@@ -60,7 +60,7 @@ public class ContestController {
 	@Operation(summary = "대회 수정 API")
 	@PutMapping("/api/v1/problem/contest/{contestId}")
 	@Authorization(values = Role.ADMIN)
-	public ResponseEntity<Void> updateAssessment(
+	public ResponseEntity<Void> updateContest(
 		@ModelAttribute @ParameterObject @Valid final Requests.ContestUpdateRequest request
 	) {
 		final AssessmentUpdateCommand command = request.toCommand();
