@@ -27,7 +27,7 @@ public class ProblemQueryService {
 	private final ProblemRepository problemRepository;
 
 	public ProblemQueryResult getSingle(@NotNull final Long problemId) {
-		return problemRepository.findById(problemId)
+		return problemRepository.findProblemByIdWithAnswer(problemId)
 			.map(ProblemQueryResult::from)
 			.orElseThrow(() -> {
 				log.warn("[ProblemQueryService.getSingle] cannot find - problemId: {}", problemId);
