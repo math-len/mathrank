@@ -16,6 +16,8 @@ public record PostPageQueryResult(
 	Long assessmentId,
 	Long contestId,
 
+	Integer commentCount,
+
 	LocalDateTime createdAt
 ) {
 	public static PostPageQueryResult from(final Post post) {
@@ -27,6 +29,7 @@ public record PostPageQueryResult(
 			post.getSingleProblemId(),
 			post.getAssessmentId(),
 			post.getContestId(),
+			post.getCommentCount(),
 			post.getCreatedAt()
 		);
 	}
