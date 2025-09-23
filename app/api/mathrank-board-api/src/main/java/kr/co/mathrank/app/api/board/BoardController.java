@@ -1,5 +1,7 @@
 package kr.co.mathrank.app.api.board;
 
+import java.util.List;
+
 import org.hibernate.validator.constraints.Range;
 import org.springdoc.core.annotations.ParameterObject;
 import org.springframework.http.ResponseEntity;
@@ -18,8 +20,10 @@ import jakarta.validation.Valid;
 import kr.co.mathrank.app.api.common.authentication.Authorization;
 import kr.co.mathrank.app.api.common.authentication.LoginInfo;
 import kr.co.mathrank.app.api.common.authentication.MemberPrincipal;
+import kr.co.mathrank.client.internal.member.MemberClient;
 import kr.co.mathrank.common.page.PageResult;
 import kr.co.mathrank.domain.board.dto.PostDeleteCommand;
+import kr.co.mathrank.domain.board.dto.PostDetailQueryResult;
 import kr.co.mathrank.domain.board.dto.PostPageQuery;
 import kr.co.mathrank.domain.board.dto.PostPageQueryResult;
 import kr.co.mathrank.domain.board.dto.PostRegisterCommand;
@@ -38,6 +42,8 @@ public class BoardController {
 	private final PostUpdateService postUpdateService;
 	private final PostDeleteService postDeleteService;
 	private final PostQueryService postQueryService;
+
+	private final MemberClient memberClient;
 
 	@Operation(summary = "게시글 등록 API")
 	@PostMapping("/api/v1/board/post")
@@ -86,5 +92,22 @@ public class BoardController {
 		@ModelAttribute @ParameterObject final PostPageQuery query
 	) {
 		return ResponseEntity.ok(postQueryService.pageQuery(query, pageSize, pageNumber));
+	}
+
+	@Operation(summary = "게시글 상세 조회 API")
+	@Authorization(openedForAll = true)
+	@GetMapping("/api/v1/board/post/{postId}")
+	public ResponseEntity<Responses.PostDetailResponse> getDetail(
+		@PathVariable final Long postId
+	) {
+		final PostDetailQueryResult result = postQueryService.getDetail(postId);
+
+		// 댓글 매핑
+		final List<Responses.CommentDetailResponse> commentDetailResponses = result.comments().stream()
+			.map(comment -> Responses.CommentDetailResponse.from(comment,
+				memberClient.getMemberInfo(comment.memberId())))
+			.toList();
+
+		return ResponseEntity.ok(Responses.PostDetailResponse.from(result, commentDetailResponses));
 	}
 }
