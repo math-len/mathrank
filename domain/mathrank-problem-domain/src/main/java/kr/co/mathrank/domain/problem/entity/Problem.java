@@ -7,17 +7,16 @@ import java.util.stream.Collectors;
 
 import org.hibernate.annotations.BatchSize;
 import org.hibernate.annotations.CreationTimestamp;
-import org.springframework.data.domain.Persistable;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Convert;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
-import jakarta.persistence.FetchType;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Index;
-import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import kr.co.mathrank.domain.problem.core.AnswerType;
@@ -42,8 +41,9 @@ import lombok.extern.slf4j.Slf4j;
 @Setter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @ToString
-public class Problem implements Persistable<Long> {
+public class Problem {
 	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Setter(AccessLevel.NONE)
 	private Long id;
 
@@ -82,12 +82,11 @@ public class Problem implements Persistable<Long> {
 
 	private String memo;
 
-	public static Problem of(final Long id, final Long memberId, final String problemImage, final Difficulty difficulty,
+	public static Problem of(final Long memberId, final String problemImage, final Difficulty difficulty,
 		final AnswerType type, final String coursePath, final String schoolCode,
 		final String solutionVideoLink, final String solutionImage, final Integer year, final String location, final String memo) {
 
 		final Problem problem = new Problem();
-		problem.id = id;
 		problem.memberId = memberId;
 		problem.problemImage = problemImage;
 		problem.difficulty = difficulty;
@@ -110,12 +109,6 @@ public class Problem implements Persistable<Long> {
 
 	private void clearAnswer() {
 		this.answers.clear();
-	}
-
-	@Override
-	public boolean isNew() {
-		log.debug("[Problem.isNew] id: {}, isNew: {}", id, createdAt);
-		return this.createdAt == null;
 	}
 
 	public Set<String> getAnswers() {

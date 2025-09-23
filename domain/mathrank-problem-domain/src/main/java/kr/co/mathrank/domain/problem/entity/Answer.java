@@ -3,9 +3,10 @@ package kr.co.mathrank.domain.problem.entity;
 import java.time.LocalDateTime;
 
 import org.hibernate.annotations.CreationTimestamp;
-import org.springframework.data.domain.Persistable;
 
 import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.ManyToOne;
 import lombok.AccessLevel;
@@ -21,8 +22,9 @@ import lombok.extern.slf4j.Slf4j;
 @Getter
 @EqualsAndHashCode(of = "answerContent")
 @ToString(exclude = "problem")
-public class Answer implements Persistable<Long> {
+public class Answer {
 	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 
 	@ManyToOne
@@ -33,18 +35,11 @@ public class Answer implements Persistable<Long> {
 	@CreationTimestamp
 	private LocalDateTime createdAt;
 
-	public static Answer of(final Long id, final String answerContent, final Problem problem) {
+	public static Answer of(final String answerContent, final Problem problem) {
 		final Answer answer = new Answer();
-		answer.id = id;
 		answer.answerContent = answerContent;
 		answer.problem = problem;
 
 		return answer;
-	}
-
-	@Override
-	public boolean isNew() {
-		log.debug("[Answer.isNew] id: {}, isNew: {}", id, createdAt);
-		return createdAt == null;
 	}
 }

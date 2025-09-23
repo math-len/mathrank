@@ -10,7 +10,6 @@ import org.springframework.validation.annotation.Validated;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 import kr.co.mathrank.common.outbox.TransactionalOutboxPublisher;
-import kr.co.mathrank.common.snowflake.Snowflake;
 import kr.co.mathrank.domain.problem.dto.ProblemDeleteCommand;
 import kr.co.mathrank.domain.problem.dto.ProblemRegisterCommand;
 import kr.co.mathrank.domain.problem.dto.ProblemUpdateCommand;
@@ -28,16 +27,13 @@ import lombok.extern.slf4j.Slf4j;
 @RequiredArgsConstructor
 public class ProblemService {
 	private final ProblemRepository problemRepository;
-	private final Snowflake snowflake;
 	private final SchoolLocationManager schoolLocationManager;
 	private final TransactionalOutboxPublisher transactionalOutboxPublisher;
 	private final ProblemUpdateManager problemUpdateManager;
 
 	public Long save(@NotNull @Valid final ProblemRegisterCommand command) {
 
-		final Long id = snowflake.nextId();
 		final Problem problem = Problem.of(
-			id,
 			command.requestMemberId(),
 			command.imageSource(),
 			command.difficulty(),
@@ -55,8 +51,8 @@ command.schoolCode(),
 
 		problemRepository.save(problem);
 		log.info("[ProblemService.save] problem created - id: {}, memberId: {}, course: {}",
-			id, command.requestMemberId(), command.coursePath());
-		return id;
+			problem.getId(), command.requestMemberId(), command.coursePath());
+		return problem.getId();
 	}
 
 	public void update(@NotNull @Valid final ProblemUpdateCommand command) {
@@ -88,7 +84,7 @@ command.schoolCode(),
 	private Set<Answer> mapToAnswer(final Set<String> answers, final Problem problem) {
 		return answers.stream()
 			.map(String::trim)
-			.map(answer -> Answer.of(snowflake.nextId(), answer, problem))
+			.map(answer -> Answer.of(answer, problem))
 			.collect(Collectors.toSet());
 	}
 }
