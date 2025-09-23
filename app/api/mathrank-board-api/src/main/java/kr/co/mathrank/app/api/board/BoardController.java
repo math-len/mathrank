@@ -23,6 +23,7 @@ import kr.co.mathrank.app.api.common.authentication.MemberPrincipal;
 import kr.co.mathrank.client.internal.member.MemberClient;
 import kr.co.mathrank.common.page.PageResult;
 import kr.co.mathrank.domain.board.dto.CommentRegisterCommand;
+import kr.co.mathrank.domain.board.dto.CommentUpdateCommand;
 import kr.co.mathrank.domain.board.dto.PostDeleteCommand;
 import kr.co.mathrank.domain.board.dto.PostDetailQueryResult;
 import kr.co.mathrank.domain.board.dto.PostPageQuery;
@@ -30,6 +31,7 @@ import kr.co.mathrank.domain.board.dto.PostPageQueryResult;
 import kr.co.mathrank.domain.board.dto.PostRegisterCommand;
 import kr.co.mathrank.domain.board.dto.PostUpdateCommand;
 import kr.co.mathrank.domain.board.service.CommentRegisterService;
+import kr.co.mathrank.domain.board.service.CommentUpdateService;
 import kr.co.mathrank.domain.board.service.PostDeleteService;
 import kr.co.mathrank.domain.board.service.PostQueryService;
 import kr.co.mathrank.domain.board.service.PostRegisterService;
@@ -47,6 +49,7 @@ public class BoardController {
 
 	private final MemberClient memberClient;
 	private final CommentRegisterService commentRegisterService;
+	private final CommentUpdateService commentUpdateService;
 
 	@Operation(summary = "게시글 등록 API")
 	@PostMapping("/api/v1/board/post")
@@ -125,5 +128,18 @@ public class BoardController {
 		final Long commentId = commentRegisterService.register(command);
 
 		return ResponseEntity.ok(commentId);
+	}
+
+	@Operation(summary = "댓글 수정 API", description = "본인이 작성한 댓글만 수정 가능. 관리자도 수정 불가")
+	@Authorization(openedForAll = true)
+	@PutMapping("/api/v1/board/post/comment/{commentId}")
+	public ResponseEntity<Void> postComment(
+		@ModelAttribute @ParameterObject @Valid final Requests.CommentUpdateRequest request,
+		@LoginInfo final MemberPrincipal memberPrincipal
+	) {
+		final CommentUpdateCommand command = request.toCommand(memberPrincipal.memberId());
+		commentUpdateService.update(command);
+
+		return ResponseEntity.ok().build();
 	}
 }

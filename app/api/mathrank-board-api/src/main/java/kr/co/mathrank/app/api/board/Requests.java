@@ -5,6 +5,7 @@ import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import kr.co.mathrank.common.role.Role;
 import kr.co.mathrank.domain.board.dto.CommentRegisterCommand;
+import kr.co.mathrank.domain.board.dto.CommentUpdateCommand;
 import kr.co.mathrank.domain.board.dto.PostRegisterCommand;
 import kr.co.mathrank.domain.board.dto.PostUpdateCommand;
 import kr.co.mathrank.domain.board.entity.PostType;
@@ -72,6 +73,21 @@ public class Requests {
 		public CommentRegisterCommand toCommand(final Long memberId) {
 			return new CommentRegisterCommand(
 				postId,
+				memberId,
+				content
+			);
+		}
+	}
+
+	record CommentUpdateRequest(
+		@NotNull
+		Long commentId,
+		@NotNull
+		String content
+	) {
+		CommentUpdateCommand toCommand(final Long memberId) {
+			return new CommentUpdateCommand(
+				commentId,
 				memberId,
 				content
 			);
