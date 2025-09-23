@@ -12,6 +12,7 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import kr.co.mathrank.common.role.Role;
 import kr.co.mathrank.domain.problem.assessment.dto.AssessmentItemRegisterCommand;
+import kr.co.mathrank.domain.problem.assessment.dto.AssessmentUpdateCommand;
 import kr.co.mathrank.domain.problem.assessment.dto.LimitedAssessmentRegisterCommand;
 import kr.co.mathrank.domain.problem.assessment.dto.SubmissionRegisterCommand;
 
@@ -72,6 +73,20 @@ public class Requests {
 		public SubmissionRegisterCommand toCommand(final Long memberId) {
 			return new SubmissionRegisterCommand(memberId, contestId, submittedAnswers,
 				Duration.ofSeconds(elapsedTimeSeconds));
+		}
+	}
+
+	record ContestUpdateRequest(
+		@NotNull
+		Long contestId,
+		@NotBlank
+		String contestName
+	) {
+		public AssessmentUpdateCommand toCommand() {
+			return new AssessmentUpdateCommand(
+				contestId,
+				contestName
+			);
 		}
 	}
 }
