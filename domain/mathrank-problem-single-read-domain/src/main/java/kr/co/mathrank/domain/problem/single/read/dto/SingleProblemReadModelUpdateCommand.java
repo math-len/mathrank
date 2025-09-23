@@ -5,6 +5,7 @@ import java.time.LocalDateTime;
 import jakarta.validation.constraints.NotNull;
 import kr.co.mathrank.domain.problem.core.AnswerType;
 import kr.co.mathrank.domain.problem.core.Difficulty;
+import kr.co.mathrank.domain.problem.core.PastProblem;
 
 public record SingleProblemReadModelUpdateCommand(
 	@NotNull
@@ -19,6 +20,7 @@ public record SingleProblemReadModelUpdateCommand(
 	AnswerType answerType,
 	@NotNull
 	Difficulty difficulty,
+	PastProblem pastProblem,
 	@NotNull
 	LocalDateTime updatedAt
 ) {

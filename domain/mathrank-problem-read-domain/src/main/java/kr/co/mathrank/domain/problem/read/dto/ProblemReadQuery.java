@@ -2,6 +2,7 @@ package kr.co.mathrank.domain.problem.read.dto;
 
 import kr.co.mathrank.domain.problem.core.AnswerType;
 import kr.co.mathrank.domain.problem.core.Difficulty;
+import kr.co.mathrank.domain.problem.core.PastProblem;
 import kr.co.mathrank.domain.problem.dto.ProblemQuery;
 
 public record ProblemReadQuery(
@@ -10,6 +11,7 @@ public record ProblemReadQuery(
 	Difficulty difficultyMinInclude,
 	Difficulty difficultyMaxInclude,
 	AnswerType answerType,
+	PastProblem pastProblem,
 	String path,
 	Boolean solutionVideoExist,
 	Integer year,
@@ -25,6 +27,7 @@ public record ProblemReadQuery(
 			answerType,
 			path,
 			solutionVideoExist,
+			pastProblem,
 			year,
 			location,
 			schoolCode

@@ -12,6 +12,7 @@ import kr.co.mathrank.common.outbox.TransactionalOutboxPublisher;
 import kr.co.mathrank.common.snowflake.Snowflake;
 import kr.co.mathrank.domain.problem.core.AnswerType;
 import kr.co.mathrank.domain.problem.core.Difficulty;
+import kr.co.mathrank.domain.problem.core.PastProblem;
 import kr.co.mathrank.domain.problem.dto.ProblemUpdateCommand;
 import kr.co.mathrank.domain.problem.entity.Answer;
 import kr.co.mathrank.domain.problem.entity.Problem;
@@ -47,6 +48,7 @@ class ProblemUpdateManager {
 		problem.setSchoolCode(command.schoolCode());
 		problem.setMemo(command.memo());
 		problem.setLocation(schoolLocation);
+		problem.setPastProblem(command.pastProblem());
 
 		problem.setUpdatedAt(LocalDateTime.now());
 
@@ -63,6 +65,7 @@ class ProblemUpdateManager {
 			problem.getProblemImage(),
 			problem.getType(),
 			problem.getDifficulty(),
+			problem.getPastProblem(),
 			problem.getUpdatedAt(),
 			problem.getYears(),
 			problem.getSchoolCode(),
@@ -92,6 +95,7 @@ class ProblemUpdateManager {
 		String problemImage,
 		AnswerType answerType,
 		Difficulty difficulty,
+		PastProblem pastProblem,
 		LocalDateTime updatedAt,
 		Integer year,
 		String schoolCode,

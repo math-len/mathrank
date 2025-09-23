@@ -6,6 +6,7 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import kr.co.mathrank.domain.problem.core.AnswerType;
 import kr.co.mathrank.domain.problem.core.Difficulty;
+import kr.co.mathrank.domain.problem.core.PastProblem;
 
 public record ProblemUpdateCommand(
 	@NotNull
@@ -20,6 +21,8 @@ public record ProblemUpdateCommand(
 	AnswerType answerType,
 	@NotNull
 	Difficulty difficulty,
+	@NotNull
+	PastProblem pastProblem,
 	@NotNull
 	String coursePath,
 	String schoolCode,

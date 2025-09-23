@@ -12,6 +12,7 @@ import kr.co.mathrank.common.event.EventPayload;
 import kr.co.mathrank.common.outbox.TransactionalOutboxPublisher;
 import kr.co.mathrank.domain.problem.core.AnswerType;
 import kr.co.mathrank.domain.problem.core.Difficulty;
+import kr.co.mathrank.domain.problem.core.PastProblem;
 import kr.co.mathrank.domain.problem.single.entity.SingleProblem;
 import kr.co.mathrank.domain.problem.single.repository.SingleProblemRepository;
 import lombok.RequiredArgsConstructor;
@@ -40,6 +41,7 @@ class SingleProblemRegisterManager {
 			result.schoolCode(),
 			result.type(),
 			result.difficulty(),
+			result.pastProblem(),
 			problem.getSingleProblemRegisteredAt(),
 			problem.getFirstTrySuccessCount(),
 			problem.getTotalAttemptedCount(),
@@ -57,6 +59,7 @@ class SingleProblemRegisterManager {
 		String schoolCode,
 		AnswerType answerType,
 		Difficulty difficulty,
+		PastProblem pastProblem,
 		LocalDateTime registeredAt,
 		Long firstTrySuccessCount, // 첫 시도에 성공한 횟수
 		Long totalAttemptedCount, // 문제를 풀려고 시도한 총 횟수

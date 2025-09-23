@@ -3,6 +3,7 @@ package kr.co.mathrank.app.api.problem.read;
 import jakarta.validation.constraints.NotNull;
 import kr.co.mathrank.domain.problem.core.AnswerType;
 import kr.co.mathrank.domain.problem.core.Difficulty;
+import kr.co.mathrank.domain.problem.core.PastProblem;
 import kr.co.mathrank.domain.problem.read.dto.ProblemReadQuery;
 
 public record ProblemQueryRequest(
@@ -12,6 +13,7 @@ public record ProblemQueryRequest(
 	Difficulty difficultyMinInclude,
 	Difficulty difficultyMaxInclude,
 	AnswerType answerType,
+	PastProblem pastProblem,
 	String coursePath,
 	Boolean videoExist,
 	Integer year,
@@ -27,6 +29,7 @@ public record ProblemQueryRequest(
 			difficultyMinInclude,
 			difficultyMaxInclude,
 			answerType,
+			pastProblem,
 			coursePath,
 			videoExist,
 			year,

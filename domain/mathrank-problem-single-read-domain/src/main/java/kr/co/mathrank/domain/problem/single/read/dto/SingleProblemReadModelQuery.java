@@ -2,6 +2,7 @@ package kr.co.mathrank.domain.problem.single.read.dto;
 
 import kr.co.mathrank.domain.problem.core.AnswerType;
 import kr.co.mathrank.domain.problem.core.Difficulty;
+import kr.co.mathrank.domain.problem.core.PastProblem;
 
 public record SingleProblemReadModelQuery(
 	Long singleProblemId,
@@ -15,6 +16,8 @@ public record SingleProblemReadModelQuery(
 	String schoolCode,
 
 	AnswerType answerType,
+
+	PastProblem pastProblem,
 
 	Difficulty difficultyMinInclude,
 	Difficulty difficultyMaxInclude,

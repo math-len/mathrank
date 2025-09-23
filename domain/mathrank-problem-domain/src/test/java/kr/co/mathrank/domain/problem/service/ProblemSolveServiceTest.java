@@ -13,6 +13,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import kr.co.mathrank.domain.problem.core.AnswerType;
 import kr.co.mathrank.domain.problem.core.Difficulty;
+import kr.co.mathrank.domain.problem.core.PastProblem;
 import kr.co.mathrank.domain.problem.dto.ProblemRegisterCommand;
 import kr.co.mathrank.domain.problem.dto.ProblemSolveCommand;
 import kr.co.mathrank.domain.problem.dto.ProblemSolveResult;
@@ -33,7 +34,7 @@ class ProblemSolveServiceTest {
 	void 제출된_정답이_실제_정답이랑_정확히_일치할때_성공한다() {
 		Mockito.when(schoolLocationManager.getSchoolLocation(Mockito.anyString())).thenReturn("test");
 
-		final ProblemRegisterCommand command = new ProblemRegisterCommand(1L, "image.jpeg", "image.jpeg", AnswerType.MULTIPLE_CHOICE, "testPath", Difficulty.KILLER, "testCode",
+		final ProblemRegisterCommand command = new ProblemRegisterCommand(1L, "image.jpeg", "image.jpeg", AnswerType.MULTIPLE_CHOICE, "testPath", Difficulty.KILLER, PastProblem.NONE, "testCode",
 			Set.of("1"), 1001, null, null);
 
 		final Long problemId = problemService.save(command);
@@ -49,7 +50,7 @@ class ProblemSolveServiceTest {
 	void 제출된_정답이_일치하지만_더많으면_실패한다() {
 		Mockito.when(schoolLocationManager.getSchoolLocation(Mockito.anyString())).thenReturn("test");
 
-		final ProblemRegisterCommand command = new ProblemRegisterCommand(1L, "image.jpeg", "image.jpeg", AnswerType.MULTIPLE_CHOICE, "testPath", Difficulty.KILLER, "testCode",
+		final ProblemRegisterCommand command = new ProblemRegisterCommand(1L, "image.jpeg", "image.jpeg", AnswerType.MULTIPLE_CHOICE, "testPath", Difficulty.KILLER, PastProblem.NONE, "testCode",
 			Set.of("1"), 1001, null, null);
 		final Long problemId = problemService.save(command);
 
@@ -65,7 +66,7 @@ class ProblemSolveServiceTest {
 	void 제출된_정답에_정답이_포함되지_않으면_실패한다() {
 		Mockito.when(schoolLocationManager.getSchoolLocation(Mockito.anyString())).thenReturn("test");
 
-		final ProblemRegisterCommand command = new ProblemRegisterCommand(1L, "image.jpeg", "image.jpeg", AnswerType.MULTIPLE_CHOICE, "testPath", Difficulty.KILLER, "testCode",
+		final ProblemRegisterCommand command = new ProblemRegisterCommand(1L, "image.jpeg", "image.jpeg", AnswerType.MULTIPLE_CHOICE, "testPath", Difficulty.KILLER, PastProblem.NONE, "testCode",
 			Set.of("1"), 1001, null, null);
 		final Long problemId = problemService.save(command);
 

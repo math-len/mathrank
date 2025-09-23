@@ -5,6 +5,7 @@ import java.util.Set;
 
 import kr.co.mathrank.domain.problem.core.AnswerType;
 import kr.co.mathrank.domain.problem.core.Difficulty;
+import kr.co.mathrank.domain.problem.core.PastProblem;
 import kr.co.mathrank.domain.problem.entity.Problem;
 
 public record ProblemQueryResult(
@@ -13,6 +14,7 @@ public record ProblemQueryResult(
 	String imageSource,
 	String path,
 	Difficulty difficulty,
+	PastProblem pastProblem,
 	AnswerType type,
 	String schoolCode,
 	Set<String> answer,
@@ -31,6 +33,7 @@ public record ProblemQueryResult(
 			// null 대비
 			String.valueOf(problem.getCoursePath()),
 			problem.getDifficulty(),
+			problem.getPastProblem(),
 			problem.getType(),
 			problem.getSchoolCode(),
 			problem.getAnswers(),
