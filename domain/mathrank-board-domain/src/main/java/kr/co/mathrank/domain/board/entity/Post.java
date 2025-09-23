@@ -95,8 +95,4 @@ public class Post {
 
 		return comment;
 	}
-
-	public void decreaseCommentCount() {
-		this.commentCount--;
-	}
 }
