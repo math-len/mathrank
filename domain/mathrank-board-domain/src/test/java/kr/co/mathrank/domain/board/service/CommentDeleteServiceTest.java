@@ -89,10 +89,10 @@ class CommentDeleteServiceTest {
 		final Long commentId = commentRegisterService.register(new CommentRegisterCommand(postId, userId, "testContent"));
 		commentRegisterService.register(new CommentRegisterCommand(postId, userId, "testContent"));
 
-		// 이중 30개만 삭제하자
+		// 하나를 두번 동시에 삭제 시도하자
 		final int deleteTryCount = 2;
 
-		// 10개 쓰레드
+		// 2개 쓰레드
 		final ExecutorService executor = Executors.newFixedThreadPool(2);
 		final CountDownLatch latch = new CountDownLatch(deleteTryCount);
 
