@@ -15,6 +15,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Index;
 import jakarta.persistence.OneToMany;
+import jakarta.persistence.OrderBy;
 import jakarta.persistence.Table;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -60,6 +61,7 @@ public class Post {
 	private Integer commentCount = 0;
 
 	@OneToMany(mappedBy = "post", cascade = CascadeType.PERSIST, orphanRemoval = true)
+	@OrderBy("createdAt")
 	private final List<Comment> comments = new ArrayList<>();
 
 	@CreationTimestamp
