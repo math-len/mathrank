@@ -22,12 +22,14 @@ import kr.co.mathrank.app.api.common.authentication.LoginInfo;
 import kr.co.mathrank.app.api.common.authentication.MemberPrincipal;
 import kr.co.mathrank.client.internal.member.MemberClient;
 import kr.co.mathrank.common.page.PageResult;
+import kr.co.mathrank.domain.board.dto.CommentRegisterCommand;
 import kr.co.mathrank.domain.board.dto.PostDeleteCommand;
 import kr.co.mathrank.domain.board.dto.PostDetailQueryResult;
 import kr.co.mathrank.domain.board.dto.PostPageQuery;
 import kr.co.mathrank.domain.board.dto.PostPageQueryResult;
 import kr.co.mathrank.domain.board.dto.PostRegisterCommand;
 import kr.co.mathrank.domain.board.dto.PostUpdateCommand;
+import kr.co.mathrank.domain.board.service.CommentRegisterService;
 import kr.co.mathrank.domain.board.service.PostDeleteService;
 import kr.co.mathrank.domain.board.service.PostQueryService;
 import kr.co.mathrank.domain.board.service.PostRegisterService;
@@ -44,6 +46,7 @@ public class BoardController {
 	private final PostQueryService postQueryService;
 
 	private final MemberClient memberClient;
+	private final CommentRegisterService commentRegisterService;
 
 	@Operation(summary = "게시글 등록 API")
 	@PostMapping("/api/v1/board/post")
@@ -109,5 +112,18 @@ public class BoardController {
 			.toList();
 
 		return ResponseEntity.ok(Responses.PostDetailResponse.from(result, commentDetailResponses));
+	}
+
+	@Operation(summary = "댓글 작성 API")
+	@Authorization(openedForAll = true)
+	@PostMapping("/api/v1/board/post/{postId}/comment")
+	public ResponseEntity<Long> postComment(
+		@ModelAttribute @ParameterObject @Valid final Requests.CommentSaveRequest request,
+		@LoginInfo final MemberPrincipal memberPrincipal
+	) {
+		final CommentRegisterCommand command = request.toCommand(memberPrincipal.memberId());
+		final Long commentId = commentRegisterService.register(command);
+
+		return ResponseEntity.ok(commentId);
 	}
 }
