@@ -9,7 +9,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import kr.co.mathrank.common.event.EventPayload;
 import kr.co.mathrank.common.outbox.TransactionalOutboxPublisher;
-import kr.co.mathrank.common.snowflake.Snowflake;
 import kr.co.mathrank.domain.problem.core.AnswerType;
 import kr.co.mathrank.domain.problem.core.Difficulty;
 import kr.co.mathrank.domain.problem.core.PastProblem;
@@ -27,7 +26,6 @@ import lombok.extern.slf4j.Slf4j;
 @RequiredArgsConstructor
 class ProblemUpdateManager {
 	private final ProblemRepository problemRepository;
-	private final Snowflake snowflake;
 	private final TransactionalOutboxPublisher outboxPublisher;
 
 	@Transactional
@@ -85,7 +83,7 @@ class ProblemUpdateManager {
 	private Set<Answer> mapToAnswer(final Set<String> answers, final Problem problem) {
 		return answers.stream()
 			.map(String::trim)
-			.map(answer -> Answer.of(snowflake.nextId(), answer, problem))
+			.map(answer -> Answer.of(answer, problem))
 			.collect(Collectors.toSet());
 	}
 
