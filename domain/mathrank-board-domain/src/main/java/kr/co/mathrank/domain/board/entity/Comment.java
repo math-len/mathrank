@@ -13,6 +13,7 @@ import jakarta.persistence.ManyToOne;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Entity
 @Getter
@@ -27,6 +28,7 @@ public class Comment {
 
 	private Long memberId;
 
+	@Setter
 	private String content;
 
 	@CreationTimestamp
