@@ -22,6 +22,7 @@ import kr.co.mathrank.app.api.common.authentication.LoginInfo;
 import kr.co.mathrank.app.api.common.authentication.MemberPrincipal;
 import kr.co.mathrank.client.internal.member.MemberClient;
 import kr.co.mathrank.common.page.PageResult;
+import kr.co.mathrank.domain.board.dto.CommentDeleteCommand;
 import kr.co.mathrank.domain.board.dto.CommentRegisterCommand;
 import kr.co.mathrank.domain.board.dto.CommentUpdateCommand;
 import kr.co.mathrank.domain.board.dto.PostDeleteCommand;
@@ -30,6 +31,7 @@ import kr.co.mathrank.domain.board.dto.PostPageQuery;
 import kr.co.mathrank.domain.board.dto.PostPageQueryResult;
 import kr.co.mathrank.domain.board.dto.PostRegisterCommand;
 import kr.co.mathrank.domain.board.dto.PostUpdateCommand;
+import kr.co.mathrank.domain.board.service.CommentDeleteService;
 import kr.co.mathrank.domain.board.service.CommentRegisterService;
 import kr.co.mathrank.domain.board.service.CommentUpdateService;
 import kr.co.mathrank.domain.board.service.PostDeleteService;
@@ -50,6 +52,7 @@ public class BoardController {
 	private final MemberClient memberClient;
 	private final CommentRegisterService commentRegisterService;
 	private final CommentUpdateService commentUpdateService;
+	private final CommentDeleteService commentDeleteService;
 
 	@Operation(summary = "게시글 등록 API")
 	@PostMapping("/api/v1/board/post")
@@ -139,6 +142,20 @@ public class BoardController {
 	) {
 		final CommentUpdateCommand command = request.toCommand(memberPrincipal.memberId());
 		commentUpdateService.update(command);
+
+		return ResponseEntity.ok().build();
+	}
+
+	@Operation(summary = "댓글 삭제 API", description = "본인, 관리자가 삭제 가능")
+	@Authorization(openedForAll = true)
+	@DeleteMapping("/api/v1/board/post/comment/{commentId}")
+	public ResponseEntity<Void> deleteComment(
+		@PathVariable final Long commentId,
+		@LoginInfo final MemberPrincipal memberPrincipal
+	) {
+		final CommentDeleteCommand command = new CommentDeleteCommand(commentId, memberPrincipal.memberId(),
+			memberPrincipal.role());
+		commentDeleteService.delete(command);
 
 		return ResponseEntity.ok().build();
 	}
