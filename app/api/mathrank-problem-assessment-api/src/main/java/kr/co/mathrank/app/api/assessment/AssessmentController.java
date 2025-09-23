@@ -1,8 +1,11 @@
 package kr.co.mathrank.app.api.assessment;
 
+import org.springdoc.core.annotations.ParameterObject;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -14,8 +17,10 @@ import kr.co.mathrank.app.api.common.authentication.LoginInfo;
 import kr.co.mathrank.app.api.common.authentication.MemberPrincipal;
 import kr.co.mathrank.common.role.Role;
 import kr.co.mathrank.domain.problem.assessment.dto.AssessmentRegisterCommand;
+import kr.co.mathrank.domain.problem.assessment.dto.AssessmentUpdateCommand;
 import kr.co.mathrank.domain.problem.assessment.dto.SubmissionRegisterCommand;
 import kr.co.mathrank.domain.problem.assessment.service.AssessmentRegisterService;
+import kr.co.mathrank.domain.problem.assessment.service.AssessmentUpdateService;
 import kr.co.mathrank.domain.problem.assessment.service.SubmissionRegisterService;
 import lombok.RequiredArgsConstructor;
 
@@ -25,6 +30,7 @@ import lombok.RequiredArgsConstructor;
 public class AssessmentController {
 	private final AssessmentRegisterService assessmentRegisterService;
 	private final SubmissionRegisterService submissionRegisterService;
+	private final AssessmentUpdateService assessmentUpdateService;
 
 	@Operation(summary = "문제집 등록", description = "문제집 등록은 관리자만 가능합니다.")
 	@PostMapping("/api/v1/problem/assessment")
@@ -49,5 +55,17 @@ public class AssessmentController {
 		final SubmissionRegisterCommand command = request.toCommand(memberPrincipal.memberId());
 		return ResponseEntity.status(HttpStatus.CREATED)
 			.body(String.valueOf(submissionRegisterService.submit(command)));
+	}
+
+	@Operation(summary = "문제집 수정 API")
+	@PutMapping("/api/v1/problem/assessment/{assessmentId}")
+	@Authorization(values = Role.ADMIN)
+	public ResponseEntity<Void> updateAssessment(
+		@ModelAttribute @ParameterObject @Valid final Requests.AssessmentUpdateRequest request
+	) {
+		final AssessmentUpdateCommand command = request.toCommand();
+		assessmentUpdateService.update(command);
+
+		return ResponseEntity.ok().build();
 	}
 }
