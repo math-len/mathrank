@@ -21,6 +21,7 @@ import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import kr.co.mathrank.common.event.Event;
 import kr.co.mathrank.domain.problem.core.AnswerType;
 import kr.co.mathrank.domain.problem.core.Difficulty;
+import kr.co.mathrank.domain.problem.core.PastProblem;
 import kr.co.mathrank.domain.problem.single.read.dto.SingleProblemAttemptStatsUpdateCommand;
 import kr.co.mathrank.domain.problem.single.read.dto.SingleProblemReadModelUpdateCommand;
 import kr.co.mathrank.domain.problem.single.read.service.SingleProblemUpdateService;
@@ -54,6 +55,7 @@ class SingleProblemReadModelConsumerTest {
 			null,
 			AnswerType.MULTIPLE_CHOICE,
 			Difficulty.LOW,
+			PastProblem.NONE,
 			LocalDateTime.now()
 		);
 		final Event<ProblemUpdatedPayload> event = Event.of(1L, payload);

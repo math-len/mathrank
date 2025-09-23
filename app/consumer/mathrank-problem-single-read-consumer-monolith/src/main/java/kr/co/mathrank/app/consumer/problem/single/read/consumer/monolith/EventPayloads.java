@@ -33,6 +33,7 @@ public class EventPayloads {
 				schoolCode,
 				answerType,
 				difficulty,
+				pastProblem,
 				updatedAt
 			);
 		}

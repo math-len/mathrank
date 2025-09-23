@@ -5,6 +5,7 @@ import java.time.LocalDateTime;
 import kr.co.mathrank.common.event.EventPayload;
 import kr.co.mathrank.domain.problem.core.AnswerType;
 import kr.co.mathrank.domain.problem.core.Difficulty;
+import kr.co.mathrank.domain.problem.core.PastProblem;
 import kr.co.mathrank.domain.problem.single.read.dto.SingleProblemReadModelUpdateCommand;
 
 public record ProblemUpdatedPayload(
@@ -15,10 +16,11 @@ public record ProblemUpdatedPayload(
 	String schoolCode,
 	AnswerType answerType,
 	Difficulty difficulty,
+	PastProblem pastProblem,
 	LocalDateTime updatedAt
 ) implements EventPayload {
 	public SingleProblemReadModelUpdateCommand toCommand() {
 		return new SingleProblemReadModelUpdateCommand(problemId, coursePath, problemImage, location, schoolCode, answerType, difficulty,
-			updatedAt);
+			pastProblem, updatedAt);
 	}
 }
