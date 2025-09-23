@@ -4,6 +4,7 @@ import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Lock;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
@@ -14,4 +15,8 @@ public interface PostRepository extends JpaRepository<Post, Long>, PostQueryRepo
 	@Lock(LockModeType.PESSIMISTIC_WRITE)
 	@Query("SELECT p FROM Post p WHERE p.id = :postId")
 	Optional<Post> findByIdForUpdate(@Param("postId") final Long postId);
+
+	@Modifying
+	@Query("UPDATE Post p set p.commentCount = p.commentCount - 1 WHERE p.id = :postId")
+	void decreaseCommentCount(@Param("postId") final Long postId);
 }
