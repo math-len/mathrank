@@ -1,9 +1,9 @@
-name: Deploy via CodeDeploy
+name: Release deploy via CodeDeploy
 
 on:
   push:
-    branches:
-      - 'release/**'
+    tags:
+      - 'v*'
 
 jobs:
   build-and-deploy:
