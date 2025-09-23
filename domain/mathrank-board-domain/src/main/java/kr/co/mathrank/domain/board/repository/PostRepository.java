@@ -19,4 +19,7 @@ public interface PostRepository extends JpaRepository<Post, Long>, PostQueryRepo
 	@Modifying
 	@Query("UPDATE Post p set p.commentCount = p.commentCount - 1 WHERE p.id = :postId")
 	void decreaseCommentCount(@Param("postId") final Long postId);
+
+	@Query("SELECT p FROM Post p LEFT JOIN FETCH p.comments WHERE p.id = :postId")
+	Optional<Post> findByIdWithComments(@Param("postId") final Long postId);
 }

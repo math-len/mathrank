@@ -9,11 +9,16 @@ import org.springframework.validation.annotation.Validated;
 import jakarta.validation.constraints.NotNull;
 import kr.co.mathrank.common.page.PageResult;
 import kr.co.mathrank.common.page.PageUtil;
+import kr.co.mathrank.domain.board.dto.PostDetailQueryResult;
 import kr.co.mathrank.domain.board.dto.PostPageQuery;
 import kr.co.mathrank.domain.board.dto.PostPageQueryResult;
+import kr.co.mathrank.domain.board.entity.Post;
+import kr.co.mathrank.domain.board.exception.CannotFoundPostException;
 import kr.co.mathrank.domain.board.repository.PostRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 @Service
 @Validated
 @RequiredArgsConstructor
@@ -37,5 +42,17 @@ public class PostQueryService {
 			pageSize,
 			PageUtil.getNextPages(pageSize, pageNumber, count, posts.size())
 		);
+	}
+
+	public PostDetailQueryResult getDetail(
+		@NotNull final Long postId
+	) {
+		final Post post = postRepository.findByIdWithComments(postId)
+			.orElseThrow(() -> {
+				log.info("[PostQueryService.getDetail] cannot found post - postId: {}", postId);
+				return new CannotFoundPostException();
+			});
+
+		return PostDetailQueryResult.from(post);
 	}
 }
