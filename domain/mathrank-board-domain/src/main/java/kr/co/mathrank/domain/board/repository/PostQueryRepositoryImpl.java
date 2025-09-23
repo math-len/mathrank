@@ -12,6 +12,7 @@ import com.querydsl.jpa.impl.JPAQueryFactory;
 
 import kr.co.mathrank.domain.board.dto.PostPageQuery;
 import kr.co.mathrank.domain.board.entity.Post;
+import kr.co.mathrank.domain.board.entity.PostType;
 import kr.co.mathrank.domain.board.entity.QPost;
 import lombok.RequiredArgsConstructor;
 
@@ -56,8 +57,17 @@ class PostQueryRepositoryImpl implements PostQueryRepository {
 			containsTitle(postQuery.title()),
 			containsMemberNickName(postQuery.nickName()),
 			matchMemberId(postQuery.memberId()),
-			matchSingleProblemId(postQuery.singleProblemId())
+			matchSingleProblemId(postQuery.singleProblemId()),
+			matchPostType(postQuery.postType())
 		};
+	}
+
+	private BooleanExpression matchPostType(final PostType postType) {
+		if (postType == null) {
+			return null;
+		}
+
+		return QPost.post.postType.eq(postType);
 	}
 
 	private BooleanExpression matchSingleProblemId(final Long singleProblemId) {
