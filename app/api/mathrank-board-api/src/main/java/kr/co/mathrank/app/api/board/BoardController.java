@@ -136,7 +136,7 @@ public class BoardController {
 	@Operation(summary = "댓글 수정 API", description = "본인이 작성한 댓글만 수정 가능. 관리자도 수정 불가")
 	@Authorization(openedForAll = true)
 	@PutMapping("/api/v1/board/post/comment/{commentId}")
-	public ResponseEntity<Void> postComment(
+	public ResponseEntity<Void> updateComment(
 		@ModelAttribute @ParameterObject @Valid final Requests.CommentUpdateRequest request,
 		@LoginInfo final MemberPrincipal memberPrincipal
 	) {
