@@ -12,6 +12,6 @@ import kr.co.mathrank.domain.board.entity.Comment;
 
 public interface CommentRepository extends JpaRepository<Comment, Long> {
 	@Lock(LockModeType.PESSIMISTIC_WRITE)
-	@Query("SELECT c FROM Comment c LEFT JOIN FETCH c.post WHERE c.id = :commentId")
+	@Query("SELECT c FROM Comment c WHERE c.id = :commentId")
 	Optional<Comment> findCommentWithPostForUpdate(@Param("commentId") final Long commentId);
 }
