@@ -31,7 +31,7 @@ public class CommentRegisterService {
 	}
 
 	private Post getPost(final Long postId) {
-		return postRepository.findById(postId)
+		return postRepository.findByIdForUpdate(postId)
 			.orElseThrow(() -> {
 				log.info("[CommentRegisterService.getPost] cannot found post - postId: {}", postId);
 				return new CannotFoundPostException();

@@ -57,6 +57,8 @@ public class Post {
 
 	private Long singleProblemId;
 
+	private Integer commentCount = 0;
+
 	@OneToMany(mappedBy = "post", cascade = CascadeType.PERSIST, orphanRemoval = true)
 	private final List<Comment> comments = new ArrayList<>();
 
@@ -89,6 +91,7 @@ public class Post {
 	public Comment addComment(final String content, final Long memberId) {
 		final Comment comment = Comment.of(content, memberId, this);
 		this.getComments().add(comment);
+		commentCount++;
 
 		return comment;
 	}
