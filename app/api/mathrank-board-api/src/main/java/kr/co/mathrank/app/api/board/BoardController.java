@@ -71,10 +71,11 @@ public class BoardController {
 	@PutMapping("/api/v1/board/post/{postId}")
 	@Authorization(openedForAll = true)
 	public ResponseEntity<Void> update(
+		@PathVariable final Long postId,
 		@ModelAttribute @ParameterObject @Valid final Requests.PostUpdateRequest request,
 		@LoginInfo final MemberPrincipal memberPrincipal
 	) {
-		final PostUpdateCommand command = request.toCommand(memberPrincipal.memberId());
+		final PostUpdateCommand command = request.toCommand(postId, memberPrincipal.memberId());
 		postUpdateService.update(command);
 
 		return ResponseEntity.ok().build();
@@ -125,10 +126,11 @@ public class BoardController {
 	@Authorization(openedForAll = true)
 	@PostMapping("/api/v1/board/post/{postId}/comment")
 	public ResponseEntity<String> postComment(
+		@PathVariable final Long postId,
 		@ModelAttribute @ParameterObject @Valid final Requests.CommentSaveRequest request,
 		@LoginInfo final MemberPrincipal memberPrincipal
 	) {
-		final CommentRegisterCommand command = request.toCommand(memberPrincipal.memberId());
+		final CommentRegisterCommand command = request.toCommand(postId, memberPrincipal.memberId());
 		final Long commentId = commentRegisterService.register(command);
 
 		return ResponseEntity.ok(String.valueOf(commentId));
