@@ -38,6 +38,14 @@ jobs:
           role-to-assume: arn:aws:iam::688567299537:role/mathrank-git-action-s3
           aws-region: ap-northeast-2
 
+      - name: Save Git tag to SSM
+        run: |
+          aws ssm put-parameter \
+            --name "/mathrank/aws/monolith/server.version" \
+            --type "String" \
+            --value "${GITHUB_REF_NAME}" \
+            --overwrite
+
       - name: Upload to S3
         run: aws s3 cp release-${GITHUB_SHA}.zip s3://mathrank-mono-jar/releases/
 
