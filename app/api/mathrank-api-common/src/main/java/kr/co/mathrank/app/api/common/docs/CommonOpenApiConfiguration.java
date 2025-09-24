@@ -18,9 +18,9 @@ import kr.co.mathrank.app.api.common.authentication.Authorization;
 @Configuration
 public class CommonOpenApiConfiguration {
 	private static final String SECURITY_SCHEME_NAME = "JWT";
-	@Value("${server.url}")
+	@Value("${server.url:http://localhost}")
 	private String url;
-	@Value("${server.version}")
+	@Value("${server.version:test}")
 	private String tagVersion;
 
 	@Bean
