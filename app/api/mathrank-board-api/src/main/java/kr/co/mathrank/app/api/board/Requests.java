@@ -52,25 +52,21 @@ public class Requests {
 	}
 
 	record PostUpdateRequest(
-		@NotNull
-		Long postId,
 		@NotEmpty
 		String title,
 		@NotEmpty
 		String content
 	) {
-		public PostUpdateCommand toCommand(final Long memberId) {
+		public PostUpdateCommand toCommand(final Long postId, final Long memberId) {
 			return new PostUpdateCommand(postId, memberId, title, content);
 		}
 	}
 
 	record CommentSaveRequest(
 		@NotNull
-		Long postId,
-		@NotNull
 		String content
 	) {
-		public CommentRegisterCommand toCommand(final Long memberId) {
+		public CommentRegisterCommand toCommand(final Long postId, final Long memberId) {
 			return new CommentRegisterCommand(
 				postId,
 				memberId,

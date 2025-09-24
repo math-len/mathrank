@@ -57,24 +57,25 @@ public class BoardController {
 	@Operation(summary = "게시글 등록 API")
 	@PostMapping("/api/v1/board/post")
 	@Authorization(openedForAll = true)
-	public ResponseEntity<Long> save(
+	public ResponseEntity<String> save(
 		@ModelAttribute @ParameterObject @Valid final Requests.PostSaveRequest request,
 		@LoginInfo final MemberPrincipal memberPrincipal
 	) {
 		final PostRegisterCommand command = request.toCommand(memberPrincipal.memberId(), memberPrincipal.role());
 		final Long postId = postRegisterService.register(command);
 
-		return ResponseEntity.ok(postId);
+		return ResponseEntity.ok(String.valueOf(postId));
 	}
 
 	@Operation(summary = "게시글 수정 API")
 	@PutMapping("/api/v1/board/post/{postId}")
 	@Authorization(openedForAll = true)
 	public ResponseEntity<Void> update(
+		@PathVariable final Long postId,
 		@ModelAttribute @ParameterObject @Valid final Requests.PostUpdateRequest request,
 		@LoginInfo final MemberPrincipal memberPrincipal
 	) {
-		final PostUpdateCommand command = request.toCommand(memberPrincipal.memberId());
+		final PostUpdateCommand command = request.toCommand(postId, memberPrincipal.memberId());
 		postUpdateService.update(command);
 
 		return ResponseEntity.ok().build();
@@ -95,12 +96,13 @@ public class BoardController {
 
 	@Operation(summary = "페이지 조회 API", description = "정렬은 날짜 내림차순으로 적용됩니다.")
 	@GetMapping("/api/v1/board/post")
-	public ResponseEntity<PageResult<PostPageQueryResult>> pageQuery(
+	public ResponseEntity<PageResult<Responses.PostPageQueryResponse>> pageQuery(
 		@RequestParam(defaultValue = "1") @Range(min = 1, max = 1000) final Integer pageNumber,
 		@RequestParam(defaultValue = "20") @Range(min = 1, max = 20) final Integer pageSize,
 		@ModelAttribute @ParameterObject final PostPageQuery query
 	) {
-		return ResponseEntity.ok(postQueryService.pageQuery(query, pageSize, pageNumber));
+		return ResponseEntity.ok(postQueryService.pageQuery(query, pageSize, pageNumber)
+			.map(Responses.PostPageQueryResponse::from));
 	}
 
 	@Operation(summary = "게시글 상세 조회 API")
@@ -123,14 +125,15 @@ public class BoardController {
 	@Operation(summary = "댓글 작성 API")
 	@Authorization(openedForAll = true)
 	@PostMapping("/api/v1/board/post/{postId}/comment")
-	public ResponseEntity<Long> postComment(
+	public ResponseEntity<String> postComment(
+		@PathVariable final Long postId,
 		@ModelAttribute @ParameterObject @Valid final Requests.CommentSaveRequest request,
 		@LoginInfo final MemberPrincipal memberPrincipal
 	) {
-		final CommentRegisterCommand command = request.toCommand(memberPrincipal.memberId());
+		final CommentRegisterCommand command = request.toCommand(postId, memberPrincipal.memberId());
 		final Long commentId = commentRegisterService.register(command);
 
-		return ResponseEntity.ok(commentId);
+		return ResponseEntity.ok(String.valueOf(commentId));
 	}
 
 	@Operation(summary = "댓글 수정 API", description = "본인이 작성한 댓글만 수정 가능. 관리자도 수정 불가")
