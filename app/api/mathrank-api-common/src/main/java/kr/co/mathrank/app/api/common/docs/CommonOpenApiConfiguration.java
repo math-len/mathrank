@@ -2,6 +2,8 @@ package kr.co.mathrank.app.api.common.docs;
 
 import org.springdoc.core.customizers.OpenApiCustomizer;
 import org.springdoc.core.customizers.OperationCustomizer;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -15,6 +17,8 @@ import kr.co.mathrank.app.api.common.authentication.Authorization;
 @Configuration
 public class CommonOpenApiConfiguration {
 	private static final String SECURITY_SCHEME_NAME = "JWT";
+	@Value("${server.url}")
+	private String url;
 
 	@Bean
 	public OpenAPI addSecurityComponent() {
@@ -47,7 +51,7 @@ public class CommonOpenApiConfiguration {
 	@Bean
 	public OpenApiCustomizer addDeployUrl() {
 		return openAPIBuilder -> {
-			openAPIBuilder.addServersItem(new Server().url("https://rank.hpmath.co.kr"));
+			openAPIBuilder.addServersItem(new Server().url(url));
 		};
 	}
 }
