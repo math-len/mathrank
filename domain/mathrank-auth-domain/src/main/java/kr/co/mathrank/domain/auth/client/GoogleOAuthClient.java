@@ -32,8 +32,7 @@ class GoogleOAuthClient implements OAuthClientHandler {
 	}
 
 	private GoogleInfoResponse getInfo(final String accessToken) {
-		return infoClient.post()
-			.contentType(MediaType.APPLICATION_FORM_URLENCODED)
+		return infoClient.get()
 			.header(HttpHeaders.AUTHORIZATION, TOKEN_FORMAT.formatted(accessToken))
 			.retrieve()
 			.body(GoogleInfoResponse.class);
