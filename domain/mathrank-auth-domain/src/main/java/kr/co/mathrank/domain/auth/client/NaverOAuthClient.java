@@ -50,7 +50,7 @@ class NaverOAuthClient implements OAuthClientHandler {
 			.contentType(MediaType.APPLICATION_FORM_URLENCODED)
 			.header(HttpHeaders.AUTHORIZATION, TOKEN_FORMAT.formatted(accessToken))
 			.retrieve()
-			.body(KakaoMemberInfoResponse.class);
+			.body(NaverMemberInfoResponse.class);
 	}
 
 	@Override
