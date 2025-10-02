@@ -28,13 +28,13 @@ public class SingleProblemDeleteService {
 		final SingleProblem singleProblem = getSingleProblem(command);
 		singleProblemRepository.delete(singleProblem);
 		outboxPublisher.publish("single-problem-deleted", SingleProblemDeletedEvent.of(singleProblem));
-		log.info("[SingleProblemDeleteService.delete] single problem delete successful - singleProblemId: {}", singleProblem.getProblemId());
+		log.info("[SingleProblemDeleteService.delete] single problem delete successful - singleProblemId: {}", singleProblem.getId());
 	}
 
 	private SingleProblem getSingleProblem(SingleProblemDeleteCommand command) {
 		return singleProblemRepository.findById(command.singleProblemId())
 			.orElseThrow(() -> {
-				log.info("[SingleProblemDeleteService.getSingleProblem] cannot found singleProblem - singleProblemId: {} ",
+				log.info("[SingleProblemDeleteService.getSingleProblem] cannot found singleProblem - singleProblemId: {}",
 					command.singleProblemId());
 				return new CannotFindSingleProblemException();
 			});
