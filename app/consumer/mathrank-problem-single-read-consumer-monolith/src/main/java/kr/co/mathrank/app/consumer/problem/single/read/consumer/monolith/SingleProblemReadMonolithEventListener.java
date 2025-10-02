@@ -85,7 +85,7 @@ public class SingleProblemReadMonolithEventListener {
 		singleProblemReadModelRegisterService.save(event.getPayload().toCommand());
 	}
 
-	@Async
+	@Async("singleProblemDeletedMessageProcessingExecutor")
 	@EventListener(MonolithEvent.class)
 	public void listenSingleProblemDeletedEvent(final MonolithEvent monolithEvent) {
 		if (!monolithEvent.isExpectedTopic(SINGLE_PROBLEM_DELETED_TOPIC)) {
