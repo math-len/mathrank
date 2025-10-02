@@ -5,10 +5,12 @@ import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 
 import kr.co.mathrank.app.consumer.problem.single.read.consumer.monolith.EventPayloads.ProblemUpdatedEventPayload;
+import kr.co.mathrank.app.consumer.problem.single.read.consumer.monolith.EventPayloads.SingleProblemDeletedEvent;
 import kr.co.mathrank.app.consumer.problem.single.read.consumer.monolith.EventPayloads.SingleProblemRegisteredEventPayload;
 import kr.co.mathrank.app.consumer.problem.single.read.consumer.monolith.EventPayloads.SingleProblemSolvedEventPayload;
 import kr.co.mathrank.common.event.Event;
 import kr.co.mathrank.common.event.publisher.monolith.MonolithEvent;
+import kr.co.mathrank.domain.problem.single.read.service.SingleProblemReadModelDeleteService;
 import kr.co.mathrank.domain.problem.single.read.service.SingleProblemReadModelRegisterService;
 import kr.co.mathrank.domain.problem.single.read.service.SingleProblemUpdateService;
 import lombok.RequiredArgsConstructor;
@@ -32,6 +34,8 @@ public class SingleProblemReadMonolithEventListener {
 	private static String PROBLEM_INFO_UPDATED_TOPIC = "problem-info-updated";
 	private static String SINGLE_PROBLEM_SOLED_TOPIC = "single-problem-solved";
 	private static String SINGLE_PROBLEM_REGISTERED_TOPIC = "single-problem-registered";
+	private static final String SINGLE_PROBLEM_DELETED_TOPIC = "single-problem-deleted";
+	private final SingleProblemReadModelDeleteService singleProblemReadModelDeleteService;
 
 	/**
 	 * 문제 정보가 업데이트되는 이벤트를 처리
@@ -79,5 +83,15 @@ public class SingleProblemReadMonolithEventListener {
 		log.debug("[SingleProblemReadMonolithEventListener.listenSingleProblemRegisteredEvent] Monolith event received: {}", monolithEvent);
 		final Event<SingleProblemRegisteredEventPayload> event = Event.fromJson(monolithEvent.payload(), SingleProblemRegisteredEventPayload.class);
 		singleProblemReadModelRegisterService.save(event.getPayload().toCommand());
+	}
+
+	@Async("singleProblemDeletedMessageProcessingExecutor")
+	@EventListener(MonolithEvent.class)
+	public void listenSingleProblemDeletedEvent(final MonolithEvent monolithEvent) {
+		if (!monolithEvent.isExpectedTopic(SINGLE_PROBLEM_DELETED_TOPIC)) {
+			return;
+		}
+		final Event<SingleProblemDeletedEvent> event = Event.fromJson(monolithEvent.payload(), SingleProblemDeletedEvent.class);
+		singleProblemReadModelDeleteService.deleteBySingleProblemId(event.getPayload().singleProblemId());
 	}
 }

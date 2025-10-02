@@ -24,4 +24,9 @@ public class SingleProblemReadModelMonolithEventListenerConfig {
 	ExecutorService singleProblemRegisteredMessageProcessingExecutor() {
 		return Executors.newFixedThreadPool(3);
 	}
+
+	@Bean
+	ExecutorService singleProblemDeletedMessageProcessingExecutor() {
+		return Executors.newFixedThreadPool(1);
+	}
 }

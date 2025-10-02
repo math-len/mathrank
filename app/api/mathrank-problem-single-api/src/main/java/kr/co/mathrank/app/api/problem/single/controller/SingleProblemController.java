@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springdoc.core.annotations.ParameterObject;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -19,12 +20,14 @@ import kr.co.mathrank.app.api.common.authentication.LoginInfo;
 import kr.co.mathrank.app.api.common.authentication.MemberPrincipal;
 import kr.co.mathrank.common.role.Role;
 import kr.co.mathrank.domain.problem.single.dto.SingleProblemChallengeLogResults;
+import kr.co.mathrank.domain.problem.single.dto.SingleProblemDeleteCommand;
 import kr.co.mathrank.domain.problem.single.dto.SingleProblemRankQuery;
 import kr.co.mathrank.domain.problem.single.dto.SingleProblemRankResult;
 import kr.co.mathrank.domain.problem.single.dto.SingleProblemRegisterCommand;
 import kr.co.mathrank.domain.problem.single.dto.SingleProblemSolveCommand;
 import kr.co.mathrank.domain.problem.single.dto.SingleProblemSolveResult;
 import kr.co.mathrank.domain.problem.single.service.ChallengerQueryService;
+import kr.co.mathrank.domain.problem.single.service.SingleProblemDeleteService;
 import kr.co.mathrank.domain.problem.single.service.SingleProblemRankQueryService;
 import kr.co.mathrank.domain.problem.single.service.SingleProblemService;
 import lombok.RequiredArgsConstructor;
@@ -36,6 +39,7 @@ public class SingleProblemController {
 	private final SingleProblemService singleProblemService;
 	private final SingleProblemRankQueryService singleProblemRankQueryService;
 	private final ChallengerQueryService challengerQueryService;
+	private final SingleProblemDeleteService singleProblemDeleteService;
 
 	@Operation(summary = "개별 문제 풀이 API", description = "해당 사용자의 문제풀이를 채점하고, 결과를 저장합니다. 풀이 결과는 모두 저장됩니다")
 	@PostMapping("/api/v1/problem/single/solve")
@@ -60,6 +64,16 @@ public class SingleProblemController {
 		final SingleProblemRegisterCommand command = request.toCommand(memberPrincipal.memberId(),
 			memberPrincipal.role());
 		singleProblemService.register(command);
+		return ResponseEntity.ok().build();
+	}
+
+	@Operation(summary = "개별 문제 삭제 API", description = "개별문제를 삭제합니다. ADMIN 만 가능합니다.")
+	@DeleteMapping("/api/v1/problem/single/{singleProblemId}")
+	@Authorization(values = Role.ADMIN)
+	public ResponseEntity<Void> deleteSingleProblem(
+		@PathVariable final Long singleProblemId
+	) {
+		singleProblemDeleteService.delete(new SingleProblemDeleteCommand(singleProblemId));
 		return ResponseEntity.ok().build();
 	}
 
