@@ -25,16 +25,16 @@ public class AssessmentDeleteService {
 
 	@Transactional
 	public void delete(@NotNull @Valid final AssessmentDeleteCommand command) {
-		final Assessment assessment = getAssessment(command);
+		final Assessment assessment = getAssessment(command.assessmentId());
 		validateOwner(assessment, command.requestMemberId(), command.requestMemberRole());
 		assessmentRepository.delete(assessment);
 	}
 
-	private Assessment getAssessment(AssessmentDeleteCommand command) {
-		return assessmentRepository.findById(command.assessmentId())
+	private Assessment getAssessment(final Long assessmentId) {
+		return assessmentRepository.findById(assessmentId)
 			.orElseThrow(() -> {
 				log.info("[AssessmentDeleteService.getAssessment] cannot found assessment - assessmentId: {}",
-					command.assessmentId());
+					assessmentId);
 				return new NoSuchAssessmentException();
 			});
 	}
