@@ -92,4 +92,13 @@ public class EventPayloads {
 			);
 		}
 	}
+
+	record SingleProblemDeletedEvent(
+		Long singleProblemId,
+		String singleProblemName,
+		Long problemId,
+		Long memberId
+	) implements EventPayload {
+
+	}
 }
