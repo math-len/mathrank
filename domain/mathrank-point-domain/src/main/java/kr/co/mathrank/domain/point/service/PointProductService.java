@@ -23,11 +23,11 @@ public class PointProductService {
 	private final PointProductRepository pointProductRepository;
 
 	public Long save(@NotNull @Valid final PointProductCreateCommand command) {
-		final PointProduct point = command.toEntity();
-		final PointProduct pointProduct = pointProductRepository.save(point);
+		final PointProduct pointProduct = command.toEntity();
+		pointProductRepository.save(pointProduct);
 		log.info(
 			"[PointProductService.save] saved point product - pointProductId: {}, pointAmount: {}, currency: {}, costAmount: {}",
-			pointProduct.getId(), pointProduct.getPointAmount(), point.getCurrency(), point.getPrice());
+			pointProduct.getId(), pointProduct.getPointAmount(), pointProduct.getCurrency(), pointProduct.getPrice());
 		return pointProduct.getId();
 	}
 
