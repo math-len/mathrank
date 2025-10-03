@@ -9,7 +9,7 @@ import kr.co.mathrank.client.internal.problem.ProblemQueryResult;
 import kr.co.mathrank.domain.problem.single.dto.SingleProblemSolutionQuery;
 import kr.co.mathrank.domain.problem.single.dto.SingleProblemSolutionQueryResult;
 import kr.co.mathrank.domain.problem.single.entity.SingleProblem;
-import kr.co.mathrank.domain.problem.single.exception.CannotFindSingleProblemException;
+import kr.co.mathrank.domain.problem.single.exception.CannotAccessSolutionException;
 import kr.co.mathrank.domain.problem.single.repository.SingleProblemRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -31,7 +31,7 @@ public class SingleProblemSolutionQueryService {
 				log.info(
 					"[SingleProblemSolutionQueryService.getSolution] cannot find single problem solved by member - singleProblemId: {}, requestMemberId: {}",
 					query.singleProblemId(), query.requestMemberId());
-				return new CannotFindSingleProblemException();
+				return new CannotAccessSolutionException();
 			});
 		final ProblemQueryResult problemQueryResult = problemInfoManager.fetch(singleProblem.getProblemId());
 		return SingleProblemSolutionQueryResult.from(problemQueryResult);
