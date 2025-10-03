@@ -24,12 +24,15 @@ import kr.co.mathrank.domain.problem.single.dto.SingleProblemDeleteCommand;
 import kr.co.mathrank.domain.problem.single.dto.SingleProblemRankQuery;
 import kr.co.mathrank.domain.problem.single.dto.SingleProblemRankResult;
 import kr.co.mathrank.domain.problem.single.dto.SingleProblemRegisterCommand;
+import kr.co.mathrank.domain.problem.single.dto.SingleProblemSolutionQuery;
+import kr.co.mathrank.domain.problem.single.dto.SingleProblemSolutionQueryResult;
 import kr.co.mathrank.domain.problem.single.dto.SingleProblemSolveCommand;
 import kr.co.mathrank.domain.problem.single.dto.SingleProblemSolveResult;
 import kr.co.mathrank.domain.problem.single.service.ChallengerQueryService;
 import kr.co.mathrank.domain.problem.single.service.SingleProblemDeleteService;
 import kr.co.mathrank.domain.problem.single.service.SingleProblemRankQueryService;
 import kr.co.mathrank.domain.problem.single.service.SingleProblemService;
+import kr.co.mathrank.domain.problem.single.service.SingleProblemSolutionQueryService;
 import lombok.RequiredArgsConstructor;
 
 @Tag(name = "개별 문제 API")
@@ -40,6 +43,7 @@ public class SingleProblemController {
 	private final SingleProblemRankQueryService singleProblemRankQueryService;
 	private final ChallengerQueryService challengerQueryService;
 	private final SingleProblemDeleteService singleProblemDeleteService;
+	private final SingleProblemSolutionQueryService singleProblemSolutionQueryService;
 
 	@Operation(summary = "개별 문제 풀이 API", description = "해당 사용자의 문제풀이를 채점하고, 결과를 저장합니다. 풀이 결과는 모두 저장됩니다")
 	@PostMapping("/api/v1/problem/single/solve")
@@ -115,5 +119,18 @@ public class SingleProblemController {
 		return ResponseEntity.ok(results.results().stream()
 			.map(SingleProblemChallengeLogResponse::from)
 			.toList());
+	}
+
+	@Operation(summary = "개별문제 정답 조회 API", description = "이미 문제를 푼 사용자만 조회 가능합니다.")
+	@GetMapping("/api/v1/problem/single/{singleProblemId}/solution")
+	@Authorization(openedForAll = true)
+	public ResponseEntity<SingleProblemSolutionQueryResult> querySolution(
+		@PathVariable final Long singleProblemId,
+		@LoginInfo final MemberPrincipal memberPrincipal
+	) {
+		final SingleProblemSolutionQuery query = new SingleProblemSolutionQuery(singleProblemId, memberPrincipal.memberId());
+		final SingleProblemSolutionQueryResult result = singleProblemSolutionQueryService.getSolution(query);
+
+		return ResponseEntity.ok(result);
 	}
 }
