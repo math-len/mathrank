@@ -25,10 +25,10 @@ WHERE sp.id = :singleProblemId
 	@Query("""
 SELECT sp FROM SingleProblem sp
 JOIN sp.challengers c
-WHERE sp.id = :singleProblemId AND c.memberId = :challengerId
+WHERE sp.id = :singleProblemId AND c.memberId = :challengerMemberId
 """)
 	Optional<SingleProblem> findByIdAndChallengerMemberId(
 		@Param("singleProblemId") Long singleProblemId,
-		@Param("solvedMemberId") Long solvedMemberId
+		@Param("challengerMemberId") Long challengerMemberId
 	);
 }
