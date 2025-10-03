@@ -10,6 +10,7 @@ import kr.co.mathrank.domain.point.dto.PointProductDeleteCommand;
 import kr.co.mathrank.domain.point.dto.PointProductQueryResult;
 import kr.co.mathrank.domain.point.dto.PointProductQueryResults;
 import kr.co.mathrank.domain.point.entity.PointProduct;
+import kr.co.mathrank.domain.point.exception.CannotFoundPointProductException;
 import kr.co.mathrank.domain.point.repository.PointProductRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -40,5 +41,14 @@ public class PointProductService {
 			.map(PointProductQueryResult::from)
 			.sorted((a, b) -> a.pointAmount().compareTo(b.pointAmount())) // 오름차순
 			.toList());
+	}
+
+	public PointProductQueryResult querySingle(@NotNull final Long pointProductId) {
+		return pointProductRepository.findById(pointProductId)
+			.map(PointProductQueryResult::from)
+			.orElseThrow(() -> {
+				log.info("[PointProductService.querySingle] cannot found point product - pointProductId: {}", pointProductId);
+				return new CannotFoundPointProductException();
+			});
 	}
 }
