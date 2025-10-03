@@ -21,4 +21,14 @@ LEFT JOIN FETCH sp.challengers c
 WHERE sp.id = :singleProblemId
 """)
 	Optional<SingleProblem> findWithChallengers(@Param("singleProblemId") Long singleProblemId);
+
+	@Query("""
+SELECT sp FROM SingleProblem sp
+JOIN sp.challengers c
+WHERE sp.id = :singleProblemId AND c.memberId = :challengerId
+""")
+	Optional<SingleProblem> findByIdAndChallengerMemberId(
+		@Param("singleProblemId") Long singleProblemId,
+		@Param("solvedMemberId") Long solvedMemberId
+	);
 }
