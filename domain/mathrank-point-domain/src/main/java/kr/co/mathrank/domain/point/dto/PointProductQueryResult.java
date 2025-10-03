@@ -16,7 +16,7 @@ public record PointProductQueryResult(
 			pointProduct.getId(),
 			pointProduct.getPointAmount(),
 			pointProduct.getCurrency(),
-			pointProduct.getPointAmount()
+			pointProduct.getPrice()
 		);
 	}
 }

@@ -38,6 +38,7 @@ public class PointProductService {
 	public PointProductQueryResults queryAll() {
 		return new PointProductQueryResults(pointProductRepository.findAll().stream()
 			.map(PointProductQueryResult::from)
+			.sorted((a, b) -> a.pointAmount().compareTo(b.pointAmount())) // 오름차순
 			.toList());
 	}
 }
