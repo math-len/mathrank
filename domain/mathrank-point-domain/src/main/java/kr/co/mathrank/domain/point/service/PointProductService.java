@@ -7,6 +7,8 @@ import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 import kr.co.mathrank.domain.point.dto.PointProductCreateCommand;
 import kr.co.mathrank.domain.point.dto.PointProductDeleteCommand;
+import kr.co.mathrank.domain.point.dto.PointProductQueryResult;
+import kr.co.mathrank.domain.point.dto.PointProductQueryResults;
 import kr.co.mathrank.domain.point.entity.PointProduct;
 import kr.co.mathrank.domain.point.repository.PointProductRepository;
 import lombok.RequiredArgsConstructor;
@@ -31,5 +33,11 @@ public class PointProductService {
 	public void delete(@NotNull @Valid final PointProductDeleteCommand command) {
 		pointProductRepository.deleteById(command.pointProductId());
 		log.info("[PointProductService.delete] delete point product - pointProductId: {}", command.pointProductId());
+	}
+
+	public PointProductQueryResults queryAll() {
+		return new PointProductQueryResults(pointProductRepository.findAll().stream()
+			.map(PointProductQueryResult::from)
+			.toList());
 	}
 }
