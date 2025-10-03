@@ -58,6 +58,7 @@ include(
         'domain:mathrank-problem-single-domain',
         'domain:mathrank-rank-domain',
         'domain:mathrank-problem-single-read-domain',
+        'domain:mathrank-point-domain',
 
         'common',
         'common:mathrank-cache',
