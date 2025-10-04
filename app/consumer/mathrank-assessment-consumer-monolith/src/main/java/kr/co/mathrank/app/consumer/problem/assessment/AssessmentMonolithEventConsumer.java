@@ -10,6 +10,8 @@ import org.springframework.stereotype.Component;
 import kr.co.mathrank.common.event.Event;
 import kr.co.mathrank.common.event.EventPayload;
 import kr.co.mathrank.common.event.publisher.monolith.MonolithEvent;
+import kr.co.mathrank.domain.problem.assessment.dto.AssessmentDeleteCommand;
+import kr.co.mathrank.domain.problem.assessment.service.AssessmentDeleteService;
 import kr.co.mathrank.domain.problem.assessment.service.AssessmentDifficultyService;
 import kr.co.mathrank.domain.problem.assessment.service.SubmissionGradeService;
 import lombok.RequiredArgsConstructor;
@@ -24,6 +26,8 @@ public class AssessmentMonolithEventConsumer {
 
 	private static final String ASSESSMENT_SUBMISSION_REGISTERED_TOPIC = "assessment-submission-registered";
 	private static final String ASSESSMENT_REGISTERED_TOPIC = "assessment-registered";
+	private static final String PROBLEM_DELETED_TOPIC = "problem-deleted";
+	private final AssessmentDeleteService assessmentDeleteService;
 
 	@EventListener(MonolithEvent.class)
 	@Async("assessmentMonolithEventConsumerExecutor")
@@ -63,6 +67,26 @@ public class AssessmentMonolithEventConsumer {
 		}
 	}
 
+	@EventListener(MonolithEvent.class)
+	@Async
+	public void consumeProblemDeletedEvent(final MonolithEvent monolithEvent) {
+		if (!monolithEvent.isExpectedTopic(PROBLEM_DELETED_TOPIC)) {
+			return;
+		}
+		log.debug("[AssessmentMonolithEventConsumer.consume] Monolith event received: {}", monolithEvent);
+
+		try {
+			final Event<ProblemDeletedEvent> event = Event.fromJson(
+				monolithEvent.payload(),
+				ProblemDeletedEvent.class
+			);
+			assessmentDeleteService.deleteByProblemId(event.getPayload().id());
+			submissionGradeService.evaluateSubmission(event.getPayload().id());
+		} catch (Exception e) {
+			log.error("[AssessmentMonolithEventConsumer.consume] Failed to process event. payload: {}", monolithEvent.payload(), e);
+		}
+	}
+
 	record SubmissionRegisteredEventPayload(
 		Long assessmentId,
 		Long memberId,
@@ -79,6 +103,19 @@ public class AssessmentMonolithEventConsumer {
 		Long assessmentMinutes,
 		List<Long> assessmentItemProblemIds,
 		LocalDateTime createdAt
+	) implements EventPayload {
+	}
+
+	record ProblemDeletedEvent(
+		Long id,
+		Long memberId,
+		String problemImage,
+		String solutionImage,
+		String coursePath,
+		String schoolCode,
+		String location,
+		Integer years,
+		String solutionVideoLink
 	) implements EventPayload {
 	}
 }
