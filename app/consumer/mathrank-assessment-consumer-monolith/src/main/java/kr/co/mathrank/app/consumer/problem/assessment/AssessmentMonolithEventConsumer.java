@@ -73,7 +73,7 @@ public class AssessmentMonolithEventConsumer {
 		if (!monolithEvent.isExpectedTopic(PROBLEM_DELETED_TOPIC)) {
 			return;
 		}
-		log.debug("[AssessmentMonolithEventConsumer.consume] Monolith event received: {}", monolithEvent);
+		log.debug("[AssessmentMonolithEventConsumer.consumeProblemDeletedEvent] Monolith event received: {}", monolithEvent);
 
 		try {
 			final Event<ProblemDeletedEvent> event = Event.fromJson(
@@ -81,9 +81,8 @@ public class AssessmentMonolithEventConsumer {
 				ProblemDeletedEvent.class
 			);
 			assessmentDeleteService.deleteByProblemId(event.getPayload().id());
-			submissionGradeService.evaluateSubmission(event.getPayload().id());
 		} catch (Exception e) {
-			log.error("[AssessmentMonolithEventConsumer.consume] Failed to process event. payload: {}", monolithEvent.payload(), e);
+			log.error("[AssessmentMonolithEventConsumer.consumeProblemDeletedEvent] Failed to process event. payload: {}", monolithEvent.payload(), e);
 		}
 	}
 
