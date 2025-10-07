@@ -4,6 +4,7 @@ import org.springframework.context.event.EventListener;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 
+import kr.co.mathrank.app.consumer.problem.single.read.consumer.monolith.EventPayloads.ProblemDeletedEvent;
 import kr.co.mathrank.app.consumer.problem.single.read.consumer.monolith.EventPayloads.ProblemUpdatedEventPayload;
 import kr.co.mathrank.app.consumer.problem.single.read.consumer.monolith.EventPayloads.SingleProblemDeletedEvent;
 import kr.co.mathrank.app.consumer.problem.single.read.consumer.monolith.EventPayloads.SingleProblemRegisteredEventPayload;
@@ -35,6 +36,7 @@ public class SingleProblemReadMonolithEventListener {
 	private static String SINGLE_PROBLEM_SOLED_TOPIC = "single-problem-solved";
 	private static String SINGLE_PROBLEM_REGISTERED_TOPIC = "single-problem-registered";
 	private static final String SINGLE_PROBLEM_DELETED_TOPIC = "single-problem-deleted";
+	private static final String PROBLEM_DELETED_EVENT = "problem-deleted";
 	private final SingleProblemReadModelDeleteService singleProblemReadModelDeleteService;
 
 	/**
@@ -93,5 +95,15 @@ public class SingleProblemReadMonolithEventListener {
 		}
 		final Event<SingleProblemDeletedEvent> event = Event.fromJson(monolithEvent.payload(), SingleProblemDeletedEvent.class);
 		singleProblemReadModelDeleteService.deleteBySingleProblemId(event.getPayload().singleProblemId());
+	}
+
+	@Async
+	@EventListener(MonolithEvent.class)
+	public void listenProblemDeletedEvent(final MonolithEvent monolithEvent) {
+		if (!monolithEvent.isExpectedTopic(PROBLEM_DELETED_EVENT)) {
+			return;
+		}
+		final Event<ProblemDeletedEvent> event = Event.fromJson(monolithEvent.payload(), ProblemDeletedEvent.class);
+		singleProblemReadModelDeleteService.deleteByProblemId(event.getPayload().id());
 	}
 }

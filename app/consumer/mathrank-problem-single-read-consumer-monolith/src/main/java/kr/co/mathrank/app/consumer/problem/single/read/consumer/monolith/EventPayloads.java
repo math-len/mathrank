@@ -101,4 +101,20 @@ public class EventPayloads {
 	) implements EventPayload {
 
 	}
+
+	record ProblemDeletedEvent(
+		Long id,
+		Long memberId,
+		String problemImage,
+		String solutionImage,
+		Difficulty difficulty,
+		AnswerType type,
+		PastProblem pastProblem,
+		String coursePath,
+		String schoolCode,
+		String location,
+		Integer years,
+		String solutionVideoLink
+	) implements EventPayload {
+	}
 }
