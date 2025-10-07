@@ -1,5 +1,7 @@
 package kr.co.mathrank.domain.problem.assessment.service;
 
+import java.util.List;
+
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.annotation.Validated;
@@ -9,7 +11,6 @@ import jakarta.validation.constraints.NotNull;
 import kr.co.mathrank.common.role.Role;
 import kr.co.mathrank.domain.problem.assessment.dto.AssessmentDeleteCommand;
 import kr.co.mathrank.domain.problem.assessment.entity.Assessment;
-import kr.co.mathrank.domain.problem.assessment.exception.AssessmentException;
 import kr.co.mathrank.domain.problem.assessment.exception.CannotDeleteAssessmentException;
 import kr.co.mathrank.domain.problem.assessment.exception.NoSuchAssessmentException;
 import kr.co.mathrank.domain.problem.assessment.repository.AssessmentRepository;
@@ -28,6 +29,13 @@ public class AssessmentDeleteService {
 		final Assessment assessment = getAssessment(command.assessmentId());
 		validateOwner(assessment, command.requestMemberId(), command.requestMemberRole());
 		assessmentRepository.delete(assessment);
+	}
+
+	@Transactional
+	public void deleteByProblemId(@NotNull final Long problemId) {
+		final List<Assessment> assessments = assessmentRepository.findAllContainsProblemId(problemId);
+		assessmentRepository.deleteAll(assessments);
+		log.info("[AssessmentDeleteService.deleteByProblemId] deleted assessment related with problemId - problemId: {}, assessmentCount: {}", problemId, assessments.size());
 	}
 
 	private Assessment getAssessment(final Long assessmentId) {
