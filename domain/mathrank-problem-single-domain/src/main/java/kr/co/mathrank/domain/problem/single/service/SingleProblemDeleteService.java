@@ -31,6 +31,23 @@ public class SingleProblemDeleteService {
 		log.info("[SingleProblemDeleteService.delete] single problem delete successful - singleProblemId: {}", singleProblem.getId());
 	}
 
+	@Transactional
+	public void deleteByProblemId(@NotNull final Long problemId) {
+		final SingleProblem singleProblem = getByProblemId(problemId);
+		singleProblemRepository.delete(singleProblem);
+		outboxPublisher.publish("single-problem-deleted", SingleProblemDeletedEvent.of(singleProblem));
+		log.info("[SingleProblemDeleteService.delete] single problem delete successful - singleProblemId: {}, problemId: {}", singleProblem.getId(), problemId);
+	}
+
+	public SingleProblem getByProblemId(@NotNull final Long problemId) {
+		return singleProblemRepository.findById(problemId)
+			.orElseThrow(() -> {
+				log.info("[SingleProblemDeleteService.getSingleProblem] cannot found singleProblem - problemId: {}",
+					problemId);
+				return new CannotFindSingleProblemException();
+			});
+	}
+
 	private SingleProblem getSingleProblem(SingleProblemDeleteCommand command) {
 		return singleProblemRepository.findById(command.singleProblemId())
 			.orElseThrow(() -> {

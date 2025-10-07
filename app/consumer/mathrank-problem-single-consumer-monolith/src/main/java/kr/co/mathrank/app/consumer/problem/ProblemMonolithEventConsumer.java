@@ -27,7 +27,7 @@ public class ProblemMonolithEventConsumer {
 			return;
 		}
 		final Event<ProblemDeletedEvent> event = Event.fromJson(monolithEvent.payload(), ProblemDeletedEvent.class);
-		singleProblemDeleteService.delete(new SingleProblemDeleteCommand(event.getPayload().id()));
+		singleProblemDeleteService.deleteByProblemId(event.getPayload().id());
 	}
 
 	record ProblemDeletedEvent(
