@@ -40,7 +40,7 @@ public class SingleProblemDeleteService {
 	}
 
 	public SingleProblem getByProblemId(@NotNull final Long problemId) {
-		return singleProblemRepository.findById(problemId)
+		return singleProblemRepository.findByProblemId(problemId)
 			.orElseThrow(() -> {
 				log.info("[SingleProblemDeleteService.getSingleProblem] cannot found singleProblem - problemId: {}",
 					problemId);
