@@ -36,7 +36,7 @@ public class SingleProblemDeleteService {
 		final SingleProblem singleProblem = getByProblemId(problemId);
 		singleProblemRepository.delete(singleProblem);
 		outboxPublisher.publish("single-problem-deleted", SingleProblemDeletedEvent.of(singleProblem));
-		log.info("[SingleProblemDeleteService.delete] single problem delete successful - singleProblemId: {}, problemId: {}", singleProblem.getId(), problemId);
+		log.info("[SingleProblemDeleteService.deleteByProblemId] single problem delete successful - singleProblemId: {}, problemId: {}", singleProblem.getId(), problemId);
 	}
 
 	public SingleProblem getByProblemId(@NotNull final Long problemId) {
