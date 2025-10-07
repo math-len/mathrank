@@ -31,4 +31,6 @@ WHERE sp.id = :singleProblemId AND c.memberId = :challengerMemberId
 		@Param("singleProblemId") Long singleProblemId,
 		@Param("challengerMemberId") Long challengerMemberId
 	);
+
+	Optional<SingleProblem> findByProblemId(Long problemId);
 }
