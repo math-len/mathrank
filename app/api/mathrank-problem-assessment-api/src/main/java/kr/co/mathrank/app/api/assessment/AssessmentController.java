@@ -1,9 +1,11 @@
 package kr.co.mathrank.app.api.assessment;
 
 import org.springdoc.core.annotations.ParameterObject;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -20,10 +22,13 @@ import kr.co.mathrank.app.api.common.authentication.MemberPrincipal;
 import kr.co.mathrank.common.role.Role;
 import kr.co.mathrank.domain.problem.assessment.dto.AssessmentDeleteCommand;
 import kr.co.mathrank.domain.problem.assessment.dto.AssessmentRegisterCommand;
+import kr.co.mathrank.domain.problem.assessment.dto.AssessmentSolutionQuery;
+import kr.co.mathrank.domain.problem.assessment.dto.AssessmentSolutionQueryResult;
 import kr.co.mathrank.domain.problem.assessment.dto.AssessmentUpdateCommand;
 import kr.co.mathrank.domain.problem.assessment.dto.SubmissionRegisterCommand;
 import kr.co.mathrank.domain.problem.assessment.service.AssessmentDeleteService;
 import kr.co.mathrank.domain.problem.assessment.service.AssessmentRegisterService;
+import kr.co.mathrank.domain.problem.assessment.service.AssessmentSolutionQueryService;
 import kr.co.mathrank.domain.problem.assessment.service.AssessmentUpdateService;
 import kr.co.mathrank.domain.problem.assessment.service.SubmissionRegisterService;
 import lombok.RequiredArgsConstructor;
@@ -36,6 +41,7 @@ public class AssessmentController {
 	private final SubmissionRegisterService submissionRegisterService;
 	private final AssessmentUpdateService assessmentUpdateService;
 	private final AssessmentDeleteService assessmentDeleteService;
+	private final AssessmentSolutionQueryService assessmentSolutionQueryService;
 
 	@Operation(summary = "문제집 등록", description = "문제집 등록은 관리자만 가능합니다.")
 	@PostMapping("/api/v1/problem/assessment")
@@ -84,5 +90,17 @@ public class AssessmentController {
 		final AssessmentDeleteCommand command = new AssessmentDeleteCommand(assessmentId, memberPrincipal.memberId(), memberPrincipal.role());
 		assessmentDeleteService.delete(command);
 		return ResponseEntity.ok().build();
+	}
+
+	@Operation(summary = "문제집 정답 조회 API", description = "문제집의 정답을 조회합니다. 이미 푼 시험지의 정답만 조회 가능합니다.")
+	@GetMapping("/api/v1/problem/assessment/{assessmentId}/solution")
+	@Authorization(openedForAll = true)
+	public ResponseEntity<AssessmentSolutionQueryResult> querySolution(
+		@PathVariable final Long assessmentId,
+		@LoginInfo final MemberPrincipal memberPrincipal
+	) {
+		final AssessmentSolutionQuery query = new AssessmentSolutionQuery(assessmentId, memberPrincipal.memberId());
+		final AssessmentSolutionQueryResult result = assessmentSolutionQueryService.querySolutions(query);
+		return ResponseEntity.ok(result);
 	}
 }

@@ -46,6 +46,13 @@ WHERE ass.id = :assessmentId
 
 	@Query("""
 SELECT ass FROM Assessment ass
+LEFT JOIN FETCH ass.assessmentSubmissions assSub
+WHERE ass.id = :assessmentId AND assSub.memberId = :memberId
+""")
+	Optional<Assessment> findByAssessmentIdAndSubmissionMemberId(@Param("assessmentId") Long assessmentId, @Param("memberId") Long memberId);
+
+	@Query("""
+SELECT ass FROM Assessment ass
 LEFT JOIN FETCH ass.assessmentItems assItem
 WHERE assItem.problemId = :problemId
 """)
