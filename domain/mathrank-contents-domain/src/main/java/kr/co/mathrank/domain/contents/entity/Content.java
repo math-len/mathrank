@@ -14,13 +14,17 @@ import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import lombok.AccessLevel;
 import lombok.Getter;
+import lombok.Setter;
 
 @Entity
 @Getter
+@Setter
 public class Content {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Setter(AccessLevel.NONE)
 	private Long id;
 
 	private String title;
@@ -41,6 +45,7 @@ public class Content {
 	private ContentType contentType;
 
 	@CreationTimestamp
+	@Setter(AccessLevel.NONE)
 	private LocalDateTime createdAt;
 
 	public static Content of(final String title, final String text, final List<String> fileSources, final List<String> videoLinks, final BigDecimal price, final ContentType contentType) {
