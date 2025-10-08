@@ -47,6 +47,7 @@ include(
         'client:external:mathrank-school',
 
         'domain',
+        'domain:mathrank-contents-domain',
         'domain:mathrank-board-domain',
         'domain:mathrank-school-domain',
         'domain:mathrank-course-domain',
