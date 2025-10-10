@@ -10,7 +10,7 @@ public record ContentReadQueryResult(
 	Long contentId,
 	Long contentOwnerId,
 	ContentType contentType,
-	List<String> fileSources,
+	List<ContentFileResult> fileInfos,
 	List<String> videoLinks,
 	LocalDateTime registeredAt
 ) {
@@ -19,7 +19,9 @@ public record ContentReadQueryResult(
 			content.getId(),
 			content.getOwnerId(),
 			content.getContentType(),
-			content.getFileSources(),
+			content.getFiles().stream()
+				.map(ContentFileResult::of)
+				.toList(),
 			content.getVideoLinks(),
 			content.getCreatedAt()
 		);

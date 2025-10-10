@@ -2,9 +2,11 @@ package kr.co.mathrank.domain.contents.dto;
 
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.hibernate.validator.group.GroupSequenceProvider;
 
+import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import kr.co.mathrank.domain.contents.constraints.ContentValidationGroupProvider;
@@ -21,7 +23,8 @@ public record ContentRegisterCommand(
 	@NotNull
 	ContentType contentType,
 	@NotNull
-	List<String> fileSources,
+	@Valid
+	List<ContentFileRegisterCommand> files,
 	@NotNull
 	BigDecimal price,
 	@NotNull(groups = ValidationGroup.VideoContentConstraints.class)
@@ -31,7 +34,9 @@ public record ContentRegisterCommand(
 		return Content.of(
 			title(),
 			text(),
-			fileSources(),
+			files().stream()
+				.map(ContentFileRegisterCommand::toEntity)
+				.collect(Collectors.toList()),
 			videoLinks(),
 			price(),
 			contentType());

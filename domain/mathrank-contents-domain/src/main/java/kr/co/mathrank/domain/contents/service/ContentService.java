@@ -44,7 +44,7 @@ public class ContentService {
 		content.setTitle(command.title());
 		content.setText(command.text());
 		content.setPrice(command.price());
-		content.setFileSources(command.fileSources());
+		content.setFiles(command.getUploadFileInfos());
 		content.setVideoLinks(command.videoLinks());
 	}
 
