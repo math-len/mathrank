@@ -1,11 +1,17 @@
 package kr.co.mathrank.domain.contents.service;
 
+import java.util.List;
+
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.annotation.Validated;
 
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
+import kr.co.mathrank.common.page.PageResult;
+import kr.co.mathrank.common.page.PageUtil;
+import kr.co.mathrank.domain.contents.dto.ContentReadPageQuery;
+import kr.co.mathrank.domain.contents.dto.ContentReadPageQueryResult;
 import kr.co.mathrank.domain.contents.dto.ContentReadQuery;
 import kr.co.mathrank.domain.contents.dto.ContentReadQueryResult;
 import kr.co.mathrank.domain.contents.dto.ContentRegisterCommand;
@@ -56,5 +62,17 @@ public class ContentService {
 				return new NotPurchsedContentException();
 			});
 		return ContentReadQueryResult.from(content);
+	}
+
+	public PageResult<ContentReadPageQueryResult> pageQuery(
+		@NotNull @Valid final ContentReadPageQuery pageQuery,
+		final int pageSize,
+		final int pageNumber
+	) {
+		final List<Content> contents = contentRepository.queryPage(pageQuery, pageSize, pageNumber - 1);
+		final Long count = contentRepository.count(pageQuery);
+
+		return PageResult.of(contents, pageNumber, pageSize, PageUtil.getNextPages(pageSize, pageNumber, count, contents.size()))
+			.map(ContentReadPageQueryResult::from);
 	}
 }

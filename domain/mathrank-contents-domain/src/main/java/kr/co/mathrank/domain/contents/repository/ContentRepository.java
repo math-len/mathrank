@@ -8,7 +8,7 @@ import org.springframework.data.repository.query.Param;
 
 import kr.co.mathrank.domain.contents.entity.Content;
 
-public interface ContentRepository extends JpaRepository<Content, Long> {
+public interface ContentRepository extends JpaRepository<Content, Long>, ContentQueryRepository {
 	@Query("""
 SELECT c FROM Content c
 LEFT JOIN FETCH c.contentUsers user

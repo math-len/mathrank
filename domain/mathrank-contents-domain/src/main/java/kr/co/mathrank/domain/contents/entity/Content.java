@@ -14,7 +14,9 @@ import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.Index;
 import jakarta.persistence.OneToMany;
+import jakarta.persistence.Table;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
@@ -22,6 +24,11 @@ import lombok.Setter;
 @Entity
 @Getter
 @Setter
+@Table(indexes = {
+	@Index(name = "idx_title_createdAt", columnList = "title, created_at desc"),
+	@Index(name = "idx_contentType_createdAt", columnList = "content_type, created_at desc"),
+	@Index(name = "idx_contentType_title_createdAt", columnList = "content_type, title, created_at desc")
+})
 public class Content {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -33,8 +40,6 @@ public class Content {
 	private String title;
 	
 	private String text;
-
-	private String content;
 
 	@OneToMany(mappedBy = "content")
 	private List<ContentUser> contentUsers;
