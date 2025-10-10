@@ -6,9 +6,12 @@ import org.springframework.validation.annotation.Validated;
 
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
+import kr.co.mathrank.domain.contents.dto.ContentReadQuery;
+import kr.co.mathrank.domain.contents.dto.ContentReadQueryResult;
 import kr.co.mathrank.domain.contents.dto.ContentRegisterCommand;
 import kr.co.mathrank.domain.contents.dto.ContentUpdateCommand;
 import kr.co.mathrank.domain.contents.entity.Content;
+import kr.co.mathrank.domain.contents.exception.NotPurchsedContentException;
 import kr.co.mathrank.domain.contents.repository.ContentRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -37,5 +40,21 @@ public class ContentService {
 		content.setPrice(command.price());
 		content.setFileSources(command.fileSources());
 		content.setVideoLinks(command.videoLinks());
+	}
+
+	/**
+	 * 지불한 사용자만 이용 가능합니다.
+	 * @param command
+	 * @return
+	 */
+	@Transactional
+	public ContentReadQueryResult read(@NotNull @Valid final ContentReadQuery command) {
+		final Content content = contentRepository.findContentPurchasedByUser(command.contentId(), command.userId())
+			.orElseThrow(() -> {
+				log.info("[ContentService.read] content not purchased - contentId: {}, userId: {}", command.contentId(),
+					command.userId());
+				return new NotPurchsedContentException();
+			});
+		return ContentReadQueryResult.from(content);
 	}
 }

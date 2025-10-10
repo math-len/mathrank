@@ -14,6 +14,7 @@ import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
@@ -27,11 +28,16 @@ public class Content {
 	@Setter(AccessLevel.NONE)
 	private Long id;
 
+	private Long ownerId;
+
 	private String title;
 	
 	private String text;
 
 	private String content;
+
+	@OneToMany(mappedBy = "content")
+	private List<ContentUser> contentUsers;
 
 	@JdbcTypeCode(SqlTypes.JSON)
 	private List<String> fileSources;
