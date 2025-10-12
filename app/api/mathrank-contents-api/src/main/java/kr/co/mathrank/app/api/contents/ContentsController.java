@@ -1,6 +1,7 @@
 package kr.co.mathrank.app.api.contents;
 
 import org.hibernate.validator.constraints.Range;
+import org.springdoc.core.annotations.ParameterObject;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -64,7 +65,7 @@ public class ContentsController {
 	public ResponseEntity<PageResult<ContentReadPageQueryResult>> pageQuery(
 		@RequestParam @Range(min = 1, max = 20) final Integer pageSize,
 		@RequestParam @Range(min = 1, max = 200) final Integer pageNumber,
-		@ModelAttribute final ContentReadPageQuery query
+		@ModelAttribute @ParameterObject final ContentReadPageQuery query
 	) {
 		final PageResult<ContentReadPageQueryResult> result = contentService.pageQuery(query, pageSize, pageNumber);
 
@@ -78,7 +79,7 @@ public class ContentsController {
 		@PathVariable final Long contentId,
 		@LoginInfo final MemberPrincipal memberPrincipal
 	) {
-		final ContentReadQueryResult result = contentService.read(new ContentReadQuery(contentId, memberPrincipal.memberId()));
+		final ContentReadQueryResult result = contentService.read(new ContentReadQuery(contentId, memberPrincipal.memberId(), memberPrincipal.role()));
 
 		return ResponseEntity.ok(result);
 	}

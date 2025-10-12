@@ -12,7 +12,7 @@ public interface ContentRepository extends JpaRepository<Content, Long>, Content
 	@Query("""
 SELECT c FROM Content c
 LEFT JOIN FETCH c.contentUsers user
-WHERE c.id = :contentId AND user.userId = :userId
+WHERE c.id = :contentId
 """)
-	Optional<Content> findContentPurchasedByUser(@Param("contentId") Long contentId, @Param("userId") Long userId);
+	Optional<Content> findContentWithPurchasedUsers(@Param("contentId") Long contentId);
 }

@@ -7,6 +7,8 @@ public record ContentReadQuery(
 	@NotNull
 	Long contentId,
 	@NotNull
-	Long userId
+	Long userId,
+	@NotNull
+	Role role
 ) {
 }
