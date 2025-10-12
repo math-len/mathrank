@@ -2,9 +2,11 @@ package kr.co.mathrank.app.api.image;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 
 import org.springframework.core.io.InputStreamResource;
+import org.springframework.core.io.Resource;
 import org.springframework.http.ContentDisposition;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -43,16 +45,18 @@ public class ImageController {
 			.body(media.data().readAllBytes());
 	}
 
-	@Operation(summary = "파일 다운로드 API", description = "fileRealName 에 지정한 이름으로 다운로드 됩니다. ")
+	@Operation(summary = "파일 다운로드 API", description = "fileRealName 에 지정한 이름으로 다운로드 됩니다. 파일 확장자 명까지 포함해야 합니다.")
 	@GetMapping("/api/v1/file/download")
-	public ResponseEntity<InputStreamResource> download(
+	public ResponseEntity<Resource> download(
 		@RequestParam final String fileSource,
 		@RequestParam final String fileRealName
 	) {
 		final ImageFileResult result = imageService.load(fileSource);
 		final HttpHeaders headers = getDownloadHeaders(fileRealName);
 
-		return new ResponseEntity<>(new InputStreamResource(result.data()) , headers, HttpStatus.OK);
+		return ResponseEntity.ok()
+			.headers(headers)
+			.body(new InputStreamResource(result.data()));
 	}
 
 	@Operation(summary = "이미지 업로드 API", description = "multipartForm으로 업로드. 업로드 후 응답받은 string 값을 통해 이미지를 로드 가능합니다.")
