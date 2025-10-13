@@ -81,7 +81,7 @@ public class ContentService {
 	private Content findContentWithPurchasedUsers(final Long contentId) {
 		return contentRepository.findContentWithPurchasedUsers(contentId)
 			.orElseThrow(() -> {
-				log.info("[ContentService.read] content not purchased - contentId: {}", contentId);
+				log.info("[ContentService.findContentWithPurchasedUsers]] content not purchased - contentId: {}", contentId);
 				return new CannotFoundContentException();
 			});
 	}
