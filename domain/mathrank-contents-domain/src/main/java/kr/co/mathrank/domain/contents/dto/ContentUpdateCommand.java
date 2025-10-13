@@ -15,7 +15,9 @@ public record ContentUpdateCommand(
 	String text,
 	@NotNull
 	BigDecimal price,
+	@NotNull
 	List<ContentFileRegisterCommand> fileSources,
+	@NotNull
 	List<String> videoLinks
 ) {
 	public List<UploadFileInfo> getUploadFileInfos() {
