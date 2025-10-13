@@ -7,6 +7,7 @@ dependencies {
 
     implementation project(':common:mathrank-exception')
     implementation project(':common:mathrank-page')
+    implementation project(':common:mathrank-cache')
     implementation project(':client:internal:mathrank-problem-client')
 
     testImplementation 'org.testcontainers:junit-jupiter'

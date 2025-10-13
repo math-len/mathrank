@@ -3,6 +3,8 @@ package kr.co.mathrank.domain.rank.service;
 import java.util.List;
 
 import org.hibernate.validator.constraints.Range;
+import org.springframework.cache.annotation.CacheConfig;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
@@ -12,6 +14,7 @@ import org.springframework.validation.annotation.Validated;
 import jakarta.validation.constraints.NotNull;
 import kr.co.mathrank.common.page.PageResult;
 import kr.co.mathrank.common.page.PageUtil;
+import kr.co.mathrank.domain.rank.RankDomainConfiguration;
 import kr.co.mathrank.domain.rank.dto.RankItemResult;
 import kr.co.mathrank.domain.rank.entity.Solver;
 import kr.co.mathrank.domain.rank.entity.Tier;
@@ -21,10 +24,15 @@ import lombok.RequiredArgsConstructor;
 @Service
 @Validated
 @RequiredArgsConstructor
+@CacheConfig(cacheNames = RankDomainConfiguration.RANK_BOARD_CACHE_NAME)
 public class RankPageQueryService {
 	private final SolverRepository solverRepository;
 
 	@Transactional(readOnly = true)
+	@Cacheable(
+		key = "'pageNumber::' + #pageNumber + '::pageSize::' + #pageSize",
+		condition = "#pageNumber <= 4"
+	)
 	public PageResult<RankItemResult> queryResultPageResult(
 		@NotNull @Range(min = 1, max = 20) final Integer pageSize,
 		@NotNull @Range(min = 1, max = 2000) final Integer pageNumber
