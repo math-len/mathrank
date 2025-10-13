@@ -3,6 +3,7 @@ package kr.co.mathrank.domain.problem.assessment.service;
 import java.util.List;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.annotation.Validated;
 
 import jakarta.validation.Valid;
@@ -31,6 +32,7 @@ public class AssessmentSolutionQueryService {
 	 * 사용자가 문제를 푼 경우에만 정답 조회가 가능합니다.
 	 * @param query
 	 */
+	@Transactional(readOnly = true)
 	public AssessmentSolutionQueryResult querySolutions(@NotNull @Valid final AssessmentSolutionQuery query) {
 		final Assessment solvedAssessment = getSubmittedAssessment(query.assessmentId(), query.requestMemberId(), query.requestMemberRole());
 
