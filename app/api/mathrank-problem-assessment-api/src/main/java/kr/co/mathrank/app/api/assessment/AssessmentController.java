@@ -99,7 +99,7 @@ public class AssessmentController {
 		@PathVariable final Long assessmentId,
 		@LoginInfo final MemberPrincipal memberPrincipal
 	) {
-		final AssessmentSolutionQuery query = new AssessmentSolutionQuery(assessmentId, memberPrincipal.memberId());
+		final AssessmentSolutionQuery query = new AssessmentSolutionQuery(assessmentId, memberPrincipal.memberId(), memberPrincipal.role());
 		final AssessmentSolutionQueryResult result = assessmentSolutionQueryService.querySolutions(query);
 		return ResponseEntity.ok(result);
 	}
