@@ -42,7 +42,10 @@ public class ContentService {
 	@Transactional
 	public void update(@NotNull @Valid final ContentUpdateCommand command) {
 		final Content content = contentRepository.findById(command.contentId())
-			.orElseThrow();
+			.orElseThrow(() -> {
+				log.info("[ContentService.update] content not found - contentId: {}", command.contentId());
+				return new CannotFoundContentException();
+			});
 		content.setTitle(command.title());
 		content.setText(command.text());
 		content.setPrice(command.price());
