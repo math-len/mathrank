@@ -20,12 +20,16 @@ public class RankQueryService {
 
 	@Cacheable(key = "#memberId")
 	public RankQueryResult getRank(final Long memberId) {
-		final Long rank = solverRepository.findRankByMemberId(memberId);
 		final Long score = solverRepository.findScoreByMemberId(memberId);
 		final long totalMemberCount = solverRepository.count();
+		// 아직 풀이 기록이 없는 경우
+		if (score == null) {
+			return RankQueryResult.of(null, null, null, totalMemberCount);
+		}
+
+		final Long rank = solverRepository.findRankByMemberId(memberId) + 1;
 
 		final Tier tier = Tier.getMatchTier(rank, totalMemberCount);
-
 		return RankQueryResult.of(rank, tier, score, totalMemberCount);
 	}
 }
