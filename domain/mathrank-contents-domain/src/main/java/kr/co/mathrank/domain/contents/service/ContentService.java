@@ -19,7 +19,7 @@ import kr.co.mathrank.domain.contents.dto.ContentRegisterCommand;
 import kr.co.mathrank.domain.contents.dto.ContentUpdateCommand;
 import kr.co.mathrank.domain.contents.entity.Content;
 import kr.co.mathrank.domain.contents.exception.CannotFoundContentException;
-import kr.co.mathrank.domain.contents.exception.NotPurchsedContentException;
+import kr.co.mathrank.domain.contents.exception.NotPurchasedContentException;
 import kr.co.mathrank.domain.contents.repository.ContentRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -98,6 +98,6 @@ public class ContentService {
 		}
 
 		log.info("[ContentService.read] content not purchased - contentId: {}, userId: {}", content.getId(), userId);
-		throw new NotPurchsedContentException();
+		throw new NotPurchasedContentException();
 	}
 }
