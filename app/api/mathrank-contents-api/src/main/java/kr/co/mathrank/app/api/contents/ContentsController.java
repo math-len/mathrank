@@ -51,9 +51,10 @@ public class ContentsController {
 	@Operation(summary = "자료 수정 API", description = "관리지(ADMIN)만 사용 가능합니다.")
 	@Authorization(values = Role.ADMIN)
 	public ResponseEntity<Void> update(
+		@PathVariable final Long contentId,
 		@RequestBody @Valid final Requests.ContentUpdateRequest request
 	) {
-		final ContentUpdateCommand command = request.toCommand();
+		final ContentUpdateCommand command = request.toCommand(contentId);
 		contentService.update(command);
 
 		return ResponseEntity.ok().build();
