@@ -38,13 +38,13 @@ public class ContentsController {
 	@PostMapping("/api/v1/content")
 	@Operation(summary = "자료 등록 API", description = "관리지(ADMIN)만 사용 가능합니다. 한번 등록된 자료는 삭제할 수 없습니다.")
 	@Authorization(values = Role.ADMIN)
-	public ResponseEntity<Void> register(
+	public ResponseEntity<Long> register(
 		@RequestBody @Valid final Requests.ContentRegisterRequest request
 	) {
 		final ContentRegisterCommand command = request.toCommand();
-		contentService.register(command);
+		final Long contentId = contentService.register(command);
 
-		return ResponseEntity.ok().build();
+		return ResponseEntity.ok(contentId);
 	}
 
 	@PutMapping("/api/v1/content/{contentId}")
