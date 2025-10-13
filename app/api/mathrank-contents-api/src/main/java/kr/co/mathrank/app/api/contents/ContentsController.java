@@ -63,8 +63,8 @@ public class ContentsController {
 	@Operation(summary = "자료실 페이징 API", description = "로그인된 사용자만 사용 가능합니다.")
 	@Authorization(openedForAll = true)
 	public ResponseEntity<PageResult<ContentReadPageQueryResult>> pageQuery(
-		@RequestParam @Range(min = 1, max = 20) final Integer pageSize,
-		@RequestParam @Range(min = 1, max = 200) final Integer pageNumber,
+		@RequestParam(defaultValue = "20") @Range(min = 1, max = 20) final Integer pageSize,
+		@RequestParam(defaultValue = "1") @Range(min = 1, max = 200) final Integer pageNumber,
 		@ModelAttribute @ParameterObject final ContentReadPageQuery query
 	) {
 		final PageResult<ContentReadPageQueryResult> result = contentService.pageQuery(query, pageSize, pageNumber);
