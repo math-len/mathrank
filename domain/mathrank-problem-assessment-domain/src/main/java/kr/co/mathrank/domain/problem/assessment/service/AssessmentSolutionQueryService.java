@@ -50,15 +50,17 @@ public class AssessmentSolutionQueryService {
 	}
 
 	private Assessment getSubmittedAssessment(final Long assessmentId, final Long requestMemberId, final Role role) {
-		return assessmentRepository.findWithSubmissions(assessmentId).stream()
-			.peek(assessment -> validatePermission(assessment, requestMemberId, role))
-			.findAny()
+		final Assessment assessment = assessmentRepository.findWithSubmissions(assessmentId)
 			.orElseThrow(() -> {
 				log.info(
 					"[AssessmentSolutionQueryService.getSubmittedAssessment] assessment not solved - assessmentId: {}, requestMemberId: {}",
 					assessmentId, requestMemberId);
 				return new NoSuchSubmissionException();
 			});
+
+		validatePermission(assessment, requestMemberId, role);
+
+		return assessment;
 	}
 
 	private void validatePermission(final Assessment assessment, final Long requestMemberId, final Role role) {
