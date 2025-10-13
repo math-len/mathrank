@@ -80,7 +80,8 @@ public class Content {
 	}
 
 	public void setFiles(final List<UploadFileInfo> files) {
+		this.files.clear();
 		files.forEach(uploadFileInfo -> uploadFileInfo.setContent(this));
-		this.files = files;
+		this.files.addAll(files);
 	}
 }
