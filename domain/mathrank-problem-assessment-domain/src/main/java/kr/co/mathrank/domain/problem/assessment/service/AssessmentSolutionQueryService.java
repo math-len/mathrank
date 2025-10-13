@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.transaction.support.TransactionTemplate;
 import org.springframework.validation.annotation.Validated;
 
 import jakarta.validation.Valid;
@@ -25,6 +26,7 @@ import lombok.extern.slf4j.Slf4j;
 @Validated
 @RequiredArgsConstructor
 public class AssessmentSolutionQueryService {
+	private final TransactionTemplate transactionTemplate;
 	private final AssessmentRepository assessmentRepository;
 	private final ProblemQueryManager problemQueryManager;
 
@@ -32,17 +34,19 @@ public class AssessmentSolutionQueryService {
 	 * 사용자가 문제를 푼 경우에만 정답 조회가 가능합니다.
 	 * @param query
 	 */
-	@Transactional(readOnly = true)
 	public AssessmentSolutionQueryResult querySolutions(@NotNull @Valid final AssessmentSolutionQuery query) {
-		final Assessment solvedAssessment = getSubmittedAssessment(query.assessmentId(), query.requestMemberId(), query.requestMemberRole());
+		// 트랜잭션 내에서 조회
+		final List<Long> problemIds = transactionTemplate.execute(status -> {
+			final Assessment solvedAssessment = getSubmittedAssessment(query.assessmentId(), query.requestMemberId(), query.requestMemberRole());
+			return solvedAssessment.getAssessmentItems().stream()
+				.map(AssessmentItem::getProblemId)
+				.toList();
+		});
 
-		final List<ProblemSolutionResult> results = solvedAssessment.getAssessmentItems().stream()
-			.map(AssessmentItem::getProblemId)
+		return new AssessmentSolutionQueryResult(problemIds.stream()
 			.map(problemQueryManager::getProblemInfo)
 			.map(ProblemSolutionResult::from)
-			.toList();
-
-		return new AssessmentSolutionQueryResult(results);
+			.toList());
 	}
 
 	private Assessment getSubmittedAssessment(final Long assessmentId, final Long requestMemberId, final Role role) {
