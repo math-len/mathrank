@@ -42,8 +42,6 @@ public class Requests {
 
 	record ContentUpdateRequest(
 		@NotNull
-		Long contentId,
-		@NotNull
 		String title,
 		@NotNull
 		String text,
@@ -52,7 +50,7 @@ public class Requests {
 		List<ContentFileRegisterCommand> fileSources,
 		List<String> videoLinks
 	) {
-		public ContentUpdateCommand toCommand() {
+		public ContentUpdateCommand toCommand(final Long contentId) {
 			return new ContentUpdateCommand(
 				contentId,
 				title,
