@@ -98,7 +98,7 @@ public class ContestController {
 		@PathVariable final Long contestId,
 		@LoginInfo final MemberPrincipal memberPrincipal
 	) {
-		final AssessmentSolutionQuery query = new AssessmentSolutionQuery(contestId, memberPrincipal.memberId());
+		final AssessmentSolutionQuery query = new AssessmentSolutionQuery(contestId, memberPrincipal.memberId(), memberPrincipal.role());
 		final AssessmentSolutionQueryResult result = assessmentSolutionQueryService.querySolutions(query);
 		return ResponseEntity.ok(result);
 	}
