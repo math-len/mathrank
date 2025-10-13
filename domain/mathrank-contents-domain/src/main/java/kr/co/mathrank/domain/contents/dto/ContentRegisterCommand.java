@@ -36,7 +36,7 @@ public record ContentRegisterCommand(
 			text(),
 			files().stream()
 				.map(ContentFileRegisterCommand::toEntity)
-				.collect(Collectors.toList()),
+				.toList(),
 			videoLinks(),
 			price(),
 			contentType());
