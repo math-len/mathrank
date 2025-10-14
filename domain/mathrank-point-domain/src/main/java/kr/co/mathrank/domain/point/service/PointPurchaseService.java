@@ -37,7 +37,7 @@ public class PointPurchaseService {
 
 		// 2. paymentId로 이미 충전됐는지 확인한다.
 		// 포인트 중복 충전 방지
-		if (pointChargedLogRepository.findByPaymentIdAndCharged(command.paymentId(), true).isPresent()) {
+		if (!pointChargedLogRepository.findAllByPaymentIdAndCharged(command.paymentId(), true).isEmpty()) {
 			log.warn("[PointPurchaseService.confirm] already processed payment - paymentId: {}, requestMemberId: {}",
 				command.paymentId(), command.requestMemberId());
 			pointChargedLogRepository.save(
