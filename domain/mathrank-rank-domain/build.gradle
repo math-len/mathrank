@@ -9,6 +9,7 @@ dependencies {
     implementation project(':common:mathrank-page')
     implementation project(':common:mathrank-cache')
     implementation project(':client:internal:mathrank-problem-client')
+    implementation project(':client:internal:mathrank-member-client')
 
     testImplementation 'org.testcontainers:junit-jupiter'
     testImplementation 'org.springframework.boot:spring-boot-testcontainers'
