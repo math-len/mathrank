@@ -9,9 +9,9 @@ import lombok.Getter;
 import lombok.Setter;
 
 @Configuration
-public class PortoneConfiguration {
+class PortOneConfiguration {
 	@Bean
-	PaymentClient paymentClient(final PortoneConfigurationProperties properties) {
+	PaymentClient paymentClient(final PortOneConfigurationProperties properties) {
 		return new PaymentClient(properties.getApiSecret(), properties.getApiBase(), properties.getStoreId());
 	}
 
@@ -19,7 +19,7 @@ public class PortoneConfiguration {
 	@Setter
 	@ConfigurationProperties("payment.portone")
 	@Configuration
-	static class PortoneConfigurationProperties {
+	static class PortOneConfigurationProperties {
 		private String apiSecret;
 		private String apiBase = "https://api.portone.io";
 		private String storeId;
