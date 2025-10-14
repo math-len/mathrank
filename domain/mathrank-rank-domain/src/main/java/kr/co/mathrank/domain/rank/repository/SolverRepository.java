@@ -54,7 +54,7 @@ SELECT new kr.co.mathrank.domain.rank.dto.SchoolRankQueryResult(
 FROM Solver s
 WHERE s.schoolCode IS NOT NULL
 GROUP BY s.schoolCode
-ORDER BY s.score DESC
+ORDER BY SUM(s.score) DESC
 """)
 	List<SchoolRankQueryResult> findSchoolScores(Pageable pageable);
 
