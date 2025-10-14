@@ -43,6 +43,7 @@ include(
         'client:mathrank-client-config',
         'client:mathrank-client-exception',
         'client:internal',
+        'client:internal:mathrank-point-client',
         'client:internal:mathrank-course-client',
         'client:internal:mathrank-member-client',
         'client:internal:mathrank-problem-client',
