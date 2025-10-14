@@ -10,6 +10,7 @@ import jakarta.validation.constraints.NotNull;
 import kr.co.mathrank.common.dataserializer.DataSerializer;
 import kr.co.mathrank.domain.point.entity.PointChargedLog;
 import kr.co.mathrank.domain.point.exception.PointPurchaseException;
+import kr.co.mathrank.domain.point.repository.PointChargedLogRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -19,6 +20,7 @@ import lombok.extern.slf4j.Slf4j;
 @RequiredArgsConstructor
 class PortOnePaymentClient {
 	private final PaymentClient paymentClient;
+	private final PointChargedLogRepository pointChargedLogRepository;
 
 	public PaymentInfo getPaymentInfo(@NotNull final String paymentId, @NotNull final Long requestMemberId) {
 		final PaidPayment paidPayment = fetchSucceededPayment(paymentId);
@@ -26,8 +28,8 @@ class PortOnePaymentClient {
 		final PaymentCustomDataPayload paymentCustomPayload = DataSerializer.deserialize(paidPayment.getCustomData(), PaymentCustomDataPayload.class)
 			.orElseThrow(() -> {
 				log.warn("[PointPurchaseService.confirm] payment custom data payload is invalid - payload: {}", paidPayment.getCustomData());
-				PointChargedLog.failed(paymentId, paymentTotalAmount, null,
-					requestMemberId, "customData 형식이 잘못됐습니다.");
+				pointChargedLogRepository.save(PointChargedLog.failed(paymentId, paymentTotalAmount, null,
+					requestMemberId, "customData 형식이 잘못됐습니다."));
 				return new PointPurchaseException("customData 형식이 잘못됐습니다.");
 			});
 
