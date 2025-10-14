@@ -9,7 +9,11 @@ import org.springframework.validation.annotation.Validated;
 
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
+import kr.co.mathrank.common.event.EventPayload;
 import kr.co.mathrank.common.outbox.TransactionalOutboxPublisher;
+import kr.co.mathrank.domain.problem.core.AnswerType;
+import kr.co.mathrank.domain.problem.core.Difficulty;
+import kr.co.mathrank.domain.problem.core.PastProblem;
 import kr.co.mathrank.domain.problem.dto.ProblemDeleteCommand;
 import kr.co.mathrank.domain.problem.dto.ProblemRegisterCommand;
 import kr.co.mathrank.domain.problem.dto.ProblemUpdateCommand;
@@ -28,7 +32,7 @@ import lombok.extern.slf4j.Slf4j;
 public class ProblemService {
 	private final ProblemRepository problemRepository;
 	private final SchoolLocationManager schoolLocationManager;
-	private final TransactionalOutboxPublisher transactionalOutboxPublisher;
+	private final TransactionalOutboxPublisher outboxPublisher;
 	private final ProblemUpdateManager problemUpdateManager;
 
 	public Long save(@NotNull @Valid final ProblemRegisterCommand command) {
@@ -71,6 +75,7 @@ public class ProblemService {
 
 		log.info("[ProblemService.delete] problem deleted - id: {}, memberId: {}",
 			command.problemId(), command.requestMemberId());
+		outboxPublisher.publish("problem-deleted", ProblemDeletedEvent.from(problem));
 		problemRepository.delete(problem);
 	}
 
@@ -96,5 +101,37 @@ public class ProblemService {
 		}
 
 		return schoolLocationManager.getSchoolLocation(schoolCode);
+	}
+
+	record ProblemDeletedEvent(
+		Long id,
+		Long memberId,
+		String problemImage,
+		String solutionImage,
+		Difficulty difficulty,
+		AnswerType type,
+		PastProblem pastProblem,
+		String coursePath,
+		String schoolCode,
+		String location,
+		Integer years,
+		String solutionVideoLink
+	) implements EventPayload {
+		static ProblemDeletedEvent from(final Problem problem) {
+			return new ProblemDeletedEvent(
+				problem.getId(),
+				problem.getMemberId(),
+				problem.getProblemImage(),
+				problem.getSolutionImage(),
+				problem.getDifficulty(),
+				problem.getType(),
+				problem.getPastProblem(),
+				problem.getCoursePath(),
+				problem.getSchoolCode(),
+				problem.getLocation(),
+				problem.getYears(),
+				problem.getSolutionVideoLink()
+			);
+		}
 	}
 }

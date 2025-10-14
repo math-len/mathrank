@@ -1,5 +1,6 @@
 package kr.co.mathrank.domain.problem.assessment.repository;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -42,4 +43,18 @@ LEFT JOIN FETCH ass.assessmentSubmissions
 WHERE ass.id = :assessmentId
 """)
 	Optional<Assessment> findWithSubmissions(@Param("assessmentId") final Long assessmentId);
+
+	@Query("""
+SELECT ass FROM Assessment ass
+LEFT JOIN FETCH ass.assessmentSubmissions assSub
+WHERE ass.id = :assessmentId AND assSub.memberId = :memberId
+""")
+	Optional<Assessment> findByAssessmentIdAndSubmissionMemberId(@Param("assessmentId") Long assessmentId, @Param("memberId") Long memberId);
+
+	@Query("""
+SELECT ass FROM Assessment ass
+LEFT JOIN FETCH ass.assessmentItems assItem
+WHERE assItem.problemId = :problemId
+""")
+	List<Assessment> findAllContainsProblemId(@Param("problemId") final Long problemId);
 }

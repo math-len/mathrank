@@ -5,8 +5,10 @@ include(
         'app:init',
         'app:init:mathrank-auth-init',
         'app:init:mathrank-problem-init',
+
         'app:api',
         'app:api:mathrank-point-api',
+        'app:api:mathrank-contents-api',
         'app:api:mathrank-member-read-api',
         'app:api:mathrank-board-api',
         'app:api:mathrank-member-api',
@@ -29,8 +31,8 @@ include(
         'app:api:mathrank-course-api',
         'app:api:mathrank-course-inner-api',
         'app:batch',
-        'app:batch:mathrank-rank-batch',
         'app:consumer',
+        'app:consumer:mathrank-problem-single-consumer-monolith',
         'app:consumer:mathrank-rank-consumer-monolith',
         'app:consumer:mathrank-assessment-consumer-monolith',
         'app:consumer:mathrank-problem-single-consumer',
@@ -47,6 +49,7 @@ include(
         'client:external:mathrank-school',
 
         'domain',
+        'domain:mathrank-contents-domain',
         'domain:mathrank-board-domain',
         'domain:mathrank-school-domain',
         'domain:mathrank-course-domain',

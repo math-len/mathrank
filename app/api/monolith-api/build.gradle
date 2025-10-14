@@ -10,6 +10,7 @@ dependencies {
     implementation project(':app:api:mathrank-auth-api')
     implementation project(':app:api:mathrank-course-api')
     implementation project(':app:api:mathrank-course-inner-api')
+    implementation project(':app:api:mathrank-contents-api')
     implementation project(':app:api:mathrank-problem-assessment-api')
     implementation project(':app:api:mathrank-problem-assessment-read-api')
     implementation project(':app:api:mathrank-healthcheck-api')
@@ -28,11 +29,10 @@ dependencies {
     implementation project(':app:init:mathrank-problem-init')
     implementation project(':app:init:mathrank-auth-init')
 
-    implementation project(':app:batch:mathrank-rank-batch')
-
     implementation project(':app:consumer:mathrank-problem-single-read-consumer-monolith')
     implementation project(':app:consumer:mathrank-assessment-consumer-monolith')
     implementation project(':app:consumer:mathrank-rank-consumer-monolith')
+    implementation project(':app:consumer:mathrank-problem-single-consumer-monolith')
 
     implementation project(':common:mathrank-cache-caffeine')
 }
