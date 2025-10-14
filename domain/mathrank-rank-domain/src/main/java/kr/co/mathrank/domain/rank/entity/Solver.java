@@ -42,9 +42,10 @@ public class Solver {
 	@Column(unique = true)
 	private Long memberId;
 
-	public static Solver of(final Long memberId) {
+	public static Solver of(final Long memberId, final String schoolCode) {
 		final Solver solver = new Solver();
 		solver.memberId = memberId;
+		solver.schoolCode = schoolCode;
 
 		return solver;
 	}

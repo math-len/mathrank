@@ -20,11 +20,8 @@ class SolverRepositoryTest {
 		final String schoolCode1 = "first";
 		final String schoolCode2 = "second";
 
-		final Solver solver1 = Solver.of(1L);
-		final Solver solver2 = Solver.of(2L);
-
-		solver1.setSchoolCode(schoolCode1);
-		solver2.setSchoolCode(schoolCode2);
+		final Solver solver1 = Solver.of(1L, schoolCode1);
+		final Solver solver2 = Solver.of(2L, schoolCode2);
 
 		solver1.addSolveLog(1L, 2L, true, 30);
 		solver2.addSolveLog(1L, 2L, true, 30);
@@ -43,9 +40,9 @@ class SolverRepositoryTest {
 		final String schoolCode2 = "second";
 		final String schoolCode3 = "third";
 
-		final Solver solver1 = Solver.of(1L);
-		final Solver solver2 = Solver.of(2L);
-		final Solver solver3 = Solver.of(3L);
+		final Solver solver1 = Solver.of(1L, schoolCode1);
+		final Solver solver2 = Solver.of(2L, schoolCode2);
+		final Solver solver3 = Solver.of(3L, schoolCode3);
 
 		solver1.setSchoolCode(schoolCode1);
 		solver2.setSchoolCode(schoolCode2);
@@ -69,9 +66,9 @@ class SolverRepositoryTest {
 		final String schoolCode1 = "first";
 		final String schoolCode2 = "second";
 
-		final Solver solver1 = Solver.of(1L);
-		final Solver solver2 = Solver.of(2L);
-		final Solver solver3 = Solver.of(3L);
+		final Solver solver1 = Solver.of(1L, schoolCode1);
+		final Solver solver2 = Solver.of(2L, schoolCode1);
+		final Solver solver3 = Solver.of(3L, schoolCode2);
 
 		solver1.setSchoolCode(schoolCode1);
 		solver2.setSchoolCode(schoolCode1);
