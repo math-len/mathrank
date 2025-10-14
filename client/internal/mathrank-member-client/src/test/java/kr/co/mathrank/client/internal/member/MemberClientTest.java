@@ -28,6 +28,6 @@ class MemberClientTest {
 		props.setReadTimeoutSeconds(1);
 		final MemberClient memberClient = new MemberClient(props);
 
-		Assertions.assertEquals(new MemberInfo(null, null), memberClient.getMemberInfo(1L));
+		Assertions.assertEquals(new MemberInfo(null, null, null), memberClient.getMemberInfo(1L));
 	}
 }
