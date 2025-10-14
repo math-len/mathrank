@@ -5,6 +5,7 @@ dependencies {
 
     implementation project(':domain:mathrank-rank-domain')
     implementation project(':client:internal:mathrank-member-client')
+    implementation project(':client:external:mathrank-school')
 
     implementation project(':app:api:mathrank-api-common')
 
