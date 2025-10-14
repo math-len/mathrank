@@ -31,7 +31,7 @@ public class PointController {
 	private final PointProductService pointProductService;
 
 	@GetMapping("/api/v1/point/products")
-	@Operation(summary = "포인트 상품 목록 조회 API", description = "로그인 유무와 상관없이 가능합니다.")
+	@Operation(summary = "포인트 상품 목록 조회 API")
 	public ResponseEntity<List<Responses.PointProductQueryResponse>> queryAllPointProducts() {
 		return ResponseEntity.ok(pointProductService.queryAll().results().stream()
 			.map(Responses.PointProductQueryResponse::from)
@@ -39,7 +39,7 @@ public class PointController {
 	}
 
 	@GetMapping("/api/v1/point/product/{productId}")
-	@Operation(summary = "포인트 상품 목록 조회 API")
+	@Operation(summary = "포인트 상품 단일 조회 API")
 	public ResponseEntity<Responses.PointProductQueryResponse> getSingleDetail(
 		@PathVariable final Long productId
 	) {
