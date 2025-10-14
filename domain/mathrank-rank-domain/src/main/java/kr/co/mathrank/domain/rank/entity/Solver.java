@@ -20,7 +20,8 @@ import lombok.Getter;
 @Table(
 	indexes = {
 		@Index(name = "idx_score_memberId", columnList = "score desc, member_id"),
-		@Index(name = "idx_memberId_score", columnList = "member_id, score desc")
+		@Index(name = "idx_memberId_score", columnList = "member_id, score desc"),
+		@Index(name = "idx_schoolCode_score", columnList = "school_code, score")
 	}
 )
 @Getter
@@ -35,12 +36,15 @@ public class Solver {
 
 	private Long score = 0L;
 
+	private String schoolCode;
+
 	@Column(unique = true)
 	private Long memberId;
 
-	public static Solver of(final Long memberId) {
+	public static Solver of(final Long memberId, final String schoolCode) {
 		final Solver solver = new Solver();
 		solver.memberId = memberId;
+		solver.schoolCode = schoolCode;
 
 		return solver;
 	}

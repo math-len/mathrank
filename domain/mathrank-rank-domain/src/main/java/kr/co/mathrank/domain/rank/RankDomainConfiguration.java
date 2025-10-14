@@ -13,6 +13,7 @@ import kr.co.mathrank.common.cache.RequiredCacheSpec;
 public class RankDomainConfiguration {
 	public static final String USER_RANK_CACHE_NAME = "mathrank::domain::rank::user";
 	public static final String RANK_BOARD_CACHE_NAME = "mathrank::domain::rank::board";
+	public static final String SCHOOL_RANK_BOARD_CACHE_NAME = "mathrank::domain::rank::school::board";
 
 	@Bean
 	RequiredCacheSpec userRankCacheSpec() {
@@ -50,6 +51,26 @@ public class RankDomainConfiguration {
 			@Override
 			public Duration ttl() {
 				return Duration.ofSeconds(5);
+			}
+		};
+	}
+
+	@Bean
+	RequiredCacheSpec schoolBoardRankCacheSpec() {
+		return new RequiredCacheSpec() {
+			@Override
+			public String moduleName() {
+				return "mathrank-domain-rank";
+			}
+
+			@Override
+			public String cacheName() {
+				return SCHOOL_RANK_BOARD_CACHE_NAME;
+			}
+
+			@Override
+			public Duration ttl() {
+				return Duration.ofSeconds(10);
 			}
 		};
 	}
