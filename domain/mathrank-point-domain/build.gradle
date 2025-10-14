@@ -5,4 +5,5 @@ dependencies {
 
     implementation project(':common:mathrank-exception')
     implementation project(':common:mathrank-dataserializer')
+    runtimeOnly 'com.h2database:h2'
 }
