@@ -10,6 +10,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import jakarta.persistence.LockModeType;
+import kr.co.mathrank.domain.rank.dto.SchoolRankQueryResult;
 import kr.co.mathrank.domain.rank.entity.Solver;
 
 public interface SolverRepository extends JpaRepository<Solver, Long> {
@@ -42,4 +43,25 @@ WHERE s.memberId = :memberId
 SELECT s FROM Solver s
 """)
 	List<Solver> findAllSolversDescendingScores(Pageable pageable);
+
+	@Query("""
+SELECT new kr.co.mathrank.domain.rank.dto.SchoolRankQueryResult(
+	s.schoolCode,
+	SUM(s.score),
+	RANK() OVER (ORDER BY SUM(s.score) DESC),
+	COUNT(*)
+)
+FROM Solver s
+WHERE s.schoolCode IS NOT NULL
+GROUP BY s.schoolCode
+ORDER BY SUM(s.score) DESC
+""")
+	List<SchoolRankQueryResult> findSchoolScores(Pageable pageable);
+
+	@Query("""
+select count(distinct s.schoolCode)
+from Solver s
+WHERE s.schoolCode IS NOT NULL
+""")
+	Long countDistinctSchools();
 }

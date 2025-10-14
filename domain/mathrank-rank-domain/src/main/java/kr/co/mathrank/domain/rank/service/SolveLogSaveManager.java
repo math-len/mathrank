@@ -11,6 +11,9 @@ import org.springframework.validation.annotation.Validated;
 
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
+import kr.co.mathrank.client.internal.member.MemberClient;
+import kr.co.mathrank.client.internal.member.MemberInfo;
+import kr.co.mathrank.client.internal.problem.ProblemQueryResult;
 import kr.co.mathrank.domain.rank.dto.SolveLogRegisterCommand;
 import kr.co.mathrank.domain.rank.entity.Solver;
 import kr.co.mathrank.domain.rank.exception.SolveLogAlreadyRegisteredException;
@@ -27,6 +30,7 @@ import lombok.extern.slf4j.Slf4j;
 class SolveLogSaveManager {
 	private final SolverRepository solverRepository;
 	private final SolveLogRepository solveLogRepository;
+	private final MemberClient memberClient;
 
 	@Transactional
 	@Retryable(
@@ -68,6 +72,11 @@ class SolveLogSaveManager {
 
 	private Solver getSolverOrCreate(final Long memberId) {
 		return solverRepository.findByMemberIdForUpdate(memberId)
-			.orElseGet(() -> Solver.of(memberId));
+			.orElseGet(() -> Solver.of(memberId, getSchoolCode(memberId)));
+	}
+
+	private String getSchoolCode(final Long memberId) {
+		final MemberInfo memberInfo = memberClient.getMemberInfo(memberId);
+		return memberInfo.schoolCode();
 	}
 }

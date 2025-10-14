@@ -7,14 +7,18 @@ import java.util.concurrent.Executors;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.DynamicPropertyRegistry;
 import org.springframework.test.context.DynamicPropertySource;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.testcontainers.containers.MySQLContainer;
 import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
 
+import kr.co.mathrank.client.internal.member.MemberClient;
+import kr.co.mathrank.client.internal.member.MemberInfo;
 import kr.co.mathrank.domain.rank.dto.SolveLogRegisterCommand;
 import kr.co.mathrank.domain.rank.entity.Solver;
 import kr.co.mathrank.domain.rank.exception.SolveLogAlreadyRegisteredException;
@@ -27,6 +31,8 @@ class SolveLogSaveManagerTest {
 	private SolveLogSaveManager solveLogSaveManager;
 	@Autowired
 	private SolverRepository solverRepository;
+	@MockitoBean
+	private MemberClient memberClient;
 
 	@Container
 	static MySQLContainer<?> mysql = new MySQLContainer<>("mysql:8.0.42")
@@ -48,6 +54,8 @@ class SolveLogSaveManagerTest {
 	void 유니크_제약_조건_위반시_롤백() {
 		final Long memberId = 1L;
 		final int score = 100;
+		Mockito.when(memberClient.getMemberInfo(Mockito.anyLong())).thenReturn(new MemberInfo(null, null, null));
+
 		solveLogSaveManager.save(new SolveLogRegisterCommand(1L, 2L, memberId, true), score);
 		Assertions.assertThrows(SolveLogAlreadyRegisteredException.class, () ->
 			solveLogSaveManager.save(new SolveLogRegisterCommand(1L, 2L, memberId, true), score));
@@ -63,6 +71,7 @@ class SolveLogSaveManagerTest {
 		final Long memberId = 1L;
 		final int tryCount = 10;
 		final int score = 100;
+		Mockito.when(memberClient.getMemberInfo(Mockito.anyLong())).thenReturn(new MemberInfo(null, null, null));
 
 		final ExecutorService executorService = Executors.newFixedThreadPool(5);
 		final CountDownLatch countDownLatch = new CountDownLatch(10);
@@ -90,6 +99,7 @@ class SolveLogSaveManagerTest {
 		final Long memberId = 1L;
 		final int tryCount = 10;
 		final int score = 100;
+		Mockito.when(memberClient.getMemberInfo(Mockito.anyLong())).thenReturn(new MemberInfo(null, null, null));
 
 		final ExecutorService executorService = Executors.newFixedThreadPool(5);
 		final CountDownLatch countDownLatch = new CountDownLatch(10);

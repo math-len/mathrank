@@ -18,10 +18,11 @@ public class Responses {
 
 	public record MemberInfoResponse(
 		String memberId,
-		String memberName
+		String memberName,
+		String schoolCode
 	) {
 		public static MemberInfoResponse from(final MemberInfoResult result) {
-			return new MemberInfoResponse(String.valueOf(result.memberId()), result.nickName());
+			return new MemberInfoResponse(String.valueOf(result.memberId()), result.nickName(), result.schoolCode());
 		}
 	}
 }
