@@ -44,10 +44,6 @@ class SolverRepositoryTest {
 		final Solver solver2 = Solver.of(2L, schoolCode2);
 		final Solver solver3 = Solver.of(3L, schoolCode3);
 
-		solver1.setSchoolCode(schoolCode1);
-		solver2.setSchoolCode(schoolCode2);
-		solver3.setSchoolCode(schoolCode3);
-
 		solver1.addSolveLog(1L, 2L, true, 30);
 		solver2.addSolveLog(1L, 2L, true, 30);
 		solver3.addSolveLog(1L, 2L, true, 10); // 너가 꼴등
@@ -68,12 +64,8 @@ class SolverRepositoryTest {
 
 		final Solver solver1 = Solver.of(1L, schoolCode1);
 		final Solver solver2 = Solver.of(2L, schoolCode1);
-		final Solver solver3 = Solver.of(3L, schoolCode2);
-
-		solver1.setSchoolCode(schoolCode1);
-		solver2.setSchoolCode(schoolCode1);
 		// 얘만 다른 학교
-		solver3.setSchoolCode(schoolCode2);
+		final Solver solver3 = Solver.of(3L, schoolCode2);
 
 		solver1.addSolveLog(1L, 2L, true, 30);
 		solver2.addSolveLog(1L, 2L, true, 30);
