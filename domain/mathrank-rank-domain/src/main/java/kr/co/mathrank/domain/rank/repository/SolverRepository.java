@@ -52,6 +52,7 @@ SELECT new kr.co.mathrank.domain.rank.dto.SchoolRankQueryResult(
 	COUNT(*)
 )
 FROM Solver s
+WHERE s.schoolCode IS NOT NULL
 GROUP BY s.schoolCode
 ORDER BY s.score DESC
 """)
@@ -60,6 +61,7 @@ ORDER BY s.score DESC
 	@Query("""
 select count(distinct s.schoolCode)
 from Solver s
+WHERE s.schoolCode IS NOT NULL
 """)
 	Long countDistinctSchools();
 }

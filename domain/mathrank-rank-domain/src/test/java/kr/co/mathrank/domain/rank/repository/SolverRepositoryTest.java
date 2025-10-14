@@ -75,4 +75,23 @@ class SolverRepositoryTest {
 
 		Assertions.assertEquals(2, solverRepository.countDistinctSchools());
 	}
+
+	@Test
+	void 학교정보_NULL_이면_랭킹_안함() {
+		final String schoolCode1 = "first";
+		final String schoolCode2 = null;
+
+		final Solver solver1 = Solver.of(1L, schoolCode1);
+		final Solver solver2 = Solver.of(2L, schoolCode2);
+
+		solver1.addSolveLog(1L, 2L, true, 30);
+		solver2.addSolveLog(1L, 2L, true, 30);
+
+		solverRepository.saveAll(List.of(solver1, solver2));
+
+		Assertions.assertAll(
+			() -> Assertions.assertEquals(1, solverRepository.countDistinctSchools()),
+			() -> Assertions.assertEquals(1, solverRepository.findSchoolScores(Pageable.ofSize(10)).size())
+		);
+	}
 }
