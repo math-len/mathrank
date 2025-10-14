@@ -21,7 +21,7 @@ public class PortoneConfiguration {
 	@Configuration
 	static class PortoneConfigurationProperties {
 		private String apiSecret;
-		private String apiBase;
+		private String apiBase = "https://api.portone.io";
 		private String storeId;
 	}
 }
