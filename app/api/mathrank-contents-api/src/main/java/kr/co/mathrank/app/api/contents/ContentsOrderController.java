@@ -1,6 +1,7 @@
 package kr.co.mathrank.app.api.contents;
 
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -12,6 +13,7 @@ import kr.co.mathrank.app.api.common.authentication.Authorization;
 import kr.co.mathrank.app.api.common.authentication.LoginInfo;
 import kr.co.mathrank.app.api.common.authentication.MemberPrincipal;
 import kr.co.mathrank.domain.contents.dto.ContentOrderCommand;
+import kr.co.mathrank.domain.contents.dto.ContentOrderQueryResult;
 import kr.co.mathrank.domain.contents.service.ContentOrderService;
 import lombok.RequiredArgsConstructor;
 
@@ -40,4 +42,12 @@ public class ContentsOrderController {
 		return ResponseEntity.ok(orderId);
 	}
 
+	@GetMapping("/api/v1/content/order/{orderId}")
+	@Operation(summary = "주문 상태 조회 API")
+	@Authorization(openedForAll = true)
+	public ResponseEntity<ContentOrderQueryResult> queryOrderStatus(
+		@PathVariable final Long orderId
+	) {
+		return ResponseEntity.ok(contentOrderService.queryOrder(orderId));
+	}
 }
