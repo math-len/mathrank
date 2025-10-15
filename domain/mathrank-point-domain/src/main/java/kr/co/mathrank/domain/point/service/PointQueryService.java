@@ -3,6 +3,7 @@ package kr.co.mathrank.domain.point.service;
 import java.util.List;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
@@ -22,6 +23,7 @@ public class PointQueryService {
 	 * @param query
 	 * @return
 	 */
+	@Transactional(readOnly = true)
 	public PointQueryResult queryPoint(
 		@NotNull @Valid final PointQuery query
 	) {
