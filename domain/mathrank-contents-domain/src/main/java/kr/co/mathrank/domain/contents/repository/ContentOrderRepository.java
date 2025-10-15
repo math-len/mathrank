@@ -12,7 +12,7 @@ import jakarta.persistence.LockModeType;
 import kr.co.mathrank.domain.contents.entity.ContentOrder;
 import kr.co.mathrank.domain.contents.entity.OrderStatus;
 
-public interface ContentOrderRepository extends JpaRepository<ContentOrder, Long> {
+public interface ContentOrderRepository extends JpaRepository<ContentOrder, Long>, ContentOrderQueryRepository {
 	@Query("""
 SELECT co FROM ContentOrder co
 WHERE co.content.id = :contentId AND co.userId = :userId AND co.orderStatus IN :orderStatuses

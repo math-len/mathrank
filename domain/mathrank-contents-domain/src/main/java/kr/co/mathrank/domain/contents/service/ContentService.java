@@ -2,6 +2,7 @@ package kr.co.mathrank.domain.contents.service;
 
 import java.util.List;
 
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.annotation.Validated;
@@ -11,6 +12,7 @@ import jakarta.validation.constraints.NotNull;
 import kr.co.mathrank.common.page.PageResult;
 import kr.co.mathrank.common.page.PageUtil;
 import kr.co.mathrank.common.role.Role;
+import kr.co.mathrank.domain.contents.ContentsCacheConfiguration;
 import kr.co.mathrank.domain.contents.dto.ContentReadPageQuery;
 import kr.co.mathrank.domain.contents.dto.ContentReadPageQueryResult;
 import kr.co.mathrank.domain.contents.dto.ContentReadQuery;
@@ -66,6 +68,11 @@ public class ContentService {
 		return ContentReadQueryResult.from(content);
 	}
 
+	@Cacheable(
+		cacheNames = ContentsCacheConfiguration.CONTENT_LIST_PAGE_CACHE_NAME,
+		key = "'title::' + #pageQuery.title() + '::contentType::' + #pageQuery.contentType() + '::pageNumber::' + #pageNumber + '::pageSize::' + #pageSize",
+		condition = "#pageNumber <= 3"
+	)
 	public PageResult<ContentReadPageQueryResult> pageQuery(
 		@NotNull @Valid final ContentReadPageQuery pageQuery,
 		final int pageSize,

@@ -7,6 +7,7 @@ dependencies {
     implementation project(':common:mathrank-role')
     implementation project(':common:mathrank-event')
     implementation project(':common:mathrank-outbox')
+    implementation project(':common:mathrank-cache')
 
     // query dsl
     implementation "com.querydsl:querydsl-jpa:${dependencyManagement.importedProperties['querydsl.version']}:jakarta"
