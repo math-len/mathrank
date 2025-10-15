@@ -33,6 +33,7 @@ include(
         'app:api:mathrank-course-inner-api',
         'app:batch',
         'app:consumer',
+        'app:consumer:mathrank-point-consumer-monolith',
         'app:consumer:mathrank-problem-single-consumer-monolith',
         'app:consumer:mathrank-rank-consumer-monolith',
         'app:consumer:mathrank-assessment-consumer-monolith',
