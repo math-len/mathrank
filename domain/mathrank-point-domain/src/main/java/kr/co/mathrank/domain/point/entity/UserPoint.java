@@ -10,7 +10,9 @@ import jakarta.persistence.Version;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 @Entity
 @Table(
 	indexes = {
@@ -40,5 +42,22 @@ public class UserPoint {
 
 	public void addPoint(Long pointAmount) {
 		this.pointAmount += pointAmount;
+	}
+
+	/**
+	 * 포인트 소모 해도 0 이상인지 확인한다.
+	 * @param pointAmount
+	 * @return
+	 */
+	public boolean canRemovePoint(Long pointAmount) {
+		return this.pointAmount - pointAmount >= 0;
+	}
+
+	public void removePoint(Long pointAmount) {
+		this.pointAmount -= pointAmount;
+
+		if (this.pointAmount < 0) {
+			throw new IllegalStateException("cannot set negative point");
+		}
 	}
 }
