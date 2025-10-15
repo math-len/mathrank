@@ -17,10 +17,14 @@ import kr.co.mathrank.domain.contents.dto.ContentOrderQueryResult;
 import kr.co.mathrank.domain.contents.entity.Content;
 import kr.co.mathrank.domain.contents.entity.ContentOrder;
 import kr.co.mathrank.domain.contents.entity.OrderStatus;
+import kr.co.mathrank.domain.contents.exception.CannotFoundContentException;
+import kr.co.mathrank.domain.contents.exception.ContentPurchaseException;
 import kr.co.mathrank.domain.contents.repository.ContentOrderRepository;
 import kr.co.mathrank.domain.contents.repository.ContentRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 @Service
 @Validated
 @RequiredArgsConstructor
@@ -41,13 +45,17 @@ public class ContentOrderService {
 	@Transactional
 	public Long purchase(@NotNull @Valid final ContentOrderCommand command) {
 		final Content content = contentRepository.findByIdForShare(command.contentId())
-			.orElseThrow();
+			.orElseThrow(() -> {
+				log.info("[ContentOrderService.purchase] cannot found content - contentId: {}", command.contentId());
+				return new CannotFoundContentException();
+			});
 
 		// 이미 결제 진행중이거나, 성공했으면 추가 결제 X
 		// 동시 요청 시, 중복 결제가 시도될 위험이 있긴 하나, 극히 희박함
 		//		- 클라이언트가 idempotence key를 의도적으로 바꾼 경우에만 이와 같은 위험 발생
 		if(isAlreadyInProcessOrFinished(command)) {
-			throw new IllegalArgumentException();
+			log.info("[ContentOrderService.purchase] purchase is already in process or finished - contentId: {}, memberId: {}", command.contentId(), command.memberId());
+			throw new ContentPurchaseException("자료가 이미 결제중입니다.");
 		}
 
 		// idempotence key에 유니크 제약조건 -> 중복 주문 방지
@@ -63,17 +71,23 @@ public class ContentOrderService {
 	// 결제 완료 이벤트 수신
 	@Transactional
 	public void completeOrderToSucceed(@NotNull final Long orderId, @NotNull final BigDecimal purchasedPointAmount) {
-		final ContentOrder contentOrder = contentOrderRepository.findByOrderIdForUpdate(orderId, OrderStatus.PENDING)
-			.orElseThrow();
+		final ContentOrder contentOrder = getPendingOrder(orderId);
 		contentOrder.succeed(LocalDateTime.now(), purchasedPointAmount);
 	}
 
 	// 결제 실패 이벤트 수신
 	@Transactional
 	public void completeOrderToFailed(@NotNull final Long orderId) {
-		final ContentOrder contentOrder = contentOrderRepository.findByOrderIdForUpdate(orderId, OrderStatus.PENDING)
-			.orElseThrow();
+		final ContentOrder contentOrder = getPendingOrder(orderId);
 		contentOrder.failed(LocalDateTime.now());
+	}
+
+	private ContentOrder getPendingOrder(Long orderId) {
+		return contentOrderRepository.findByOrderIdForUpdate(orderId, OrderStatus.PENDING)
+			.orElseThrow(() -> {
+				log.info("[ContentOrderService.getPendingOrder] cannot found pending order - orderId: {}", orderId);
+				return new ContentPurchaseException("지연중인 주문을 찾을 수 없습니다.");
+			});
 	}
 
 	// 결제 상태 조회 api
@@ -84,7 +98,10 @@ public class ContentOrderService {
 		return contentOrderRepository.findById(orderId)
 			.filter(order -> order.getUserId().equals(requestMemberId))
 			.map(ContentOrderQueryResult::from)
-			.orElseThrow();
+			.orElseThrow(() -> {
+				log.info("[ContentOrderService.queryOrder] cannot access to order status info - orderId: {}, memberId: {}", orderId, requestMemberId);
+				return new ContentPurchaseException("존재하지 않는 주문이거나, 본인의 주문이 아닙니다.");
+			});
 	}
 
 	private boolean isAlreadyInProcessOrFinished(final ContentOrderCommand command) {
