@@ -36,7 +36,7 @@ public class PointConsumeService {
 			userPoint.removePoint(command.requirePointAmount(), command.orderId());
 			outboxPublisher.publish(
 				"mathrank-point-consume-succeeded",
-				PointConsumeSucceededEvent.of(command.memberId(), command.requirePointAmount(), userPoint.getPointAmount()));
+				PointConsumeSucceededEvent.of(command.orderId(), command.memberId(), command.requirePointAmount(), userPoint.getPointAmount()));
 			return;
 		}
 
@@ -44,7 +44,7 @@ public class PointConsumeService {
 		// 차감 불가 이벤트 발행
 		outboxPublisher.publish(
 			"mathrank-point-consume-failed",
-			PointConsumeFailedEvent.of(command.memberId(), command.requirePointAmount(), userPoint.getPointAmount()));
+			PointConsumeFailedEvent.of(command.orderId(), command.memberId(), command.requirePointAmount(), userPoint.getPointAmount()));
 	}
 
 	@org.jetbrains.annotations.NotNull
@@ -58,23 +58,25 @@ public class PointConsumeService {
 
 	// mathrank-point-consume-succeeded
 	record PointConsumeSucceededEvent(
+		Long orderId,
 		Long memberId,
 		Long consumedPointAmount,
 		Long remainingPointAmount
 	) implements EventPayload {
-		static PointConsumeSucceededEvent of(final Long memberId, final Long consumedPointAmount, final Long remainingPointAmount) {
-			return new PointConsumeSucceededEvent(memberId, consumedPointAmount, remainingPointAmount);
+		static PointConsumeSucceededEvent of(final Long orderId, final Long memberId, final Long consumedPointAmount, final Long remainingPointAmount) {
+			return new PointConsumeSucceededEvent(orderId, memberId, consumedPointAmount, remainingPointAmount);
 		}
 	}
 
 	// mathrank-point-consume-failed
 	record PointConsumeFailedEvent(
+		Long orderId,
 		Long memberId,
 		Long requiredPointAmount,
 		Long remainingPointAmount
 	) implements EventPayload {
-		static PointConsumeFailedEvent of(final Long memberId, final Long requiredPointAmount, final Long remainingPointAmount) {
-			return new PointConsumeFailedEvent(memberId, requiredPointAmount, remainingPointAmount);
+		static PointConsumeFailedEvent of(final Long orderId, final Long memberId, final Long requiredPointAmount, final Long remainingPointAmount) {
+			return new PointConsumeFailedEvent(orderId, memberId, requiredPointAmount, remainingPointAmount);
 		}
 	}
 }
