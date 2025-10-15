@@ -1,10 +1,14 @@
 package kr.co.mathrank.domain.point.entity;
 
+import java.util.List;
+
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Index;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import jakarta.persistence.Version;
 import lombok.AccessLevel;
@@ -30,6 +34,9 @@ public class UserPoint {
 
 	private Long pointAmount = 0L;
 
+	@OneToMany(mappedBy = "userPoint", cascade = CascadeType.PERSIST)
+	private List<PointConsumedLog> pointConsumedLogs;
+
 	@Version
 	private Long version = 0L;
 
@@ -53,11 +60,17 @@ public class UserPoint {
 		return this.pointAmount - pointAmount >= 0;
 	}
 
-	public void removePoint(Long pointAmount) {
+	public void removePoint(Long pointAmount, Long orderId) {
 		this.pointAmount -= pointAmount;
+
+		addLog(pointAmount, orderId);
 
 		if (this.pointAmount < 0) {
 			throw new IllegalStateException("cannot set negative point");
 		}
+	}
+
+	private void addLog(final Long pointAmount, final Long orderId) {
+		this.pointConsumedLogs.add(PointConsumedLog.of(orderId, pointAmount, this));
 	}
 }

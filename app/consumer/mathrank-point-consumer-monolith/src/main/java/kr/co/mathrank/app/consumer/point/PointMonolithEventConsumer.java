@@ -26,7 +26,10 @@ class PointMonolithEventConsumer {
 			log.info("[PointMonolithEventConsumer.consumeContentOrderRegisteredEvent] consume point consume event - event: {}", monolithEvent);
 			final Event<Events.ContentOrderRegisteredEvent> eventEvent = Event.fromJson(monolithEvent.payload(), Events.ContentOrderRegisteredEvent.class);
 			pointConsumeService.consume(new PointConsumeCommand(
-				eventEvent.getPayload().memberId(), eventEvent.getPayload().contentPointCost()));
+				eventEvent.getPayload().orderId(),
+				eventEvent.getPayload().memberId(),
+				eventEvent.getPayload().contentPointCost())
+			);
 		}
 	}
 }

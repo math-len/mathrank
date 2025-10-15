@@ -33,7 +33,7 @@ public class PointConsumeService {
 		// 포인트 차감해도 0 이상일떄
 		if (userPoint.canRemovePoint(command.requirePointAmount())) {
 			// 차감 완료 이벤트 발행
-			userPoint.removePoint(command.requirePointAmount());
+			userPoint.removePoint(command.requirePointAmount(), command.orderId());
 			outboxPublisher.publish(
 				"mathrank-point-consume-succeeded",
 				PointConsumeSucceededEvent.of(command.memberId(), command.requirePointAmount(), userPoint.getPointAmount()));
