@@ -101,7 +101,7 @@ public class ContentOrderService {
 		@NotNull final Long orderId,
 		@NotNull final Long requestMemberId
 	) {
-		return contentOrderRepository.findById(orderId)
+		return contentOrderRepository.findByIdWithContent(orderId)
 			.filter(order -> order.getUserId().equals(requestMemberId))
 			.map(ContentOrderQueryResult::from)
 			.orElseThrow(() -> {
