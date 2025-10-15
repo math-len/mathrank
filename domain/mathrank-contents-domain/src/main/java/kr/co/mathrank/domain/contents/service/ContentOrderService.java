@@ -1,5 +1,6 @@
 package kr.co.mathrank.domain.contents.service;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -12,6 +13,7 @@ import jakarta.validation.constraints.NotNull;
 import kr.co.mathrank.common.event.EventPayload;
 import kr.co.mathrank.common.outbox.TransactionalOutboxPublisher;
 import kr.co.mathrank.domain.contents.dto.ContentOrderCommand;
+import kr.co.mathrank.domain.contents.dto.ContentOrderQueryResult;
 import kr.co.mathrank.domain.contents.entity.Content;
 import kr.co.mathrank.domain.contents.entity.ContentOrder;
 import kr.co.mathrank.domain.contents.entity.OrderStatus;
@@ -48,6 +50,7 @@ public class ContentOrderService {
 			throw new IllegalArgumentException();
 		}
 
+		// idempotence key에 유니크 제약조건 -> 중복 주문 방지
 		final ContentOrder order = ContentOrder.create(content, command.memberId(), command.idempotenceKey());
 		contentOrderRepository.save(order);
 
@@ -55,6 +58,22 @@ public class ContentOrderService {
 		outboxPublisher.publish("mathrank-content-order-registered", ContentOrderRegisteredEvent.from(order));
 
 		return order.getId();
+	}
+
+	// 결제 완료 이벤트 수신
+	@Transactional
+	public void completeOrderToSucceed(@NotNull final Long orderId, @NotNull final BigDecimal purchasedPointAmount) {
+		final ContentOrder contentOrder = contentOrderRepository.findByOrderIdForUpdate(orderId, OrderStatus.PENDING)
+			.orElseThrow();
+		contentOrder.succeed(LocalDateTime.now(), purchasedPointAmount);
+	}
+
+	// 결제 실패 이벤트 수신
+	@Transactional
+	public void completeOrderToFailed(@NotNull final Long orderId) {
+		final ContentOrder contentOrder = contentOrderRepository.findByOrderIdForUpdate(orderId, OrderStatus.PENDING)
+			.orElseThrow();
+		contentOrder.failed(LocalDateTime.now());
 	}
 
 	private boolean isAlreadyInProcessOrFinished(final ContentOrderCommand command) {
@@ -66,6 +85,7 @@ public class ContentOrderService {
 	}
 
 	record ContentOrderRegisteredEvent(
+		Long orderId,
 		Long memberId,
 		Long contentId,
 		Long contentPointCost,
@@ -73,6 +93,7 @@ public class ContentOrderService {
 	) implements EventPayload {
 		static ContentOrderRegisteredEvent from(final ContentOrder order) {
 			return new ContentOrderRegisteredEvent(
+				order.getId(),
 				order.getContent().getId(),
 				order.getUserId(),
 				order.getContent().getPrice().longValue(),

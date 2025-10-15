@@ -1,5 +1,6 @@
 package kr.co.mathrank.domain.contents.entity;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 import org.hibernate.annotations.CreationTimestamp;
@@ -44,7 +45,7 @@ public class ContentOrder {
 	@CreationTimestamp
 	private LocalDateTime createdAt;
 
-	private LocalDateTime purchasedAt;
+	private LocalDateTime completedAt;
 
 	public static ContentOrder create(
 		Content content,
@@ -59,5 +60,16 @@ public class ContentOrder {
 		order.purchasedPointAmount = content.getPrice().longValue();
 
 		return order;
+	}
+
+	public void succeed(final LocalDateTime completedAt, final BigDecimal purchasedAmount) {
+		this.completedAt = completedAt;
+		this.purchasedPointAmount = purchasedAmount.longValue();
+		this.orderStatus = OrderStatus.SUCCEEDED;
+	}
+
+	public void failed(final LocalDateTime failedAt) {
+		this.completedAt = failedAt;
+		this.orderStatus = OrderStatus.FAILED;
 	}
 }
