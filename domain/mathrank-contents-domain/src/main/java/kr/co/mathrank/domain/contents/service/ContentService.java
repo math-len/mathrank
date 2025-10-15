@@ -20,6 +20,7 @@ import kr.co.mathrank.domain.contents.dto.ContentReadQueryResult;
 import kr.co.mathrank.domain.contents.dto.ContentRegisterCommand;
 import kr.co.mathrank.domain.contents.dto.ContentUpdateCommand;
 import kr.co.mathrank.domain.contents.entity.Content;
+import kr.co.mathrank.domain.contents.entity.OrderStatus;
 import kr.co.mathrank.domain.contents.exception.CannotFoundContentException;
 import kr.co.mathrank.domain.contents.exception.NotPurchasedContentException;
 import kr.co.mathrank.domain.contents.repository.ContentRepository;
@@ -100,7 +101,7 @@ public class ContentService {
 		}
 
 		// 일반 사용자는 결제해야지 조회 가능
-		if (content.getContentOrders().stream().anyMatch(order -> order.getUserId().equals(userId))) {
+		if (content.getContentOrders().stream().anyMatch(order -> order.getUserId().equals(userId) && order.getOrderStatus() == OrderStatus.SUCCEEDED)) {
 			return;
 		}
 
