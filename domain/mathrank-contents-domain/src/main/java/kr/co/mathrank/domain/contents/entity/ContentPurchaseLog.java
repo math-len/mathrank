@@ -22,6 +22,8 @@ public class ContentPurchaseLog {
 	@ManyToOne(fetch = FetchType.LAZY)
 	private Content content;
 
+	private OrderStatus orderStatus;
+
 	private Long purchasedPointAmount;
 
 	private LocalDateTime purchasedAt;
