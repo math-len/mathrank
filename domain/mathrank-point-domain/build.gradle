@@ -4,6 +4,10 @@ dependencies {
     implementation 'io.portone:server-sdk:0.21.0'
 
     implementation project(':common:mathrank-exception')
+    implementation project(':common:mathrank-outbox')
+    implementation project(':common:mathrank-event')
     implementation project(':common:mathrank-dataserializer')
     runtimeOnly 'com.h2database:h2'
+
+    testImplementation project(':common:mathrank-event-publisher-test')
 }

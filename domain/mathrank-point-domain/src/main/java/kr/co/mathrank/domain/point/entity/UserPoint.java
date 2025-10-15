@@ -1,16 +1,22 @@
 package kr.co.mathrank.domain.point.entity;
 
+import java.util.List;
+
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Index;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import jakarta.persistence.Version;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 @Entity
 @Table(
 	indexes = {
@@ -28,6 +34,9 @@ public class UserPoint {
 
 	private Long pointAmount = 0L;
 
+	@OneToMany(mappedBy = "userPoint", cascade = CascadeType.PERSIST)
+	private List<PointConsumedLog> pointConsumedLogs;
+
 	@Version
 	private Long version = 0L;
 
@@ -40,5 +49,28 @@ public class UserPoint {
 
 	public void addPoint(Long pointAmount) {
 		this.pointAmount += pointAmount;
+	}
+
+	/**
+	 * 포인트 소모 해도 0 이상인지 확인한다.
+	 * @param pointAmount
+	 * @return
+	 */
+	public boolean canRemovePoint(Long pointAmount) {
+		return this.pointAmount - pointAmount >= 0;
+	}
+
+	public void removePoint(Long pointAmount, Long orderId) {
+		this.pointAmount -= pointAmount;
+
+		addLog(pointAmount, orderId);
+
+		if (this.pointAmount < 0) {
+			throw new IllegalStateException("cannot set negative point");
+		}
+	}
+
+	private void addLog(final Long pointAmount, final Long orderId) {
+		this.pointConsumedLogs.add(PointConsumedLog.of(orderId, pointAmount, this));
 	}
 }
