@@ -49,7 +49,7 @@ public class PointConsumeService {
 
 	@org.jetbrains.annotations.NotNull
 	private UserPoint getPointOrCreate(PointConsumeCommand command) {
-		return pointRepository.findByUserId(command.memberId())
+		return pointRepository.findByUserIdForUpdate(command.memberId())
 			.orElseGet(() -> {
 				log.info("[PointConsumeService.consume] cannot found users point - userId: {}", command.memberId());
 				return pointRepository.save(UserPoint.of(command.memberId()));
