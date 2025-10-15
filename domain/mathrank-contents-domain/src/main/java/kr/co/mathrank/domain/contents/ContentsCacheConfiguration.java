@@ -27,7 +27,7 @@ public class ContentsCacheConfiguration {
 
 			@Override
 			public Duration ttl() {
-				return Duration.ofMinutes(1);
+				return Duration.ofSeconds(2);
 			}
 		};
 	}
