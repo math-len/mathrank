@@ -12,8 +12,11 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import kr.co.mathrank.app.api.common.authentication.Authorization;
 import kr.co.mathrank.app.api.common.authentication.LoginInfo;
 import kr.co.mathrank.app.api.common.authentication.MemberPrincipal;
+import kr.co.mathrank.common.page.PageResult;
 import kr.co.mathrank.domain.contents.dto.ContentOrderCommand;
+import kr.co.mathrank.domain.contents.dto.ContentOrderQuery;
 import kr.co.mathrank.domain.contents.dto.ContentOrderQueryResult;
+import kr.co.mathrank.domain.contents.service.ContentOrderQueryService;
 import kr.co.mathrank.domain.contents.service.ContentOrderService;
 import lombok.RequiredArgsConstructor;
 
@@ -22,6 +25,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class ContentsOrderController {
 	private final ContentOrderService contentOrderService;
+	private final ContentOrderQueryService contentOrderQueryService;
 
 	@PostMapping("/api/v1/content/{contentId}")
 	@Operation(summary = "자료 주문 API", description = "주문 ID를 반환합니다.")
@@ -50,5 +54,22 @@ public class ContentsOrderController {
 		@LoginInfo final MemberPrincipal memberPrincipal
 	) {
 		return ResponseEntity.ok(contentOrderService.queryOrder(orderId, memberPrincipal.memberId()));
+	}
+
+	@GetMapping("/api/v1/content/orders/my")
+	@Operation(summary = "본인 주문 내역 조회 API")
+	@Authorization(openedForAll = true)
+	public ResponseEntity<PageResult<ContentOrderQueryResult>> queryOrders(
+		@RequestParam(defaultValue = "1") final Integer pageNumber,
+		@RequestParam(defaultValue = "10") final Integer pageSize,
+		@LoginInfo final MemberPrincipal memberPrincipal
+	) {
+		final PageResult<ContentOrderQueryResult> result = contentOrderQueryService.contentOrderPageQuery(
+			new ContentOrderQuery(memberPrincipal.memberId()),
+			pageSize,
+			pageNumber
+		);
+
+		return ResponseEntity.ok(result);
 	}
 }
