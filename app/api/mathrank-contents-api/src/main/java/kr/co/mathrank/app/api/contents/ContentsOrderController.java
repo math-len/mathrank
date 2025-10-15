@@ -46,8 +46,9 @@ public class ContentsOrderController {
 	@Operation(summary = "주문 상태 조회 API")
 	@Authorization(openedForAll = true)
 	public ResponseEntity<ContentOrderQueryResult> queryOrderStatus(
-		@PathVariable final Long orderId
+		@PathVariable final Long orderId,
+		@LoginInfo final MemberPrincipal memberPrincipal
 	) {
-		return ResponseEntity.ok(contentOrderService.queryOrder(orderId));
+		return ResponseEntity.ok(contentOrderService.queryOrder(orderId, memberPrincipal.memberId()));
 	}
 }

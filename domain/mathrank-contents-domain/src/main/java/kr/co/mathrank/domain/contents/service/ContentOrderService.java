@@ -77,8 +77,12 @@ public class ContentOrderService {
 	}
 
 	// 결제 상태 조회 api
-	public ContentOrderQueryResult queryOrder(@NotNull final Long orderId) {
+	public ContentOrderQueryResult queryOrder(
+		@NotNull final Long orderId,
+		@NotNull final Long requestMemberId
+	) {
 		return contentOrderRepository.findById(orderId)
+			.filter(order -> order.getUserId().equals(requestMemberId))
 			.map(ContentOrderQueryResult::from)
 			.orElseThrow();
 	}
