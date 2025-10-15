@@ -1,5 +1,6 @@
 package kr.co.mathrank.domain.point.entity;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import jakarta.persistence.CascadeType;
@@ -35,7 +36,7 @@ public class UserPoint {
 	private Long pointAmount = 0L;
 
 	@OneToMany(mappedBy = "userPoint", cascade = CascadeType.PERSIST)
-	private List<PointConsumedLog> pointConsumedLogs;
+	private final List<PointConsumedLog> pointConsumedLogs = new ArrayList<>();
 
 	@Version
 	private Long version = 0L;
