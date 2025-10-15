@@ -15,11 +15,11 @@ import kr.co.mathrank.domain.contents.entity.OrderStatus;
 public interface ContentOrderRepository extends JpaRepository<ContentOrder, Long> {
 	@Query("""
 SELECT co FROM ContentOrder co
-WHERE co.content.id = :id AND co.userId = :userId AND co.orderStatus IN :orderStatuses
+WHERE co.content.id = :contentId AND co.userId = :userId AND co.orderStatus IN :orderStatuses
 """)
 	@Lock(LockModeType.PESSIMISTIC_READ)
 	Optional<ContentOrder> findByContentIdAndUserIdAndOrderStatusForShare(
-		@Param("id") Long contentId,
+		@Param("contentId") Long contentId,
 		@Param("userId") Long userId,
 		@Param("orderStatuses") List<OrderStatus> orderStatuses
 	);
