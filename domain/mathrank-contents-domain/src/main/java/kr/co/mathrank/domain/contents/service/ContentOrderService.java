@@ -51,7 +51,7 @@ public class ContentOrderService {
 		}
 
 		// idempotence key에 유니크 제약조건 -> 중복 주문 방지
-		final ContentOrder order = ContentOrder.create(content, command.memberId(), command.idempotenceKey());
+		final ContentOrder order = ContentOrder.create(content, command.memberId(), command.idempotencyKey());
 		contentOrderRepository.save(order);
 
 		// 주문 생성 이벤트 발행

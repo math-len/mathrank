@@ -7,7 +7,7 @@ import jakarta.validation.constraints.NotNull;
  *
  * @param memberId
  * @param contentId
- * @param idempotenceKey 중복 결제 방지를 위한 키
+ * @param idempotencyKey 중복 결제 방지를 위한 키
  */
 public record ContentOrderCommand(
 	@NotNull
@@ -15,6 +15,6 @@ public record ContentOrderCommand(
 	@NotNull
 	Long contentId,
 	@NotBlank
-	String idempotenceKey
+	String idempotencyKey
 ) {
 }
