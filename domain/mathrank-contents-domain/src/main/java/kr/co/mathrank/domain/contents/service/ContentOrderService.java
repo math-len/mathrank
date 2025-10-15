@@ -4,6 +4,7 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
 
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.annotation.Validated;
@@ -60,7 +61,12 @@ public class ContentOrderService {
 
 		// idempotence key에 유니크 제약조건 -> 중복 주문 방지
 		final ContentOrder order = ContentOrder.create(content, command.memberId(), command.idempotencyKey());
-		contentOrderRepository.save(order);
+		try {
+			contentOrderRepository.saveAndFlush(order);
+		} catch (DataIntegrityViolationException e) {
+			log.info("[ContentOrderService.purchase] duplicated idempotency key - contentId: {}, memberId: {}, idempotencyKey: {}", command.contentId(), command.memberId(), command.idempotencyKey());
+			throw new ContentPurchaseException("멱등키가 중복되는 결제입니다. 다른 키로 다시 시도해주세요");
+		}
 
 		// 주문 생성 이벤트 발행
 		outboxPublisher.publish("mathrank-content-order-registered", ContentOrderRegisteredEvent.from(order));
