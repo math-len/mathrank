@@ -23,6 +23,10 @@ import lombok.Getter;
 			name = "idx_unique_idempotencyKey",
 			columnList = "idempotency_key",
 			unique = true
+		),
+		@Index(
+			name = "idx_userId",
+			columnList = "user_id"
 		)
 	}
 )
