@@ -12,7 +12,7 @@ import lombok.Getter;
 
 @Entity
 @Getter
-public class ContentPurchaseLog {
+public class ContentOrder {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;

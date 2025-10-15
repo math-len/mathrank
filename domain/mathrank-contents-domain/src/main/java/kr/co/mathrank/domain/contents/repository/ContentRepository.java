@@ -11,7 +11,7 @@ import kr.co.mathrank.domain.contents.entity.Content;
 public interface ContentRepository extends JpaRepository<Content, Long>, ContentQueryRepository {
 	@Query("""
 SELECT c FROM Content c
-LEFT JOIN FETCH c.contentUsers user
+LEFT JOIN FETCH c.contentOrders
 WHERE c.id = :contentId
 """)
 	Optional<Content> findContentWithPurchasedUsers(@Param("contentId") Long contentId);
