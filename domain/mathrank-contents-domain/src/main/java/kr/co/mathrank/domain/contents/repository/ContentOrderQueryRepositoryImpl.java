@@ -29,6 +29,7 @@ class ContentOrderQueryRepositoryImpl implements ContentOrderQueryRepository {
 			.where(
 				whereConditions(query)
 			)
+			.leftJoin(contentOrder.content).fetchJoin()
 			.limit(pageSize)
 			.offset(pageNumber * pageSize)
 			.orderBy(new OrderSpecifier<>(Order.DESC, contentOrder.createdAt))

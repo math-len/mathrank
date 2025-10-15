@@ -33,4 +33,11 @@ WHERE co.id = :orderId AND co.orderStatus = :orderStatus
 		@Param("orderId") Long orderId,
 		@Param("orderStatus") OrderStatus orderStatus
 	);
+
+	@Query("""
+SELECT co FROM ContentOrder co
+LEFT JOIN FETCH co.content
+WHERE co.id = :orderId AND co.userId = :userId
+		""")
+	Optional<ContentOrder> findByIdWithContent(@Param("orderId") Long contentId);
 }

@@ -26,8 +26,8 @@ public class ContentOrderQueryService {
 	private final ContentOrderRepository contentOrderRepository;
 
 	@Cacheable(
-		key = "'userId' + #query.memberId() +'pageSize::' + #pageSize + '::pageNumber::' + #pageNumber",
-		condition = "#pageNumber < 1"
+		key = "'userId::' + #query.memberId() +'::pageSize::' + #pageSize + '::pageNumber::' + #pageNumber",
+		condition = "#pageNumber < 3"
 	)
 	public PageResult<ContentOrderQueryResult> contentOrderPageQuery(
 		@NotNull final ContentOrderQuery query,
