@@ -1,6 +1,5 @@
 package kr.co.mathrank.domain.contents.entity;
 
-import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 import jakarta.persistence.Entity;
@@ -13,7 +12,7 @@ import lombok.Getter;
 
 @Entity
 @Getter
-public class ContentUser {
+public class ContentPurchaseLog {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
@@ -23,7 +22,7 @@ public class ContentUser {
 	@ManyToOne(fetch = FetchType.LAZY)
 	private Content content;
 
-	private BigDecimal price;
+	private Long purchasedPointAmount;
 
 	private LocalDateTime purchasedAt;
 }

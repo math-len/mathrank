@@ -93,7 +93,7 @@ public class ContentService {
 		}
 
 		// 일반 사용자는 결제해야지 조회 가능
-		if (content.getContentUsers().stream().anyMatch(user -> user.getUserId().equals(userId))) {
+		if (content.getContentPurchaseLogs().stream().anyMatch(user -> user.getUserId().equals(userId))) {
 			return;
 		}
 

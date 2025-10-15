@@ -43,7 +43,7 @@ public class Content {
 	private String text;
 
 	@OneToMany(mappedBy = "content")
-	private List<ContentUser> contentUsers;
+	private List<ContentPurchaseLog> contentPurchaseLogs;
 
 	@OneToMany(mappedBy = "content", cascade = CascadeType.PERSIST, orphanRemoval = true)
 	private List<UploadFileInfo> files;
