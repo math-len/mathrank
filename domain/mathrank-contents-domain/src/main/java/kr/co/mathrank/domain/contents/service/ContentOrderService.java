@@ -101,8 +101,8 @@ public class ContentOrderService {
 		static ContentOrderRegisteredEvent from(final ContentOrder order) {
 			return new ContentOrderRegisteredEvent(
 				order.getId(),
-				order.getContent().getId(),
 				order.getUserId(),
+				order.getContent().getId(),
 				order.getContent().getPrice().longValue(),
 				order.getCreatedAt()
 			);
