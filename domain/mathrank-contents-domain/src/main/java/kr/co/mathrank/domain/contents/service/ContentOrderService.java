@@ -76,6 +76,13 @@ public class ContentOrderService {
 		contentOrder.failed(LocalDateTime.now());
 	}
 
+	// 결제 상태 조회 api
+	public ContentOrderQueryResult queryOrder(@NotNull final Long orderId) {
+		return contentOrderRepository.findById(orderId)
+			.map(ContentOrderQueryResult::from)
+			.orElseThrow();
+	}
+
 	private boolean isAlreadyInProcessOrFinished(final ContentOrderCommand command) {
 		return contentOrderRepository.findByContentIdAndUserIdAndOrderStatusForShare(
 				command.contentId(),
