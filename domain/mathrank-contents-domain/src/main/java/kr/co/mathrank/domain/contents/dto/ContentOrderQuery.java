@@ -1,8 +1,9 @@
 package kr.co.mathrank.domain.contents.dto;
 
-import jakarta.validation.constraints.NotNull;
+import kr.co.mathrank.domain.contents.entity.OrderStatus;
 
 public record ContentOrderQuery(
-	Long memberId
+	Long memberId,
+	OrderStatus orderStatus
 ) {
 }

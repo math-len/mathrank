@@ -12,6 +12,7 @@ import com.querydsl.jpa.impl.JPAQueryFactory;
 
 import kr.co.mathrank.domain.contents.dto.ContentOrderQuery;
 import kr.co.mathrank.domain.contents.entity.ContentOrder;
+import kr.co.mathrank.domain.contents.entity.OrderStatus;
 import kr.co.mathrank.domain.contents.entity.QContentOrder;
 import lombok.RequiredArgsConstructor;
 
@@ -50,7 +51,8 @@ class ContentOrderQueryRepositoryImpl implements ContentOrderQueryRepository {
 
 	private BooleanExpression[] whereConditions(ContentOrderQuery query) {
 		return new BooleanExpression[] {
-			matchMemberId(query.memberId())
+			matchMemberId(query.memberId()),
+			matchOrderStatus(query.orderStatus())
 		};
 	}
 
@@ -60,5 +62,13 @@ class ContentOrderQueryRepositoryImpl implements ContentOrderQueryRepository {
 		}
 
 		return QContentOrder.contentOrder.userId.eq(memberId);
+	}
+
+	private BooleanExpression matchOrderStatus(final OrderStatus orderStatus) {
+		if (orderStatus == null) {
+			return null;
+		}
+
+		return QContentOrder.contentOrder.orderStatus.eq(orderStatus);
 	}
 }
