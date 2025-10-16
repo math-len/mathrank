@@ -12,14 +12,11 @@ import org.springframework.web.client.RestClient;
 
 import jakarta.validation.constraints.NotNull;
 import kr.co.mathrank.client.config.TimeoutConfiguredClient;
-import kr.co.mathrank.client.exception.aspect.Client;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
-@Client
 @Component
 public class SchoolClient extends TimeoutConfiguredClient {
 	@Value("${neice.school.key:}")

@@ -10,13 +10,11 @@ import org.springframework.web.client.RestClient;
 
 import jakarta.validation.constraints.NotNull;
 import kr.co.mathrank.client.config.TimeoutConfiguredClient;
-import kr.co.mathrank.client.exception.aspect.Client;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Component
-@Client
 public class PointClient extends TimeoutConfiguredClient {
 	private static final String URL_FORMAT = "%s:%s";
 

@@ -44,7 +44,6 @@ include(
         'client',
         'client:mathrank-client-result',
         'client:mathrank-client-config',
-        'client:mathrank-client-exception',
         'client:internal',
         'client:internal:mathrank-point-client',
         'client:internal:mathrank-course-client',
