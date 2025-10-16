@@ -42,6 +42,7 @@ include(
         'app:consumer:mathrank-problem-single-read-consumer-monolith',
 
         'client',
+        'client:mathrank-client-result',
         'client:mathrank-client-config',
         'client:mathrank-client-exception',
         'client:internal',
