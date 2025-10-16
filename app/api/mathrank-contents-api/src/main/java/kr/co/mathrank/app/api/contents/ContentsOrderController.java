@@ -16,6 +16,7 @@ import kr.co.mathrank.common.page.PageResult;
 import kr.co.mathrank.domain.contents.dto.ContentOrderCommand;
 import kr.co.mathrank.domain.contents.dto.ContentOrderQuery;
 import kr.co.mathrank.domain.contents.dto.ContentOrderQueryResult;
+import kr.co.mathrank.domain.contents.entity.OrderStatus;
 import kr.co.mathrank.domain.contents.service.ContentOrderQueryService;
 import kr.co.mathrank.domain.contents.service.ContentOrderService;
 import lombok.RequiredArgsConstructor;
@@ -62,10 +63,11 @@ public class ContentsOrderController {
 	public ResponseEntity<PageResult<ContentOrderQueryResult>> queryOrders(
 		@RequestParam(defaultValue = "1") final Integer pageNumber,
 		@RequestParam(defaultValue = "10") final Integer pageSize,
+		@RequestParam(required = false) final OrderStatus orderStatus,
 		@LoginInfo final MemberPrincipal memberPrincipal
 	) {
 		final PageResult<ContentOrderQueryResult> result = contentOrderQueryService.contentOrderPageQuery(
-			new ContentOrderQuery(memberPrincipal.memberId()),
+			new ContentOrderQuery(memberPrincipal.memberId(), orderStatus),
 			pageSize,
 			pageNumber
 		);
