@@ -14,7 +14,7 @@ import kr.co.mathrank.common.event.Event;
 import kr.co.mathrank.common.event.publisher.monolith.MonolithEvent;
 import kr.co.mathrank.domain.problem.single.read.service.SingleProblemReadModelDeleteService;
 import kr.co.mathrank.domain.problem.single.read.service.SingleProblemReadModelRegisterService;
-import kr.co.mathrank.domain.problem.single.read.service.SingleProblemUpdateService;
+import kr.co.mathrank.domain.problem.single.read.service.SingleProblemReadModelUpdateService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -30,7 +30,7 @@ import lombok.extern.slf4j.Slf4j;
 @Component
 @RequiredArgsConstructor
 public class SingleProblemReadMonolithEventListener {
-	private final SingleProblemUpdateService singleProblemUpdateService;
+	private final SingleProblemReadModelUpdateService singleProblemUpdateService;
 	private final SingleProblemReadModelRegisterService singleProblemReadModelRegisterService;
 
 	private static String PROBLEM_INFO_UPDATED_TOPIC = "problem-info-updated";

@@ -28,7 +28,7 @@ import lombok.extern.slf4j.Slf4j;
 @Service
 @Validated
 @RequiredArgsConstructor
-public class SingleProblemUpdateService {
+public class SingleProblemReadModelUpdateService {
 	private final SingleProblemReadModelRepository singleProblemReadModelRepository;
 	private final SingleProblemSolverRepository singleProblemSolverRepository;
 

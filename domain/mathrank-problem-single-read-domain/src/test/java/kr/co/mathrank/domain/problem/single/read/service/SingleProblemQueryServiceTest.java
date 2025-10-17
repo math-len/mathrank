@@ -4,7 +4,6 @@ import java.time.LocalDateTime;
 import java.util.Comparator;
 import java.util.List;
 
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,7 +35,7 @@ class SingleProblemQueryServiceTest {
 	@Autowired
 	private SingleProblemQueryService queryService;
 	@Autowired
-	private SingleProblemUpdateService singleProblemUpdateService;
+	private SingleProblemReadModelUpdateService singleProblemUpdateService;
 
 	@Autowired
 	private SingleProblemReadModelRepository repository;

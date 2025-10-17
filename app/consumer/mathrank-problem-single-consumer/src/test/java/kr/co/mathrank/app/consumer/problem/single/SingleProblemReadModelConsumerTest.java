@@ -24,7 +24,7 @@ import kr.co.mathrank.domain.problem.core.Difficulty;
 import kr.co.mathrank.domain.problem.core.PastProblem;
 import kr.co.mathrank.domain.problem.single.read.dto.SingleProblemAttemptStatsUpdateCommand;
 import kr.co.mathrank.domain.problem.single.read.dto.SingleProblemReadModelUpdateCommand;
-import kr.co.mathrank.domain.problem.single.read.service.SingleProblemUpdateService;
+import kr.co.mathrank.domain.problem.single.read.service.SingleProblemReadModelUpdateService;
 
 @SpringBootTest(classes = {
 	SingleProblemReadModelUpdateMessageConsumer.class,
@@ -41,7 +41,7 @@ class SingleProblemReadModelConsumerTest {
 
 	// 실제 서비스 대신 Mock 객체를 주입하여 상호작용을 검증합니다.
 	@MockitoBean
-	private SingleProblemUpdateService singleProblemUpdateService;
+	private SingleProblemReadModelUpdateService singleProblemUpdateService;
 
 	@Test
 	void 유효한_업데이트_이벤트를_수신하면_페이로드를_파싱하여_서비스_로직을_호출한다() {
