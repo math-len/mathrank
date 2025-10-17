@@ -9,7 +9,9 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.client.RestClient;
 
 import jakarta.validation.constraints.NotNull;
+import kr.co.mathrank.client.config.RestClientResponseDecorator;
 import kr.co.mathrank.client.config.TimeoutConfiguredClient;
+import kr.co.mathrank.client.result.ClientResponse;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -22,8 +24,9 @@ public class CourseClient extends TimeoutConfiguredClient {
 	private static final String URL_FORMAT = "%s:%s";
 
 	private final RestClient restClient;
+	private final RestClientResponseDecorator responseDecorator;
 
-	CourseClient(final CourseClientProperties properties) {
+	CourseClient(final CourseClientProperties properties, final RestClientResponseDecorator restClientResponseDecorator) {
 		final String baseURL = URL_FORMAT.formatted(properties.getHost(), properties.getPort());
 		log.info("[CourseClient.new] init : {}", baseURL);
 		this.restClient = RestClient.builder()
@@ -33,8 +36,10 @@ public class CourseClient extends TimeoutConfiguredClient {
 			)
 			.baseUrl(baseURL)
 			.build();
+		this.responseDecorator = restClientResponseDecorator;
 	}
 
+	@Deprecated
 	public CourseQueryContainsParentsResult getParentCourses(final String coursePath) {
 		log.info("[CourseClient.getParentCourses]: called - coursePath: {}", coursePath);
 		return restClient.get()
@@ -44,6 +49,10 @@ public class CourseClient extends TimeoutConfiguredClient {
 				.build())
 			.retrieve()
 			.body(CourseQueryContainsParentsResult.class);
+	}
+
+	public ClientResponse<CourseQueryContainsParentsResult> getParentCoursesResponse(final String coursePath) {
+		return responseDecorator.wrap(() -> getParentCourses(coursePath));
 	}
 
 	@Getter
