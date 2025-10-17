@@ -67,7 +67,7 @@ public class SingleProblemUpdateService {
 	public void updateSingleProblemName(@NotNull @Valid final SingleProblemReadModelNameUpdateCommand command) {
 		final SingleProblemReadModel model = singleProblemReadModelRepository.findByIdForUpdate(command.singleProblemId())
 			.orElseThrow(() -> {
-				log.warn("[SingleProblemUpdateService.updateSingleProblemName] cannot find problemId: {}", command.singleProblemId());
+				log.warn("[SingleProblemUpdateService.updateSingleProblemName] cannot find single problem - singleProblemId {}", command.singleProblemId());
 				return new CannotFoundProblemException();
 			});
 		model.setSingleProblemName(command.singleProblemName());
