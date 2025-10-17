@@ -7,6 +7,7 @@ import kr.co.mathrank.domain.problem.core.AnswerType;
 import kr.co.mathrank.domain.problem.core.Difficulty;
 import kr.co.mathrank.domain.problem.core.PastProblem;
 import kr.co.mathrank.domain.problem.single.read.dto.SingleProblemAttemptStatsUpdateCommand;
+import kr.co.mathrank.domain.problem.single.read.dto.SingleProblemReadModelNameUpdateCommand;
 import kr.co.mathrank.domain.problem.single.read.dto.SingleProblemReadModelRegisterCommand;
 import kr.co.mathrank.domain.problem.single.read.dto.SingleProblemReadModelUpdateCommand;
 
@@ -100,6 +101,20 @@ public class EventPayloads {
 		Long memberId
 	) implements EventPayload {
 
+	}
+
+	record SingleProblemNameUpdatedEventPayload(
+		Long singleProblemId,
+		String singleProblemName,
+		Long problemId,
+		Long memberId
+	) implements EventPayload {
+		public SingleProblemReadModelNameUpdateCommand toCommand() {
+			return new SingleProblemReadModelNameUpdateCommand(
+				singleProblemId,
+				singleProblemName
+			);
+		}
 	}
 
 	record ProblemDeletedEvent(
