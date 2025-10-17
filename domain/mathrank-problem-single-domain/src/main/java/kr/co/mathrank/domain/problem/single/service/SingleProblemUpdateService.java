@@ -8,7 +8,7 @@ import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 import kr.co.mathrank.common.event.EventPayload;
 import kr.co.mathrank.common.outbox.TransactionalOutboxPublisher;
-import kr.co.mathrank.domain.problem.single.dto.SingleProblemUpdateCommand;
+import kr.co.mathrank.domain.problem.single.dto.SingleProblemNameUpdateCommand;
 import kr.co.mathrank.domain.problem.single.entity.SingleProblem;
 import kr.co.mathrank.domain.problem.single.exception.CannotFindSingleProblemException;
 import kr.co.mathrank.domain.problem.single.repository.SingleProblemRepository;
@@ -24,7 +24,7 @@ public class SingleProblemUpdateService {
 	private final TransactionalOutboxPublisher outboxPublisher;
 
 	@Transactional
-	public void update(@NotNull @Valid final SingleProblemUpdateCommand command) {
+	public void update(@NotNull @Valid final SingleProblemNameUpdateCommand command) {
 		final SingleProblem singleProblem = findSingleProblem(command.singleProblemId());
 		singleProblem.setSingleProblemName(command.singleProblemName());
 		outboxPublisher.publish("single-problem-name-updated", SingleProblemUpdatedEventPayload.from(singleProblem));

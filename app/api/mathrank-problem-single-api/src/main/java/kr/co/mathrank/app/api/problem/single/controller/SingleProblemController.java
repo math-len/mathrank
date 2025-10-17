@@ -9,8 +9,11 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.filter.RequestContextFilter;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -28,11 +31,13 @@ import kr.co.mathrank.domain.problem.single.dto.SingleProblemSolutionQuery;
 import kr.co.mathrank.domain.problem.single.dto.SingleProblemSolutionQueryResult;
 import kr.co.mathrank.domain.problem.single.dto.SingleProblemSolveCommand;
 import kr.co.mathrank.domain.problem.single.dto.SingleProblemSolveResult;
+import kr.co.mathrank.domain.problem.single.dto.SingleProblemNameUpdateCommand;
 import kr.co.mathrank.domain.problem.single.service.ChallengerQueryService;
 import kr.co.mathrank.domain.problem.single.service.SingleProblemDeleteService;
 import kr.co.mathrank.domain.problem.single.service.SingleProblemRankQueryService;
 import kr.co.mathrank.domain.problem.single.service.SingleProblemService;
 import kr.co.mathrank.domain.problem.single.service.SingleProblemSolutionQueryService;
+import kr.co.mathrank.domain.problem.single.service.SingleProblemUpdateService;
 import lombok.RequiredArgsConstructor;
 
 @Tag(name = "개별 문제 API")
@@ -44,6 +49,7 @@ public class SingleProblemController {
 	private final ChallengerQueryService challengerQueryService;
 	private final SingleProblemDeleteService singleProblemDeleteService;
 	private final SingleProblemSolutionQueryService singleProblemSolutionQueryService;
+	private final SingleProblemUpdateService singleProblemUpdateService;
 
 	@Operation(summary = "개별 문제 풀이 API", description = "해당 사용자의 문제풀이를 채점하고, 결과를 저장합니다. 풀이 결과는 모두 저장됩니다")
 	@PostMapping("/api/v1/problem/single/solve")
@@ -132,5 +138,18 @@ public class SingleProblemController {
 		final SingleProblemSolutionQueryResult result = singleProblemSolutionQueryService.getSolution(query);
 
 		return ResponseEntity.ok(result);
+	}
+
+	@Operation(summary = "개별문제 수정 API - 관리자 전용", description = "이미 문제를 푼 사용자만 조회 가능합니다.")
+	@PutMapping("/api/v1/problem/single/{singleProblemId}/title")
+	@Authorization(values = Role.ADMIN)
+	public ResponseEntity<SingleProblemSolutionQueryResult> querySolution(
+		@PathVariable final Long singleProblemId,
+		@RequestBody @Valid final SingleProblemNameUpdateRequest request
+	) {
+		final SingleProblemNameUpdateCommand command = request.toCommand(singleProblemId);
+		singleProblemUpdateService.update(command);
+
+		return ResponseEntity.ok().build();
 	}
 }
