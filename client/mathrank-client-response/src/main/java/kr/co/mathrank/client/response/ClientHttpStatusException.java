@@ -1,4 +1,4 @@
-package kr.co.mathrank.client.result;
+package kr.co.mathrank.client.response;
 
 import lombok.Getter;
 

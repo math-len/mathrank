@@ -4,5 +4,5 @@ plugins {
 
 dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-web'
-    implementation project(':client:mathrank-client-result')
+    implementation project(':client:mathrank-client-response')
 }

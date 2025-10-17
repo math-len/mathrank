@@ -1,4 +1,4 @@
-package kr.co.mathrank.client.result;
+package kr.co.mathrank.client.response;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;

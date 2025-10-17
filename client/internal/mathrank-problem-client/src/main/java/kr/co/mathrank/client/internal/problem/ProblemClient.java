@@ -12,7 +12,7 @@ import org.springframework.web.client.RestClient;
 import jakarta.validation.constraints.NotNull;
 import kr.co.mathrank.client.config.RestClientResponseDecorator;
 import kr.co.mathrank.client.config.TimeoutConfiguredClient;
-import kr.co.mathrank.client.result.ClientResponse;
+import kr.co.mathrank.client.response.ClientResponse;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;

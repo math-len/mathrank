@@ -6,7 +6,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.client.ResourceAccessException;
 import org.springframework.web.client.RestClientResponseException;
 
-import kr.co.mathrank.client.result.ClientResponse;
+import kr.co.mathrank.client.response.ClientResponse;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
