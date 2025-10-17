@@ -19,6 +19,7 @@ import jakarta.persistence.OneToMany;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Entity
 @Getter
@@ -31,6 +32,7 @@ public class SingleProblem {
 	@Column
 	private Long problemId;
 
+	@Setter
 	private String singleProblemName;
 
 	private Long memberId;
