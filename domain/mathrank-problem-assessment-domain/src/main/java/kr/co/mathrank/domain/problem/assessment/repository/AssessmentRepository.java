@@ -11,6 +11,7 @@ import org.springframework.data.repository.query.Param;
 import jakarta.persistence.LockModeType;
 import kr.co.mathrank.domain.problem.assessment.entity.Assessment;
 import kr.co.mathrank.domain.problem.assessment.entity.AssessmentPeriodType;
+import kr.co.mathrank.domain.problem.assessment.entity.AssessmentSubmission;
 
 public interface AssessmentRepository extends JpaRepository<Assessment, Long>, AssessmentQueryRepository{
 	@Query("""
@@ -50,11 +51,4 @@ LEFT JOIN FETCH ass.assessmentSubmissions assSub
 WHERE ass.id = :assessmentId AND assSub.memberId = :memberId
 """)
 	Optional<Assessment> findByAssessmentIdAndSubmissionMemberId(@Param("assessmentId") Long assessmentId, @Param("memberId") Long memberId);
-
-	@Query("""
-SELECT ass FROM Assessment ass
-LEFT JOIN FETCH ass.assessmentItems assItem
-WHERE assItem.problemId = :problemId
-""")
-	List<Assessment> findAllContainsProblemId(@Param("problemId") final Long problemId);
 }
