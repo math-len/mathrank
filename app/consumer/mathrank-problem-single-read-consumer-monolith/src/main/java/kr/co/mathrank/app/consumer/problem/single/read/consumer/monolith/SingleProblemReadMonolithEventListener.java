@@ -7,6 +7,7 @@ import org.springframework.stereotype.Component;
 import kr.co.mathrank.app.consumer.problem.single.read.consumer.monolith.EventPayloads.ProblemDeletedEvent;
 import kr.co.mathrank.app.consumer.problem.single.read.consumer.monolith.EventPayloads.ProblemUpdatedEventPayload;
 import kr.co.mathrank.app.consumer.problem.single.read.consumer.monolith.EventPayloads.SingleProblemDeletedEvent;
+import kr.co.mathrank.app.consumer.problem.single.read.consumer.monolith.EventPayloads.SingleProblemNameUpdatedEventPayload;
 import kr.co.mathrank.app.consumer.problem.single.read.consumer.monolith.EventPayloads.SingleProblemRegisteredEventPayload;
 import kr.co.mathrank.app.consumer.problem.single.read.consumer.monolith.EventPayloads.SingleProblemSolvedEventPayload;
 import kr.co.mathrank.common.event.Event;
@@ -37,6 +38,7 @@ public class SingleProblemReadMonolithEventListener {
 	private static String SINGLE_PROBLEM_REGISTERED_TOPIC = "single-problem-registered";
 	private static final String SINGLE_PROBLEM_DELETED_TOPIC = "single-problem-deleted";
 	private static final String PROBLEM_DELETED_EVENT = "problem-deleted";
+	private static final String SINGLE_PROBLEM_NAME_UPDATED_EVENT = "single-problem-name-updated";
 	private final SingleProblemReadModelDeleteService singleProblemReadModelDeleteService;
 
 	/**
@@ -53,6 +55,17 @@ public class SingleProblemReadMonolithEventListener {
 		log.debug("[SingleProblemReadMonolithEventListener.listenInfoUpdatedEvent] Monolith event received: {}", monolithEvent);
 		final Event<ProblemUpdatedEventPayload> event = Event.fromJson(monolithEvent.payload(), ProblemUpdatedEventPayload.class);
 		singleProblemUpdateService.updateProblemInfo(event.getPayload().toCommand());
+	}
+
+	@Async
+	@EventListener(MonolithEvent.class)
+	public void listenSingleProblemNameUpdatedEvent(final MonolithEvent monolithEvent) {
+		if (!monolithEvent.isExpectedTopic(SINGLE_PROBLEM_NAME_UPDATED_EVENT)) {
+			return;
+		}
+		log.debug("[SingleProblemReadMonolithEventListener.listenSingleProblemNameUpdatedEvent] Monolith event received: {}", monolithEvent);
+		final Event<SingleProblemNameUpdatedEventPayload> event = Event.fromJson(monolithEvent.payload(), SingleProblemNameUpdatedEventPayload.class);
+		singleProblemUpdateService.updateSingleProblemName(event.getPayload().toCommand());
 	}
 
 	/**

@@ -7,6 +7,7 @@ import org.springframework.validation.annotation.Validated;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 import kr.co.mathrank.domain.problem.single.read.dto.SingleProblemAttemptStatsUpdateCommand;
+import kr.co.mathrank.domain.problem.single.read.dto.SingleProblemReadModelNameUpdateCommand;
 import kr.co.mathrank.domain.problem.single.read.dto.SingleProblemReadModelUpdateCommand;
 import kr.co.mathrank.domain.problem.single.read.entity.SingleProblemReadModel;
 import kr.co.mathrank.domain.problem.single.read.entity.SingleProblemSolver;
@@ -60,6 +61,17 @@ public class SingleProblemUpdateService {
 			return;
 		}
 		log.info("[SingleProblemUpdateService.updateProblemInfo] read model not updated: {}", command);
+	}
+
+	@Transactional
+	public void updateSingleProblemName(@NotNull @Valid final SingleProblemReadModelNameUpdateCommand command) {
+		final SingleProblemReadModel model = singleProblemReadModelRepository.findByProblemIdForUpdate(command.singleProblemId())
+			.orElseThrow(() -> {
+				log.warn("[SingleProblemUpdateService.updateSingleProblemName] cannot find problemId: {}", command.singleProblemId());
+				return new CannotFoundProblemException();
+			});
+		model.setSingleProblemName(command.singleProblemName());
+		log.info("[SingleProblemUpdateService.updateSingleProblemName] read model updated: {}", command);
 	}
 
 	/**
