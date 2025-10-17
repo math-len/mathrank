@@ -2,6 +2,7 @@ package kr.co.mathrank.client.internal.member;
 
 import java.time.Duration;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.stereotype.Component;
@@ -22,9 +23,10 @@ public class MemberClient extends TimeoutConfiguredClient {
 
 	private final MemberClientProperties properties;
 	private final RestClient restClient;
-	private final RestClientResponseDecorator responseDecorator;
+	@Autowired
+	private RestClientResponseDecorator responseDecorator;
 
-	MemberClient(final MemberClientProperties properties, final RestClientResponseDecorator responseDecorator) {
+	MemberClient(final MemberClientProperties properties) {
 		this.properties = properties;
 		this.restClient = RestClient.builder()
 			.requestFactory(configureTimeoutConfiguration(
@@ -33,7 +35,6 @@ public class MemberClient extends TimeoutConfiguredClient {
 			)
 			.baseUrl(getUrlFormat(properties.getHost(), properties.getPort()))
 			.build();
-		this.responseDecorator = responseDecorator;
 	}
 
 	@Deprecated

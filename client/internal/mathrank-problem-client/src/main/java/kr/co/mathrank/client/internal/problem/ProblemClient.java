@@ -3,6 +3,7 @@ package kr.co.mathrank.client.internal.problem;
 import java.time.Duration;
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.stereotype.Component;
@@ -24,9 +25,10 @@ import lombok.extern.slf4j.Slf4j;
 public class ProblemClient extends TimeoutConfiguredClient {
 	private static final String URL_FORMAT = "%s:%s";
 	private final RestClient problemClient;
-	private final RestClientResponseDecorator responseDecorator;
+	@Autowired
+	private RestClientResponseDecorator responseDecorator;
 
-	ProblemClient(final ProblemClientProperties properties, final RestClientResponseDecorator responseDecorator) {
+	ProblemClient(final ProblemClientProperties properties) {
 		final String url = URL_FORMAT.formatted(properties.getHost(), properties.getPort());
 		log.info("[ProblemClient.new] initialized with url: {}", url);
 
@@ -37,7 +39,6 @@ public class ProblemClient extends TimeoutConfiguredClient {
 			)
 			.baseUrl(url)
 			.build();
-		this.responseDecorator = responseDecorator;
 	}
 
 	@Deprecated

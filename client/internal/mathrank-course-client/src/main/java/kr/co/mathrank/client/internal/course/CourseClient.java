@@ -2,6 +2,7 @@ package kr.co.mathrank.client.internal.course;
 
 import java.time.Duration;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.stereotype.Component;
@@ -24,9 +25,10 @@ public class CourseClient extends TimeoutConfiguredClient {
 	private static final String URL_FORMAT = "%s:%s";
 
 	private final RestClient restClient;
-	private final RestClientResponseDecorator responseDecorator;
+	@Autowired
+	private RestClientResponseDecorator responseDecorator;
 
-	CourseClient(final CourseClientProperties properties, final RestClientResponseDecorator restClientResponseDecorator) {
+	CourseClient(final CourseClientProperties properties) {
 		final String baseURL = URL_FORMAT.formatted(properties.getHost(), properties.getPort());
 		log.info("[CourseClient.new] init : {}", baseURL);
 		this.restClient = RestClient.builder()
@@ -36,7 +38,6 @@ public class CourseClient extends TimeoutConfiguredClient {
 			)
 			.baseUrl(baseURL)
 			.build();
-		this.responseDecorator = restClientResponseDecorator;
 	}
 
 	@Deprecated

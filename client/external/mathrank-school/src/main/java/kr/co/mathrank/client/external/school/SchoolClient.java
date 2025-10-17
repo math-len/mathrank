@@ -3,6 +3,7 @@ package kr.co.mathrank.client.external.school;
 import java.time.Duration;
 import java.util.Optional;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Configuration;
@@ -24,9 +25,10 @@ public class SchoolClient extends TimeoutConfiguredClient {
 	@Value("${neice.school.key:}")
 	private String key;
 	private final RestClient restClient;
+	@Autowired
 	private RestClientResponseDecorator responseDecorator;
 
-	public SchoolClient(final SchoolClientProperties schoolClientProperties, final RestClientResponseDecorator restClientResponseDecorator) {
+	public SchoolClient(final SchoolClientProperties schoolClientProperties) {
 		restClient = RestClient.builder()
 			.requestFactory(configureTimeoutConfiguration(
 				Duration.ofSeconds(schoolClientProperties.getConnectionTimeoutSeconds()),
@@ -34,7 +36,6 @@ public class SchoolClient extends TimeoutConfiguredClient {
 			))
 			.baseUrl("https://open.neis.go.kr")
 			.build();
-		this.responseDecorator = restClientResponseDecorator;
 	}
 
 	@Deprecated
