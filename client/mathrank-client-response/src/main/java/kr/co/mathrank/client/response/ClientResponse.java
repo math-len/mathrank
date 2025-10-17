@@ -54,6 +54,7 @@ public sealed abstract class ClientResponse<T>
 	}
 
 	@RequiredArgsConstructor
+	@Getter
 	public static final class StatusCodeFailure<T> extends ClientResponse<T> {
 		private final int statusCode;
 		private final String message;
