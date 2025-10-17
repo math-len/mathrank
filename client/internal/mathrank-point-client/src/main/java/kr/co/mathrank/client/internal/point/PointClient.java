@@ -9,7 +9,9 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.client.RestClient;
 
 import jakarta.validation.constraints.NotNull;
+import kr.co.mathrank.client.config.RestClientResponseDecorator;
 import kr.co.mathrank.client.config.TimeoutConfiguredClient;
+import kr.co.mathrank.client.result.ClientResponse;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -20,8 +22,9 @@ public class PointClient extends TimeoutConfiguredClient {
 
 	private final PointClientProperties properties;
 	private final RestClient restClient;
+	private final RestClientResponseDecorator responseDecorator;
 
-	PointClient(final PointClientProperties properties) {
+	PointClient(final PointClientProperties properties, final RestClientResponseDecorator responseDecorator) {
 		this.properties = properties;
 		this.restClient = RestClient.builder()
 			.requestFactory(configureTimeoutConfiguration(
@@ -30,8 +33,10 @@ public class PointClient extends TimeoutConfiguredClient {
 			)
 			.baseUrl(getUrlFormat(properties.getHost(), properties.getPort()))
 			.build();
+		this.responseDecorator = responseDecorator;
 	}
 
+	@Deprecated
 	public PointInfo getRemainPoint(final Long memberId) {
 		return restClient.get()
 			.uri(uriBuilder -> uriBuilder
@@ -40,6 +45,10 @@ public class PointClient extends TimeoutConfiguredClient {
 				.build())
 			.retrieve()
 			.body(PointInfo.class);
+	}
+
+	public ClientResponse<PointInfo> getRemainPointResponse(final Long memberId) {
+		return responseDecorator.wrap(() -> getRemainPoint(memberId));
 	}
 
 	private String getUrlFormat(final String host, final Integer port) {
