@@ -3,17 +3,17 @@ package kr.co.mathrank.client.internal.problem;
 import java.time.Duration;
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.http.client.ClientHttpRequestFactory;
-import org.springframework.http.client.SimpleClientHttpRequestFactory;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.client.RestClient;
 
 import jakarta.validation.constraints.NotNull;
+import kr.co.mathrank.client.config.RestClientResponseDecorator;
 import kr.co.mathrank.client.config.TimeoutConfiguredClient;
-import kr.co.mathrank.client.exception.aspect.Client;
+import kr.co.mathrank.client.response.ClientResponse;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -22,10 +22,11 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @Component
 @Validated
-@Client
 public class ProblemClient extends TimeoutConfiguredClient {
 	private static final String URL_FORMAT = "%s:%s";
 	private final RestClient problemClient;
+	@Autowired
+	private RestClientResponseDecorator responseDecorator;
 
 	ProblemClient(final ProblemClientProperties properties) {
 		final String url = URL_FORMAT.formatted(properties.getHost(), properties.getPort());
@@ -40,6 +41,7 @@ public class ProblemClient extends TimeoutConfiguredClient {
 			.build();
 	}
 
+	@Deprecated
 	public SolveResult matchAnswer(@NotNull final Long problemId, @NotNull final List<String> answers) {
 		return problemClient.get()
 			.uri(uri -> uri
@@ -51,6 +53,11 @@ public class ProblemClient extends TimeoutConfiguredClient {
 			.body(SolveResult.class);
 	}
 
+	public ClientResponse<SolveResult> matchAnswerResponse(@NotNull final Long problemId, @NotNull final List<String> answers) {
+		return responseDecorator.wrap(() -> matchAnswer(problemId, answers));
+	}
+
+	@Deprecated
 	public ProblemQueryResult fetchProblemInfo(final Long problemId) {
 		return problemClient.get()
 			.uri(uriBuilder -> uriBuilder
@@ -58,6 +65,10 @@ public class ProblemClient extends TimeoutConfiguredClient {
 				.build(problemId))
 			.retrieve()
 			.body(ProblemQueryResult.class);
+	}
+
+	public ClientResponse<ProblemQueryResult> fetchProblemInfoResponse(final Long problemId) {
+		return responseDecorator.wrap(() -> fetchProblemInfo(problemId));
 	}
 
 	@Getter

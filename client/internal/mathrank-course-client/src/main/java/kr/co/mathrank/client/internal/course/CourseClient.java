@@ -2,6 +2,7 @@ package kr.co.mathrank.client.internal.course;
 
 import java.time.Duration;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.stereotype.Component;
@@ -9,8 +10,9 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.client.RestClient;
 
 import jakarta.validation.constraints.NotNull;
+import kr.co.mathrank.client.config.RestClientResponseDecorator;
 import kr.co.mathrank.client.config.TimeoutConfiguredClient;
-import kr.co.mathrank.client.exception.aspect.Client;
+import kr.co.mathrank.client.response.ClientResponse;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -19,11 +21,12 @@ import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @Component
-@Client
 public class CourseClient extends TimeoutConfiguredClient {
 	private static final String URL_FORMAT = "%s:%s";
 
 	private final RestClient restClient;
+	@Autowired
+	private RestClientResponseDecorator responseDecorator;
 
 	CourseClient(final CourseClientProperties properties) {
 		final String baseURL = URL_FORMAT.formatted(properties.getHost(), properties.getPort());
@@ -37,6 +40,7 @@ public class CourseClient extends TimeoutConfiguredClient {
 			.build();
 	}
 
+	@Deprecated
 	public CourseQueryContainsParentsResult getParentCourses(final String coursePath) {
 		log.info("[CourseClient.getParentCourses]: called - coursePath: {}", coursePath);
 		return restClient.get()
@@ -46,6 +50,10 @@ public class CourseClient extends TimeoutConfiguredClient {
 				.build())
 			.retrieve()
 			.body(CourseQueryContainsParentsResult.class);
+	}
+
+	public ClientResponse<CourseQueryContainsParentsResult> getParentCoursesResponse(final String coursePath) {
+		return responseDecorator.wrap(() -> getParentCourses(coursePath));
 	}
 
 	@Getter

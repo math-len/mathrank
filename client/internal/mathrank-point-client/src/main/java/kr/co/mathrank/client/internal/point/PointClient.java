@@ -2,6 +2,7 @@ package kr.co.mathrank.client.internal.point;
 
 import java.time.Duration;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.stereotype.Component;
@@ -9,19 +10,21 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.client.RestClient;
 
 import jakarta.validation.constraints.NotNull;
+import kr.co.mathrank.client.config.RestClientResponseDecorator;
 import kr.co.mathrank.client.config.TimeoutConfiguredClient;
-import kr.co.mathrank.client.exception.aspect.Client;
+import kr.co.mathrank.client.response.ClientResponse;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Component
-@Client
 public class PointClient extends TimeoutConfiguredClient {
 	private static final String URL_FORMAT = "%s:%s";
 
 	private final PointClientProperties properties;
 	private final RestClient restClient;
+	@Autowired
+	private RestClientResponseDecorator responseDecorator;
 
 	PointClient(final PointClientProperties properties) {
 		this.properties = properties;
@@ -34,6 +37,7 @@ public class PointClient extends TimeoutConfiguredClient {
 			.build();
 	}
 
+	@Deprecated
 	public PointInfo getRemainPoint(final Long memberId) {
 		return restClient.get()
 			.uri(uriBuilder -> uriBuilder
@@ -42,6 +46,10 @@ public class PointClient extends TimeoutConfiguredClient {
 				.build())
 			.retrieve()
 			.body(PointInfo.class);
+	}
+
+	public ClientResponse<PointInfo> getRemainPointResponse(final Long memberId) {
+		return responseDecorator.wrap(() -> getRemainPoint(memberId));
 	}
 
 	private String getUrlFormat(final String host, final Integer port) {

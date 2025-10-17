@@ -1,7 +1,7 @@
 subprojects {
     apply plugin: 'java-library'
     dependencies {
-        api project(':client:mathrank-client-exception')
         api project(':client:mathrank-client-config')
+        api project(':client:mathrank-client-response')
     }
 }

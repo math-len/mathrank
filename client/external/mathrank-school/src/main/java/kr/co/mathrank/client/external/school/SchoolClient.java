@@ -3,6 +3,7 @@ package kr.co.mathrank.client.external.school;
 import java.time.Duration;
 import java.util.Optional;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Configuration;
@@ -11,20 +12,21 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.client.RestClient;
 
 import jakarta.validation.constraints.NotNull;
+import kr.co.mathrank.client.config.RestClientResponseDecorator;
 import kr.co.mathrank.client.config.TimeoutConfiguredClient;
-import kr.co.mathrank.client.exception.aspect.Client;
+import kr.co.mathrank.client.response.ClientResponse;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
-@Client
 @Component
 public class SchoolClient extends TimeoutConfiguredClient {
 	@Value("${neice.school.key:}")
 	private String key;
 	private final RestClient restClient;
+	@Autowired
+	private RestClientResponseDecorator responseDecorator;
 
 	public SchoolClient(final SchoolClientProperties schoolClientProperties) {
 		restClient = RestClient.builder()
@@ -36,6 +38,7 @@ public class SchoolClient extends TimeoutConfiguredClient {
 			.build();
 	}
 
+	@Deprecated
 	public Optional<SchoolInfo> getSchool(final String type, final String schoolCode) {
 		if (schoolCode == null || schoolCode.isBlank()) {
 			return Optional.empty();
@@ -55,6 +58,11 @@ public class SchoolClient extends TimeoutConfiguredClient {
 		return response.getSchoolInfo().isEmpty() ? Optional.empty() : Optional.of(response.getSchoolInfo().getFirst());
 	}
 
+	public ClientResponse<Optional<SchoolInfo>> getSchoolResponse(final String type, final String schoolCode) {
+		return responseDecorator.wrap(() -> getSchool(type, schoolCode));
+	}
+
+	@Deprecated
 	public SchoolResponse getSchools(String type, Integer pageIndex, Integer pageSize, String schoolName) {
 		return restClient.get()
 			.uri(uriBuilder -> uriBuilder.path("/hub/schoolInfo")
@@ -67,6 +75,10 @@ public class SchoolClient extends TimeoutConfiguredClient {
 			.body(SchoolResponse.class);
 	}
 
+	public ClientResponse<SchoolResponse> getSchoolsResponse(String type, Integer pageIndex, Integer pageSize, String schoolName) {
+		return responseDecorator.wrap(() -> this.getSchools(type, pageIndex, pageSize, schoolName));
+	}
+
 	/**
 	 * 도시 이름 기반으로 학교 목록을 조회합니다.
 	 * NEIS API는 도시 이름으로 조회 시 최대 1000개의 결과만 반환하므로, 모든 결과를 가져오기 위해 페이지 크기를 1000으로 고정합니다.
@@ -75,6 +87,7 @@ public class SchoolClient extends TimeoutConfiguredClient {
 	 * @param cityName 도시 전체 이름 (ex: "부산광역시", "서울특별시")
 	 * @return 해당 도시의 학교 정보가 담긴 응답 객체
 	 */
+	@Deprecated
 	public SchoolResponse getSchoolsByCityName(String type, String cityName) {
 		return restClient.get()
 			.uri(uriBuilder -> uriBuilder.path("/hub/schoolInfo")
@@ -86,6 +99,10 @@ public class SchoolClient extends TimeoutConfiguredClient {
 				.build())
 			.retrieve()
 			.body(SchoolResponse.class);
+	}
+
+	public ClientResponse<SchoolResponse> getSchoolsByCityNameResponse(String type, String cityName) {
+		return responseDecorator.wrap(() -> this.getSchoolsByCityName(type, cityName));
 	}
 
 	@Getter
