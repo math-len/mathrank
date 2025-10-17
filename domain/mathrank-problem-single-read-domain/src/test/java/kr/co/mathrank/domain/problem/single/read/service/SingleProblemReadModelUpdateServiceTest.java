@@ -29,9 +29,9 @@ import kr.co.mathrank.domain.problem.single.read.repository.SingleProblemReadMod
 
 @SpringBootTest
 @Testcontainers
-class SingleProblemUpdateServiceTest {
+class SingleProblemReadModelUpdateServiceTest {
 	@Autowired
-	private SingleProblemUpdateService singleProblemUpdateService;
+	private SingleProblemReadModelUpdateService singleProblemUpdateService;
 	@Autowired
 	private SingleProblemReadModelRepository singleProblemReadModelRepository;
 	@PersistenceContext

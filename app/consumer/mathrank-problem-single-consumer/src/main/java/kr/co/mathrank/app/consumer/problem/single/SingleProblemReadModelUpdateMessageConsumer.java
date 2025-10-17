@@ -6,7 +6,7 @@ import org.springframework.stereotype.Component;
 import kr.co.mathrank.common.event.Event;
 import kr.co.mathrank.domain.problem.single.read.dto.SingleProblemAttemptStatsUpdateCommand;
 import kr.co.mathrank.domain.problem.single.read.dto.SingleProblemReadModelUpdateCommand;
-import kr.co.mathrank.domain.problem.single.read.service.SingleProblemUpdateService;
+import kr.co.mathrank.domain.problem.single.read.service.SingleProblemReadModelUpdateService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -19,13 +19,13 @@ import lombok.extern.slf4j.Slf4j;
  * 메시지 포맷은 <a href="https://snow-quasar-645.notion.site/Message-Format-249631417ede80a6a7dade6a34c0420a?pvs=73">
  * 이 문서</a>에 설명되어 있습니다.
  *
- * @see SingleProblemUpdateService
+ * @see SingleProblemReadModelUpdateService
  */
 @Slf4j
 @Component
 @RequiredArgsConstructor
 public class SingleProblemReadModelUpdateMessageConsumer {
-	private final SingleProblemUpdateService singleProblemUpdateService;
+	private final SingleProblemReadModelUpdateService singleProblemUpdateService;
 
 	static final String GROUP_ID = "single-problem-read-model-updaters";
 
