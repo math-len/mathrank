@@ -40,8 +40,8 @@ public class CourseInitializer implements CommandLineRunner {
 
 			final Sheet sheet = workbook.getSheetAt(0);
 
-			// 과정 저장
-			final Set<String> set = new HashSet<>();
+			// 과정 저장 ( 같은놈 추가로 안등록하기 위해 )
+			String prevCellData = null;
 			for (Row row : sheet) {
 				final Cell cell = row.getCell(1);
 				if (cell == null) { continue; }
@@ -49,16 +49,16 @@ public class CourseInitializer implements CommandLineRunner {
 
 				final String cellName = cell.toString();
 
-				if (set.contains(cellName)) {
+				if (cellName.equals(prevCellData)) {
 					continue;
 				}
-				set.add(cellName);
+				prevCellData = cellName;
 				log.info("first: {}", cellName);
 				courseService.register(new CourseRegisterCommand(cellName, ""));
 			}
 
-			set.clear();
 			// 대단원 저장
+			prevCellData = null;
 			for (Row row : sheet) {
 				final Cell parentCell = row.getCell(1);
 				final Cell cell = row.getCell(2);
@@ -67,10 +67,10 @@ public class CourseInitializer implements CommandLineRunner {
 
 				final String cellName = cell.toString();
 
-				if (set.contains(cellName)) {
+				if (cellName.equals(prevCellData)) {
 					continue;
 				}
-				set.add(cellName);
+				prevCellData = cellName;
 				final Path parentPath = courseRepository.findAllByCourseName(parentCell.toString()).stream()
 					.map(Course::getPath)
 					.filter(path -> path.getDepth() == 1)
@@ -79,7 +79,7 @@ public class CourseInitializer implements CommandLineRunner {
 				courseService.register(new CourseRegisterCommand(cellName, parentPath.getPath()));
 			}
 
-			set.clear();
+			prevCellData = null;
 			// 중단원
 			for (Row row : sheet) {
 				final Cell parentCell = row.getCell(2);
@@ -87,12 +87,13 @@ public class CourseInitializer implements CommandLineRunner {
 				if (cell == null) {
 					continue;
 				}
-				final String cellName = cell.toString();
 
-				if (set.contains(cellName)) {
+				final String cellName = cell.toString();
+				if (cellName.equals(prevCellData)) {
 					continue;
 				}
-				set.add(cellName);
+				prevCellData = cellName;
+
 				final Path parentPath = courseRepository.findAllByCourseName(parentCell.toString()).stream()
 					.map(Course::getPath)
 					.filter(path -> path.getDepth() == 2)
@@ -102,7 +103,8 @@ public class CourseInitializer implements CommandLineRunner {
 			}
 
 			// 소단원
-			set.clear();
+			prevCellData = null;
+
 			for (Row row : sheet) {
 				final Cell parentCell = row.getCell(3);
 				final Cell cell = row.getCell(6);
@@ -110,11 +112,10 @@ public class CourseInitializer implements CommandLineRunner {
 
 
 				final String cellName = cell.toString();
-
-				if (set.contains(cellName)) {
+				if (cellName.equals(prevCellData)) {
 					continue;
 				}
-				set.add(cellName);
+				prevCellData = cellName;
 				final Path parentPath = courseRepository.findAllByCourseName(parentCell.toString()).stream()
 					.map(Course::getPath)
 					.filter(path -> path.getDepth() == 3)
