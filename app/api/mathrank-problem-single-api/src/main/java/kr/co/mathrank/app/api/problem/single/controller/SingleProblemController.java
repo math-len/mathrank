@@ -13,7 +13,6 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.filter.RequestContextFilter;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -140,10 +139,10 @@ public class SingleProblemController {
 		return ResponseEntity.ok(result);
 	}
 
-	@Operation(summary = "개별문제 수정 API - 관리자 전용", description = "이미 문제를 푼 사용자만 조회 가능합니다.")
+	@Operation(summary = "개별문제 이름 수정 API - 관리자 전용", description = "개별문제 이름을 수정합니다.")
 	@PutMapping("/api/v1/problem/single/{singleProblemId}/title")
 	@Authorization(values = Role.ADMIN)
-	public ResponseEntity<SingleProblemSolutionQueryResult> querySolution(
+	public ResponseEntity<Void> updateSingleProblemName(
 		@PathVariable final Long singleProblemId,
 		@RequestBody @Valid final SingleProblemNameUpdateRequest request
 	) {
