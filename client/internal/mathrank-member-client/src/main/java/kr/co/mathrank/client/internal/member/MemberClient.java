@@ -9,7 +9,9 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.client.RestClient;
 
 import jakarta.validation.constraints.NotNull;
+import kr.co.mathrank.client.config.RestClientResponseDecorator;
 import kr.co.mathrank.client.config.TimeoutConfiguredClient;
+import kr.co.mathrank.client.result.ClientResponse;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -20,8 +22,9 @@ public class MemberClient extends TimeoutConfiguredClient {
 
 	private final MemberClientProperties properties;
 	private final RestClient restClient;
+	private final RestClientResponseDecorator responseDecorator;
 
-	MemberClient(final MemberClientProperties properties) {
+	MemberClient(final MemberClientProperties properties, final RestClientResponseDecorator responseDecorator) {
 		this.properties = properties;
 		this.restClient = RestClient.builder()
 			.requestFactory(configureTimeoutConfiguration(
@@ -30,8 +33,10 @@ public class MemberClient extends TimeoutConfiguredClient {
 			)
 			.baseUrl(getUrlFormat(properties.getHost(), properties.getPort()))
 			.build();
+		this.responseDecorator = responseDecorator;
 	}
 
+	@Deprecated
 	public MemberInfo getMemberInfo(final Long memberId) {
 		return restClient.get()
 			.uri(uriBuilder -> uriBuilder
@@ -40,6 +45,10 @@ public class MemberClient extends TimeoutConfiguredClient {
 				.build())
 			.retrieve()
 			.body(MemberInfo.class);
+	}
+
+	public ClientResponse<MemberInfo> getMemberInfoResponse(final Long memberId) {
+		return responseDecorator.wrap(() -> getMemberInfo(memberId));
 	}
 
 	private String getUrlFormat(final String host, final Integer port) {
