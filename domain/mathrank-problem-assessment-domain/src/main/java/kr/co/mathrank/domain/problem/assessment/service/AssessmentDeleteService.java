@@ -11,8 +11,10 @@ import jakarta.validation.constraints.NotNull;
 import kr.co.mathrank.common.role.Role;
 import kr.co.mathrank.domain.problem.assessment.dto.AssessmentDeleteCommand;
 import kr.co.mathrank.domain.problem.assessment.entity.Assessment;
+import kr.co.mathrank.domain.problem.assessment.entity.AssessmentItem;
 import kr.co.mathrank.domain.problem.assessment.exception.CannotDeleteAssessmentException;
 import kr.co.mathrank.domain.problem.assessment.exception.NoSuchAssessmentException;
+import kr.co.mathrank.domain.problem.assessment.repository.AssessmentItemRepository;
 import kr.co.mathrank.domain.problem.assessment.repository.AssessmentRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -23,6 +25,7 @@ import lombok.extern.slf4j.Slf4j;
 @Validated
 public class AssessmentDeleteService {
 	private final AssessmentRepository assessmentRepository;
+	private final AssessmentItemRepository assessmentItemRepository;
 
 	@Transactional
 	public void delete(@NotNull @Valid final AssessmentDeleteCommand command) {
@@ -33,8 +36,10 @@ public class AssessmentDeleteService {
 
 	@Transactional
 	public void deleteByProblemId(@NotNull final Long problemId) {
-		final List<Assessment> assessments = assessmentRepository.findAllContainsProblemId(problemId);
-		assessmentRepository.deleteAll(assessments);
+		final List<AssessmentItem> assessments = assessmentItemRepository.findAllContainsProblemId(problemId);
+		assessmentRepository.deleteAll(assessments.stream()
+			.map(AssessmentItem::getAssessment)
+			.toList());
 		log.info("[AssessmentDeleteService.deleteByProblemId] deleted assessment related with problemId - problemId: {}, assessmentCount: {}", problemId, assessments.size());
 	}
 
