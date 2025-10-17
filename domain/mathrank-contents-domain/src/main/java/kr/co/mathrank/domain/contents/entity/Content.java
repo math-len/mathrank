@@ -42,7 +42,7 @@ public class Content {
 	
 	private String text;
 
-	@OneToMany(mappedBy = "content")
+	@OneToMany(mappedBy = "content", orphanRemoval = true)
 	private List<ContentOrder> contentOrders;
 
 	@OneToMany(mappedBy = "content", cascade = CascadeType.PERSIST, orphanRemoval = true)
