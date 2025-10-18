@@ -1,5 +1,7 @@
 package kr.co.mathrank.init.auth;
 
+import java.util.Map;
+
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
@@ -18,13 +20,22 @@ import lombok.extern.slf4j.Slf4j;
 @RequiredArgsConstructor
 public class InitMembers implements CommandLineRunner {
 	private final MemberRegisterService memberRegisterService;
+	private final AdminAccountProperties adminAccountProperties;
 
 	@Override
 	public void run(String... args) throws Exception {
-		final String loginId = "test1";
-		final String password = "0000";
-		memberRegisterService.register(new MemberRegisterCommand("test1", "testName", new Password("0000"), Role.ADMIN, MemberType.NORMAL, true,
-			null));
-		log.info("[InitMembers.run] initialized test member - loginId: {}, password: {}", loginId, password);
+		final Map<String, AdminAccountProperties.Account> propertiesMap = adminAccountProperties.getAccount();
+
+		for (final Map.Entry<String, AdminAccountProperties.Account> entry : propertiesMap.entrySet()) {
+			final String userName = entry.getKey();
+			final String loginId = entry.getValue().getLoginId();
+			final String password = entry.getValue().getPassword();
+
+			memberRegisterService.register(new MemberRegisterCommand(loginId, userName, new Password(password), Role.ADMIN, MemberType.NORMAL, true,
+				null));
+			log.info("[InitMembers.run] initialized test member - loginId: {}, password: ****", loginId);
+		}
+
+		log.info("[InitMembers.run] initialized test member - count: {}", propertiesMap.size());
 	}
 }
