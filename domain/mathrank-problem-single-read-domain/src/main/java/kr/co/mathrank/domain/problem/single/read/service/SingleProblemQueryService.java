@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.hibernate.validator.constraints.Range;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.annotation.Validated;
@@ -13,6 +14,7 @@ import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 import kr.co.mathrank.common.page.PageResult;
 import kr.co.mathrank.common.page.PageUtil;
+import kr.co.mathrank.domain.problem.single.read.SingleProblemReadModelConfiguration;
 import kr.co.mathrank.domain.problem.single.read.dto.SingleProblemReadModelQuery;
 import kr.co.mathrank.domain.problem.single.read.dto.SingleProblemReadModelQueryResult;
 import kr.co.mathrank.domain.problem.single.read.dto.SingleProblemReadModelResult;
@@ -49,6 +51,11 @@ public class SingleProblemQueryService {
 	 * @param pageNumber   조회할 페이지 번호 (1부터 시작)
 	 * @return 페이지네이션된 문제 목록 및 관련 정보
 	 */
+
+	@Cacheable(
+		cacheNames = SingleProblemReadModelConfiguration.MATHRANK_SINGLE_PROBLEM_PAGE_CACHE,
+		condition = "#pageNumber <= 3"
+	)
 	public PageResult<SingleProblemReadModelQueryResult> queryPage(
 		@NotNull @Valid final SingleProblemReadModelQuery query,
 		OrderColumn orderColumn,
@@ -94,6 +101,9 @@ public class SingleProblemQueryService {
 	 * @return                  문제 상세 정보 및 풀이 성공 여부 (풀이 기록이 없으면 null)
 	 * @throws CannotFoundProblemException  해당 문제를 찾을 수 없는 경우 발생
 	 */
+	@Cacheable(
+		cacheNames = SingleProblemReadModelConfiguration.MATHRANK_SINGLE_PROBLEM_SINGLE_CACHE
+	)
 	public SingleProblemReadModelQueryResult getProblemWithSolverStatus(
 		@NotNull final Long singleProblemId,
 		final Long requestMemberId
@@ -108,6 +118,9 @@ public class SingleProblemQueryService {
 	}
 
 	@Transactional(readOnly = true)
+	@Cacheable(
+		cacheNames = SingleProblemReadModelConfiguration.MATHRANK_SINGLE_PROBLEM_MY_CACHE
+	)
 	public SolveStatusResults querySolveStatus(@NotNull final Long memberId) {
 		return SolveStatusResults.from(singleProblemSolverRepository.findAllByMemberId(memberId));
 	}
