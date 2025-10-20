@@ -28,7 +28,10 @@ class NaverOAuthClient implements OAuthClientHandler {
 
 	@Override
 	public MemberInfoResponse getMemberInfo(OAuthLoginCommand command) {
-		return getUserInfo(getAccessToken(command).access_token());
+		final AccessTokenResponse token = getAccessToken(command);
+		final MemberInfoResponse infoResponse = getUserInfo(token.access_token());
+		
+		return new MemberInfoRefreshTokenAdapter(infoResponse.toInfo(), token.refresh_token(), token.token_type());
 	}
 
 	private AccessTokenResponse getAccessToken(final OAuthLoginCommand command) {
@@ -54,7 +57,49 @@ class NaverOAuthClient implements OAuthClientHandler {
 	}
 
 	@Override
+	public boolean revoke(final String refreshToken) {
+		final AccessTokenResponse token = refreshAccessToken(refreshToken);
+
+		return tokenClient.post()
+			.uri(uriBuilder -> uriBuilder
+				.queryParam("client_id", naverConfiguration.getClientId())
+				.queryParam("client_secret", naverConfiguration.getClientSecret())
+				.queryParam("access_token", token.access_token())
+				.queryParam("grant_type", "delete")
+				.build())
+			.contentType(MediaType.APPLICATION_FORM_URLENCODED)
+			.retrieve()
+			.body(TokenRevokeResponse.class)
+			.succeeded();
+	}
+
+	private AccessTokenResponse refreshAccessToken(String refreshToken) {
+		return tokenClient.post()
+			.uri(uriBuilder -> uriBuilder
+				.queryParam("grant_type", "refresh_token")
+				.queryParam("client_id", naverConfiguration.getClientId())
+				.queryParam("client_secret", naverConfiguration.getClientSecret())
+				.queryParam("refresh_token", refreshToken)
+				.build())
+			.contentType(MediaType.APPLICATION_FORM_URLENCODED)
+			.retrieve()
+			.body(AccessTokenResponse.class);
+	}
+
+	@Override
 	public boolean supports(OAuthProvider provider) {
 		return OAuthProvider.NAVER.equals(provider);
+	}
+
+	record TokenRevokeResponse(
+		String success
+	) {
+		boolean succeeded() {
+			if (success == null) {
+				return false;
+			}
+
+			return success.equals("success");
+		}
 	}
 }

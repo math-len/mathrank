@@ -6,6 +6,6 @@ public record GoogleInfoResponse(
 ) implements MemberInfoResponse{
 	@Override
 	public MemberInfo toInfo() {
-		return new MemberInfo(id(), given_name());
+		return new MemberInfo(id(), given_name(),null, null);
 	}
 }

@@ -18,6 +18,10 @@ class KakaoOAuthClient implements OAuthClientHandler{
 		.baseUrl("https://kauth.kakao.com/oauth/token")
 		.build();
 
+	private final RestClient tokenUnlinkClient = RestClient.builder()
+		.baseUrl("https://kapi.kakao.com/v1/user/unlink")
+		.build();
+
 	// https://kapi.kakao.com/v2/user/me
 	// 사용자 정보 조회
 	private final RestClient infoClient = RestClient.builder()
@@ -26,7 +30,10 @@ class KakaoOAuthClient implements OAuthClientHandler{
 
 	@Override
 	public MemberInfoResponse getMemberInfo(OAuthLoginCommand command) {
-		return getKakaoInfoResponse(getAccessToken(command.code()).access_token());
+		final AccessTokenResponse token = getAccessToken(command.code());
+		final MemberInfoResponse infoResponse = getKakaoInfoResponse(token.access_token());
+
+		return new MemberInfoRefreshTokenAdapter(infoResponse.toInfo(), token.refresh_token(), token.token_type());
 	}
 
 	public AccessTokenResponse getAccessToken(final String code) {
@@ -54,5 +61,41 @@ class KakaoOAuthClient implements OAuthClientHandler{
 	@Override
 	public boolean supports(OAuthProvider provider) {
 		return provider == OAuthProvider.KAKAO;
+	}
+
+	@Override
+	public boolean revoke(final String refreshToken) {
+		final AccessTokenResponse token = refreshByRefreshToken(refreshToken);
+		return revokeByAccessToken(token.access_token());
+	}
+
+	private boolean revokeByAccessToken(final String accessToken) {
+		return tokenUnlinkClient.post()
+			.header(HttpHeaders.AUTHORIZATION, "Bearer %s".formatted(accessToken))
+			.retrieve()
+			.body(KakaoRevokeResponse.class)
+			.succeed();
+	}
+
+	private AccessTokenResponse refreshByRefreshToken(final String refreshToken) {
+		return tokenClient.post()
+			.uri(uriBuilder -> uriBuilder
+				.queryParam("grant_type", "refresh_token")
+				.queryParam("client_id", kakaoConfiguration.getClientId())
+				.queryParam("refresh_token", refreshToken)
+				.queryParam("client_secret", kakaoConfiguration.getClientSecret())
+				.build()
+			)
+			.contentType(MediaType.APPLICATION_FORM_URLENCODED)
+			.retrieve()
+			.body(AccessTokenResponse.class);
+	}
+
+	private record KakaoRevokeResponse(
+		String id
+	) {
+		boolean succeed() {
+			return id != null;
+		}
 	}
 }

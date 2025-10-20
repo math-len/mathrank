@@ -23,7 +23,7 @@ class MemberRepositoryTest {
 	@Test
 	void oAuth_제공자와_ID로_조회성공() {
 		final String oAuthId = "12";
-		final Member member = Member.fromOAuth(1L, oAuthId, OAuthProvider.KAKAO, "nickName", Role.USER);
+		final Member member = Member.fromOAuth(1L, oAuthId, OAuthProvider.KAKAO, "testRefreshToken", "testTokenType", "nickName", Role.USER);
 		memberRepository.save(member);
 
 		entityManager.flush();

@@ -5,7 +5,7 @@ record NaverMemberInfoResponse(
 ) implements MemberInfoResponse {
 	@Override
 	public MemberInfo toInfo() {
-		return new MemberInfo(response.id(), response.nickname());
+		return new MemberInfo(response.id(), response.nickname(),null, null);
 	}
 
 	record NaverResponse(
