@@ -51,7 +51,7 @@ public class AssessmentReadDomainConfiguration {
 
 	@Bean
 	RequiredCacheSpec assessmentReadDomainAssessmentSolutionCacheSpec() {
-		return createCacheSpec(ASSESSMENT_READ_SOLUTION_CACHE, Duration.ofSeconds(10));
+		return createCacheSpec(ASSESSMENT_READ_SOLUTION_CACHE, Duration.ofSeconds(10L));
 	}
 
 	@Bean
