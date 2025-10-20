@@ -10,6 +10,9 @@ import kr.co.mathrank.common.cache.RequiredCacheSpec;
 @Configuration
 public class SingleProblemReadModelConfiguration {
 	public static final String COURSE_CACHE = "mathrank::domain::single-problem::read::course";
+	public static final String MATHRANK_SINGLE_PROBLEM_PAGE_CACHE = "mathrank::domain::single-problem::page";
+	public static final String MATHRANK_SINGLE_PROBLEM_SINGLE_CACHE = "mathrank::domain::single-problem::single";
+	public static final String MATHRANK_SINGLE_PROBLEM_MY_CACHE = "mathrank::domain::single-problem::my";
 
 	@Bean
 	RequiredCacheSpec courseCacheSpec() {
@@ -33,5 +36,20 @@ public class SingleProblemReadModelConfiguration {
 				return ttl;
 			}
 		};
+	}
+
+	@Bean
+	RequiredCacheSpec singleProblemPageCacheSpec() {
+		return cacheSpec(MATHRANK_SINGLE_PROBLEM_PAGE_CACHE, Duration.ofSeconds(2));
+	}
+
+	@Bean
+	RequiredCacheSpec singleProblemSingleCacheSpec() {
+		return cacheSpec(MATHRANK_SINGLE_PROBLEM_SINGLE_CACHE, Duration.ofSeconds(2));
+	}
+
+	@Bean
+	RequiredCacheSpec singleProblemMySolvedCacheSpec() {
+		return cacheSpec(MATHRANK_SINGLE_PROBLEM_MY_CACHE, Duration.ofSeconds(5));
 	}
 }
