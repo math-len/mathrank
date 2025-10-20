@@ -11,9 +11,9 @@ import kr.co.mathrank.common.cache.RequiredCacheSpec;
 public class AssessmentReadDomainConfiguration {
 	public static final String PROBLEM_CACHE_NAME = "mathrank::assessment-domain::problem";
 	public static final String COURSE_CACHE_NAME = "mathrank::assessment-domain::course";
-	public static final String ASSESSMENT_READ_MODEL_CACHE_NAME = "mathrank::assessment-domain::assessment";
+	public static final String ASSESSMENT_READ_MODEL_CACHE_NAME = "mathrank::assessment-domain::assessment::read-model::single";
 	public static final String ASSESSMENT_READ_SINGLE_CACHE = "mathrank::assessment-domain::assessment::single";
-	public static final String ASSESSMENT_READ_PAGE_CAHCE = "mathrank::assessment-domain::assessment::single";
+	public static final String ASSESSMENT_READ_PAGE_CAHCE = "mathrank::assessment-domain::assessment::page";
 	public static final String ASSESSMENT_READ_RANK_CACHE = "mathrank::assessment-domain::assessment::rank";
 	public static final String ASSESSMENT_READ_SOLUTION_CACHE = "mathrank::assessment-domain::assessment::solution";
 	public static final String ASSESSMENT_STATISTICS_CACHE = "mathrank::assessment-domain::assessment::statistics";
