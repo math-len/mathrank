@@ -22,7 +22,7 @@ public class CourseQueryService {
 	private final CourseRepository courseRepository;
 
 	@Cacheable(
-		cacheNames = MathRankCourseCacheConfiguration.MATHRANK_COURSE_PARENT_CACHE,
+		cacheNames = MathRankCourseCacheConfiguration.MATHRANK_COURSE_CHILD_CACHE,
 		key = "'path::' + #pathSource"
 	)
 	public CourseQueryResults queryChildes(@NotNull final String pathSource) {
