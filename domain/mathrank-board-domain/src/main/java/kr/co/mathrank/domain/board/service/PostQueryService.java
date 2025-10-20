@@ -3,12 +3,14 @@ package kr.co.mathrank.domain.board.service;
 import java.util.List;
 
 import org.hibernate.validator.constraints.Range;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.annotation.Validated;
 
 import jakarta.validation.constraints.NotNull;
 import kr.co.mathrank.common.page.PageResult;
 import kr.co.mathrank.common.page.PageUtil;
+import kr.co.mathrank.domain.board.MathrankBoardCacheConfiguration;
 import kr.co.mathrank.domain.board.dto.PostDetailQueryResult;
 import kr.co.mathrank.domain.board.dto.PostPageQuery;
 import kr.co.mathrank.domain.board.dto.PostPageQueryResult;
@@ -25,6 +27,10 @@ import lombok.extern.slf4j.Slf4j;
 public class PostQueryService {
 	private final PostRepository postRepository;
 
+	@Cacheable(
+		cacheNames = MathrankBoardCacheConfiguration.MATHRANK_POST_PAGE_CACHE,
+		condition = "#pageSize <= 3"
+	)
 	public PageResult<PostPageQueryResult> pageQuery(
 		@NotNull final PostPageQuery query,
 		@NotNull @Range(min = 1, max = 20) final Integer pageSize,
@@ -44,6 +50,9 @@ public class PostQueryService {
 		);
 	}
 
+	@Cacheable(
+		cacheNames = MathrankBoardCacheConfiguration.MATHRANK_POST_SINGLE_CACHE
+	)
 	public PostDetailQueryResult getDetail(
 		@NotNull final Long postId
 	) {
