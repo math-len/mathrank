@@ -80,7 +80,7 @@ class KakaoOAuthClient implements OAuthClientHandler{
 	private AccessTokenResponse refreshByRefreshToken(final String refreshToken) {
 		return tokenClient.post()
 			.uri(uriBuilder -> uriBuilder
-				.queryParam("grant_type", kakaoConfiguration.getGrantType())
+				.queryParam("grant_type", "refresh_token")
 				.queryParam("client_id", kakaoConfiguration.getClientId())
 				.queryParam("refresh_token", refreshToken)
 				.queryParam("client_secret", kakaoConfiguration.getClientSecret())
