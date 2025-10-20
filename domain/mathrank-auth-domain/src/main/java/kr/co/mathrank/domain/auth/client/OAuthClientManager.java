@@ -9,6 +9,7 @@ import jakarta.annotation.PostConstruct;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 import kr.co.mathrank.domain.auth.dto.OAuthLoginCommand;
+import kr.co.mathrank.domain.auth.entity.Member;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -26,6 +27,17 @@ public class OAuthClientManager {
 			.map(oAuthClientHandler -> oAuthClientHandler.getMemberInfo(command))
 			.map(MemberInfoResponse::toInfo)
 			.orElseThrow();
+	}
+
+	public boolean revoke(final Member member) {
+		return handlers.stream()
+			.filter(oAuthClientHandler -> oAuthClientHandler.supports(member.getOAuthInfo().getOAuthProvider()))
+			.findAny()
+			.map(oAuthClientHandler -> oAuthClientHandler.revoke(member.getOAuthInfo().getOAuthRefreshToken()))
+			.orElseGet(() -> {
+				log.info("[OAuthClientManager.revoke] its not a oauth registered user - memberId: {}", member.getId());
+				return true;
+			});
 	}
 
 	@PostConstruct

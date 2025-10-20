@@ -15,8 +15,11 @@ class GoogleOAuthClient implements OAuthClientHandler {
 
 	// 토큰 URL
 	private static final String TOKEN_URL = "https://oauth2.googleapis.com/token";
+	// 토큰 폐기 URL
+	private static final String TOKEN_REVOKE_URL = "https://oauth2.googleapis.com/revoke";
 	// 사용자 정보 조회 URL
 	private static final String INFO_URL = "https://www.googleapis.com/oauth2/v2/userinfo";
+
 
 	private final RestClient tokenClient = RestClient.builder()
 		.baseUrl(TOKEN_URL)
@@ -26,9 +29,16 @@ class GoogleOAuthClient implements OAuthClientHandler {
 		.baseUrl(INFO_URL)
 		.build();
 
+	private final RestClient revokeClient = RestClient.builder()
+		.baseUrl(TOKEN_REVOKE_URL)
+		.build();
+
 	@Override
 	public MemberInfoResponse getMemberInfo(OAuthLoginCommand command) {
-		return getInfo(getAccessToken(command).access_token());
+		final AccessTokenResponse token = getAccessToken(command);
+		final MemberInfoResponse infoResponse = getInfo(token.access_token());
+
+		return new MemberInfoRefreshTokenAdapter(infoResponse.toInfo(), token.refresh_token(), token.token_type());
 	}
 
 	private GoogleInfoResponse getInfo(final String accessToken) {
@@ -55,5 +65,20 @@ class GoogleOAuthClient implements OAuthClientHandler {
 	@Override
 	public boolean supports(OAuthProvider provider) {
 		return OAuthProvider.GOOGLE.equals(provider);
+	}
+
+	// 구글은 refreshToken 만으로도 삭제 가능
+	// https://developers.google.com/identity/protocols/oauth2/web-server?hl=ko
+	@Override
+	public boolean revoke(String refreshToken) {
+		return revokeClient.post()
+			.uri(uriBuilder -> uriBuilder
+				.queryParam("token", refreshToken)
+				.build()
+			)
+			.contentType(MediaType.APPLICATION_FORM_URLENCODED)
+			.retrieve()
+			.toBodilessEntity()
+			.getStatusCode().is2xxSuccessful();
 	}
 }

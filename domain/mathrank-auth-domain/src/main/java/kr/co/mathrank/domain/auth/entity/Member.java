@@ -82,11 +82,17 @@ public class Member {
 	}
 
 	public static Member fromOAuth(final Long id, final String oAuthId, final OAuthProvider provider,
-		final String nickName, final Role role) {
+		final String oAuthRefreshToken,
+		final String oAuthTokenType,
+		final String nickName,
+		final Role role
+	) {
 		final Member member = new Member();
 		member.id = id;
 		member.oAuthInfo.setOAuthUserId(oAuthId);
 		member.oAuthInfo.setOAuthProvider(provider);
+		member.oAuthInfo.setOAuthRefreshToken(oAuthRefreshToken);
+		member.oAuthInfo.setTokenType(oAuthTokenType);
 		member.name = nickName;
 		member.role = role;
 
