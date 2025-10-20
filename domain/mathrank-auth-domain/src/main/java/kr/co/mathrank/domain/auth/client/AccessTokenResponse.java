@@ -2,7 +2,6 @@ package kr.co.mathrank.domain.auth.client;
 
 record AccessTokenResponse(
 	String token_type,
-	String access_token,
-	String refresh_token
+	String access_token
 ) {
 }
