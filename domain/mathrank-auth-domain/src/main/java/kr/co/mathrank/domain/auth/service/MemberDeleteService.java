@@ -5,6 +5,7 @@ import org.springframework.validation.annotation.Validated;
 
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
+import kr.co.mathrank.domain.auth.client.OAuthClientManager;
 import kr.co.mathrank.domain.auth.dto.MemberDeleteCommand;
 import kr.co.mathrank.domain.auth.entity.Member;
 import kr.co.mathrank.domain.auth.exception.CannotFoundMemberException;
@@ -18,10 +19,13 @@ import lombok.extern.slf4j.Slf4j;
 @RequiredArgsConstructor
 public class MemberDeleteService {
 	private final MemberRepository memberRepository;
+	private final OAuthClientManager oAuthClientManager;
 
 	public void delete(@NotNull @Valid final MemberDeleteCommand command) {
 		final Member member = getMember(command.targetMemberId());
 		memberRepository.delete(member);
+		oAuthClientManager.revoke(member);
+
 		log.info("[MemberDeleteService.delete] member delete success - memberId: {}", command.targetMemberId());
 	}
 
