@@ -50,6 +50,9 @@ public class AssessmentQueryService {
 
 	}
 
+	@Cacheable(
+		cacheNames = AssessmentReadDomainConfiguration.ASSESSMENT_READ_PAGE_CAHCE
+	)
 	public PageResult<AssessmentPageQueryResult> pageQuery(
 		@NotNull @Valid final AssessmentPageQuery assessmentQuery,
 		final Long requestMemberId,
