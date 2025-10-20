@@ -57,7 +57,7 @@ class OAuthLoginServiceTest {
 		final OAuthLoginCommand command = new OAuthLoginCommand("testCode", "testState", kakao);
 
 		final String oAuthId = "12345";
-		final MemberInfo memberInfo = new MemberInfo(oAuthId, "nickName");
+		final MemberInfo memberInfo = new MemberInfo(oAuthId, "nickName", "refreshTOken", "tokenType");
 		// 항상 memberInfo 리턴
 		Mockito.when(oAuthClientManager.getMemberInfo(command)).thenReturn(memberInfo);
 		Mockito.when(jwtLoginManager.login(Mockito.anyLong(), Mockito.any(), Mockito.any()))
@@ -91,7 +91,7 @@ class OAuthLoginServiceTest {
 		final OAuthLoginCommand command = new OAuthLoginCommand("testCode", "testState", kakao);
 
 		final String oAuthId = "12345";
-		final MemberInfo memberInfo = new MemberInfo(oAuthId, "nickName");
+		final MemberInfo memberInfo = new MemberInfo(oAuthId, "nickName", "refreshTOken", "tokenType");
 		// 항상 memberInfo 리턴
 		Mockito.when(oAuthClientManager.getMemberInfo(command)).thenReturn(memberInfo);
 		Mockito.when(jwtLoginManager.login(Mockito.anyLong(), Mockito.any(), Mockito.any()))
