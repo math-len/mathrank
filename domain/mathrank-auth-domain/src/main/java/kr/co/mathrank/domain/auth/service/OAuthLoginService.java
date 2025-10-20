@@ -15,6 +15,7 @@ import kr.co.mathrank.domain.auth.dto.JwtOAuthLoginResult;
 import kr.co.mathrank.domain.auth.dto.MemberInfoCompleteCommand;
 import kr.co.mathrank.domain.auth.dto.OAuthLoginCommand;
 import kr.co.mathrank.domain.auth.entity.Member;
+import kr.co.mathrank.domain.auth.entity.OAuthInfo;
 import kr.co.mathrank.domain.auth.exception.CannotFoundMemberException;
 import kr.co.mathrank.domain.auth.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
@@ -49,6 +50,7 @@ public class OAuthLoginService {
 				return newMember;
 			});
 
+		refreshTokenInfo(memberInfo, member);
 		log.info("[OAuthLoginService.login] member login success with oAuth - memberId: {}, oAuthProvider: {}", member.getId(), member.getOAuthInfo().getOAuthProvider());
 		// 사용자의 등록 지연 여부를 함께 응답한다.
 		return JwtOAuthLoginResult.from(jwtLogin(member), member.getPending());
@@ -76,5 +78,10 @@ public class OAuthLoginService {
 
 	private JwtLoginResult jwtLogin(final Member member) {
 		return jwtLoginManager.login(member.getId(), member.getRole(), member.getName());
+	}
+
+	private void refreshTokenInfo(final MemberInfo memberInfo, final Member member) {
+		final OAuthInfo oAuthInfo = member.getOAuthInfo();
+		oAuthInfo.setOAuthRefreshToken(memberInfo.refreshToken());
 	}
 }
