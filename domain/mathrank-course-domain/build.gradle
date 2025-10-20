@@ -3,5 +3,6 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-validation'
 
     implementation project(':common:mathrank-exception')
+    implementation project(':common:mathrank-cache')
     testRuntimeOnly 'com.h2database:h2'
 }
