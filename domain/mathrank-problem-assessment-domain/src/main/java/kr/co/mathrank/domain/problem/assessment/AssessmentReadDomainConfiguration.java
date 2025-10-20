@@ -15,6 +15,7 @@ public class AssessmentReadDomainConfiguration {
 	public static final String ASSESSMENT_READ_SINGLE_CACHE = "mathrank::assessment-domain::assessment::single";
 	public static final String ASSESSMENT_READ_PAGE_CAHCE = "mathrank::assessment-domain::assessment::single";
 	public static final String ASSESSMENT_READ_RANK_CACHE = "mathrank::assessment-domain::assessment::rank";
+	public static final String ASSESSMENT_READ_SOLUTION_CACHE = "mathrank::assessment-domain::assessment::solution";
 
 	@Bean
 	RequiredCacheSpec assessmentReadDomainProblemCacheSpec() {
@@ -44,6 +45,10 @@ public class AssessmentReadDomainConfiguration {
 	@Bean
 	RequiredCacheSpec assessmentReadDomainAssessmentRankCacheSpec() {
 		return createCacheSpec(ASSESSMENT_READ_RANK_CACHE, Duration.ofSeconds(60));
+	}
+	@Bean
+	RequiredCacheSpec assessmentReadDomainAssessmentSolutionCacheSpec() {
+		return createCacheSpec(ASSESSMENT_READ_SOLUTION_CACHE, Duration.ofSeconds(60));
 	}
 
 	private RequiredCacheSpec createCacheSpec(final String cacheName, final Duration ttl) {

@@ -2,6 +2,7 @@ package kr.co.mathrank.domain.problem.assessment.service;
 
 import java.util.List;
 
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.transaction.support.TransactionTemplate;
@@ -10,6 +11,7 @@ import org.springframework.validation.annotation.Validated;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 import kr.co.mathrank.common.role.Role;
+import kr.co.mathrank.domain.problem.assessment.AssessmentReadDomainConfiguration;
 import kr.co.mathrank.domain.problem.assessment.dto.AssessmentSolutionQuery;
 import kr.co.mathrank.domain.problem.assessment.dto.AssessmentSolutionQueryResult;
 import kr.co.mathrank.domain.problem.assessment.dto.ProblemSolutionResult;
@@ -34,6 +36,9 @@ public class AssessmentSolutionQueryService {
 	 * 사용자가 문제를 푼 경우에만 정답 조회가 가능합니다.
 	 * @param query
 	 */
+	@Cacheable(
+		cacheNames = AssessmentReadDomainConfiguration.ASSESSMENT_READ_SOLUTION_CACHE
+	)
 	public AssessmentSolutionQueryResult querySolutions(@NotNull @Valid final AssessmentSolutionQuery query) {
 		// 트랜잭션 내에서 조회
 		final List<Long> problemIds = transactionTemplate.execute(status -> {
