@@ -72,7 +72,10 @@ class GoogleOAuthClient implements OAuthClientHandler {
 	@Override
 	public boolean revoke(String refreshToken) {
 		return revokeClient.post()
-			.uri("token", refreshToken)
+			.uri(uriBuilder -> uriBuilder
+				.queryParam("token", refreshToken)
+				.build()
+			)
 			.contentType(MediaType.APPLICATION_FORM_URLENCODED)
 			.retrieve()
 			.toBodilessEntity()
