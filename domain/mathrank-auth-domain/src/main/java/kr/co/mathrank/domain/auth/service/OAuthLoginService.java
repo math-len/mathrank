@@ -42,6 +42,7 @@ public class OAuthLoginService {
 				final Long uniqueId = snowflake.nextId();
 
 				final Member newMember = Member.fromOAuth(uniqueId, memberInfo.memberId(), command.provider(),
+					memberInfo.refreshToken(), memberInfo.tokenType(),
 					memberInfo.nickName(), Role.USER);
 				memberRepository.save(newMember);
 				log.info("[OAuthLoginService.login] member registered - memberId: {}, oAuthProvider: {}", uniqueId, command.provider());
