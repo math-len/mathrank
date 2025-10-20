@@ -17,10 +17,4 @@ public class OAuthInfo {
 
 	@Column(name = "oauth_user_id")
 	private String oAuthUserId;
-
-	@Column(name = "oauth_user_refresh_token")
-	private String oAuthRefreshToken;
-
-	@Column(name = "oauth_user_refresh_token_type")
-	private String tokenType;
 }

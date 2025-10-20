@@ -21,7 +21,7 @@ record KakaoMemberInfoResponse(
 
 	@Override
 	public MemberInfo toInfo() {
-		return new MemberInfo(String.valueOf(id), getNickName(),null, null);
+		return new MemberInfo(String.valueOf(id), getNickName());
 	}
 
 	record Account (
