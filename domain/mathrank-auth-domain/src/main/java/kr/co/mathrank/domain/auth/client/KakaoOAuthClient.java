@@ -26,7 +26,10 @@ class KakaoOAuthClient implements OAuthClientHandler{
 
 	@Override
 	public MemberInfoResponse getMemberInfo(OAuthLoginCommand command) {
-		return getKakaoInfoResponse(getAccessToken(command.code()).access_token());
+		final AccessTokenResponse token = getAccessToken(command.code());
+		final MemberInfoResponse infoResponse = getKakaoInfoResponse(token.access_token());
+
+		return new MemberInfoRefreshTokenAdapter(infoResponse.toInfo(), token.refresh_token(), token.token_type());
 	}
 
 	public AccessTokenResponse getAccessToken(final String code) {

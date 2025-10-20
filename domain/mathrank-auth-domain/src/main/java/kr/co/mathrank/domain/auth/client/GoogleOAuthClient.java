@@ -28,7 +28,10 @@ class GoogleOAuthClient implements OAuthClientHandler {
 
 	@Override
 	public MemberInfoResponse getMemberInfo(OAuthLoginCommand command) {
-		return getInfo(getAccessToken(command).access_token());
+		final AccessTokenResponse token = getAccessToken(command);
+		final MemberInfoResponse infoResponse = getInfo(token.access_token());
+
+		return new MemberInfoRefreshTokenAdapter(infoResponse.toInfo(), token.refresh_token(), token.token_type());
 	}
 
 	private GoogleInfoResponse getInfo(final String accessToken) {

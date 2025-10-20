@@ -28,7 +28,10 @@ class NaverOAuthClient implements OAuthClientHandler {
 
 	@Override
 	public MemberInfoResponse getMemberInfo(OAuthLoginCommand command) {
-		return getUserInfo(getAccessToken(command).access_token());
+		final AccessTokenResponse token = getAccessToken(command);
+		final MemberInfoResponse infoResponse = getUserInfo(token.access_token());
+		
+		return new MemberInfoRefreshTokenAdapter(infoResponse.toInfo(), token.refresh_token(), token.token_type());
 	}
 
 	private AccessTokenResponse getAccessToken(final OAuthLoginCommand command) {
