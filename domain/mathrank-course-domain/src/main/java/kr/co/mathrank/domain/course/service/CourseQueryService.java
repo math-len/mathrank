@@ -2,10 +2,12 @@ package kr.co.mathrank.domain.course.service;
 
 import java.util.List;
 
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.annotation.Validated;
 
 import jakarta.validation.constraints.NotNull;
+import kr.co.mathrank.domain.course.MathRankCourseCacheConfiguration;
 import kr.co.mathrank.domain.course.dto.CourseQueryContainsParentsResult;
 import kr.co.mathrank.domain.course.dto.CourseQueryResult;
 import kr.co.mathrank.domain.course.dto.CourseQueryResults;
@@ -19,6 +21,10 @@ import lombok.RequiredArgsConstructor;
 public class CourseQueryService {
 	private final CourseRepository courseRepository;
 
+	@Cacheable(
+		cacheNames = MathRankCourseCacheConfiguration.MATHRANK_COURSE_PARENT_CACHE,
+		key = "'path::' + #pathSource"
+	)
 	public CourseQueryResults queryChildes(@NotNull final String pathSource) {
 		final Path path = new Path(pathSource);
 
@@ -30,6 +36,10 @@ public class CourseQueryService {
 
 	// 삭제된 상위 경로는 출력되지 않음
 	// 쿼리가 개당 한번씩 호출될것
+	@Cacheable(
+		cacheNames = MathRankCourseCacheConfiguration.MATHRANK_COURSE_PARENT_CACHE,
+		key = "'path::' + #path"
+	)
 	public CourseQueryContainsParentsResult queryParents(@NotNull final String path) {
 		final Path basePath = new Path(path);
 		final CourseQueryResult result = courseRepository.findByPath(basePath)
