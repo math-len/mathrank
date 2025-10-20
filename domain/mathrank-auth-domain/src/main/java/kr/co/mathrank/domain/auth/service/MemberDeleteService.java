@@ -12,6 +12,7 @@ import kr.co.mathrank.domain.auth.entity.Member;
 import kr.co.mathrank.domain.auth.exception.CannotFoundMemberException;
 import kr.co.mathrank.domain.auth.exception.UnRegisterMemberException;
 import kr.co.mathrank.domain.auth.repository.MemberRepository;
+import kr.co.mathrank.domain.auth.repository.RefreshTokenRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -22,6 +23,7 @@ import lombok.extern.slf4j.Slf4j;
 public class MemberDeleteService {
 	private final MemberRepository memberRepository;
 	private final OAuthClientManager oAuthClientManager;
+	private final RefreshTokenRepository refreshTokenRepository;
 
 	@Transactional
 	public void delete(@NotNull @Valid final MemberDeleteCommand command) {
@@ -33,7 +35,7 @@ public class MemberDeleteService {
 			log.info("[MemberDeleteService.delete] failed to revoke OAuth client for member - memberId: {}", member.getId());
 			throw new UnRegisterMemberException("oauth 연동 해제중 에러 발생했습니다. 잠시 후 다시 시도해주세요");
 		}
-
+		refreshTokenRepository.expire(member.getId());
 		log.info("[MemberDeleteService.delete] member delete success - memberId: {}", command.targetMemberId());
 	}
 
