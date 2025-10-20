@@ -3,9 +3,11 @@ package kr.co.mathrank.domain.problem.assessment.service;
 import java.time.Duration;
 import java.util.List;
 
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.annotation.Validated;
 
+import kr.co.mathrank.domain.problem.assessment.AssessmentReadDomainConfiguration;
 import kr.co.mathrank.domain.problem.assessment.dto.AssessmentSubmissionRankResult;
 import kr.co.mathrank.domain.problem.assessment.dto.AssessmentSubmissionStatisticQueryResult;
 import kr.co.mathrank.domain.problem.assessment.entity.AssessmentSubmission;
@@ -24,6 +26,9 @@ public class AssessmentRankQueryService {
 	private final AssessmentSubmissionRepository assessmentSubmissionRepository;
 	private final AssessmentStatisticsService assessmentStatisticsService;
 
+	@Cacheable(
+		cacheNames = AssessmentReadDomainConfiguration.ASSESSMENT_READ_RANK_CACHE
+	)
 	public AssessmentSubmissionRankResult getRank(final Long submissionId) {
 		final AssessmentSubmission assessmentSubmission = assessmentSubmissionRepository.findById(submissionId)
 			.orElseThrow(() -> {
