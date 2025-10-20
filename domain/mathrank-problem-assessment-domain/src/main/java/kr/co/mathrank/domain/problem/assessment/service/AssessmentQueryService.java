@@ -5,6 +5,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 import org.hibernate.validator.constraints.Range;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.annotation.Validated;
 
@@ -12,6 +13,7 @@ import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 import kr.co.mathrank.common.page.PageResult;
 import kr.co.mathrank.common.page.PageUtil;
+import kr.co.mathrank.domain.problem.assessment.AssessmentReadDomainConfiguration;
 import kr.co.mathrank.domain.problem.assessment.dto.AssessmentDetailQuery;
 import kr.co.mathrank.domain.problem.assessment.dto.AssessmentDetailResult;
 import kr.co.mathrank.domain.problem.assessment.dto.AssessmentPageQuery;
@@ -34,6 +36,9 @@ public class AssessmentQueryService {
 	private final AssessmentRepository assessmentRepository;
 	private final AssessmentSubmissionRepository assessmentSubmissionRepository;
 
+	@Cacheable(
+		cacheNames = AssessmentReadDomainConfiguration.ASSESSMENT_READ_SINGLE_CACHE
+	)
 	public AssessmentDetailResult getAssessmentDetails(@NotNull final AssessmentDetailQuery detailQuery) {
 		final Assessment assessment = assessmentRepository.findWithItemsByIdAndPeriod(detailQuery.getAssessmentId(), detailQuery.getAssessmentPeriodType())
 			.orElseThrow(() -> {
@@ -45,6 +50,9 @@ public class AssessmentQueryService {
 
 	}
 
+	@Cacheable(
+		cacheNames = AssessmentReadDomainConfiguration.ASSESSMENT_READ_PAGE_CAHCE
+	)
 	public PageResult<AssessmentPageQueryResult> pageQuery(
 		@NotNull @Valid final AssessmentPageQuery assessmentQuery,
 		final Long requestMemberId,

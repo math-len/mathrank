@@ -4,10 +4,12 @@ import java.time.Duration;
 import java.util.Comparator;
 import java.util.List;
 
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.annotation.Validated;
 
 import jakarta.validation.constraints.NotNull;
+import kr.co.mathrank.domain.problem.assessment.AssessmentReadDomainConfiguration;
 import kr.co.mathrank.domain.problem.assessment.dto.AssessmentSubmissionStatisticQueryResult;
 import kr.co.mathrank.domain.problem.assessment.entity.Assessment;
 import kr.co.mathrank.domain.problem.assessment.entity.AssessmentSubmission;
@@ -24,6 +26,9 @@ import lombok.extern.slf4j.Slf4j;
 public class AssessmentStatisticsService {
 	private final AssessmentRepository assessmentRepository;
 
+	@Cacheable(
+		cacheNames = AssessmentReadDomainConfiguration.ASSESSMENT_STATISTICS_CACHE
+	)
 	public AssessmentSubmissionStatisticQueryResult query(@NotNull final Long assessmentId) {
 		final Assessment assessment = assessmentRepository.findWithSubmissions(assessmentId)
 			.orElseThrow(() -> {

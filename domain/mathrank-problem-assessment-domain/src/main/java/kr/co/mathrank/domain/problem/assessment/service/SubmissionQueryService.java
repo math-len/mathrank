@@ -2,10 +2,12 @@ package kr.co.mathrank.domain.problem.assessment.service;
 
 import java.util.Comparator;
 
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.annotation.Validated;
 
 import jakarta.validation.constraints.NotNull;
+import kr.co.mathrank.domain.problem.assessment.AssessmentReadDomainConfiguration;
 import kr.co.mathrank.domain.problem.assessment.dto.SubmissionQueryResults;
 import kr.co.mathrank.domain.problem.assessment.dto.SubmissionQueryResult;
 import kr.co.mathrank.domain.problem.assessment.entity.AssessmentSubmission;
@@ -21,6 +23,9 @@ import lombok.extern.slf4j.Slf4j;
 public class SubmissionQueryService {
 	private final AssessmentSubmissionRepository assessmentSubmissionRepository;
 
+	@Cacheable(
+		cacheNames = AssessmentReadDomainConfiguration.ASSESSMENT_SUBMISSION_SINGLE_CACHE
+	)
 	public SubmissionQueryResult getSubmissionResult(@NotNull final Long submissionId) {
 		final AssessmentSubmission submission = assessmentSubmissionRepository.findByIdWithSubmittedItemAnswers(submissionId)
 			.orElseThrow(() -> {
