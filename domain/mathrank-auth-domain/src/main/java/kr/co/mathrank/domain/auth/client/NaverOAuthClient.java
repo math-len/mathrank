@@ -92,14 +92,14 @@ class NaverOAuthClient implements OAuthClientHandler {
 	}
 
 	record TokenRevokeResponse(
-		String success
+		String result
 	) {
 		boolean succeeded() {
-			if (success == null) {
+			if (result == null) {
 				return false;
 			}
 
-			return success.equals("success");
+			return result.equals("success");
 		}
 	}
 }
