@@ -49,7 +49,7 @@ public class SingleProblemReadModelConfiguration {
 	}
 
 	@Bean
-	RequiredCacheSpec singleProblemSingleCacheSpec() {
+	RequiredCacheSpec singleProblemMySolvedCacheSpec() {
 		return cacheSpec(MATHRANK_SINGLE_PROBLEM_MY_CACHE, Duration.ofSeconds(5));
 	}
 }
