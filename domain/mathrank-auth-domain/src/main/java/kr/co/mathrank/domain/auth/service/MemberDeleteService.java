@@ -29,7 +29,7 @@ public class MemberDeleteService {
 		memberRepository.delete(member);
 
 		// oauth 삭제 실패했을 경우
-		if (oAuthClientManager.revoke(member)) {
+		if (!oAuthClientManager.revoke(member)) {
 			log.info("[MemberDeleteService.delete] failed to revoke OAuth client for member - memberId: {}", member.getId());
 			throw new UnRegisterMemberException("oauth 연동 해제중 에러 발생했습니다. 잠시 후 다시 시도해주세요");
 		}
