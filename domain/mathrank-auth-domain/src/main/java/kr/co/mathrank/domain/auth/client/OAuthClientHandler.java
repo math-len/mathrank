@@ -6,5 +6,4 @@ import kr.co.mathrank.domain.auth.entity.OAuthProvider;
 interface OAuthClientHandler {
 	MemberInfoResponse getMemberInfo(final OAuthLoginCommand command);
 	boolean supports(final OAuthProvider provider);
-	boolean revoke(final String refreshToken);
 }
