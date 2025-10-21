@@ -34,16 +34,16 @@ import lombok.ToString;
 @Entity
 @Getter
 @Table(indexes = {
-	@Index(name = "idx_coursePath", columnList = "course_path"),
-	@Index(name = "idx_problemId", columnList = "problem_id"),
-	@Index(name = "idx_answerType", columnList = "answer_type"),
-	@Index(name = "idx_location", columnList = "location"),
-	@Index(name = "idx_difficulty", columnList = "difficulty"),
-	@Index(name = "idx_totalAttemptedCount", columnList = "total_attempted_count"),
-	@Index(name = "idx_firstTrySuccessCount", columnList = "first_try_success_count desc"),
-	@Index(name = "idx_attemptedUserDistinctCount", columnList = "attempted_user_distinct_count desc"),
-	@Index(name = "idx_accuracy", columnList = "accuracy desc"),
-	@Index(name = "idx_pastProblem", columnList = "past_problem"),
+	@Index(name = "idx_singleProblem_coursePath", columnList = "course_path"),
+	@Index(name = "idx_singleProblem_problemId", columnList = "problem_id"),
+	@Index(name = "idx_singleProblem_answerType", columnList = "answer_type"),
+	@Index(name = "idx_singleProblem_location", columnList = "location"),
+	@Index(name = "idx_singleProblem_difficulty", columnList = "difficulty"),
+	@Index(name = "idx_singleProblem_totalAttemptedCount", columnList = "total_attempted_count"),
+	@Index(name = "idx_singleProblem_firstTrySuccessCount", columnList = "first_try_success_count desc"),
+	@Index(name = "idx_singleProblem_attemptedUserDistinctCount", columnList = "attempted_user_distinct_count desc"),
+	@Index(name = "idx_singleProblem_accuracy", columnList = "accuracy desc"),
+	@Index(name = "idx_singleProblem_pastProblem", columnList = "past_problem"),
 })
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Setter

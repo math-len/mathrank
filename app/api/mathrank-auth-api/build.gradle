@@ -6,4 +6,5 @@ dependencies {
 
     implementation project(':domain:mathrank-auth-domain')
     implementation project(':app:api:mathrank-api-common')
+    testImplementation project(':common:mathrank-event-publisher-test')
 }
