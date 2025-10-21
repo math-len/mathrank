@@ -22,9 +22,9 @@ public class SolverUpdateService {
 
 	@Transactional
 	public void updateSolver(@NotNull @Valid final SolverUpdateCommand command) {
-		final Solver solver = solverRepository.findById(command.solverId())
+		final Solver solver = solverRepository.findByMemberId(command.memberId())
 			.orElseThrow(() -> {
-				log.info("[SolverUpdateService.updateSolver] cannot found solver - solverId: {}", command.solverId());
+				log.info("[SolverUpdateService.updateSolver] cannot found solver - memberId: {}", command.memberId());
 				return new CannotFoundSolverException("사용자를 찾을 수 없습니다.");
 			});
 
