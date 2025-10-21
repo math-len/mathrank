@@ -60,7 +60,7 @@ class SolveLogSaveManagerTest {
 		Assertions.assertThrows(SolveLogAlreadyRegisteredException.class, () ->
 			solveLogSaveManager.save(new SolveLogRegisterCommand(1L, 2L, memberId, true), score));
 
-		final Solver solver = solverRepository.findByMemberId(memberId).get();
+		final Solver solver = solverRepository.findByMemberIdWithLogs(memberId).get();
 		Assertions.assertEquals(1, solverRepository.count());
 		Assertions.assertEquals(1, solver.getSolveLogs().size());
 		Assertions.assertEquals(score, solver.getScore());
@@ -88,7 +88,7 @@ class SolveLogSaveManagerTest {
 
 		countDownLatch.await();
 
-		final Solver solver = solverRepository.findByMemberId(memberId).get();
+		final Solver solver = solverRepository.findByMemberIdWithLogs(memberId).get();
 		Assertions.assertEquals(1, solverRepository.count());
 		Assertions.assertEquals(1, solver.getSolveLogs().size());
 		Assertions.assertEquals(score, solver.getScore());
@@ -117,7 +117,7 @@ class SolveLogSaveManagerTest {
 
 		countDownLatch.await();
 
-		final Solver solver = solverRepository.findByMemberId(memberId).get();
+		final Solver solver = solverRepository.findByMemberIdWithLogs(memberId).get();
 		Assertions.assertEquals(1, solverRepository.count());
 		Assertions.assertEquals(tryCount, solver.getSolveLogs().size());
 		Assertions.assertEquals(tryCount * score, solver.getScore());
