@@ -1,6 +1,5 @@
 package kr.co.mathrank.domain.rank.repository;
 
-import java.lang.ScopedValue;
 import java.util.List;
 import java.util.Optional;
 
