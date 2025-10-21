@@ -16,12 +16,15 @@ import kr.co.mathrank.domain.auth.dto.MemberDeleteCommand;
 import kr.co.mathrank.domain.auth.entity.Member;
 import kr.co.mathrank.domain.auth.entity.MemberType;
 import kr.co.mathrank.domain.auth.repository.MemberRepository;
+import kr.co.mathrank.domain.auth.repository.RefreshTokenRepository;
 
 @SpringBootTest
 @Transactional
 class MemberDeleteServiceTest {
 	@Autowired
 	private MemberDeleteService deleteService;
+	@MockitoBean
+	private RefreshTokenRepository refreshTokenRepository;
 	@MockitoBean
 	private MemberRepository memberRepository;
 
