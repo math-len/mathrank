@@ -5,12 +5,13 @@ record NaverMemberInfoResponse(
 ) implements MemberInfoResponse {
 	@Override
 	public MemberInfo toInfo() {
-		return new MemberInfo(response.id(), response.nickname(),null, null);
+		return new MemberInfo(response.id(), response.nickname(), response.email(), null, null);
 	}
 
 	record NaverResponse(
 		String nickname,
-		String id
+		String id,
+		String email
 	) {
 	}
 }

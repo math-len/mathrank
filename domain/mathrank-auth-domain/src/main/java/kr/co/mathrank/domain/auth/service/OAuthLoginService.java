@@ -44,7 +44,7 @@ public class OAuthLoginService {
 
 				final Member newMember = Member.fromOAuth(uniqueId, memberInfo.memberId(), command.provider(),
 					memberInfo.refreshToken(), memberInfo.tokenType(),
-					memberInfo.nickName(), Role.USER);
+					memberInfo.nickName(), Role.USER, memberInfo.email());
 				memberRepository.save(newMember);
 				log.info("[OAuthLoginService.login] member registered - memberId: {}, oAuthProvider: {}", uniqueId, command.provider());
 				return newMember;

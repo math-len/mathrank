@@ -21,14 +21,25 @@ record KakaoMemberInfoResponse(
 
 	@Override
 	public MemberInfo toInfo() {
-		return new MemberInfo(String.valueOf(id), getNickName(),null, null);
+		return new MemberInfo(String.valueOf(id), getNickName(), kakao_account().getEmail(), null, null);
 	}
 
 	record Account (
-		Profile profile
+		Profile profile,
+		Boolean is_email_valid, // 유효한 이메일인지 ( 마스킹 되어 있는지 )
+		Boolean is_email_verified, // 인증된 이메일인지 ( 이메일 인증 완료 됐는지 )
+		String email
 	) {
+		public String getEmail() {
+			if (is_email_valid && is_email_verified) {
+				return email;
+			}
 
+			log.info("[KakaoMemberInfoResponse.getEmail] email is not available - email: {}", this);
+			return null;
+		}
 	}
+
 	record Profile(
 		String nickname
 	) {

@@ -7,6 +7,7 @@ public record MemberInfoRefreshTokenAdapter(MemberInfo memberInfo, String refres
 		return new MemberInfo(
 			memberInfo.memberId(),
 			memberInfo.nickName(),
+			memberInfo.email(),
 			refreshToken,
 			tokenType
 		);
