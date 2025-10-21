@@ -49,6 +49,8 @@ public class Member {
 
 	private String password;
 
+	private String email;
+
 	@Embedded
 	private final OAuthInfo oAuthInfo = new OAuthInfo();
 
@@ -85,7 +87,8 @@ public class Member {
 		final String oAuthRefreshToken,
 		final String oAuthTokenType,
 		final String nickName,
-		final Role role
+		final Role role,
+		final String email
 	) {
 		final Member member = new Member();
 		member.id = id;
@@ -95,6 +98,7 @@ public class Member {
 		member.oAuthInfo.setTokenType(oAuthTokenType);
 		member.name = nickName;
 		member.role = role;
+		member.email = email;
 
 		return member;
 	}
