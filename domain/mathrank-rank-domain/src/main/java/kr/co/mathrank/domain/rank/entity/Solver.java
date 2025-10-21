@@ -15,6 +15,7 @@ import jakarta.persistence.Index;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import lombok.Getter;
+import lombok.Setter;
 
 @Entity
 @Table(
@@ -36,6 +37,7 @@ public class Solver {
 
 	private Long score = 0L;
 
+	@Setter
 	private String schoolCode;
 
 	@Column(unique = true)

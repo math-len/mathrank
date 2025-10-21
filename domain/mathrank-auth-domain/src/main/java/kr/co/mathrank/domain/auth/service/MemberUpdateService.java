@@ -6,6 +6,8 @@ import org.springframework.validation.annotation.Validated;
 
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
+import kr.co.mathrank.common.event.EventPayload;
+import kr.co.mathrank.common.outbox.TransactionalOutboxPublisher;
 import kr.co.mathrank.domain.auth.dto.MemberUpdateCommand;
 import kr.co.mathrank.domain.auth.entity.Member;
 import kr.co.mathrank.domain.auth.exception.CannotFoundMemberException;
@@ -19,6 +21,7 @@ import lombok.extern.slf4j.Slf4j;
 @RequiredArgsConstructor
 public class MemberUpdateService {
 	private final MemberRepository memberRepository;
+	private final TransactionalOutboxPublisher outboxPublisher;
 
 	@Transactional
 	public void update(@NotNull @Valid final MemberUpdateCommand command) {
@@ -34,6 +37,21 @@ public class MemberUpdateService {
 		member.setName(command.userNickName());
 
 		memberRepository.save(member);
+		outboxPublisher.publish("mathrank-member-updated", MemberUpdatedEventPayload.from(member));
 		log.info("[MemberUpdateService.update] member updated - memberId: {}", member.getId());
+	}
+
+	record MemberUpdatedEventPayload(
+		String memberId,
+		String name,
+		String schoolCode
+	) implements EventPayload {
+		public static MemberUpdatedEventPayload from(final Member member) {
+			return new MemberUpdatedEventPayload(
+				String.valueOf(member.getId()),
+				member.getName(),
+				member.getSchoolCode()
+			);
+		}
 	}
 }

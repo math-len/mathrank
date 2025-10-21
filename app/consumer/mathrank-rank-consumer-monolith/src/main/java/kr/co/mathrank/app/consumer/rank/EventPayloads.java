@@ -22,4 +22,11 @@ public class EventPayloads {
 			);
 		}
 	}
+
+	record MemberUpdatedEventPayload(
+		String memberId,
+		String name,
+		String schoolCode
+	) implements EventPayload {
+	}
 }
