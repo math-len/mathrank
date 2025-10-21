@@ -13,7 +13,7 @@ import lombok.RequiredArgsConstructor;
 
 @Component
 @RequiredArgsConstructor
-class SingleProblemSolvedRankEventMonolithListener {
+class SolvedRankEventMonolithListener {
 	private final SolveLogRegisterService solveLogRegisterService;
 	private final SolverUpdateService solverUpdateService;
 
