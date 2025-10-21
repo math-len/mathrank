@@ -4,7 +4,7 @@ import jakarta.validation.constraints.NotNull;
 
 public record SolverUpdateCommand(
 	@NotNull
-	Long solverId,
+	Long memberId,
 	@NotNull
 	String solverName,
 	String schoolCode
