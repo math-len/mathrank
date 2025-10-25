@@ -4,6 +4,9 @@ dependencies {
     implementation platform('io.awspring.cloud:spring-cloud-aws-dependencies:3.3.0')
     implementation 'io.awspring.cloud:spring-cloud-aws-starter-parameter-store'
 
+    implementation("io.awspring.cloud:spring-cloud-aws-starter-metrics")
+    implementation("io.micrometer:micrometer-registry-cloudwatch2")
+
     implementation project(':app:api:mathrank-member-api')
     implementation project(':app:api:mathrank-point-api')
     implementation project(':app:api:mathrank-point-inner-api')
