@@ -13,10 +13,6 @@ public record ProblemRegisterCommand(
 	Long requestMemberId,
 	@NotNull
 	String imageSource,
-	/*
-		문제 등록시, 풀이 이미지 필수 아니도록 수정
-	*/
-	// @NotBlank
 	String solutionImage,
 	@NotNull
 	AnswerType answerType,
