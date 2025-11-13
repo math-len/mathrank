@@ -19,7 +19,7 @@ public class SolverDeleteService {
 
 	@Transactional
 	public void delete(@NotNull @Valid final Long memberId) {
-		solverRepository.findById(memberId)
+		solverRepository.findByMemberId(memberId)
 			.ifPresentOrElse(solver -> {
 				solverRepository.delete(solver);
 				log.info("[SolverDeleteService.delete] solver deleted - memberId: {}", memberId);
