@@ -66,6 +66,7 @@ class NaverOAuthClient implements OAuthClientHandler {
 				.queryParam("client_secret", naverConfiguration.getClientSecret())
 				.queryParam("access_token", token.access_token())
 				.queryParam("grant_type", "delete")
+				.queryParam("service_provider", "NAVER")
 				.build())
 			.contentType(MediaType.APPLICATION_FORM_URLENCODED)
 			.retrieve()
