@@ -6,6 +6,8 @@ import org.springframework.validation.annotation.Validated;
 
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
+import kr.co.mathrank.common.event.EventPayload;
+import kr.co.mathrank.common.outbox.TransactionalOutboxPublisher;
 import kr.co.mathrank.domain.auth.client.OAuthClientManager;
 import kr.co.mathrank.domain.auth.dto.MemberDeleteCommand;
 import kr.co.mathrank.domain.auth.entity.Member;
@@ -24,6 +26,7 @@ public class MemberDeleteService {
 	private final MemberRepository memberRepository;
 	private final OAuthClientManager oAuthClientManager;
 	private final RefreshTokenRepository refreshTokenRepository;
+	private final TransactionalOutboxPublisher outboxPublisher;
 
 	@Transactional
 	public void delete(@NotNull @Valid final MemberDeleteCommand command) {
@@ -36,6 +39,7 @@ public class MemberDeleteService {
 			throw new UnRegisterMemberException("oauth 연동 해제중 에러 발생했습니다. 잠시 후 다시 시도해주세요");
 		}
 		refreshTokenRepository.expire(member.getId());
+		outboxPublisher.publish("mathrank-member-removed", MemberDeletedEventPayload.from(member));
 		log.info("[MemberDeleteService.delete] member delete success - memberId: {}", command.targetMemberId());
 	}
 
@@ -45,5 +49,14 @@ public class MemberDeleteService {
 				log.info("[MemberDeleteService.getMember] cannot found member - memberId: {}", targetMemberId);
 				return new CannotFoundMemberException();
 			});
+	}
+
+	record MemberDeletedEventPayload(
+		Long memberId,
+		String memberName
+	) implements EventPayload {
+		static MemberDeletedEventPayload from(final Member member) {
+			return new MemberDeletedEventPayload(member.getId(), member.getName());
+		}
 	}
 }
