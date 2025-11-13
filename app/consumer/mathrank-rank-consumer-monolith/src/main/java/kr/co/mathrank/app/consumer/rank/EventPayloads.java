@@ -29,4 +29,10 @@ public class EventPayloads {
 		String schoolCode
 	) implements EventPayload {
 	}
+
+	record MemberDeletedEventPayload(
+		Long memberId,
+		String memberName
+	) implements EventPayload {
+	}
 }

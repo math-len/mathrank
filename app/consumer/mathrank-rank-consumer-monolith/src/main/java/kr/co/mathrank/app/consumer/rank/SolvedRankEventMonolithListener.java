@@ -8,6 +8,7 @@ import kr.co.mathrank.common.event.Event;
 import kr.co.mathrank.common.event.publisher.monolith.MonolithEvent;
 import kr.co.mathrank.domain.rank.dto.SolverUpdateCommand;
 import kr.co.mathrank.domain.rank.service.SolveLogRegisterService;
+import kr.co.mathrank.domain.rank.service.SolverDeleteService;
 import kr.co.mathrank.domain.rank.service.SolverUpdateService;
 import lombok.RequiredArgsConstructor;
 
@@ -16,6 +17,7 @@ import lombok.RequiredArgsConstructor;
 class SolvedRankEventMonolithListener {
 	private final SolveLogRegisterService solveLogRegisterService;
 	private final SolverUpdateService solverUpdateService;
+	private final SolverDeleteService solverDeleteService;
 
 	@EventListener
 	@Async
@@ -43,5 +45,16 @@ class SolvedRankEventMonolithListener {
 		).getPayload();
 
 		solverUpdateService.updateSolver(new SolverUpdateCommand(Long.parseLong(payload.memberId()), payload.name(), payload.schoolCode()));
+	}
+
+	@EventListener
+	@Async
+	public void consumeMemberRemovedEvent(final MonolithEvent monolithEvent) {
+		if (!monolithEvent.isExpectedTopic("mathrank-member-removed")) {
+			return;
+		}
+		final Event<EventPayloads.MemberDeletedEventPayload> deletedEventPayload = Event.fromJson(monolithEvent.payload(), EventPayloads.MemberDeletedEventPayload.class);
+
+		solverDeleteService.delete(deletedEventPayload.getPayload().memberId());
 	}
 }
