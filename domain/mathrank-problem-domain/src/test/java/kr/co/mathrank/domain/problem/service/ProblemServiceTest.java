@@ -121,9 +121,7 @@ class ProblemServiceTest {
 			Arguments.of(new ProblemRegisterCommand(			1L, null, null, AnswerType.MULTIPLE_CHOICE, "aa", Difficulty.KILLER, PastProblem.NONE, "testCode", Set.of("answer"), 1001, null, null)),
 			Arguments.of(new ProblemRegisterCommand(			1L, "image.jpeg", null, null, "aa", Difficulty.KILLER, PastProblem.NONE, "testCode", Set.of("answer"), 1001, null, null)),
 			Arguments.of(new ProblemRegisterCommand(			1L, "image.jpeg", null, AnswerType.MULTIPLE_CHOICE, "aa", null, PastProblem.NONE, "testCode", Set.of("answer"), 1001, null, null)),
-			Arguments.of(new ProblemRegisterCommand(			1L, "image.jpeg", null, AnswerType.MULTIPLE_CHOICE, "aa", Difficulty.KILLER, PastProblem.NONE, null, Set.of("answer"), 1001, null, null)),
-			Arguments.of(new ProblemRegisterCommand(			1L, "image.jpeg", null, AnswerType.MULTIPLE_CHOICE, "aa", Difficulty.KILLER, PastProblem.NONE, "testCode", Set.of(), 1001, null, null)),
-			Arguments.of(new ProblemRegisterCommand(			1L, "image.jpeg", null, AnswerType.MULTIPLE_CHOICE, "aa", Difficulty.KILLER, PastProblem.NONE, "testCode", null, 1001, null, null))
+			Arguments.of(new ProblemRegisterCommand(			1L, "image.jpeg", null, AnswerType.MULTIPLE_CHOICE, "aa", Difficulty.KILLER, PastProblem.NONE, "testCode", Set.of(), 1001, null, null))
 		);
 	}
 }

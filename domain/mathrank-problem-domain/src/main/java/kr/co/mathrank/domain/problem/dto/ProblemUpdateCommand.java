@@ -15,7 +15,6 @@ public record ProblemUpdateCommand(
 	Long requestMemberId,
 	@NotNull
 	String imageSource,
-	@NotNull
 	String solutionImage,
 	@NotNull
 	AnswerType answerType,

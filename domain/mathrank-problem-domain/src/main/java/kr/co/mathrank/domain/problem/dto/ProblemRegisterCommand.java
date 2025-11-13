@@ -2,7 +2,6 @@ package kr.co.mathrank.domain.problem.dto;
 
 import java.util.Set;
 
-import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import kr.co.mathrank.domain.problem.core.AnswerType;
@@ -14,7 +13,6 @@ public record ProblemRegisterCommand(
 	Long requestMemberId,
 	@NotNull
 	String imageSource,
-	@NotBlank
 	String solutionImage,
 	@NotNull
 	AnswerType answerType,

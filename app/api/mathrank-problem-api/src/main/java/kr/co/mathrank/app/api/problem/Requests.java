@@ -2,8 +2,6 @@ package kr.co.mathrank.app.api.problem;
 
 import java.util.Set;
 
-import io.swagger.v3.oas.annotations.media.Schema;
-import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import kr.co.mathrank.domain.problem.core.AnswerType;
@@ -16,7 +14,6 @@ class Requests {
 	record ProblemRegisterRequest(
 		@NotNull
 		String problemImage,
-		@NotBlank
 		String solutionImage,
 		@NotNull
 		AnswerType answerType,
@@ -54,7 +51,6 @@ class Requests {
 		Long problemId,
 		@NotNull
 		String problemImage,
-		@NotBlank
 		String solutionImage,
 		@NotNull
 		AnswerType answerType,
