@@ -6,8 +6,6 @@ import org.springframework.validation.annotation.Validated;
 
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
-import kr.co.mathrank.domain.rank.entity.Solver;
-import kr.co.mathrank.domain.rank.exception.CannotFoundSolverException;
 import kr.co.mathrank.domain.rank.repository.SolverRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -21,13 +19,12 @@ public class SolverDeleteService {
 
 	@Transactional
 	public void delete(@NotNull @Valid final Long memberId) {
-		final Solver solver = solverRepository.findById(memberId)
-			.orElseThrow(() -> {
+		solverRepository.findById(memberId)
+			.ifPresentOrElse(solver -> {
+				solverRepository.delete(solver);
+				log.info("[SolverDeleteService.delete] solver deleted - memberId: {}", memberId);
+			}, () -> {
 				log.info("[SolverDeleteService.delete] cannot found solver - memberId: {}", memberId);
-				return new CannotFoundSolverException("사용자를 찾을 수 없습니다.");
 			});
-
-		solverRepository.delete(solver);
-		log.info("[SolverDeleteService.delete] solver deleted - memberId: {}", memberId);
 	}
 }
