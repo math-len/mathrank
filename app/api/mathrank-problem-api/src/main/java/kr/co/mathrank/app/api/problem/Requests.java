@@ -16,7 +16,10 @@ class Requests {
 	record ProblemRegisterRequest(
 		@NotNull
 		String problemImage,
-		@NotBlank
+		/*
+			문제 등록시, 풀이 이미지 필수 아니도록 수정
+		*/
+		// @NotBlank
 		String solutionImage,
 		@NotNull
 		AnswerType answerType,
@@ -54,7 +57,10 @@ class Requests {
 		Long problemId,
 		@NotNull
 		String problemImage,
-		@NotBlank
+		/*
+			문제 수정시, 풀이 이미지 필수 아니도록 수정
+		*/
+		// @NotBlank
 		String solutionImage,
 		@NotNull
 		AnswerType answerType,

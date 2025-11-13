@@ -15,7 +15,10 @@ public record ProblemUpdateCommand(
 	Long requestMemberId,
 	@NotNull
 	String imageSource,
-	@NotNull
+	/*
+		문제 수정시, 풀이 이미지 필수 아니도록 수정
+	*/
+	// @NotNull
 	String solutionImage,
 	@NotNull
 	AnswerType answerType,
