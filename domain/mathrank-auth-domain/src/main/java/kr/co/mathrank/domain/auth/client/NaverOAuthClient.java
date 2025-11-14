@@ -1,6 +1,7 @@
 package kr.co.mathrank.domain.auth.client;
 
 import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
@@ -67,7 +68,7 @@ class NaverOAuthClient implements OAuthClientHandler {
 			.uri(uriBuilder -> uriBuilder
 				.queryParam("client_id", naverConfiguration.getClientId())
 				.queryParam("client_secret", naverConfiguration.getClientSecret())
-				.queryParam("access_token", UriUtils.encode(token.access_token(), Charset.defaultCharset()))
+				.queryParam("access_token", UriUtils.encode(token.access_token(), StandardCharsets.UTF_8))
 				.queryParam("grant_type", "delete")
 				.queryParam("service_provider", "NAVER")
 				.build())
