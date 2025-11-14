@@ -64,10 +64,10 @@ class NaverOAuthClient implements OAuthClientHandler {
 			.uri(uriBuilder -> uriBuilder
 				.queryParam("client_id", naverConfiguration.getClientId())
 				.queryParam("client_secret", naverConfiguration.getClientSecret())
-				.queryParam("access_token", token.access_token())
+				.queryParam("access_token", "{access_token}")
 				.queryParam("grant_type", "delete")
 				.queryParam("service_provider", "NAVER")
-				.build())
+				.build(token.access_token()))
 			.contentType(MediaType.APPLICATION_FORM_URLENCODED)
 			.retrieve()
 			.body(TokenRevokeResponse.class)
