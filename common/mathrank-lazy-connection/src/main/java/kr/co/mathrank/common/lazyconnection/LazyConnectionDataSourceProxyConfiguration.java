@@ -1,7 +1,6 @@
 package kr.co.mathrank.common.lazyconnection;
 
 import javax.sql.DataSource;
-import javax.xml.crypto.Data;
 
 import org.springframework.boot.autoconfigure.jdbc.DataSourceProperties;
 import org.springframework.context.annotation.Bean;
