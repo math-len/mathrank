@@ -69,6 +69,7 @@ include(
         'domain:mathrank-point-domain',
 
         'common',
+        'common:mathrank-lazy-connection',
         'common:mathrank-cache',
         'common:mathrank-cache-redis',
         'common:mathrank-cache-caffeine',

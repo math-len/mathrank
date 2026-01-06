@@ -41,4 +41,5 @@ dependencies {
     implementation project(':app:consumer:mathrank-contents-consumer-monolith')
 
     implementation project(':common:mathrank-cache-caffeine')
+    implementation project(':common:mathrank-lazy-connection')
 }
