@@ -1,6 +1,6 @@
 package kr.co.mathrank.rank.read;
 
-import kr.co.mathrank.domain.rank.dto.SchoolRankQueryResult;
+import kr.co.mathrank.domain.rank.dto.SchoolRankPageResult;
 
 public record SchoolRankPageResponse(
 	String schoolCode,
@@ -9,10 +9,10 @@ public record SchoolRankPageResponse(
 	Long rank,
 	Long memberCount
 ) {
-	public static SchoolRankPageResponse from(final SchoolRankQueryResult result, final String schoolName) {
+	public static SchoolRankPageResponse from(final SchoolRankPageResult result) {
 		return new SchoolRankPageResponse(
 			result.schoolCode(),
-			schoolName,
+			result.schoolName(),
 			result.score(),
 			result.rank(),
 			result.memberCount()

@@ -14,6 +14,27 @@ public class RankDomainConfiguration {
 	public static final String USER_RANK_CACHE_NAME = "mathrank::domain::rank::user";
 	public static final String RANK_BOARD_CACHE_NAME = "mathrank::domain::rank::board";
 	public static final String SCHOOL_RANK_BOARD_CACHE_NAME = "mathrank::domain::rank::school::board";
+	public static final String SCHOOL_NAME_CACHE = "mathrank::domain::rank::school";
+
+	@Bean
+	RequiredCacheSpec rankDomainSchoolNameCacheSpec() {
+		return new RequiredCacheSpec() {
+			@Override
+			public String moduleName() {
+				return "mathrank-domain-rank";
+			}
+
+			@Override
+			public String cacheName() {
+				return SCHOOL_NAME_CACHE;
+			}
+
+			@Override
+			public Duration ttl() {
+				return Duration.ofMinutes(10L); // 잘 업데이트 되지 않는 데이터
+			}
+		};
+	}
 
 	@Bean
 	RequiredCacheSpec userRankCacheSpec() {
