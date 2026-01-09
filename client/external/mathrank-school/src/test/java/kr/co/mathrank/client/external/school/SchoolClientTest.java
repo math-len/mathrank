@@ -13,6 +13,9 @@ import lombok.extern.slf4j.Slf4j;
 @SpringBootTest(properties = """
 client.school.read-timeout-seconds=10
 client.school.connection-timeout-seconds=10
+resilience4j.ratelimiter.instances.neiceApi.limit-refresh-period=1s
+resilience4j.ratelimiter.instances.neiceApi.limit-for-period=100
+resilience4j.ratelimiter.instances.neiceApi.timeout-duration=1s
 """)
 class SchoolClientTest {
 	@Autowired
