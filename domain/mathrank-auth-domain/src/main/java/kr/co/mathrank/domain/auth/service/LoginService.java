@@ -45,18 +45,18 @@ public class LoginService {
 			throw new MemberLockedException(member.getLockInfo().getRemainLockDuration(now));
 		}
 
-		// 비밀번호 일치
-		if (isMatch(command.password(), member.getPassword())) {
-			member.getLockInfo().unlock();
-			log.info("[LoginService.login] member login success: {}", member.getId());
-			return jwtLoginManager.login(member.getId(), member.getRole(), member.getName());
+		// 비밀번호 불일치
+		if (!isMatch(command.password(), member.getPassword())) {
+			member.getLockInfo().addFailedCount(now);
+			memberRepository.save(member);
+			log.warn("[LoginService.login] password not matched for member: {}, remain try count: {}", member.getId(),
+				member.getLockInfo().getRemainTryCount());
+			throw new PasswordMismatchedException(member.getLockInfo().getRemainTryCount());
 		}
 
-		// 비밀번호 불일치
-		member.getLockInfo().addFailedCount(now);
-		memberRepository.save(member);
-		log.warn("[LoginService.login] password not matched for member: {}, remain try count: {}", member.getId(), member.getLockInfo().getRemainTryCount());
-		throw new PasswordMismatchedException(member.getLockInfo().getRemainTryCount());
+		member.getLockInfo().unlock();
+		log.info("[LoginService.login] member login success: {}", member.getId());
+		return jwtLoginManager.login(member.getId(), member.getRole(), member.getName());
 	}
 
 	public JwtLoginResult refresh(@NotNull final String refreshToken) {
