@@ -47,7 +47,6 @@ public class LoginService {
 
 		// 비밀번호 불일치
 		if (!isMatch(command.password(), member.getPassword())) {
-			// 비밀번호 불일치
 			member.getLockInfo().addFailedCount(now);
 			memberRepository.save(member);
 			log.warn("[LoginService.login] password not matched for member: {}, remain try count: {}", member.getId(),
