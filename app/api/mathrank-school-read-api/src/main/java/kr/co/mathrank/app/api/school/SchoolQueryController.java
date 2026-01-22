@@ -29,9 +29,9 @@ public class SchoolQueryController {
 		@RequestParam(required = false)
 		final String schoolName,
 		@RequestParam(defaultValue = "1")
-		@Range(min = 0, max = 1000)
+		@Range(min = 1, max = 1000)
 		final Integer pageIndex,
-		@Range(min = 0, max = 20)
+		@Range(min = 1, max = 20)
 		@RequestParam(defaultValue = "10")
 		final Integer pageSize
 	) {
