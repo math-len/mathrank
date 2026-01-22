@@ -6,6 +6,7 @@ import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.method.annotation.HandlerMethodValidationException;
 
 import jakarta.servlet.ServletException;
 import jakarta.validation.ConstraintViolationException;
@@ -22,6 +23,13 @@ public class ApiExceptionHandler {
 	@ExceptionHandler(ConstraintViolationException.class)
 	public ResponseEntity<ApiExceptionBody> handleValidationException(final ConstraintViolationException exception) {
 		log.warn("[ApiExceptionHandler] wrong arguments with: {}", exception.getConstraintViolations(), exception);
+		return ResponseEntity.status(API_EXCEPTION_STATUS)
+			.body(ApiExceptionBody.of(1000, exception.getMessage()));
+	}
+
+	@ExceptionHandler(HandlerMethodValidationException.class)
+	public ResponseEntity<ApiExceptionBody> handleValidationException(final HandlerMethodValidationException exception) {
+		log.warn("[ApiExceptionHandler] wrong arguments: {}", exception.getCrossParameterValidationResults(), exception);
 		return ResponseEntity.status(API_EXCEPTION_STATUS)
 			.body(ApiExceptionBody.of(1000, exception.getMessage()));
 	}
