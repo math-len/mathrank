@@ -11,6 +11,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.client.RestClient;
 
+import io.github.resilience4j.ratelimiter.annotation.RateLimiter;
 import jakarta.validation.constraints.NotNull;
 import kr.co.mathrank.client.config.RestClientResponseDecorator;
 import kr.co.mathrank.client.config.TimeoutConfiguredClient;
@@ -19,7 +20,9 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 @Component
 public class SchoolClient extends TimeoutConfiguredClient {
 	@Value("${neice.school.key:}")
@@ -39,6 +42,7 @@ public class SchoolClient extends TimeoutConfiguredClient {
 	}
 
 	@Deprecated
+	@RateLimiter(name = "neiceApi", fallbackMethod = "fallBackSchoolInfo")
 	public Optional<SchoolInfo> getSchool(final String type, final String schoolCode) {
 		if (schoolCode == null || schoolCode.isBlank()) {
 			return Optional.empty();
@@ -58,11 +62,18 @@ public class SchoolClient extends TimeoutConfiguredClient {
 		return response.getSchoolInfo().isEmpty() ? Optional.empty() : Optional.of(response.getSchoolInfo().getFirst());
 	}
 
+	// fall back - #getSchool
+	private Optional<SchoolInfo> fallBackSchoolInfo(final String type, final String schoolCode, final Throwable t) {
+		log.warn("[SchoolClient.fallBackSchoolInfo] fallback called - type: {}, schoolCode: {}", type, schoolCode, t);
+		return Optional.empty();
+	}
+
 	public ClientResponse<Optional<SchoolInfo>> getSchoolResponse(final String type, final String schoolCode) {
 		return responseDecorator.wrap(() -> getSchool(type, schoolCode));
 	}
 
 	@Deprecated
+	@RateLimiter(name = "neiceApi", fallbackMethod = "fallBackGetSchools")
 	public SchoolResponse getSchools(String type, Integer pageIndex, Integer pageSize, String schoolName) {
 		return restClient.get()
 			.uri(uriBuilder -> uriBuilder.path("/hub/schoolInfo")
@@ -73,6 +84,11 @@ public class SchoolClient extends TimeoutConfiguredClient {
 				.queryParam("SCHUL_NM", schoolName).build())
 			.retrieve()
 			.body(SchoolResponse.class);
+	}
+
+	private SchoolResponse fallBackGetSchools(String type, Integer pageIndex, Integer pageSize, String schoolName, Throwable t) {
+		log.warn("[SchoolClient.fallBackGetSchools] fallback called - type: {}, pageIndex: {}, pageSize: {}, schoolName: {}", type, pageIndex, pageSize, schoolName, t);
+		return new SchoolResponse(null);
 	}
 
 	public ClientResponse<SchoolResponse> getSchoolsResponse(String type, Integer pageIndex, Integer pageSize, String schoolName) {
@@ -88,6 +104,7 @@ public class SchoolClient extends TimeoutConfiguredClient {
 	 * @return 해당 도시의 학교 정보가 담긴 응답 객체
 	 */
 	@Deprecated
+	@RateLimiter(name = "neiceApi", fallbackMethod = "fallBackGetSchoolsByCityName")
 	public SchoolResponse getSchoolsByCityName(String type, String cityName) {
 		return restClient.get()
 			.uri(uriBuilder -> uriBuilder.path("/hub/schoolInfo")
@@ -99,6 +116,11 @@ public class SchoolClient extends TimeoutConfiguredClient {
 				.build())
 			.retrieve()
 			.body(SchoolResponse.class);
+	}
+
+	private SchoolResponse fallBackGetSchoolsByCityName(String type, String cityName, Throwable t) {
+		log.warn("[SchoolClient.fallBackGetSchoolsByCityName] fallback called - type: {}, cityName: {}", type, cityName, t);
+		return new SchoolResponse(null);
 	}
 
 	public ClientResponse<SchoolResponse> getSchoolsByCityNameResponse(String type, String cityName) {
