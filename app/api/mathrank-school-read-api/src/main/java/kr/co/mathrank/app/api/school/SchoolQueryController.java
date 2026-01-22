@@ -28,10 +28,10 @@ public class SchoolQueryController {
 	public ResponseEntity<List<SchoolResponse>> loadInfos(
 		@RequestParam(required = false)
 		final String schoolName,
-		@RequestParam(defaultValue = "0")
-		@Range(min = 0, max = 1000)
+		@RequestParam(defaultValue = "1")
+		@Range(min = 1, max = 1000)
 		final Integer pageIndex,
-		@Range(min = 0, max = 20)
+		@Range(min = 1, max = 20)
 		@RequestParam(defaultValue = "10")
 		final Integer pageSize
 	) {
