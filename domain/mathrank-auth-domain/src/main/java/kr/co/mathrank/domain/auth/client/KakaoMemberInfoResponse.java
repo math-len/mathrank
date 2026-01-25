@@ -32,6 +32,7 @@ record KakaoMemberInfoResponse(
 	) {
 		public String getEmail() {
 			if (is_email_valid == null || is_email_verified == null) {
+				log.info("[KakaoMemberInfoResponse.getEmail] cannot parse email - valid and verified is null");
 				return null;
 			}
 
