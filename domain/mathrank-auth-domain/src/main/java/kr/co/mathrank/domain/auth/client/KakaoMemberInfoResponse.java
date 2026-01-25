@@ -31,12 +31,16 @@ record KakaoMemberInfoResponse(
 		String email
 	) {
 		public String getEmail() {
-			if (is_email_valid && is_email_verified) {
-				return email;
+			if (is_email_valid == null || is_email_verified == null) {
+				return null;
 			}
 
-			log.info("[KakaoMemberInfoResponse.getEmail] email is not available - email: {}", this);
-			return null;
+			if (!is_email_valid || !is_email_verified) {
+				log.info("[KakaoMemberInfoResponse.getEmail] email is not available - email: {}", this);
+				return null;
+			}
+
+			return email;
 		}
 	}
 
