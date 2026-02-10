@@ -30,4 +30,11 @@ class OAuthConfiguration {
 		log.info("[OAuthClientConfiguration] naver oauth client registered - configuration: {}", configuration);
 		return new NaverOAuthClient(configuration);
 	}
+
+	@Bean
+	@ConditionalOnBean(AppleConfiguration.class)
+	AppleOAuthClient appleOAuthClient(final AppleConfiguration configuration) {
+		log.info("[OAuthClientConfiguration] apple oauth client registered - configuration: {}", configuration);
+		return new AppleOAuthClient(configuration);
+	}
 }
