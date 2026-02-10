@@ -6,6 +6,13 @@ record AppleMemberInfoResponse(
 ) implements MemberInfoResponse {
 	@Override
 	public MemberInfo toInfo() {
-		return new MemberInfo(sub, null, email, null, null);
+		return new MemberInfo(sub, getNickName(), email, null, null);
+	}
+
+	private String getNickName() {
+		if (email != null && email.contains("@")) {
+			return email.substring(0, email.indexOf("@"));
+		}
+		return sub;
 	}
 }
