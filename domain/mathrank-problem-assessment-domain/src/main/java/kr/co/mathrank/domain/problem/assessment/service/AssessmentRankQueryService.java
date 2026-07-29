@@ -10,6 +10,7 @@ import org.springframework.validation.annotation.Validated;
 import kr.co.mathrank.domain.problem.assessment.AssessmentReadDomainConfiguration;
 import kr.co.mathrank.domain.problem.assessment.dto.AssessmentSubmissionRankResult;
 import kr.co.mathrank.domain.problem.assessment.dto.AssessmentSubmissionStatisticQueryResult;
+import kr.co.mathrank.domain.problem.assessment.dto.AssessmentSubmissionStanding;
 import kr.co.mathrank.domain.problem.assessment.entity.AssessmentSubmission;
 import kr.co.mathrank.domain.problem.assessment.entity.EvaluationStatus;
 import kr.co.mathrank.domain.problem.assessment.exception.NoSuchSubmissionException;
@@ -58,7 +59,9 @@ public class AssessmentRankQueryService {
 				result.ascendingElapsedTimes(),
 				assessmentSubmission.getElapsedTime(),
 				elapsedTimeRank == null ? result.descendingScores().size() : elapsedTimeRank,
-				result.ascendingElapsedTimes().size()
+				result.officialStandings().size(),
+				getOverallRank(result.officialStandings(), assessmentSubmission),
+				true
 			);
 		}
 
@@ -74,8 +77,24 @@ public class AssessmentRankQueryService {
 			result.ascendingElapsedTimes(),
 			assessmentSubmission.getElapsedTime(),
 			elapsedTimeRank == null ? result.descendingScores().size() + 1 : elapsedTimeRank,
-			result.descendingScores().size() + 1
+			result.officialStandings().size(),
+			null,
+			false
 		);
+	}
+
+	private Integer getOverallRank(
+		final List<AssessmentSubmissionStanding> standings,
+		final AssessmentSubmission submission
+	) {
+		for (int index = 0; index < standings.size(); index++) {
+			final AssessmentSubmissionStanding standing = standings.get(index);
+			if (standing.totalScore().equals(submission.getTotalScore())
+				&& standing.elapsedTime().equals(submission.getElapsedTime())) {
+				return index + 1;
+			}
+		}
+		return null;
 	}
 
 	private Integer getElapsedTimeRank(final List<Duration> ascendingDurations, final Duration elapsedTime) {

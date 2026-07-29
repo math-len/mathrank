@@ -16,6 +16,7 @@ public record AssessmentDetailResult(
 	LocalDateTime createdAt,
 	Difficulty difficulty,
 	Long minutes,
+	Long answerInputDelaySeconds,
 	AssessmentPeriodType periodType,
 	LocalDateTime startAt,
 	LocalDateTime endAt
@@ -32,6 +33,7 @@ public record AssessmentDetailResult(
 			assessment.getCreatedAt(),
 			assessment.getDifficulty(),
 			assessment.getAssessmentDuration().toMinutes(),
+			assessment.getAnswerInputDelaySeconds(),
 			assessment.getAssessmentSubmissionPeriod().getPeriodType(),
 			assessment.getAssessmentSubmissionPeriod().getStartAt(),
 			assessment.getAssessmentSubmissionPeriod().getEndAt()

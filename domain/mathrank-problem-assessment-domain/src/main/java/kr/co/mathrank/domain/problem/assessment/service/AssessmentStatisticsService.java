@@ -11,6 +11,7 @@ import org.springframework.validation.annotation.Validated;
 import jakarta.validation.constraints.NotNull;
 import kr.co.mathrank.domain.problem.assessment.AssessmentReadDomainConfiguration;
 import kr.co.mathrank.domain.problem.assessment.dto.AssessmentSubmissionStatisticQueryResult;
+import kr.co.mathrank.domain.problem.assessment.dto.AssessmentSubmissionStanding;
 import kr.co.mathrank.domain.problem.assessment.entity.Assessment;
 import kr.co.mathrank.domain.problem.assessment.entity.AssessmentSubmission;
 import kr.co.mathrank.domain.problem.assessment.entity.EvaluationStatus;
@@ -41,11 +42,18 @@ public class AssessmentStatisticsService {
 
 		final List<Duration> ascendingDurations = ascendingSortElapsedTimes(submissions);
 		final List<Integer> descendingScores = descendingSortScores(submissions);
+		final List<AssessmentSubmissionStanding> officialStandings = submissions.stream()
+			.sorted(Comparator.comparing(AssessmentSubmission::getTotalScore).reversed()
+				.thenComparing(AssessmentSubmission::getElapsedTime))
+			.map(submission -> new AssessmentSubmissionStanding(
+				submission.getTotalScore(), submission.getElapsedTime()))
+			.toList();
 
 		return new AssessmentSubmissionStatisticQueryResult(
 			assessmentId,
 			descendingScores,
-			ascendingDurations
+			ascendingDurations,
+			officialStandings
 		);
 	}
 

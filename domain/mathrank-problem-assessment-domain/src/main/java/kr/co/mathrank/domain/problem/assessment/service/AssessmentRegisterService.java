@@ -19,6 +19,7 @@ import kr.co.mathrank.domain.problem.assessment.entity.Assessment;
 import kr.co.mathrank.domain.problem.assessment.entity.AssessmentItem;
 import kr.co.mathrank.domain.problem.assessment.entity.AssessmentPeriodType;
 import kr.co.mathrank.domain.problem.assessment.exception.AssessmentRegisterException;
+import kr.co.mathrank.domain.problem.assessment.exception.InvalidAssessmentAnswerInputDelayException;
 import kr.co.mathrank.domain.problem.assessment.repository.AssessmentRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -33,7 +34,12 @@ public class AssessmentRegisterService {
 
 	@Transactional
 	public Long register(@NotNull @Valid final AssessmentRegisterCommand command) {
-		final Assessment assessment = Assessment.unlimited(command.registerMemberId(), command.assessmentName(), command.minutes());
+		if (command.answerInputDelay().isNegative()
+			|| command.answerInputDelay().compareTo(command.minutes()) >= 0) {
+			throw new InvalidAssessmentAnswerInputDelayException();
+		}
+		final Assessment assessment = Assessment.unlimited(command.registerMemberId(), command.assessmentName(),
+			command.minutes(), command.answerInputDelay());
 
 		return register(assessment, command.role(), toItems(command.assessmentItems())).getId();
 	}

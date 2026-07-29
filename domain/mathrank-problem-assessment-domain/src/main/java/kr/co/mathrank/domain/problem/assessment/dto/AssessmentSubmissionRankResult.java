@@ -10,6 +10,8 @@ public record AssessmentSubmissionRankResult(
 	List<Duration> ascendingElapsedTimes,
 	Duration elapsedTime,
 	Integer elapsedTimeRank,
-	Integer totalUserCount
+	Integer totalUserCount,
+	Integer overallRank,
+	Boolean rankEligible
 ) {
 }
