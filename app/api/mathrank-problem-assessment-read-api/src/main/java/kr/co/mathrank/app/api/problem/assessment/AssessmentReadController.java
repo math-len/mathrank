@@ -19,6 +19,7 @@ import kr.co.mathrank.domain.problem.assessment.dto.AssessmentDetailQuery;
 import kr.co.mathrank.domain.problem.assessment.entity.AssessmentOrder;
 import kr.co.mathrank.domain.problem.assessment.entity.AssessmentOrderDirection;
 import kr.co.mathrank.domain.problem.assessment.service.AssessmentDetailReadService;
+import kr.co.mathrank.domain.problem.assessment.service.AssessmentAttemptService;
 import kr.co.mathrank.domain.problem.assessment.service.AssessmentQueryService;
 import kr.co.mathrank.domain.problem.assessment.service.AssessmentRankQueryService;
 import kr.co.mathrank.domain.problem.assessment.service.SubmissionQueryService;
@@ -29,6 +30,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class AssessmentReadController {
 	private final AssessmentQueryService assessmentQueryService;
+	private final AssessmentAttemptService assessmentAttemptService;
 	private final SubmissionQueryService submissionQueryService;
 	private final AssessmentDetailReadService assessmentDetailReadService;
 	private final AssessmentRankQueryService assessmentRankQueryService;
@@ -42,6 +44,19 @@ public class AssessmentReadController {
 		final Responses.AssessmentSubmissionQueryResponse response = Responses.AssessmentSubmissionQueryResponse.from(
 			submissionQueryService.getSubmissionResult(submissionId));
 		return ResponseEntity.ok(response);
+	}
+
+	@Operation(summary = "진행 중인 문제집 응시 조회 API")
+	@Authorization(openedForAll = true)
+	@GetMapping("/api/v1/problem/assessment/{assessmentId}/attempts/active")
+	public ResponseEntity<Responses.AssessmentAttemptResponse> getActiveAttempt(
+		@PathVariable final Long assessmentId,
+		@LoginInfo final MemberPrincipal memberPrincipal
+	) {
+		return assessmentAttemptService.getActive(assessmentId, memberPrincipal.memberId())
+			.map(Responses.AssessmentAttemptResponse::from)
+			.map(ResponseEntity::ok)
+			.orElseGet(() -> ResponseEntity.noContent().build());
 	}
 
 	@Operation(summary = "제출 이력 확인 API")

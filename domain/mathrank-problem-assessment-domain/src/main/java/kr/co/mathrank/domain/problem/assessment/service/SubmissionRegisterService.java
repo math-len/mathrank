@@ -14,6 +14,7 @@ import kr.co.mathrank.domain.problem.assessment.dto.SubmissionRegisterCommand;
 import kr.co.mathrank.domain.problem.assessment.entity.Assessment;
 import kr.co.mathrank.domain.problem.assessment.entity.AssessmentSubmission;
 import kr.co.mathrank.domain.problem.assessment.exception.NoSuchAssessmentException;
+import kr.co.mathrank.domain.problem.assessment.exception.AssessmentAttemptException;
 import kr.co.mathrank.domain.problem.assessment.repository.AssessmentRepository;
 import kr.co.mathrank.domain.problem.assessment.repository.AssessmentSubmissionRepository;
 import lombok.RequiredArgsConstructor;
@@ -57,6 +58,15 @@ public class SubmissionRegisterService {
 	 */
 	@Transactional
 	public Long submit(@NotNull @Valid final SubmissionRegisterCommand command) {
+		return submit(command, false);
+	}
+
+	@Transactional
+	public Long submitFromAttempt(@NotNull @Valid final SubmissionRegisterCommand command) {
+		return submit(command, true);
+	}
+
+	private Long submit(final SubmissionRegisterCommand command, final boolean attemptValidated) {
 		// X-Lock
 		final Assessment assessment = assessmentRepository.findWithItemsForUpdate(command.assessmentId())
 			.orElseThrow(() -> {
@@ -64,6 +74,10 @@ public class SubmissionRegisterService {
 					command.assessmentId());
 				return new NoSuchAssessmentException();
 			});
+
+		if (!attemptValidated && assessment.getAnswerInputDelaySeconds() > 0L) {
+			throw AssessmentAttemptException.attemptRequired();
+		}
 
 		// 처음으로 제출한 사용자일때
 		final boolean isFirstSubmission = isFirstTry(command.assessmentId(), command.memberId());

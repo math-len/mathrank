@@ -10,13 +10,14 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import kr.co.mathrank.common.role.Role;
+import kr.co.mathrank.domain.problem.assessment.dto.AssessmentAttemptSubmissionCommand;
 import kr.co.mathrank.domain.problem.assessment.dto.AssessmentItemRegisterCommand;
 import kr.co.mathrank.domain.problem.assessment.dto.AssessmentRegisterCommand;
 import kr.co.mathrank.domain.problem.assessment.dto.AssessmentUpdateCommand;
 import kr.co.mathrank.domain.problem.assessment.dto.SubmissionRegisterCommand;
 
 public class Requests {
-	record AssessmentRegisterRequest (
+	record AssessmentRegisterRequest(
 		@NotBlank
 		String assessmentName,
 
@@ -28,7 +29,10 @@ public class Requests {
 		@NotNull
 		@Min(1)
 		@Max(600)
-		Long minutes // 시험 시간
+		Long minutes, // 시험 시간
+
+		@Min(0)
+		Long answerInputDelaySeconds
 	) {
 		public AssessmentRegisterCommand toCommand(final Long registerMemberId, final Role role) {
 			return new AssessmentRegisterCommand(
@@ -38,7 +42,8 @@ public class Requests {
 				items.stream()
 					.map(AssessmentItemRegisterRequest::toCommand)
 					.toList(),
-				Duration.ofMinutes(minutes)
+				Duration.ofMinutes(minutes),
+				Duration.ofSeconds(answerInputDelaySeconds == null ? 0L : answerInputDelaySeconds)
 			);
 		}
 	}
@@ -65,6 +70,15 @@ public class Requests {
 		public SubmissionRegisterCommand toCommand(final Long memberId) {
 			return new SubmissionRegisterCommand(memberId, assessmentId, submittedAnswers,
 				Duration.ofSeconds(elapsedTimeSeconds));
+		}
+	}
+
+	record AssessmentAttemptSubmissionRequest(
+		@NotNull
+		List<List<String>> submittedAnswers
+	) {
+		public AssessmentAttemptSubmissionCommand toCommand(final Long memberId, final Long attemptId) {
+			return new AssessmentAttemptSubmissionCommand(memberId, attemptId, submittedAnswers);
 		}
 	}
 

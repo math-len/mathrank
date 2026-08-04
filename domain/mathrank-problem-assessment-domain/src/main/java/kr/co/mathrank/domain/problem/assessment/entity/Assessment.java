@@ -54,6 +54,8 @@ public class Assessment {
 	@Convert(converter = AssessmentDurationConverter.class)
 	private Duration assessmentDuration;
 
+	private Long answerInputDelaySeconds = 0L;
+
 	@Convert(converter = DifficultyConverter.class)
 	private Difficulty difficulty;
 
@@ -82,10 +84,16 @@ public class Assessment {
 	private AssessmentSubmissionPeriod assessmentSubmissionPeriod = new AssessmentSubmissionPeriod();
 
 	public static Assessment unlimited(final Long registerMemberId, final String assessmentName, final Duration assessmentDuration) {
+		return unlimited(registerMemberId, assessmentName, assessmentDuration, Duration.ZERO);
+	}
+
+	public static Assessment unlimited(final Long registerMemberId, final String assessmentName,
+		final Duration assessmentDuration, final Duration answerInputDelay) {
 		final Assessment assessment = new Assessment();
 		assessment.registerMemberId = registerMemberId;
 		assessment.assessmentName = assessmentName;
 		assessment.assessmentDuration = assessmentDuration;
+		assessment.answerInputDelaySeconds = answerInputDelay.getSeconds();
 		assessment.assessmentSubmissionPeriod = AssessmentSubmissionPeriod.unlimited();
 
 		return assessment;
@@ -99,6 +107,10 @@ public class Assessment {
 		assessment.assessmentSubmissionPeriod = AssessmentSubmissionPeriod.limited(startAt, endAt);
 
 		return assessment;
+	}
+
+	public Duration getAnswerInputDelay() {
+		return Duration.ofSeconds(answerInputDelaySeconds);
 	}
 
 	public void addNewSubmittedScore(int score) {

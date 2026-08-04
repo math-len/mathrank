@@ -15,6 +15,7 @@ public record AssessmentDetailReadModelResult(
 	LocalDateTime createdAt,
 	Difficulty difficulty,
 	Long minutes,
+	Long answerInputDelaySeconds,
 	AssessmentPeriodType periodType,
 	LocalDateTime startAt,
 	LocalDateTime endAt
@@ -29,6 +30,7 @@ public record AssessmentDetailReadModelResult(
 			detailResult.createdAt(),
 			detailResult.difficulty(),
 			detailResult.minutes(),
+			detailResult.answerInputDelaySeconds(),
 			detailResult.periodType(),
 			detailResult.startAt(),
 			detailResult.endAt()

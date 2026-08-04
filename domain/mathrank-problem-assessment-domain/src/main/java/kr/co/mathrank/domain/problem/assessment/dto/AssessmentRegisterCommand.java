@@ -29,6 +29,18 @@ public record AssessmentRegisterCommand(
 
 	@NotNull
 	@AssessmentDurationConstraint(minIncludeMinutes = 1, maxIncludeMinutes = 60 * 10)
-	Duration minutes // 시험 시간
+	Duration minutes, // 시험 시간
+
+	@NotNull
+	Duration answerInputDelay
 ) {
+	public AssessmentRegisterCommand(
+		final Long registerMemberId,
+		final Role role,
+		final String assessmentName,
+		final List<AssessmentItemRegisterCommand> assessmentItems,
+		final Duration minutes
+	) {
+		this(registerMemberId, role, assessmentName, assessmentItems, minutes, Duration.ZERO);
+	}
 }

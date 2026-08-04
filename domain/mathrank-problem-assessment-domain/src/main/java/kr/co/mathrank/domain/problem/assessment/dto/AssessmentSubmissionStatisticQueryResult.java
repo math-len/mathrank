@@ -6,6 +6,7 @@ import java.util.List;
 public record AssessmentSubmissionStatisticQueryResult(
 	Long assessmentId,
 	List<Integer> descendingScores,
-	List<Duration> ascendingElapsedTimes
+	List<Duration> ascendingElapsedTimes,
+	List<AssessmentSubmissionStanding> officialStandings
 ) {
 }

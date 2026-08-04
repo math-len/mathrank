@@ -1,10 +1,12 @@
 package kr.co.mathrank.app.api.problem.assessment;
 
 import java.time.Duration;
+import java.time.Instant;
 import java.time.LocalDateTime;
 import java.util.List;
 
 import kr.co.mathrank.domain.problem.assessment.dto.AssessmentDetailReadModelResult;
+import kr.co.mathrank.domain.problem.assessment.dto.AssessmentAttemptResult;
 import kr.co.mathrank.domain.problem.assessment.dto.AssessmentItemReadModelDetailResult;
 import kr.co.mathrank.domain.problem.assessment.dto.AssessmentPageQueryResult;
 import kr.co.mathrank.domain.problem.assessment.dto.AssessmentSubmissionRankResult;
@@ -18,6 +20,30 @@ import kr.co.mathrank.domain.problem.core.AnswerType;
 import kr.co.mathrank.domain.problem.core.Difficulty;
 
 class Responses {
+	public record AssessmentAttemptResponse(
+		String attemptId,
+		Integer attemptNumber,
+		Instant startedAt,
+		Instant serverNow,
+		Instant answerUnlockedAt,
+		Instant expiresAt,
+		Boolean answerInputEnabled,
+		Boolean rankEligible
+	) {
+		public static AssessmentAttemptResponse from(final AssessmentAttemptResult result) {
+			return new AssessmentAttemptResponse(
+				String.valueOf(result.attemptId()),
+				result.attemptNumber(),
+				result.startedAt(),
+				result.serverNow(),
+				result.answerUnlockedAt(),
+				result.expiresAt(),
+				result.answerInputEnabled(),
+				result.rankEligible()
+			);
+		}
+	}
+
 	public record AssessmentSubmissionRankResponse(
 		List<Integer> descendingScores,
 		Integer score,
@@ -25,7 +51,9 @@ class Responses {
 		List<Long> ascendingElapsedTimeSeconds,
 		Long elapsedTimeSeconds,
 		Integer elapsedTimeRank,
-		Integer totalUserCount
+		Integer totalUserCount,
+		Integer overallRank,
+		Boolean rankEligible
 	) {
 		public static AssessmentSubmissionRankResponse from(final AssessmentSubmissionRankResult result) {
 			return new AssessmentSubmissionRankResponse(
@@ -37,7 +65,9 @@ class Responses {
 					.toList(),
 				result.elapsedTime().toSeconds(),
 				result.elapsedTimeRank(),
-				result.totalUserCount()
+				result.totalUserCount(),
+				result.overallRank(),
+				result.rankEligible()
 			);
 		}
 	}
@@ -84,7 +114,8 @@ class Responses {
 		Long distinctUserCount,
 		LocalDateTime createdAt,
 		Difficulty difficulty,
-		Long minutes
+		Long minutes,
+		Long answerInputDelaySeconds
 	) {
 		public static AssessmentDetailResponse from(AssessmentDetailReadModelResult result) {
 			return new AssessmentDetailResponse(
@@ -97,7 +128,8 @@ class Responses {
 				result.distinctUserCount(),
 				result.createdAt(),
 				result.difficulty(),
-				result.minutes()
+				result.minutes(),
+				result.answerInputDelaySeconds()
 			);
 		}
 	}

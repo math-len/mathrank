@@ -13,6 +13,8 @@ import kr.co.mathrank.domain.problem.assessment.entity.Assessment;
 import kr.co.mathrank.domain.problem.assessment.entity.AssessmentSubmission;
 
 public interface AssessmentSubmissionRepository extends JpaRepository<AssessmentSubmission, Long> {
+	boolean existsByAssessmentIdAndMemberId(Long assessmentId, Long memberId);
+
 	@Query("""
 		SELECT s FROM AssessmentSubmission s
 		LEFT JOIN FETCH s.assessment
