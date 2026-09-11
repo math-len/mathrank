@@ -14,9 +14,8 @@ import lombok.ToString;
 @ConfigurationProperties("oauth.google")
 @ConditionalOnProperty(prefix = "oauth.google", name = "clientId")
 @ToString(exclude = "clientSecret")
-class GoogleConfiguration {
+class GoogleConfiguration implements GoogleOAuthProperties {
 	private String clientId;
 	private String clientSecret;
 	private String redirectUri;
 }
-

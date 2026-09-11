@@ -5,10 +5,9 @@ import org.springframework.http.MediaType;
 import org.springframework.web.client.RestClient;
 
 import kr.co.mathrank.domain.auth.dto.OAuthLoginCommand;
+import kr.co.mathrank.domain.auth.entity.OAuthCredentialProfile;
 import kr.co.mathrank.domain.auth.entity.OAuthProvider;
-import lombok.RequiredArgsConstructor;
 
-@RequiredArgsConstructor
 class NaverOAuthClient implements OAuthClientHandler {
 	private static final String TOKEN_FORMAT = "Bearer %s";
 	// 토큰 발급 URI
@@ -16,7 +15,14 @@ class NaverOAuthClient implements OAuthClientHandler {
 	// 사용자 정보 조회 URI
 	private static final String USER_INFO_URL = "https://openapi.naver.com/v1/nid/me";
 
-	private final NaverConfiguration naverConfiguration;
+	private final NaverOAuthProperties naverConfiguration;
+	private final OAuthCredentialProfile credentialProfile;
+
+	NaverOAuthClient(final NaverOAuthProperties naverConfiguration,
+		final OAuthCredentialProfile credentialProfile) {
+		this.naverConfiguration = naverConfiguration;
+		this.credentialProfile = credentialProfile;
+	}
 
 	private final RestClient tokenClient = RestClient.builder()
 		.baseUrl(TOKEN_URL)
@@ -88,8 +94,8 @@ class NaverOAuthClient implements OAuthClientHandler {
 	}
 
 	@Override
-	public boolean supports(OAuthProvider provider) {
-		return OAuthProvider.NAVER.equals(provider);
+	public boolean supports(final OAuthProvider provider, final OAuthCredentialProfile credentialProfile) {
+		return OAuthProvider.NAVER.equals(provider) && this.credentialProfile == credentialProfile;
 	}
 
 	record TokenRevokeResponse(

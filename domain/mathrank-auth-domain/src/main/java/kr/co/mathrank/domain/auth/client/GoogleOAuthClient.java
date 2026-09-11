@@ -5,13 +5,19 @@ import org.springframework.http.MediaType;
 import org.springframework.web.client.RestClient;
 
 import kr.co.mathrank.domain.auth.dto.OAuthLoginCommand;
+import kr.co.mathrank.domain.auth.entity.OAuthCredentialProfile;
 import kr.co.mathrank.domain.auth.entity.OAuthProvider;
-import lombok.RequiredArgsConstructor;
 
-@RequiredArgsConstructor
 class GoogleOAuthClient implements OAuthClientHandler {
 	private static final String TOKEN_FORMAT = "Bearer %s";
-	private final GoogleConfiguration googleConfiguration;
+	private final GoogleOAuthProperties googleConfiguration;
+	private final OAuthCredentialProfile credentialProfile;
+
+	GoogleOAuthClient(final GoogleOAuthProperties googleConfiguration,
+		final OAuthCredentialProfile credentialProfile) {
+		this.googleConfiguration = googleConfiguration;
+		this.credentialProfile = credentialProfile;
+	}
 
 	// 토큰 URL
 	private static final String TOKEN_URL = "https://oauth2.googleapis.com/token";
@@ -63,8 +69,8 @@ class GoogleOAuthClient implements OAuthClientHandler {
 	}
 
 	@Override
-	public boolean supports(OAuthProvider provider) {
-		return OAuthProvider.GOOGLE.equals(provider);
+	public boolean supports(final OAuthProvider provider, final OAuthCredentialProfile credentialProfile) {
+		return OAuthProvider.GOOGLE.equals(provider) && this.credentialProfile == credentialProfile;
 	}
 
 	// 구글은 refreshToken 만으로도 삭제 가능

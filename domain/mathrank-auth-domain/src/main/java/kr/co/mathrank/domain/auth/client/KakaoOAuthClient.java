@@ -5,13 +5,19 @@ import org.springframework.http.MediaType;
 import org.springframework.web.client.RestClient;
 
 import kr.co.mathrank.domain.auth.dto.OAuthLoginCommand;
+import kr.co.mathrank.domain.auth.entity.OAuthCredentialProfile;
 import kr.co.mathrank.domain.auth.entity.OAuthProvider;
-import lombok.RequiredArgsConstructor;
 
-@RequiredArgsConstructor
 class KakaoOAuthClient implements OAuthClientHandler{
 	private static final String TOKEN_FORMAT = "Bearer %s";
-	private final KakaoConfiguration kakaoConfiguration;
+	private final KakaoOAuthProperties kakaoConfiguration;
+	private final OAuthCredentialProfile credentialProfile;
+
+	KakaoOAuthClient(final KakaoOAuthProperties kakaoConfiguration,
+		final OAuthCredentialProfile credentialProfile) {
+		this.kakaoConfiguration = kakaoConfiguration;
+		this.credentialProfile = credentialProfile;
+	}
 	// https://kauth.kakao.com/oauth/token
 	// 토큰 발급 받기
 	private final RestClient tokenClient = RestClient.builder()
@@ -59,8 +65,8 @@ class KakaoOAuthClient implements OAuthClientHandler{
 	}
 
 	@Override
-	public boolean supports(OAuthProvider provider) {
-		return provider == OAuthProvider.KAKAO;
+	public boolean supports(final OAuthProvider provider, final OAuthCredentialProfile credentialProfile) {
+		return provider == OAuthProvider.KAKAO && this.credentialProfile == credentialProfile;
 	}
 
 	@Override

@@ -22,7 +22,8 @@ public class OAuthClientManager {
 
 	public MemberInfo getMemberInfo(@NotNull @Valid final OAuthLoginCommand command) {
 		return handlers.stream()
-			.filter(oAuthClientHandler -> oAuthClientHandler.supports(command.provider()))
+			.filter(oAuthClientHandler -> oAuthClientHandler.supports(
+				command.provider(), command.credentialProfile()))
 			.findAny()
 			.map(oAuthClientHandler -> oAuthClientHandler.getMemberInfo(command))
 			.map(MemberInfoResponse::toInfo)
@@ -30,14 +31,25 @@ public class OAuthClientManager {
 	}
 
 	public boolean revoke(final Member member) {
-		return handlers.stream()
+		final List<OAuthClientHandler> matchingHandlers = handlers.stream()
 			.filter(oAuthClientHandler -> oAuthClientHandler.supports(member.getOAuthInfo().getOAuthProvider()))
-			.findAny()
-			.map(oAuthClientHandler -> oAuthClientHandler.revoke(member.getOAuthInfo().getOAuthRefreshToken()))
-			.orElseGet(() -> {
-				log.info("[OAuthClientManager.revoke] its not a oauth registered user - memberId: {}", member.getId());
-				return true;
-			});
+			.toList();
+		if (matchingHandlers.isEmpty()) {
+			log.info("[OAuthClientManager.revoke] its not a oauth registered user - memberId: {}", member.getId());
+			return true;
+		}
+		return matchingHandlers.stream()
+			.anyMatch(handler -> revokeQuietly(handler, member.getOAuthInfo().getOAuthRefreshToken()));
+	}
+
+	private boolean revokeQuietly(final OAuthClientHandler handler, final String refreshToken) {
+		try {
+			return handler.revoke(refreshToken);
+		} catch (final RuntimeException exception) {
+			log.warn("[OAuthClientManager.revoke] credential profile rejected refresh token - client: {}",
+				handler.getClass().getSimpleName());
+			return false;
+		}
 	}
 
 	@PostConstruct

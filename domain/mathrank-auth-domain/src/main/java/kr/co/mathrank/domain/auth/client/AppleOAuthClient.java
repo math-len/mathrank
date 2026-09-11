@@ -19,6 +19,7 @@ import com.nimbusds.jwt.JWTClaimsSet;
 import com.nimbusds.jwt.SignedJWT;
 
 import kr.co.mathrank.domain.auth.dto.OAuthLoginCommand;
+import kr.co.mathrank.domain.auth.entity.OAuthCredentialProfile;
 import kr.co.mathrank.domain.auth.entity.OAuthProvider;
 import kr.co.mathrank.domain.auth.exception.InvalidOAuthLoginException;
 import lombok.RequiredArgsConstructor;
@@ -125,8 +126,8 @@ class AppleOAuthClient implements OAuthClientHandler {
 	}
 
 	@Override
-	public boolean supports(OAuthProvider provider) {
-		return OAuthProvider.APPLE.equals(provider);
+	public boolean supports(final OAuthProvider provider, final OAuthCredentialProfile credentialProfile) {
+		return OAuthProvider.APPLE.equals(provider) && credentialProfile == OAuthCredentialProfile.LEGACY;
 	}
 
 	// 애플은 refreshToken으로 직접 토큰 폐기 가능
