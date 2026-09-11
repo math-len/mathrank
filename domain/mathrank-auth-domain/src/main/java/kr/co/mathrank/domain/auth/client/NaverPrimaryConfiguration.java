@@ -11,12 +11,10 @@ import lombok.ToString;
 @Configuration
 @Getter
 @Setter
-@ConfigurationProperties("oauth.kakao")
-@ConditionalOnProperty(prefix = "oauth.kakao", name = "clientId")
+@ConfigurationProperties("oauth.naver.primary")
+@ConditionalOnProperty(prefix = "oauth.naver.primary", name = "clientId")
 @ToString(exclude = "clientSecret")
-class KakaoConfiguration implements KakaoOAuthProperties {
-	private String grantType = "authorization_code";
+class NaverPrimaryConfiguration implements NaverOAuthProperties {
 	private String clientId;
 	private String clientSecret;
-	private String redirectUri;
 }

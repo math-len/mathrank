@@ -11,11 +11,10 @@ import lombok.ToString;
 @Configuration
 @Getter
 @Setter
-@ConfigurationProperties("oauth.kakao")
-@ConditionalOnProperty(prefix = "oauth.kakao", name = "clientId")
+@ConfigurationProperties("oauth.google.primary")
+@ConditionalOnProperty(prefix = "oauth.google.primary", name = "clientId")
 @ToString(exclude = "clientSecret")
-class KakaoConfiguration implements KakaoOAuthProperties {
-	private String grantType = "authorization_code";
+class GooglePrimaryConfiguration implements GoogleOAuthProperties {
 	private String clientId;
 	private String clientSecret;
 	private String redirectUri;

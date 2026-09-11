@@ -14,7 +14,7 @@ import lombok.ToString;
 @ConfigurationProperties("oauth.naver")
 @ConditionalOnProperty(prefix = "oauth.naver", name = "clientId")
 @ToString(exclude = "clientSecret")
-class NaverConfiguration {
+class NaverConfiguration implements NaverOAuthProperties {
 	private String clientId;
 	private String clientSecret;
 }

@@ -11,6 +11,7 @@ import kr.co.mathrank.domain.auth.dto.LoginCommand;
 import kr.co.mathrank.domain.auth.dto.MemberInfoCompleteCommand;
 import kr.co.mathrank.domain.auth.dto.OAuthLoginCommand;
 import kr.co.mathrank.domain.auth.entity.MemberType;
+import kr.co.mathrank.domain.auth.entity.OAuthCredentialProfile;
 import kr.co.mathrank.domain.auth.entity.OAuthProvider;
 import kr.co.mathrank.domain.auth.entity.Password;
 
@@ -32,10 +33,12 @@ class Requests {
 		@NotNull
 		String code,
 		@NotNull
-		String state
+		String state,
+		@Schema(description = "OAuth 자격 증명 프로필. 생략 시 기존 앱 호환용 LEGACY")
+		OAuthCredentialProfile credentialProfile
 	) {
 		public OAuthLoginCommand toCommand(final OAuthProvider provider) {
-			return new OAuthLoginCommand(code, state, provider);
+			return new OAuthLoginCommand(code, state, provider, credentialProfile);
 		}
 	}
 

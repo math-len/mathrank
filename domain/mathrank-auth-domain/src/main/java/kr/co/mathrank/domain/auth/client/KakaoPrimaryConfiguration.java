@@ -11,10 +11,10 @@ import lombok.ToString;
 @Configuration
 @Getter
 @Setter
-@ConfigurationProperties("oauth.kakao")
-@ConditionalOnProperty(prefix = "oauth.kakao", name = "clientId")
+@ConfigurationProperties("oauth.kakao.primary")
+@ConditionalOnProperty(prefix = "oauth.kakao.primary", name = "clientId")
 @ToString(exclude = "clientSecret")
-class KakaoConfiguration implements KakaoOAuthProperties {
+class KakaoPrimaryConfiguration implements KakaoOAuthProperties {
 	private String grantType = "authorization_code";
 	private String clientId;
 	private String clientSecret;
