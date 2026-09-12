@@ -55,8 +55,7 @@ class NaverOAuthClient implements OAuthClientHandler {
 	}
 
 	private MemberInfoResponse getUserInfo(final String accessToken) {
-		return infoClient.post()
-			.contentType(MediaType.APPLICATION_FORM_URLENCODED)
+		return infoClient.get()
 			.header(HttpHeaders.AUTHORIZATION, TOKEN_FORMAT.formatted(accessToken))
 			.retrieve()
 			.body(NaverMemberInfoResponse.class);
