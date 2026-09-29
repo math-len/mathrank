@@ -56,7 +56,7 @@ public class AssessmentAttempt {
 	@Column(name = "answer_unlocked_at", nullable = false)
 	private Instant answerUnlockedAt;
 
-	@Column(name = "expires_at", nullable = false)
+	@Column(name = "expires_at")
 	private Instant expiresAt;
 
 	@Enumerated(EnumType.STRING)
@@ -102,11 +102,16 @@ public class AssessmentAttempt {
 	}
 
 	public boolean isExpiredAt(final Instant now) {
-		return now.isAfter(expiresAt);
+		return expiresAt != null && now.isAfter(expiresAt);
 	}
 
 	public boolean isAnswerInputEnabledAt(final Instant now) {
 		return !now.isBefore(answerUnlockedAt) && !isExpiredAt(now);
+	}
+
+	public void removeTimeLimits() {
+		answerUnlockedAt = startedAt;
+		expiresAt = null;
 	}
 
 	public void expire() {

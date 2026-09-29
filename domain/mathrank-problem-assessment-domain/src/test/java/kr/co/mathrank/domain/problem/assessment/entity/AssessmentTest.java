@@ -1,6 +1,7 @@
 package kr.co.mathrank.domain.problem.assessment.entity;
 
 import java.time.Duration;
+import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.List;
 
@@ -26,10 +27,24 @@ class AssessmentTest {
 	private EntityManager entityManager;
 
 	@Test
-	void 답안지_제출시간이_초과되면_제출할_수_없다() {
-		final Assessment assessment = Assessment.unlimited(1L, "test", Duration.ofMinutes(100L));
+	void 제한_시험은_답안지_제출시간이_초과되면_제출할_수_없다() {
+		final Assessment assessment = Assessment.limited(
+			1L,
+			"test",
+			Duration.ofMinutes(100L),
+			LocalDateTime.now().minusDays(1),
+			LocalDateTime.now().plusDays(1)
+		);
 
 		Assertions.assertThrows(SubmissionTimeExceedException.class,
+			() -> assessment.registerSubmission(1L, Collections.emptyList(), Duration.ofMinutes(101L), true));
+	}
+
+	@Test
+	void 무제한_시험지는_기존_duration을_넘겨도_제출할_수_있다() {
+		final Assessment assessment = Assessment.unlimited(1L, "test", Duration.ofMinutes(100L));
+
+		Assertions.assertDoesNotThrow(
 			() -> assessment.registerSubmission(1L, Collections.emptyList(), Duration.ofMinutes(101L), true));
 	}
 

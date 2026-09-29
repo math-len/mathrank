@@ -2,8 +2,6 @@ package kr.co.mathrank.app.init.problem;
 
 import java.io.FileInputStream;
 
-import org.apache.poi.ss.usermodel.Cell;
-import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
@@ -29,6 +27,8 @@ public class CourseInitializer implements CommandLineRunner {
 	private final CourseService courseService;
 	@Value("${excel.file.path}")
 	private String excelFilePath;
+	@Value("${excel.course.apply:false}")
+	private boolean applyChanges;
 
 	@Override
 	public void run(String... args) throws Exception {
@@ -37,50 +37,47 @@ public class CourseInitializer implements CommandLineRunner {
 			 Workbook workbook = new XSSFWorkbook(fis)) {
 
 			final Sheet sheet = workbook.getSheetAt(0);
+			final var rows = CourseWorkbookRow.read(sheet);
+			log.info("[CourseInitializer.run] parsed valid rows: {}", rows.size());
+			if (!applyChanges) {
+				log.info("[CourseInitializer.run] dry-run completed. Set excel.course.apply=true to add missing courses.");
+				return;
+			}
 
-			for (final Row row : sheet) {
-				final Cell mainCell = row.getCell(1); // 과정
-				final Cell lageUnitCell = row.getCell(2); // 대단원
-				final Cell midUnitCell = row.getCell(3); // 중단원
-				final Cell littleUnitCell = row.getCell(6); // 소단원
-
-				if (mainCell == null || lageUnitCell == null || midUnitCell == null || littleUnitCell == null) {
-					break;
-				}
-
+			for (final CourseWorkbookRow row : rows) {
 				// main 셀이 존재하면 가져오고 없으면 생성
-				final Course mainCourse = courseRepository.findByCourseNameAndPathLength(mainCell.toString(), 2).
+				final Course mainCourse = courseRepository.findByCourseNameAndPathLength(row.course(), 2).
 					orElseGet(() -> {
-						final String path = courseService.register(new CourseRegisterCommand(mainCell.toString(), ""));
+						final String path = courseService.register(new CourseRegisterCommand(row.course(), ""));
 						return courseRepository.findByPath(new Path(path))
 							.orElseThrow();
 					});
 
 				// 대단원 등록
 				final Course largeCoursePath = courseRepository.findByCourseNameAndPathStartsWith(
-						lageUnitCell.toString(), mainCourse.getPath().getPath())
+						row.largeUnit(), mainCourse.getPath().getPath())
 					.orElseGet(() -> {
 						final String path = courseService.register(
-							new CourseRegisterCommand(lageUnitCell.toString(), mainCourse.getPath().getPath()));
+							new CourseRegisterCommand(row.largeUnit(), mainCourse.getPath().getPath()));
 						return courseRepository.findByPath(new Path(path))
 							.orElseThrow();
 					});
 
 				// 중단원 등록
-				final Course midCourse = courseRepository.findByCourseNameAndPathStartsWith(midUnitCell.toString(),
+				final Course midCourse = courseRepository.findByCourseNameAndPathStartsWith(row.middleUnit(),
 						largeCoursePath.getPath().getPath())
 					.orElseGet(() -> {
 						final String path = courseService.register(
-							new CourseRegisterCommand(midUnitCell.toString(), largeCoursePath.getPath().getPath()));
+							new CourseRegisterCommand(row.middleUnit(), largeCoursePath.getPath().getPath()));
 						return courseRepository.findByPath(new Path(path))
 							.orElseThrow();
 					});
 				// 소단원 등록
-				courseRepository.findByCourseNameAndPathStartsWith(littleUnitCell.toString(),
+				courseRepository.findByCourseNameAndPathStartsWith(row.smallUnit(),
 						midCourse.getPath().getPath())
 					.orElseGet(() -> {
 						final String path = courseService.register(
-							new CourseRegisterCommand(littleUnitCell.toString(), midCourse.getPath().getPath()));
+							new CourseRegisterCommand(row.smallUnit(), midCourse.getPath().getPath()));
 						return courseRepository.findByPath(new Path(path))
 							.orElseThrow();
 					});
@@ -93,4 +90,3 @@ public class CourseInitializer implements CommandLineRunner {
 		log.info("[CourseInitializer.run] initialized completed - total count: {}", courseRepository.count());
 	}
 }
-

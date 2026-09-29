@@ -41,6 +41,31 @@ class AssessmentAttemptTest {
 		assertTrue(expired.getStatus() == AssessmentAttemptStatus.EXPIRED);
 	}
 
+	@Test
+	void 무제한_응시는_만료되지_않고_즉시_답안을_입력할_수_있다() {
+		final AssessmentAttempt attempt = AssessmentAttempt.start(
+			1L,
+			2L,
+			1,
+			STARTED_AT,
+			STARTED_AT,
+			null
+		);
+
+		assertFalse(attempt.isExpiredAt(STARTED_AT.plusSeconds(86400)));
+		assertTrue(attempt.isAnswerInputEnabledAt(STARTED_AT));
+	}
+
+	@Test
+	void 기존_활성회차의_잠금과_만료도_제거할_수_있다() {
+		final AssessmentAttempt attempt = newAttempt();
+
+		attempt.removeTimeLimits();
+
+		assertTrue(attempt.isAnswerInputEnabledAt(STARTED_AT));
+		assertNull(attempt.getExpiresAt());
+	}
+
 	private AssessmentAttempt newAttempt() {
 		return AssessmentAttempt.start(
 			1L,
