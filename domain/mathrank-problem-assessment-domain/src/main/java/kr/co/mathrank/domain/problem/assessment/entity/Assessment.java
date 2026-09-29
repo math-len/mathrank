@@ -140,7 +140,7 @@ public class Assessment {
 			throw new AssessmentSubmissionRegisterException();
 		}
 
-		if (elapsedTime.compareTo(assessmentDuration) > 0) { // elapsedTime이 시험시간보다 큰 경우
+		if (!isUnlimited() && elapsedTime.compareTo(assessmentDuration) > 0) { // 제한 시험의 시험시간을 넘긴 경우
 			log.info(
 				"[Assessment.registerSubmission] elapsed time overed assessment time limit - elapsedTime: {}, assessmentTime: {}",
 				elapsedTime, this.assessmentDuration);
@@ -165,6 +165,10 @@ public class Assessment {
 		assessmentSubmissions.add(assessmentSubmission);
 
 		return assessmentSubmission;
+	}
+
+	public boolean isUnlimited() {
+		return assessmentSubmissionPeriod.getPeriodType() == AssessmentPeriodType.UNLIMITED;
 	}
 
 	/**

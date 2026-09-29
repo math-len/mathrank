@@ -33,6 +33,10 @@ class AssessmentAttemptStartManager {
 
 		final Optional<AssessmentAttempt> activeAttempt =
 			assessmentAttemptRepository.findByActiveKeyForUpdate(activeKey);
+		if (activeAttempt.isPresent() && assessment.isUnlimited()) {
+			activeAttempt.get().removeTimeLimits();
+			return result(activeAttempt.get(), now, false);
+		}
 		if (activeAttempt.isPresent() && !activeAttempt.get().isExpiredAt(now)) {
 			return result(activeAttempt.get(), now, false);
 		}
@@ -50,8 +54,8 @@ class AssessmentAttemptStartManager {
 			memberId,
 			attemptNumber,
 			now,
-			now.plus(assessment.getAnswerInputDelay()),
-			now.plus(assessment.getAssessmentDuration())
+			assessment.isUnlimited() ? now : now.plus(assessment.getAnswerInputDelay()),
+			assessment.isUnlimited() ? null : now.plus(assessment.getAssessmentDuration())
 		);
 		assessmentAttemptRepository.saveAndFlush(attempt);
 		return result(attempt, now, true);
