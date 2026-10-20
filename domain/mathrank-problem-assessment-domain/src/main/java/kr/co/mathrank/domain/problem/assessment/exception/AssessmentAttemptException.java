@@ -34,4 +34,12 @@ public class AssessmentAttemptException extends HttpMathRankException {
 	public static AssessmentAttemptException invalidAnswer() {
 		return new AssessmentAttemptException(400, 7019, "제출 답안 형식이 올바르지 않습니다.");
 	}
+
+	public static AssessmentAttemptException draftClosed() {
+		return new AssessmentAttemptException(409, 7023, "진행 중인 응시가 아니어서 답안을 저장할 수 없습니다.");
+	}
+
+	public static AssessmentAttemptException autoSubmitted() {
+		return new AssessmentAttemptException(409, 7024, "응시 시작 후 3시간이 지나 저장된 답안으로 자동 제출되었습니다.");
+	}
 }

@@ -19,7 +19,8 @@ public record AssessmentDetailResult(
 	Long answerInputDelaySeconds,
 	AssessmentPeriodType periodType,
 	LocalDateTime startAt,
-	LocalDateTime endAt
+	LocalDateTime endAt,
+	Long averageScore
 ) {
 	public static AssessmentDetailResult from(final Assessment assessment) {
 		return new AssessmentDetailResult(
@@ -36,7 +37,8 @@ public record AssessmentDetailResult(
 			assessment.getAnswerInputDelaySeconds(),
 			assessment.getAssessmentSubmissionPeriod().getPeriodType(),
 			assessment.getAssessmentSubmissionPeriod().getStartAt(),
-			assessment.getAssessmentSubmissionPeriod().getEndAt()
+			assessment.getAssessmentSubmissionPeriod().getEndAt(),
+			assessment.getDistinctTriedMemberCount() > 0 ? assessment.getAverageScore() : null
 		);
 	}
 }

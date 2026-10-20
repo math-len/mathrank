@@ -14,6 +14,7 @@ import kr.co.mathrank.domain.problem.assessment.dto.SubmissionRegisterCommand;
 import kr.co.mathrank.domain.problem.assessment.entity.Assessment;
 import kr.co.mathrank.domain.problem.assessment.entity.AssessmentSubmission;
 import kr.co.mathrank.domain.problem.assessment.exception.NoSuchAssessmentException;
+import kr.co.mathrank.domain.problem.assessment.exception.AlreadyParticipatedException;
 import kr.co.mathrank.domain.problem.assessment.exception.AssessmentAttemptException;
 import kr.co.mathrank.domain.problem.assessment.repository.AssessmentRepository;
 import kr.co.mathrank.domain.problem.assessment.repository.AssessmentSubmissionRepository;
@@ -81,6 +82,12 @@ public class SubmissionRegisterService {
 
 		// 처음으로 제출한 사용자일때
 		final boolean isFirstSubmission = isFirstTry(command.assessmentId(), command.memberId());
+		// 시험지·경시대회 모두 회원당 1회만 제출할 수 있다 (기존 다회 제출 기록은 유지)
+		if (!isFirstSubmission) {
+			throw assessment.isUnlimited()
+				? AlreadyParticipatedException.assessment()
+				: AlreadyParticipatedException.contest();
+		}
 
 		// 새로운 답안지 등록
 		final AssessmentSubmission assessmentSubmission = assessment.registerSubmission(

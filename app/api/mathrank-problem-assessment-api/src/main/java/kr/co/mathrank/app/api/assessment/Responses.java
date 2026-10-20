@@ -1,6 +1,7 @@
 package kr.co.mathrank.app.api.assessment;
 
 import java.time.Instant;
+import java.util.List;
 
 import kr.co.mathrank.domain.problem.assessment.dto.AssessmentAttemptResult;
 
@@ -19,7 +20,9 @@ class Responses {
 		Instant answerUnlockedAt,
 		Instant expiresAt,
 		Boolean answerInputEnabled,
-		Boolean rankEligible
+		Boolean rankEligible,
+		Instant autoSubmitAt,
+		List<List<String>> draftAnswers
 	) {
 		static AssessmentAttemptResponse from(final AssessmentAttemptResult result) {
 			return new AssessmentAttemptResponse(
@@ -30,7 +33,9 @@ class Responses {
 				result.answerUnlockedAt(),
 				result.expiresAt(),
 				result.answerInputEnabled(),
-				result.rankEligible()
+				result.rankEligible(),
+				result.autoSubmitAt(),
+				result.draftAnswers()
 			);
 		}
 	}

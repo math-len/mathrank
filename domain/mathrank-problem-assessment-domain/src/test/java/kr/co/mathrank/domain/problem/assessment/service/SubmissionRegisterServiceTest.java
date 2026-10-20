@@ -26,6 +26,7 @@ import kr.co.mathrank.domain.problem.assessment.dto.AssessmentRegisterCommand;
 import kr.co.mathrank.domain.problem.assessment.dto.LimitedAssessmentRegisterCommand;
 import kr.co.mathrank.domain.problem.assessment.dto.SubmissionRegisterCommand;
 import kr.co.mathrank.domain.problem.assessment.entity.AssessmentSubmission;
+import kr.co.mathrank.domain.problem.assessment.exception.AlreadyParticipatedException;
 import kr.co.mathrank.domain.problem.assessment.exception.SubmissionDeniedException;
 import kr.co.mathrank.domain.problem.assessment.repository.AssessmentRepository;
 import kr.co.mathrank.domain.problem.assessment.repository.AssessmentSubmissionRepository;
@@ -62,7 +63,7 @@ class SubmissionRegisterServiceTest {
 	}
 
 	@Test
-	void 같은_사용자가_동시에_여러번_제출할때_모든_답안지_정상등록() throws InterruptedException {
+	void 같은_사용자가_동시에_여러번_제출해도_한번만_등록된다() throws InterruptedException {
 		final Long assessmentId = assessmentRegisterService.register(new AssessmentRegisterCommand(
 			1L, Role.ADMIN,
 			"testName",
@@ -90,8 +91,8 @@ class SubmissionRegisterServiceTest {
 
 		latch.await();
 
-		// 제출된 답안지는 trCount와 같아야한다
-		Assertions.assertEquals(tryCount, assessmentSubmissionRepository.count());
+		// 회원당 1회 응시 정책: 첫 제출만 등록된다
+		Assertions.assertEquals(1, assessmentSubmissionRepository.count());
 	}
 
 	@Test
@@ -246,10 +247,29 @@ class SubmissionRegisterServiceTest {
 		submissionRegisterService.submit(
 			new SubmissionRegisterCommand(memberId, assessmentId, List.of(List.of("test")), Duration.ofMinutes(10L)));
 
-		Assertions.assertThrows(SubmissionDeniedException.class, () -> {
+		Assertions.assertThrows(AlreadyParticipatedException.class, () -> {
 			submissionRegisterService.submit(
 				new SubmissionRegisterCommand(memberId, assessmentId, List.of(List.of("test")), Duration.ofMinutes(10L)));
 		});
+	}
+
+	@Test
+	void 시험지도_한번만_응시가능하다() {
+		final Long assessmentId = assessmentRegisterService.register(new AssessmentRegisterCommand(
+			1L, Role.ADMIN,
+			"testName",
+			List.of(new AssessmentItemRegisterCommand(1L, 100)),
+			Duration.ofMinutes(100L)
+		));
+		final Long memberId = 10L;
+
+		submissionRegisterService.submit(
+			new SubmissionRegisterCommand(memberId, assessmentId, List.of(List.of("test")), Duration.ofMinutes(10L)));
+
+		final AlreadyParticipatedException exception = Assertions.assertThrows(AlreadyParticipatedException.class,
+			() -> submissionRegisterService.submit(
+				new SubmissionRegisterCommand(memberId, assessmentId, List.of(List.of("test")), Duration.ofMinutes(10L))));
+		Assertions.assertEquals(7021, exception.getCode());
 	}
 
 	@AfterEach
