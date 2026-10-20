@@ -1,6 +1,7 @@
 package kr.co.mathrank.domain.problem.assessment.dto;
 
 import java.time.Instant;
+import java.util.List;
 
 import kr.co.mathrank.domain.problem.assessment.entity.AssessmentAttempt;
 
@@ -13,7 +14,9 @@ public record AssessmentAttemptResult(
 	Instant expiresAt,
 	Boolean answerInputEnabled,
 	Boolean rankEligible,
-	Boolean newlyCreated
+	Boolean newlyCreated,
+	Instant autoSubmitAt,
+	List<List<String>> draftAnswers
 ) {
 	public static AssessmentAttemptResult from(
 		final AssessmentAttempt attempt,
@@ -30,7 +33,9 @@ public record AssessmentAttemptResult(
 			attempt.getExpiresAt(),
 			attempt.isAnswerInputEnabledAt(serverNow),
 			rankEligible,
-			newlyCreated
+			newlyCreated,
+			attempt.getAutoSubmitAt(),
+			attempt.getDraftAnswers()
 		);
 	}
 }

@@ -4,6 +4,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -17,6 +18,8 @@ import java.util.Set;
 
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
+import org.springframework.transaction.PlatformTransactionManager;
+import org.springframework.transaction.support.TransactionTemplate;
 
 import kr.co.mathrank.client.internal.problem.ProblemQueryResult;
 import kr.co.mathrank.domain.problem.assessment.dto.AssessmentAttemptSubmissionCommand;
@@ -110,6 +113,47 @@ class AssessmentAttemptServiceTest {
 		));
 	}
 
+	@Test
+	void 자동제출_시각이_지난_응시의_제출은_자동제출_안내로_거부한다() {
+		final Fixture fixture = fixture(STARTED_AT.plusSeconds(900));
+		when(fixture.autoSubmitManager.autoSubmitIfDue(1L)).thenReturn(true);
+
+		final AssessmentAttemptException exception = assertThrows(AssessmentAttemptException.class,
+			() -> fixture.service.submit(new AssessmentAttemptSubmissionCommand(2L, 1L, List.of(List.of("1")))));
+
+		assertEquals(7024, exception.getCode());
+		verify(fixture.submissionRegisterService, never()).submitFromAttempt(any());
+	}
+
+	@Test
+	void 진행중_응시의_답안을_임시저장한다() {
+		final Fixture fixture = fixture(STARTED_AT.plusSeconds(900));
+
+		fixture.service.saveDraft(new AssessmentAttemptSubmissionCommand(2L, 1L, List.of(List.of("2", "4"))));
+
+		assertEquals(List.of(List.of("2", "4")), fixture.attempt.getDraftAnswers());
+		assertEquals(STARTED_AT.plusSeconds(900), fixture.attempt.getDraftSavedAt());
+	}
+
+	@Test
+	void 다른_회원의_응시에는_임시저장할_수_없다() {
+		final Fixture fixture = fixture(STARTED_AT.plusSeconds(900));
+
+		assertThrows(AssessmentAttemptException.class, () -> fixture.service.saveDraft(
+			new AssessmentAttemptSubmissionCommand(3L, 1L, List.of(List.of("1")))));
+	}
+
+	@Test
+	void 제출된_응시에는_임시저장할_수_없다() {
+		final Fixture fixture = fixture(STARTED_AT.plusSeconds(900));
+		fixture.attempt.submit(5L);
+
+		final AssessmentAttemptException exception = assertThrows(AssessmentAttemptException.class,
+			() -> fixture.service.saveDraft(new AssessmentAttemptSubmissionCommand(2L, 1L, List.of(List.of("1")))));
+
+		assertEquals(7023, exception.getCode());
+	}
+
 	private Fixture fixture(final Instant now) {
 		return fixture(now, AnswerType.MULTIPLE_CHOICE);
 	}
@@ -120,6 +164,7 @@ class AssessmentAttemptServiceTest {
 		final AssessmentRepository assessmentRepository = mock(AssessmentRepository.class);
 		final SubmissionRegisterService submissionRegisterService = mock(SubmissionRegisterService.class);
 		final ProblemQueryManager problemQueryManager = mock(ProblemQueryManager.class);
+		final AssessmentAutoSubmitManager autoSubmitManager = mock(AssessmentAutoSubmitManager.class);
 		final Clock clock = Clock.fixed(now, ZoneOffset.UTC);
 		final AssessmentAttempt attempt = AssessmentAttempt.start(
 			1L, 2L, 1, STARTED_AT, STARTED_AT.plusSeconds(900), STARTED_AT.plusSeconds(3600));
@@ -156,17 +201,21 @@ class AssessmentAttemptServiceTest {
 				assessmentRepository,
 				submissionRegisterService,
 				problemQueryManager,
+				autoSubmitManager,
+				new TransactionTemplate(mock(PlatformTransactionManager.class)),
 				clock
 			),
 			attempt,
-			submissionRegisterService
+			submissionRegisterService,
+			autoSubmitManager
 		);
 	}
 
 	private record Fixture(
 		AssessmentAttemptService service,
 		AssessmentAttempt attempt,
-		SubmissionRegisterService submissionRegisterService
+		SubmissionRegisterService submissionRegisterService,
+		AssessmentAutoSubmitManager autoSubmitManager
 	) {
 	}
 }

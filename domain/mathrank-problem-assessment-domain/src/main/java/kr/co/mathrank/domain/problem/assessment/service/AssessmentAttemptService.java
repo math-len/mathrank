@@ -11,6 +11,7 @@ import java.util.Optional;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.transaction.support.TransactionTemplate;
 import org.springframework.validation.annotation.Validated;
 
 import jakarta.validation.Valid;
@@ -34,15 +35,19 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class AssessmentAttemptService {
 	private static final int MAX_SHORT_ANSWERS = 100;
+	private static final int MAX_DRAFT_ITEMS = 200;
 
 	private final AssessmentAttemptStartManager assessmentAttemptStartManager;
 	private final AssessmentAttemptRepository assessmentAttemptRepository;
 	private final AssessmentRepository assessmentRepository;
 	private final SubmissionRegisterService submissionRegisterService;
 	private final ProblemQueryManager problemQueryManager;
+	private final AssessmentAutoSubmitManager assessmentAutoSubmitManager;
+	private final TransactionTemplate transactionTemplate;
 	private final Clock assessmentClock;
 
 	public AssessmentAttemptResult start(@NotNull final Long assessmentId, @NotNull final Long memberId) {
+		autoSubmitActiveIfDue(assessmentId, memberId);
 		try {
 			return assessmentAttemptStartManager.start(assessmentId, memberId);
 		} catch (DataIntegrityViolationException exception) {
@@ -55,11 +60,48 @@ public class AssessmentAttemptService {
 		@NotNull final Long assessmentId,
 		@NotNull final Long memberId
 	) {
+		autoSubmitActiveIfDue(assessmentId, memberId);
 		return assessmentAttemptStartManager.getActive(assessmentId, memberId);
 	}
 
-	@Transactional
+	/**
+	 * 제출 전에 자동 제출 시각이 지났다면 임시 저장 답안으로 먼저 제출하고 그 사실을 알린다.
+	 * 자동 제출은 별도 트랜잭션에서 커밋되어야 하므로 이 메소드는 트랜잭션을 열지 않는다.
+	 */
 	public Long submit(@NotNull @Valid final AssessmentAttemptSubmissionCommand command) {
+		if (assessmentAutoSubmitManager.autoSubmitIfDue(command.attemptId())) {
+			throw AssessmentAttemptException.autoSubmitted();
+		}
+		return transactionTemplate.execute(status -> submitInTransaction(command));
+	}
+
+	@Transactional
+	public void saveDraft(@NotNull @Valid final AssessmentAttemptSubmissionCommand command) {
+		final AssessmentAttempt attempt = assessmentAttemptRepository.findByIdForUpdate(command.attemptId())
+			.orElseThrow(AssessmentAttemptException::notFound);
+		if (!attempt.getMemberId().equals(command.memberId())) {
+			throw AssessmentAttemptException.accessDenied();
+		}
+		final Instant now = assessmentClock.instant();
+		if (attempt.getStatus() != AssessmentAttemptStatus.ACTIVE
+			|| attempt.isExpiredAt(now)
+			|| attempt.isAutoSubmitDueAt(now)) {
+			throw AssessmentAttemptException.draftClosed();
+		}
+		if (command.submittedAnswers().size() > MAX_DRAFT_ITEMS
+			|| command.submittedAnswers().stream().anyMatch(answers ->
+				answers == null || answers.size() > MAX_SHORT_ANSWERS || answers.stream().anyMatch(a -> a == null))) {
+			throw AssessmentAttemptException.invalidAnswer();
+		}
+		attempt.saveDraft(command.submittedAnswers(), now);
+	}
+
+	private void autoSubmitActiveIfDue(final Long assessmentId, final Long memberId) {
+		assessmentAttemptRepository.findByActiveKey(AssessmentAttempt.activeKey(assessmentId, memberId))
+			.ifPresent(attempt -> assessmentAutoSubmitManager.autoSubmitIfDue(attempt.getId()));
+	}
+
+	private Long submitInTransaction(final AssessmentAttemptSubmissionCommand command) {
 		final AssessmentAttempt attempt = assessmentAttemptRepository.findByIdForUpdate(command.attemptId())
 			.orElseThrow(AssessmentAttemptException::notFound);
 		if (!attempt.getMemberId().equals(command.memberId())) {

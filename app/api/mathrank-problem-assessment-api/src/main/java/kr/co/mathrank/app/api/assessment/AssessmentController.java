@@ -87,6 +87,18 @@ public class AssessmentController {
 			.body(Responses.AssessmentAttemptSubmissionResponse.from(submissionId));
 	}
 
+	@Operation(summary = "문제집 응시 답안 임시 저장 API", description = "진행 중 응시의 답안을 저장합니다. 시작 3시간 뒤 이 답안으로 자동 제출됩니다.")
+	@PutMapping("/api/v1/problem/assessment/attempts/{attemptId}/draft")
+	@Authorization(openedForAll = true)
+	public ResponseEntity<Void> saveAttemptDraft(
+		@PathVariable final Long attemptId,
+		@RequestBody @Valid final Requests.AssessmentAttemptSubmissionRequest request,
+		@LoginInfo final MemberPrincipal memberPrincipal
+	) {
+		assessmentAttemptService.saveDraft(request.toCommand(memberPrincipal.memberId(), attemptId));
+		return ResponseEntity.noContent().build();
+	}
+
 	@Operation(summary = "문제집 답안지 등록 API")
 	@PostMapping("/api/v1/problem/assessment/submission")
 	@Authorization(openedForAll = true)

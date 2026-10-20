@@ -83,7 +83,8 @@ class Responses {
 		Difficulty difficulty,
 		Long minutes,
 		LocalDateTime startAt,
-		LocalDateTime endAt
+		LocalDateTime endAt,
+		Long averageScore
 	) {
 		public static ContestDetailResponse from(AssessmentDetailReadModelResult result) {
 			return new ContestDetailResponse(
@@ -98,7 +99,8 @@ class Responses {
 				result.difficulty(),
 				result.minutes(),
 				result.startAt(),
-				result.endAt()
+				result.endAt(),
+				result.averageScore()
 			);
 		}
 	}

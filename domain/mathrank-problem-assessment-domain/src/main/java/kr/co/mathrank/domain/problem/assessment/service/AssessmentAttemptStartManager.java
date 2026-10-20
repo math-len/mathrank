@@ -10,6 +10,7 @@ import org.springframework.transaction.annotation.Transactional;
 import kr.co.mathrank.domain.problem.assessment.dto.AssessmentAttemptResult;
 import kr.co.mathrank.domain.problem.assessment.entity.Assessment;
 import kr.co.mathrank.domain.problem.assessment.entity.AssessmentAttempt;
+import kr.co.mathrank.domain.problem.assessment.exception.AlreadyParticipatedException;
 import kr.co.mathrank.domain.problem.assessment.exception.NoSuchAssessmentException;
 import kr.co.mathrank.domain.problem.assessment.repository.AssessmentAttemptRepository;
 import kr.co.mathrank.domain.problem.assessment.repository.AssessmentRepository;
@@ -43,6 +44,12 @@ class AssessmentAttemptStartManager {
 		if (activeAttempt.isPresent()) {
 			activeAttempt.get().expire();
 			assessmentAttemptRepository.flush();
+		}
+		// 회원당 1회 응시: 제출 기록이 있으면 새 응시를 만들지 않는다.
+		if (assessmentSubmissionRepository.existsByAssessmentIdAndMemberId(assessmentId, memberId)) {
+			throw assessment.isUnlimited()
+				? AlreadyParticipatedException.assessment()
+				: AlreadyParticipatedException.contest();
 		}
 
 		final int attemptNumber = assessmentAttemptRepository

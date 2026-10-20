@@ -1,9 +1,14 @@
 package kr.co.mathrank.domain.problem.assessment.entity;
 
+import java.time.Duration;
 import java.time.Instant;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.JdbcTypeCode;
 import org.hibernate.annotations.UpdateTimestamp;
+import org.hibernate.type.SqlTypes;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -37,6 +42,9 @@ import lombok.NoArgsConstructor;
 )
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class AssessmentAttempt {
+	/** 시간 제한이 없는 응시는 시작 후 이 시간이 지나면 임시 저장 답안으로 자동 제출된다. */
+	public static final Duration AUTO_SUBMIT_AFTER = Duration.ofHours(3);
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
@@ -68,6 +76,13 @@ public class AssessmentAttempt {
 
 	@Column(name = "active_key")
 	private String activeKey;
+
+	@JdbcTypeCode(SqlTypes.JSON)
+	@Column(name = "draft_answers")
+	private List<List<String>> draftAnswers;
+
+	@Column(name = "draft_saved_at")
+	private Instant draftSavedAt;
 
 	@CreationTimestamp
 	@Column(name = "created_at", nullable = false, updatable = false)
@@ -107,6 +122,34 @@ public class AssessmentAttempt {
 
 	public boolean isAnswerInputEnabledAt(final Instant now) {
 		return !now.isBefore(answerUnlockedAt) && !isExpiredAt(now);
+	}
+
+	public Instant getAutoSubmitAt() {
+		return expiresAt == null ? startedAt.plus(AUTO_SUBMIT_AFTER) : null;
+	}
+
+	/** 시간 제한이 없는 진행 중 응시가 자동 제출 시각을 지났는지 판단한다. */
+	public boolean isAutoSubmitDueAt(final Instant now) {
+		return status == AssessmentAttemptStatus.ACTIVE
+			&& expiresAt == null
+			&& !now.isBefore(getAutoSubmitAt());
+	}
+
+	public void saveDraft(final List<List<String>> answers, final Instant now) {
+		draftAnswers = answers.stream().map(List::copyOf).toList();
+		draftSavedAt = now;
+	}
+
+	/** 자동 제출용 답안. 저장된 답안이 없거나 문항 수가 다르면 빈 답안으로 맞춘다. */
+	public List<List<String>> draftAnswersFor(final int itemCount) {
+		final List<List<String>> answers = new ArrayList<>(itemCount);
+		for (int index = 0; index < itemCount; index++) {
+			final boolean hasDraft = draftAnswers != null
+				&& index < draftAnswers.size()
+				&& draftAnswers.get(index) != null;
+			answers.add(hasDraft ? draftAnswers.get(index) : List.of());
+		}
+		return answers;
 	}
 
 	public void removeTimeLimits() {

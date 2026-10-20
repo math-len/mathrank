@@ -28,7 +28,9 @@ class Responses {
 		Instant answerUnlockedAt,
 		Instant expiresAt,
 		Boolean answerInputEnabled,
-		Boolean rankEligible
+		Boolean rankEligible,
+		Instant autoSubmitAt,
+		List<List<String>> draftAnswers
 	) {
 		public static AssessmentAttemptResponse from(final AssessmentAttemptResult result) {
 			return new AssessmentAttemptResponse(
@@ -39,7 +41,9 @@ class Responses {
 				result.answerUnlockedAt(),
 				result.expiresAt(),
 				result.answerInputEnabled(),
-				result.rankEligible()
+				result.rankEligible(),
+				result.autoSubmitAt(),
+				result.draftAnswers()
 			);
 		}
 	}
@@ -115,7 +119,8 @@ class Responses {
 		LocalDateTime createdAt,
 		Difficulty difficulty,
 		Long minutes,
-		Long answerInputDelaySeconds
+		Long answerInputDelaySeconds,
+		Long averageScore
 	) {
 		public static AssessmentDetailResponse from(AssessmentDetailReadModelResult result) {
 			return new AssessmentDetailResponse(
@@ -129,7 +134,8 @@ class Responses {
 				result.createdAt(),
 				result.difficulty(),
 				result.minutes(),
-				result.answerInputDelaySeconds()
+				result.answerInputDelaySeconds(),
+				result.averageScore()
 			);
 		}
 	}

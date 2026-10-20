@@ -18,7 +18,8 @@ public record AssessmentDetailReadModelResult(
 	Long answerInputDelaySeconds,
 	AssessmentPeriodType periodType,
 	LocalDateTime startAt,
-	LocalDateTime endAt
+	LocalDateTime endAt,
+	Long averageScore
 ) {
 	public static AssessmentDetailReadModelResult from(final AssessmentDetailResult detailResult, final List<AssessmentItemReadModelDetailResult> itemReadModelDetailResults) {
 		return new AssessmentDetailReadModelResult(
@@ -33,7 +34,8 @@ public record AssessmentDetailReadModelResult(
 			detailResult.answerInputDelaySeconds(),
 			detailResult.periodType(),
 			detailResult.startAt(),
-			detailResult.endAt()
+			detailResult.endAt(),
+			detailResult.averageScore()
 		);
 	}
 }
