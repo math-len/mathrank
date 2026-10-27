@@ -69,7 +69,7 @@ class ProblemServiceTest {
 	}
 
 	@Test
-	void 소유자가_아니면_업데이트_불가() {
+	void 등록자가_아니어도_업데이트_가능() {
 		entityManager.flush();
 		entityManager.clear();
 
@@ -77,8 +77,12 @@ class ProblemServiceTest {
 		final Long problemId = problemService.save(command);
 
 		final ProblemUpdateCommand updateCommand = new ProblemUpdateCommand(problemId, 2L, "newImage.jpeg", "newImage.jpeg", AnswerType.SHORT_ANSWER, Difficulty.KILLER, PastProblem.NONE, "testPath", "newTestCode", Set.of("newAnswer"), 1212, "solutionVideoLink", null);
+		problemService.update(updateCommand);
 
-		Assertions.assertThrows(CannotAccessProblemException.class, () -> problemService.update(updateCommand));
+		final Problem updatedProblem = problemRepository.findById(problemId)
+			.orElseThrow();
+		assertEquals("newImage.jpeg", updatedProblem.getProblemImage());
+		assertEquals(1L, updatedProblem.getMemberId());
 	}
 
 	@Test
