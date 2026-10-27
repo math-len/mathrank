@@ -18,5 +18,11 @@ jobs:
       - name: Grant execute permission for gradlew
         run: chmod +x gradlew
 
+      # 러너의 Docker 29부터 최소 API 버전이 1.44라, Testcontainers(docker-java)가 낮은 버전으로 접속하면 컨테이너를 못 띄운다.
+      - name: Pin Docker API version for Testcontainers
+        run: |
+          docker version --format 'server={{.Server.Version}} api={{.Server.APIVersion}} min={{.Server.MinAPIVersion}}'
+          echo "api.version=1.44" > ~/.docker-java.properties
+
       - name: Test with Gradle
         run: ./gradlew test
