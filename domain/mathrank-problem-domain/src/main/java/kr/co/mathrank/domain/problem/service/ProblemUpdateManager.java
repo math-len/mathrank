@@ -15,7 +15,6 @@ import kr.co.mathrank.domain.problem.core.PastProblem;
 import kr.co.mathrank.domain.problem.dto.ProblemUpdateCommand;
 import kr.co.mathrank.domain.problem.entity.Answer;
 import kr.co.mathrank.domain.problem.entity.Problem;
-import kr.co.mathrank.domain.problem.exception.CannotAccessProblemException;
 import kr.co.mathrank.domain.problem.exception.CannotFoundProblemException;
 import kr.co.mathrank.domain.problem.repository.ProblemRepository;
 import lombok.RequiredArgsConstructor;
@@ -33,8 +32,7 @@ class ProblemUpdateManager {
 		final Problem problem = problemRepository.findById(command.problemId())
 			.orElseThrow(() -> new CannotFoundProblemException(command.problemId()));
 
-		isOwner(command.requestMemberId(), problem);
-
+		// 수정 API는 관리자만 호출할 수 있고, 관리자끼리는 등록자와 상관없이 문제를 고칠 수 있다.
 		problem.setDifficulty(command.difficulty());
 		problem.setCoursePath(command.coursePath());
 		problem.setType(command.answerType());
@@ -52,8 +50,8 @@ class ProblemUpdateManager {
 
 		publishUpdateMessage(problem);
 
-		log.info("[ProblemUpdateManager.update] problem updated - id: {}, memberId: {}, course: {}",
-			command.problemId(), command.requestMemberId(), command.coursePath());
+		log.info("[ProblemUpdateManager.update] problem updated - id: {}, ownerId: {}, memberId: {}, course: {}",
+			command.problemId(), problem.getMemberId(), command.requestMemberId(), command.coursePath());
 	}
 
 	private void publishUpdateMessage(final Problem problem) {
@@ -70,14 +68,6 @@ class ProblemUpdateManager {
 			problem.getLocation(),
 			problem.getMemo()
 		));
-	}
-
-	private void isOwner(final Long requestMemberId, final Problem problem) {
-		if (!requestMemberId.equals(problem.getMemberId())) {
-			log.warn("[ProblemUpdateManager.isOwner] is not owner - problemId: {}, ownerId: {}, requestMemberId: {}",
-				problem.getId(), problem.getMemberId(), requestMemberId);
-			throw new CannotAccessProblemException();
-		}
 	}
 
 	private Set<Answer> mapToAnswer(final Set<String> answers, final Problem problem) {
